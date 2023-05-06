@@ -1,6 +1,6 @@
 import moment from 'moment';
-import {RRuleSet,rrulestr} from 'rrule'
-import { ViewTypes, CellUnits, DATETIME_FORMAT, DATETIME_FORMAT } from '../config/scheduler-config';
+import { RRuleSet, rrulestr } from 'rrule';
+import { ViewTypes, CellUnits, DATETIME_FORMAT, DATE_FORMAT } from '../config/scheduler-config';
 import config from '../config/functionality-config';
 import behaviors from '../config/behaviors-config';
 
