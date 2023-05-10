@@ -1,13 +1,17 @@
-import React from 'react';
-import { useDrop } from 'react-dnd';
-import { CellUnits, DATETIME_FORMAT, ViewTypes, DnDTypes } from '../config/scheduler-config';
+import { DropTarget } from 'react-dnd';
+import { DnDTypes, ViewTypes, CellUnits, DATETIME_FORMAT } from '../config/default';
+import { getPos } from '../helper/utility';
 
-const DnDContext = ({ sources, DecoratedComponent }) => {
-  const sourceMap = new Map();
+export default class DnDContext {
+  constructor(sources, DecoratedComponent) {
+    this.sourceMap = new Map();
+    sources.forEach(item => {
+      this.sourceMap.set(item.dndType, item);
+    });
+    this.DecoratedComponent = DecoratedComponent;
+  }
 
-  sources.forEach(item => sourceMap.set(item.dndType, item));
-
-  const getDropSpec = () => {
+  getDropSpec = () => {
     return {
       drop: (props, monitor, component) => {
         const { schedulerData, resourceEvents } = props;
@@ -110,30 +114,18 @@ const DnDContext = ({ sources, DecoratedComponent }) => {
     };
   };
 
-  const getDropTarget = () => {
-    const [{ isOver }, drop] = useDrop({
-      accept: Array.from(sourceMap.keys()),
-      ...getDropSpec(),
-    });
-
-    return props => {
-      return (
-        <div ref={drop}>
-          <DecoratedComponent {...props} />
-        </div>
-      );
+  getDropCollect = (connect, monitor) => {
+    return {
+      connectDropTarget: connect.dropTarget(),
+      isOver: monitor.isOver(),
     };
   };
 
-  const getDropCollect = (connect, monitor) => ({ connectDropTarget: connect.dropTarget(), isOver: monitor.isOver() });
-
-  const getDndSource = dndType => sourceMap.get(dndType);
-
-  return {
-    getDropTarget,
-    getDndSource,
-    getDropCollect,
+  getDropTarget = () => {
+    return DropTarget([...this.sourceMap.keys()], this.getDropSpec(), this.getDropCollect)(this.DecoratedComponent);
   };
-};
 
-export default DnDContext;
+  getDndSource = (dndType = DnDTypes.EVENT) => {
+    return this.sourceMap.get(dndType);
+  };
+}

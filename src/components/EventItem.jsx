@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Popover } from 'antd';
 import EventItemPopover from './EventItemPopover';
-import { DnDTypes, CellUnits, DATETIME_FORMAT } from '../config/scheduler-config';
+import { CellUnits, DATETIME_FORMAT, DnDTypes } from '../config/default';
 
 const supportTouch = 'ontouchstart' in window;
 

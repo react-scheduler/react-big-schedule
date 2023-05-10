@@ -1,4 +1,4 @@
-import PropTypes  from 'prop-types';
+import PropTypes from 'prop-types';
 
 function AddMore({ number, left, width, top, clickAction, headerItem, schedulerData }) {
   const { config } = schedulerData;

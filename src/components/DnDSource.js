@@ -1,10 +1,19 @@
-import { useDrag, DragPreviewImage } from 'react-dnd';
-import { DnDTypes, ViewTypes, DATETIME_FORMAT } from '../config/scheduler-config';
+import { DragSource } from 'react-dnd';
+import { DnDTypes, ViewTypes, DATETIME_FORMAT } from '../config/default';
 
-export default function DnDSource(resolveDragObjFunc, DecoratedComponent, dndType = DnDTypes.EVENT) {
-  const getDragSpec = () => {
+export default class DnDSource {
+  constructor(resolveDragObjFunc, DecoratedComponent, dndType = DnDTypes.EVENT) {
+    this.resolveDragObjFunc = resolveDragObjFunc;
+    this.DecoratedComponent = DecoratedComponent;
+    this.dndType = dndType;
+    this.dragSource = DragSource(this.dndType, this.getDragSpec(), this.getDragCollect)(this.DecoratedComponent);
+  }
+
+  getDragSpec = () => {
     return {
-      beginDrag: (props, monitor, component) => resolveDragObjFunc(props),
+      beginDrag: (props, monitor, component) => {
+        return this.resolveDragObjFunc(props);
+      },
       endDrag: (props, monitor, component) => {
         if (!monitor.didDrop()) return;
 
@@ -38,6 +47,7 @@ export default function DnDSource(resolveDragObjFunc, DecoratedComponent, dndTyp
             .add(localeMoment(event.end).diff(localeMoment(event.start)), 'ms')
             .format(DATETIME_FORMAT);
 
+          //if crossResourceMove disabled, slot returns old value
           if (config.crossResourceMove === false) {
             slotId = schedulerData._getEventSlotId(item);
             slotName = undefined;
@@ -79,10 +89,9 @@ export default function DnDSource(resolveDragObjFunc, DecoratedComponent, dndTyp
           }
         }
       },
-
       canDrag: props => {
         const { schedulerData, resourceEvents } = props;
-        const item = resolveDragObjFunc(props);
+        const item = this.resolveDragObjFunc(props);
         if (schedulerData._isResizing()) return false;
         const { config } = schedulerData;
         return config.movable && (resourceEvents == undefined || !resourceEvents.groupOnly) && (item.movable == undefined || item.movable !== false);
@@ -90,21 +99,15 @@ export default function DnDSource(resolveDragObjFunc, DecoratedComponent, dndTyp
     };
   };
 
-  const DecoratedComponentWithDrag = props => {
-    const [collectedProps, drag] = useDrag({
-      item: { type: dndType },
-      canDrag: () => getDragSpec().canDrag(props),
-      begin: () => getDragSpec().beginDrag(props),
-      end: () => getDragSpec().endDrag(props),
-    });
-
-    return (
-      <>
-        <DragPreviewImage connect={collectedProps.connectDragPreview} />
-        <DecoratedComponent {...props} ref={drag} />
-      </>
-    );
+  getDragCollect = (connect, monitor) => {
+    return {
+      connectDragSource: connect.dragSource(),
+      isDragging: monitor.isDragging(),
+      connectDragPreview: connect.dragPreview(),
+    };
   };
 
-  return DecoratedComponentWithDrag;
+  getDragSource = () => {
+    return this.dragSource;
+  };
 }

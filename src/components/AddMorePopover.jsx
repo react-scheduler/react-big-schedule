@@ -1,24 +1,26 @@
-import React from 'react';
+import { useState } from 'react';
 import PropTypes from 'prop-types';
 import EventItem from './EventItem';
 import DnDSource from './DnDSource';
+import { CloseOutlined } from '@ant-design/icons';
+import { Col, Row } from 'antd';
 
 function AddMorePopover(props) {
-  const [dndSource] = useState(
-    new DnDSource(props => {
-      return props.eventItem;
-    }, EventItem)
-  );
+  const [dndSource] = useState(new DnDSource(p => p.eventItem, EventItem));
+
   const { headerItem, left, top, height, closeAction, schedulerData } = props;
+
   const { config, localeMoment } = schedulerData;
+
   const { time, start, end, events } = headerItem;
+
   let header = localeMoment(time).format(config.addMorePopoverHeaderFormat);
   let durationStart = localeMoment(start);
   let durationEnd = localeMoment(end);
-  let eventList = [];
   let i = 0;
   let DnDEventItem = dndSource.getDragSource();
-  events.forEach(evt => {
+
+  const eventList = events.map(evt => {
     if (evt !== undefined) {
       i++;
       let eventStart = localeMoment(evt.eventItem.start);
@@ -28,7 +30,7 @@ function AddMorePopover(props) {
       let eventItemLeft = 10;
       let eventItemWidth = 138;
       let eventItemTop = 12 + i * config.eventItemLineHeight;
-      let eventItem = (
+      return (
         <DnDEventItem
           {...props}
           key={evt.eventItem.id}
@@ -43,23 +45,19 @@ function AddMorePopover(props) {
           top={eventItemTop}
         />
       );
-      eventList.push(eventItem);
     }
+    return null;
   });
 
   return (
-    <div className='add-more-popover-overlay' style={{ left: left, top: top, height: height, width: '170px' }}>
-      <Row type='flex' justify='space-between' align='middle'>
+    <div className='add-more-popover-overlay' style={{ left, top, height, width: '170px' }}>
+      <Row justify='space-between' align='middle'>
         <Col span='22'>
           <span className='base-text'>{header}</span>
         </Col>
         <Col span='2'>
-          <span
-            onClick={() => {
-              closeAction(undefined);
-            }}
-          >
-            <Icon type='cross'></Icon>
+          <span onClick={() => closeAction(undefined)}>
+            <CloseOutlined />
           </span>
         </Col>
       </Row>

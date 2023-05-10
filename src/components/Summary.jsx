@@ -1,26 +1,31 @@
 import PropTypes from 'prop-types';
-import { SummaryPos } from '../config/scheduler-config';
+import { SummaryPos } from '../config/default';
 
 function Summary({ summary, left, width, top, schedulerData }) {
   const { config } = schedulerData;
-  let color = config.summaryColor;
+  const color = summary.color || config.summaryColor;
 
-  if (summary.color != undefined) color = summary.color;
   let textAlign = 'center';
+  if (config.summaryPos === SummaryPos.TopRight || config.summaryPos === SummaryPos.BottomRight) {
+    textAlign = 'right';
+  } else if (config.summaryPos === SummaryPos.TopLeft || config.summaryPos === SummaryPos.BottomLeft) {
+    textAlign = 'left';
+  }
 
-  if (config.summaryPos === SummaryPos.TopRight || config.summaryPos === SummaryPos.BottomRight) textAlign = 'right';
-  else if (config.summaryPos === SummaryPos.TopLeft || config.summaryPos === SummaryPos.BottomLeft) textAlign = 'left';
-  let style = { height: config.eventItemHeight, color: color, textAlign: textAlign, marginLeft: '6px', marginRight: '6px' };
-  if (summary.fontSize != undefined) style = { ...style, fontSize: summary.fontSize };
+  const style = {
+    height: config.eventItemHeight,
+    color,
+    textAlign,
+    margin: '0 6px',
+    fontSize: summary.fontSize,
+  };
 
   return (
-    <a className='timeline-event header2-text' style={{ left: left, width: width, top: top, cursor: 'default' }}>
+    <a className='timeline-event header2-text' style={{ left, width, top, cursor: 'default' }}>
       <div style={style}>{summary.text}</div>
     </a>
   );
 }
-
-export default Summary;
 
 Summary.propTypes = {
   schedulerData: PropTypes.object.isRequired,
@@ -29,3 +34,4 @@ Summary.propTypes = {
   width: PropTypes.number.isRequired,
   top: PropTypes.number.isRequired,
 };
+export default Summary;

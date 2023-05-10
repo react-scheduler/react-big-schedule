@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Col, Row, Radio, Popover, Calendar, Button } from 'antd';
+import { LeftOutlined, RightOutlined } from '@ant-design/icons';
+import { Radio, Popover, Calendar } from 'antd';
 import EventItem from './EventItem';
 import DnDSource from './DnDSource';
 import DnDContext from './DnDContext';
@@ -10,9 +11,10 @@ import BodyView from './BodyView';
 import ResourceEvents from './ResourceEvents';
 import AgendaView from './AgendaView';
 import AddMorePopover from './AddMorePopover';
-import SchedulerData from './SchedularData';
-import DemoData from '../helpers/demo-data';
-import { SummaryPos, ViewTypes, DATETIME_FORMAT, DATE_FORMAT, CellUnits } from '../config/scheduler-config';
+import SchedulerData from './SchedulerData';
+import SampleData from '../sample-data/sample1';
+import { ViewTypes, CellUnits, SummaryPos, DATETIME_FORMAT, DATE_FORMAT } from '../config/default';
+import '../css/style.css';
 
 const RadioButton = Radio.Button;
 const RadioGroup = Radio.Group;
@@ -23,15 +25,11 @@ class Scheduler extends Component {
 
     const { schedulerData, dndSources } = props;
     let sources = [];
-    sources.push(
-      new DnDSource(props => {
-        return props.eventItem;
-      }, EventItem)
-    );
+    sources.push(new DnDSource(props => props.eventItem, EventItem));
     if (dndSources != undefined && dndSources.length > 0) {
       sources = [...sources, ...dndSources];
     }
-    let dndContext = DnDContext(sources, ResourceEvents);
+    let dndContext = new DnDContext(sources, ResourceEvents);
 
     this.currentArea = -1;
     schedulerData._setDocumentWidth(document.documentElement.clientWidth);
@@ -160,8 +158,18 @@ class Scheduler extends Component {
         contentHeight = this.state.contentHeight;
       let resourcePaddingBottom = resourceScrollbarHeight === 0 ? contentScrollbarHeight : 0;
       let contentPaddingBottom = contentScrollbarHeight === 0 ? resourceScrollbarHeight : 0;
-      let schedulerContentStyle = { overflow: 'auto', margin: '0px', position: 'relative', paddingBottom: contentPaddingBottom };
-      let resourceContentStyle = { overflowX: 'auto', overflowY: 'auto', width: resourceTableWidth + resourceScrollbarWidth - 2, margin: `0px -${contentScrollbarWidth}px 0px 0px` };
+      let schedulerContentStyle = {
+        overflow: 'auto',
+        margin: '0px',
+        position: 'relative',
+        paddingBottom: contentPaddingBottom,
+      };
+      let resourceContentStyle = {
+        overflowX: 'auto',
+        overflowY: 'auto',
+        width: resourceTableWidth + resourceScrollbarWidth - 2,
+        margin: `0px -${contentScrollbarWidth}px 0px 0px`,
+      };
       if (config.schedulerMaxHeight > 0) {
         schedulerContentStyle = {
           ...schedulerContentStyle,
@@ -178,8 +186,20 @@ class Scheduler extends Component {
         <tr>
           <td style={{ width: resourceTableWidth, verticalAlign: 'top' }}>
             <div className='resource-view'>
-              <div style={{ overflow: 'hidden', borderBottom: '1px solid #e9e9e9', height: config.tableHeaderHeight }}>
-                <div style={{ overflowX: 'scroll', overflowY: 'hidden', margin: `0px 0px -${contentScrollbarHeight}px` }}>
+              <div
+                style={{
+                  overflow: 'hidden',
+                  borderBottom: '1px solid #e9e9e9',
+                  height: config.tableHeaderHeight,
+                }}
+              >
+                <div
+                  style={{
+                    overflowX: 'scroll',
+                    overflowY: 'hidden',
+                    margin: `0px 0px -${contentScrollbarHeight}px`,
+                  }}
+                >
                   <table className='resource-table'>
                     <thead>
                       <tr style={{ height: config.tableHeaderHeight }}>
@@ -202,15 +222,30 @@ class Scheduler extends Component {
           </td>
           <td>
             <div className='scheduler-view' style={{ width: schedulerContainerWidth, verticalAlign: 'top' }}>
-              <div style={{ overflow: 'hidden', borderBottom: '1px solid #e9e9e9', height: config.tableHeaderHeight }}>
+              <div
+                style={{
+                  overflow: 'hidden',
+                  borderBottom: '1px solid #e9e9e9',
+                  height: config.tableHeaderHeight,
+                }}
+              >
                 <div
-                  style={{ overflowX: 'scroll', overflowY: 'hidden', margin: `0px 0px -${contentScrollbarHeight}px` }}
+                  style={{
+                    overflowX: 'scroll',
+                    overflowY: 'hidden',
+                    margin: `0px 0px -${contentScrollbarHeight}px`,
+                  }}
                   ref={this.schedulerHeadRef}
                   onMouseOver={this.onSchedulerHeadMouseOver}
                   onMouseOut={this.onSchedulerHeadMouseOut}
                   onScroll={this.onSchedulerHeadScroll}
                 >
-                  <div style={{ paddingRight: `${contentScrollbarWidth}px`, width: schedulerWidth + contentScrollbarWidth }}>
+                  <div
+                    style={{
+                      paddingRight: `${contentScrollbarWidth}px`,
+                      width: schedulerWidth + contentScrollbarWidth,
+                    }}
+                  >
                     <table className='scheduler-bg-table'>
                       <HeaderView {...this.props} />
                     </table>
@@ -251,15 +286,20 @@ class Scheduler extends Component {
     let schedulerHeader = <div />;
     if (config.headerEnabled) {
       schedulerHeader = (
-        <Row type='flex' align='middle' justify='space-between' style={{ marginBottom: '24px' }}>
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            marginBottom: '24px',
+          }}
+        >
           {leftCustomHeader}
-          <Col>
+          <div>
             <div className='header2-text'>
-              <Button type='left' style={{ marginRight: '8px' }} className='icon-nav' onClick={this.goBack}>
-                {'<-'}
-              </Button>
+              <LeftOutlined style={{ marginRight: '8px' }} className='icon-nav' onClick={this.goBack} />
               {calendarPopoverEnabled ? (
-                <Popover content={popover} placement='bottom' trigger='click' visible={this.state.visible} onVisibleChange={this.handleVisibleChange}>
+                <Popover content={popover} placement='bottom' trigger='click' open={this.state.visible} onOpenChange={this.handleVisibleChange}>
                   <span className={'header2-text-label'} style={{ cursor: 'pointer' }}>
                     {dateLabel}
                   </span>
@@ -267,30 +307,30 @@ class Scheduler extends Component {
               ) : (
                 <span className={'header2-text-label'}>{dateLabel}</span>
               )}
-              <Button type='right' style={{ marginLeft: '8px' }} className='icon-nav' onClick={this.goNext}>
-                {'->'}
-              </Button>
+              <RightOutlined style={{ marginLeft: '8px' }} className='icon-nav' onClick={this.goNext} />
             </div>
-          </Col>
-          <Col>
+          </div>
+          <div>
             <RadioGroup defaultValue={defaultValue} size='default' onChange={this.onViewChange}>
-              {radioButtonList}
+              {radioButtonList}xx
             </RadioGroup>
-          </Col>
+          </div>
           {rightCustomHeader}
-        </Row>
+        </div>
       );
     }
 
     return (
-      <table id='RBS-Scheduler-root' className='scheduler' style={{ width: `${width}px` }}>
-        <thead>
-          <tr>
-            <td colSpan='2'>{schedulerHeader}</td>
-          </tr>
-        </thead>
-        <tbody>{tbodyContent}</tbody>
-      </table>
+      <div className='scheduler-component-module'>
+        <table id='RBS-Scheduler-root' className='scheduler' style={{ width: `${width}px` }}>
+          <thead>
+            <tr>
+              <td colSpan='2'>{schedulerHeader}</td>
+            </tr>
+          </thead>
+          <tbody>{tbodyContent}</tbody>
+        </table>
+      </div>
     );
   }
 
@@ -316,7 +356,10 @@ class Scheduler extends Component {
     let tmpState = {};
     let needSet = false;
     if (contentScrollbarHeight != this.state.contentScrollbarHeight) {
-      tmpState = { ...tmpState, contentScrollbarHeight: contentScrollbarHeight };
+      tmpState = {
+        ...tmpState,
+        contentScrollbarHeight: contentScrollbarHeight,
+      };
       needSet = true;
     }
     if (contentScrollbarWidth != this.state.contentScrollbarWidth) {
@@ -328,11 +371,17 @@ class Scheduler extends Component {
       needSet = true;
     }
     if (resourceScrollbarHeight != this.state.resourceScrollbarHeight) {
-      tmpState = { ...tmpState, resourceScrollbarHeight: resourceScrollbarHeight };
+      tmpState = {
+        ...tmpState,
+        resourceScrollbarHeight: resourceScrollbarHeight,
+      };
       needSet = true;
     }
     if (resourceScrollbarWidth != this.state.resourceScrollbarWidth) {
-      tmpState = { ...tmpState, resourceScrollbarWidth: resourceScrollbarWidth };
+      tmpState = {
+        ...tmpState,
+        resourceScrollbarWidth: resourceScrollbarWidth,
+      };
       needSet = true;
     }
     if (needSet) this.setState(tmpState);
@@ -420,7 +469,11 @@ class Scheduler extends Component {
     let viewType = parseInt(e.target.value.charAt(0));
     let showAgenda = e.target.value.charAt(1) === '1';
     let isEventPerspective = e.target.value.charAt(2) === '1';
-    onViewChange(schedulerData, { viewType: viewType, showAgenda: showAgenda, isEventPerspective: isEventPerspective });
+    onViewChange(schedulerData, {
+      viewType: viewType,
+      showAgenda: showAgenda,
+      isEventPerspective: isEventPerspective,
+    });
   };
 
   goNext = () => {
@@ -447,5 +500,4 @@ class Scheduler extends Component {
   };
 }
 
-export { DATETIME_FORMAT, DATE_FORMAT, SchedulerData, ViewTypes, CellUnits, SummaryPos, DnDSource, DnDContext, AddMorePopover, DemoData };
-export default Scheduler;
+export { Scheduler, DATETIME_FORMAT, DATE_FORMAT, SchedulerData, ViewTypes, CellUnits, SummaryPos, DnDSource, DnDContext, AddMorePopover, SampleData };

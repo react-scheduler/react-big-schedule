@@ -1,35 +1,57 @@
 import React, { Component } from 'react';
-import Scheduler, { SchedulerData, ViewTypes, DATE_FORMAT, DemoData } from '../components/Scheduler';
-// import Nav from './Nav';
-// import Tips from './Tips';
-// import ViewSrcCode from './ViewSrcCode';
-import { DndProvider } from 'react-dnd';
-import { HTML5Backend } from 'react-dnd-html5-backend';
+import { Scheduler, SchedulerData, ViewTypes, SampleData, AddMorePopover } from '../components/index';
+import withDnDContext from './withDnDContext';
 
-class Basic extends Component {
+class AddMore extends Component {
   constructor(props) {
     super(props);
 
-    //let schedulerData = new SchedulerData(new moment("2017-12-18").format(DATE_FORMAT), ViewTypes.Week);
-    let schedulerData = new SchedulerData('2017-12-18', ViewTypes.Week);
+    let schedulerData = new SchedulerData('2022-12-18', ViewTypes.Week, false, false, {
+      dayMaxEvents: 2,
+      weekMaxEvents: 4,
+      monthMaxEvents: 4,
+      quarterMaxEvents: 4,
+      yearMaxEvents: 4,
+    });
     schedulerData.localeMoment.locale('en');
-    schedulerData.setResources(DemoData.resources);
-    schedulerData.setEvents(DemoData.events);
+    schedulerData.setResources(SampleData.resources);
+    schedulerData.setEvents(SampleData.events);
     this.state = {
       viewModel: schedulerData,
+      headerItem: undefined,
+      left: 0,
+      top: 0,
+      height: 0,
     };
   }
 
   render() {
     const { viewModel } = this.state;
+
+    let popover = <div />;
+    if (this.state.headerItem !== undefined) {
+      popover = (
+        <AddMorePopover
+          headerItem={this.state.headerItem}
+          eventItemClick={this.eventClicked}
+          viewEventClick={this.ops1}
+          viewEventText='Ops 1'
+          viewEvent2Click={this.ops2}
+          viewEvent2Text='Ops 2'
+          schedulerData={viewModel}
+          closeAction={this.onSetAddMoreState}
+          left={this.state.left}
+          top={this.state.top}
+          height={this.state.height}
+          moveEvent={this.moveEvent}
+        />
+      );
+    }
+
     return (
-      <DndProvider backend={HTML5Backend}>
-        {/* <Nav /> */}
+      <div>
         <div>
-          {/* <h3 style={{ textAlign: 'center' }}>
-            Basic example
-            <ViewSrcCode srcCodeUrl='https://github.com/StephenChou1017/react-big-scheduler/blob/master/example/Basic.js' />
-          </h3> */}
+          <h3 style={{ textAlign: 'center' }}>Add more</h3>
           <Scheduler
             schedulerData={viewModel}
             prevClick={this.prevClick}
@@ -45,21 +67,18 @@ class Basic extends Component {
             updateEventEnd={this.updateEventEnd}
             moveEvent={this.moveEvent}
             newEvent={this.newEvent}
-            onScrollLeft={this.onScrollLeft}
-            onScrollRight={this.onScrollRight}
-            onScrollTop={this.onScrollTop}
-            onScrollBottom={this.onScrollBottom}
+            onSetAddMoreState={this.onSetAddMoreState}
             toggleExpandFunc={this.toggleExpandFunc}
           />
+          {popover}
         </div>
-        {/* <Tips /> */}
-      </DndProvider>
+      </div>
     );
   }
 
   prevClick = schedulerData => {
     schedulerData.prev();
-    schedulerData.setEvents(DemoData.events);
+    schedulerData.setEvents(SampleData.events);
     this.setState({
       viewModel: schedulerData,
     });
@@ -67,7 +86,7 @@ class Basic extends Component {
 
   nextClick = schedulerData => {
     schedulerData.next();
-    schedulerData.setEvents(DemoData.events);
+    schedulerData.setEvents(SampleData.events);
     this.setState({
       viewModel: schedulerData,
     });
@@ -75,7 +94,7 @@ class Basic extends Component {
 
   onViewChange = (schedulerData, view) => {
     schedulerData.setViewType(view.viewType, view.showAgenda, view.isEventPerspective);
-    schedulerData.setEvents(DemoData.events);
+    schedulerData.setEvents(SampleData.events);
     this.setState({
       viewModel: schedulerData,
     });
@@ -83,7 +102,7 @@ class Basic extends Component {
 
   onSelectDate = (schedulerData, date) => {
     schedulerData.setDate(date);
-    schedulerData.setEvents(DemoData.events);
+    schedulerData.setEvents(SampleData.events);
     this.setState({
       viewModel: schedulerData,
     });
@@ -150,36 +169,19 @@ class Basic extends Component {
     }
   };
 
-  onScrollRight = (schedulerData, schedulerContent, maxScrollLeft) => {
-    if (schedulerData.ViewTypes === ViewTypes.Day) {
-      schedulerData.next();
-      schedulerData.setEvents(DemoData.events);
+  onSetAddMoreState = newState => {
+    if (newState === undefined) {
       this.setState({
-        viewModel: schedulerData,
+        headerItem: undefined,
+        left: 0,
+        top: 0,
+        height: 0,
       });
-
-      schedulerContent.scrollLeft = maxScrollLeft - 10;
-    }
-  };
-
-  onScrollLeft = (schedulerData, schedulerContent, maxScrollLeft) => {
-    if (schedulerData.ViewTypes === ViewTypes.Day) {
-      schedulerData.prev();
-      schedulerData.setEvents(DemoData.events);
+    } else {
       this.setState({
-        viewModel: schedulerData,
+        ...newState,
       });
-
-      schedulerContent.scrollLeft = 10;
     }
-  };
-
-  onScrollTop = (schedulerData, schedulerContent, maxScrollTop) => {
-    console.log('onScrollTop');
-  };
-
-  onScrollBottom = (schedulerData, schedulerContent, maxScrollTop) => {
-    console.log('onScrollBottom');
   };
 
   toggleExpandFunc = (schedulerData, slotId) => {
@@ -190,4 +192,4 @@ class Basic extends Component {
   };
 }
 
-export default Basic;
+export default withDnDContext(AddMore);

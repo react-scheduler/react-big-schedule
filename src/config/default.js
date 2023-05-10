@@ -8,4 +8,4 @@ export const CellUnits = { Day: 0, Hour: 1 };
 
 export const SummaryPos = { Top: 0, TopRight: 1, TopLeft: 2, Bottom: 3, BottomRight: 4, BottomLeft: 5 };
 
-export const DnDTypes = { Event: 'event' };
+export const DnDTypes = { EVENT: 'event' };
