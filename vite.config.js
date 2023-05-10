@@ -12,13 +12,18 @@ export default defineConfig({
       fileName: format => `react-scheduler-master.${format}.js`,
     },
     rollupOptions: {
-      external: ['react', 'react-dom', 'antd', 'moment'],
+      external: ['react', 'react-dom', 'antd', 'moment', 'react-dnd', 'react-dnd-html5-backend', 'rrule', '@ant-design/icons', 'prop-types'],
       output: {
         globals: {
           react: 'React',
           'react-dom': 'ReactDOM',
           antd: 'antd',
           moment: 'moment',
+          '@ant-design/icons': 'antdIcons',
+          'prop-types': 'PropTypes',
+          'react-dnd': 'ReactDnd',
+          'react-dnd-html5-backend': 'ReactDndHtml5Backend',
+          rrule: 'rrule',
         },
       },
     },
