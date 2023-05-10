@@ -40,6 +40,9 @@
   "bugs": {
     "url": "https://github.com/ansulagrawal/react-scheduler-master.git/issues"
   },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
   "exports": {
     ".": {
       "import": "./dist/react-scheduler-master.es.js",
