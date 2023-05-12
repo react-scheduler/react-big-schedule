@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import Scheduler, { SchedulerData, ViewTypes, SampleData, AddMorePopover } from '../lib/components/index';
+import { Scheduler, SchedulerData, ViewTypes, SampleData, AddMorePopover } from '../components/index';
 import withDnDContext from './withDnDContext';
 
 class AddMore extends Component {
