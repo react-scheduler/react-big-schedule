@@ -109,7 +109,7 @@ class AddMore extends Component {
   };
 
   eventClicked = (schedulerData, event) => {
-    alert(`You just clicked on an event: {id: ${event.id}, title: ${event.title}}`);
+    alert(`You just clicked on an event with {id: ${event.id}, title: ${event.title}}`);
   };
 
   ops1 = (schedulerData, event) => {
