@@ -1,18 +1,14 @@
 name: Release
 
 on:
-#   push:
-#     branches: ['master']
-#   pull_request:
-#     branches: ['master']
-    workflow_dispatch:
+  workflow_dispatch:
 
 jobs:
   release:
     permissions:
-        contents: write
-        issues: write
-        pull-requests: write
+      contents: write
+      issues: write
+      pull-requests: write
     runs-on: ubuntu-latest
 
     strategy:
@@ -29,7 +25,5 @@ jobs:
       - run: npm ci
       - run: npm run build
       - run: npx semantic-release
-      - run: npm test
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
