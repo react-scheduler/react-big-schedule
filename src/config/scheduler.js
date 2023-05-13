@@ -65,6 +65,9 @@ export default {
   addMorePopoverHeaderFormat: 'MMM D, YYYY dddd',
   eventItemPopoverDateFormat: 'MMM D',
   nonAgendaDayCellHeaderFormat: 'ha',
+  nonAgendaWeekCellHeaderFormat: 'ww/YYYY',
+  nonAgendaMonthCellHeaderFormat: 'MMM YYYY',
+  nonAgendaYearCellHeaderFormat: 'YYYY',
   nonAgendaOtherCellHeaderFormat: 'ddd M/D',
 
   minuteStep: 30,
