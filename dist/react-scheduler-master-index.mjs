@@ -1,13 +1,13 @@
-var qt = Object.defineProperty;
-var Yt = (y, t, e) => t in y ? qt(y, t, { enumerable: !0, configurable: !0, writable: !0, value: e }) : y[t] = e;
-var M = (y, t, e) => (Yt(y, typeof t != "symbol" ? t + "" : t, e), e);
+var Yt = Object.defineProperty;
+var qt = (y, t, e) => t in y ? Yt(y, t, { enumerable: !0, configurable: !0, writable: !0, value: e }) : y[t] = e;
+var M = (y, t, e) => (qt(y, typeof t != "symbol" ? t + "" : t, e), e);
 import st, { Component as _e, createElement as he, useState as $t } from "react";
 import u, { PropTypes as oe } from "prop-types";
-import { MinusSquareOutlined as Bt, PlusSquareOutlined as Vt, CloseOutlined as Gt, LeftOutlined as Xt, RightOutlined as Ut } from "@ant-design/icons";
+import { MinusSquareOutlined as Bt, PlusSquareOutlined as Vt, CloseOutlined as Gt, LeftOutlined as Ut, RightOutlined as Xt } from "@ant-design/icons";
 import { Row as ue, Col as ee, Popover as He, Radio as it, Calendar as Qt } from "antd";
 import { DragSource as Jt, DropTarget as Kt } from "react-dnd";
-import je from "moment";
-import { rrulestr as ke, RRuleSet as Zt } from "rrule";
+import ke from "moment";
+import { rrulestr as je, RRuleSet as Zt } from "rrule";
 var We = { exports: {} }, me = {};
 /**
  * @license React
@@ -23,18 +23,18 @@ function er() {
   if (et)
     return me;
   et = 1;
-  var y = st, t = Symbol.for("react.element"), e = Symbol.for("react.fragment"), r = Object.prototype.hasOwnProperty, s = y.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED.ReactCurrentOwner, o = { key: !0, ref: !0, __self: !0, __source: !0 };
-  function i(a, d, c) {
+  var y = st, t = Symbol.for("react.element"), e = Symbol.for("react.fragment"), r = Object.prototype.hasOwnProperty, n = y.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED.ReactCurrentOwner, i = { key: !0, ref: !0, __self: !0, __source: !0 };
+  function o(a, d, c) {
     var h, p = {}, f = null, m = null;
     c !== void 0 && (f = "" + c), d.key !== void 0 && (f = "" + d.key), d.ref !== void 0 && (m = d.ref);
     for (h in d)
-      r.call(d, h) && !o.hasOwnProperty(h) && (p[h] = d[h]);
+      r.call(d, h) && !i.hasOwnProperty(h) && (p[h] = d[h]);
     if (a && a.defaultProps)
       for (h in d = a.defaultProps, d)
         p[h] === void 0 && (p[h] = d[h]);
-    return { $$typeof: t, type: a, key: f, ref: m, props: p, _owner: s.current };
+    return { $$typeof: t, type: a, key: f, ref: m, props: p, _owner: n.current };
   }
-  return me.Fragment = e, me.jsx = i, me.jsxs = i, me;
+  return me.Fragment = e, me.jsx = o, me.jsxs = o, me;
 }
 var ge = {};
 /**
@@ -49,88 +49,88 @@ var ge = {};
 var tt;
 function tr() {
   return tt || (tt = 1, process.env.NODE_ENV !== "production" && function() {
-    var y = st, t = Symbol.for("react.element"), e = Symbol.for("react.portal"), r = Symbol.for("react.fragment"), s = Symbol.for("react.strict_mode"), o = Symbol.for("react.profiler"), i = Symbol.for("react.provider"), a = Symbol.for("react.context"), d = Symbol.for("react.forward_ref"), c = Symbol.for("react.suspense"), h = Symbol.for("react.suspense_list"), p = Symbol.for("react.memo"), f = Symbol.for("react.lazy"), m = Symbol.for("react.offscreen"), E = Symbol.iterator, C = "@@iterator";
-    function R(n) {
-      if (n === null || typeof n != "object")
+    var y = st, t = Symbol.for("react.element"), e = Symbol.for("react.portal"), r = Symbol.for("react.fragment"), n = Symbol.for("react.strict_mode"), i = Symbol.for("react.profiler"), o = Symbol.for("react.provider"), a = Symbol.for("react.context"), d = Symbol.for("react.forward_ref"), c = Symbol.for("react.suspense"), h = Symbol.for("react.suspense_list"), p = Symbol.for("react.memo"), f = Symbol.for("react.lazy"), m = Symbol.for("react.offscreen"), E = Symbol.iterator, R = "@@iterator";
+    function C(s) {
+      if (s === null || typeof s != "object")
         return null;
-      var g = E && n[E] || n[C];
+      var g = E && s[E] || s[R];
       return typeof g == "function" ? g : null;
     }
     var x = y.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
-    function v(n) {
+    function v(s) {
       {
         for (var g = arguments.length, b = new Array(g > 1 ? g - 1 : 0), I = 1; I < g; I++)
           b[I - 1] = arguments[I];
-        T("error", n, b);
+        D("error", s, b);
       }
     }
-    function T(n, g, b) {
+    function D(s, g, b) {
       {
-        var I = x.ReactDebugCurrentFrame, z = I.getStackAddendum();
-        z !== "" && (g += "%s", b = b.concat([z]));
-        var $ = b.map(function(N) {
-          return String(N);
+        var I = x.ReactDebugCurrentFrame, F = I.getStackAddendum();
+        F !== "" && (g += "%s", b = b.concat([F]));
+        var B = b.map(function(L) {
+          return String(L);
         });
-        $.unshift("Warning: " + g), Function.prototype.apply.call(console[n], console, $);
+        B.unshift("Warning: " + g), Function.prototype.apply.call(console[s], console, B);
       }
     }
-    var w = !1, j = !1, k = !1, O = !1, P = !1, S;
+    var T = !1, k = !1, j = !1, N = !1, A = !1, S;
     S = Symbol.for("react.module.reference");
-    function W(n) {
-      return !!(typeof n == "string" || typeof n == "function" || n === r || n === o || P || n === s || n === c || n === h || O || n === m || w || j || k || typeof n == "object" && n !== null && (n.$$typeof === f || n.$$typeof === p || n.$$typeof === i || n.$$typeof === a || n.$$typeof === d || // This needs to include all possible module reference object
+    function _(s) {
+      return !!(typeof s == "string" || typeof s == "function" || s === r || s === i || A || s === n || s === c || s === h || N || s === m || T || k || j || typeof s == "object" && s !== null && (s.$$typeof === f || s.$$typeof === p || s.$$typeof === o || s.$$typeof === a || s.$$typeof === d || // This needs to include all possible module reference object
       // types supported by any Flight configuration anywhere since
       // we don't know which Flight build this will end up being used
       // with.
-      n.$$typeof === S || n.getModuleId !== void 0));
+      s.$$typeof === S || s.getModuleId !== void 0));
     }
-    function q(n, g, b) {
-      var I = n.displayName;
+    function q(s, g, b) {
+      var I = s.displayName;
       if (I)
         return I;
-      var z = g.displayName || g.name || "";
-      return z !== "" ? b + "(" + z + ")" : b;
+      var F = g.displayName || g.name || "";
+      return F !== "" ? b + "(" + F + ")" : b;
     }
-    function Q(n) {
-      return n.displayName || "Context";
+    function Q(s) {
+      return s.displayName || "Context";
     }
-    function V(n) {
-      if (n == null)
+    function G(s) {
+      if (s == null)
         return null;
-      if (typeof n.tag == "number" && v("Received an unexpected object in getComponentNameFromType(). This is likely a bug in React. Please file an issue."), typeof n == "function")
-        return n.displayName || n.name || null;
-      if (typeof n == "string")
-        return n;
-      switch (n) {
+      if (typeof s.tag == "number" && v("Received an unexpected object in getComponentNameFromType(). This is likely a bug in React. Please file an issue."), typeof s == "function")
+        return s.displayName || s.name || null;
+      if (typeof s == "string")
+        return s;
+      switch (s) {
         case r:
           return "Fragment";
         case e:
           return "Portal";
-        case o:
+        case i:
           return "Profiler";
-        case s:
+        case n:
           return "StrictMode";
         case c:
           return "Suspense";
         case h:
           return "SuspenseList";
       }
-      if (typeof n == "object")
-        switch (n.$$typeof) {
+      if (typeof s == "object")
+        switch (s.$$typeof) {
           case a:
-            var g = n;
+            var g = s;
             return Q(g) + ".Consumer";
-          case i:
-            var b = n;
+          case o:
+            var b = s;
             return Q(b._context) + ".Provider";
           case d:
-            return q(n, n.render, "ForwardRef");
+            return q(s, s.render, "ForwardRef");
           case p:
-            var I = n.displayName || null;
-            return I !== null ? I : V(n.type) || "Memo";
+            var I = s.displayName || null;
+            return I !== null ? I : G(s.type) || "Memo";
           case f: {
-            var z = n, $ = z._payload, N = z._init;
+            var F = s, B = F._payload, L = F._init;
             try {
-              return V(N($));
+              return G(L(B));
             } catch {
               return null;
             }
@@ -138,80 +138,80 @@ function tr() {
         }
       return null;
     }
-    var K = Object.assign, G = 0, A, F, Y, B, ne, Le, Pe;
+    var K = Object.assign, U = 0, z, Y, $, V, ne, Le, Pe;
     function Ae() {
     }
     Ae.__reactDisabledLog = !0;
     function vt() {
       {
-        if (G === 0) {
-          A = console.log, F = console.info, Y = console.warn, B = console.error, ne = console.group, Le = console.groupCollapsed, Pe = console.groupEnd;
-          var n = {
+        if (U === 0) {
+          z = console.log, Y = console.info, $ = console.warn, V = console.error, ne = console.group, Le = console.groupCollapsed, Pe = console.groupEnd;
+          var s = {
             configurable: !0,
             enumerable: !0,
             value: Ae,
             writable: !0
           };
           Object.defineProperties(console, {
-            info: n,
-            log: n,
-            warn: n,
-            error: n,
-            group: n,
-            groupCollapsed: n,
-            groupEnd: n
+            info: s,
+            log: s,
+            warn: s,
+            error: s,
+            group: s,
+            groupCollapsed: s,
+            groupEnd: s
           });
         }
-        G++;
+        U++;
       }
     }
     function Et() {
       {
-        if (G--, G === 0) {
-          var n = {
+        if (U--, U === 0) {
+          var s = {
             configurable: !0,
             enumerable: !0,
             writable: !0
           };
           Object.defineProperties(console, {
-            log: K({}, n, {
-              value: A
+            log: K({}, s, {
+              value: z
             }),
-            info: K({}, n, {
-              value: F
-            }),
-            warn: K({}, n, {
+            info: K({}, s, {
               value: Y
             }),
-            error: K({}, n, {
-              value: B
+            warn: K({}, s, {
+              value: $
             }),
-            group: K({}, n, {
+            error: K({}, s, {
+              value: V
+            }),
+            group: K({}, s, {
               value: ne
             }),
-            groupCollapsed: K({}, n, {
+            groupCollapsed: K({}, s, {
               value: Le
             }),
-            groupEnd: K({}, n, {
+            groupEnd: K({}, s, {
               value: Pe
             })
           });
         }
-        G < 0 && v("disabledDepth fell below zero. This is a bug in React. Please file an issue.");
+        U < 0 && v("disabledDepth fell below zero. This is a bug in React. Please file an issue.");
       }
     }
-    var Re = x.ReactCurrentDispatcher, Ce;
-    function ve(n, g, b) {
+    var Ce = x.ReactCurrentDispatcher, Re;
+    function ve(s, g, b) {
       {
-        if (Ce === void 0)
+        if (Re === void 0)
           try {
             throw Error();
-          } catch (z) {
-            var I = z.stack.trim().match(/\n( *(at )?)/);
-            Ce = I && I[1] || "";
+          } catch (F) {
+            var I = F.stack.trim().match(/\n( *(at )?)/);
+            Re = I && I[1] || "";
           }
         return `
-` + Ce + n;
+` + Re + s;
       }
     }
     var Se = !1, Ee;
@@ -219,43 +219,43 @@ function tr() {
       var bt = typeof WeakMap == "function" ? WeakMap : Map;
       Ee = new bt();
     }
-    function ze(n, g) {
-      if (!n || Se)
+    function ze(s, g) {
+      if (!s || Se)
         return "";
       {
-        var b = Ee.get(n);
+        var b = Ee.get(s);
         if (b !== void 0)
           return b;
       }
       var I;
       Se = !0;
-      var z = Error.prepareStackTrace;
+      var F = Error.prepareStackTrace;
       Error.prepareStackTrace = void 0;
-      var $;
-      $ = Re.current, Re.current = null, vt();
+      var B;
+      B = Ce.current, Ce.current = null, vt();
       try {
         if (g) {
-          var N = function() {
+          var L = function() {
             throw Error();
           };
-          if (Object.defineProperty(N.prototype, "props", {
+          if (Object.defineProperty(L.prototype, "props", {
             set: function() {
               throw Error();
             }
           }), typeof Reflect == "object" && Reflect.construct) {
             try {
-              Reflect.construct(N, []);
+              Reflect.construct(L, []);
             } catch (se) {
               I = se;
             }
-            Reflect.construct(n, [], N);
+            Reflect.construct(s, [], L);
           } else {
             try {
-              N.call();
+              L.call();
             } catch (se) {
               I = se;
             }
-            n.call(N.prototype);
+            s.call(L.prototype);
           }
         } else {
           try {
@@ -263,247 +263,247 @@ function tr() {
           } catch (se) {
             I = se;
           }
-          n();
+          s();
         }
       } catch (se) {
         if (se && I && typeof se.stack == "string") {
-          for (var _ = se.stack.split(`
+          for (var H = se.stack.split(`
 `), Z = I.stack.split(`
-`), U = _.length - 1, J = Z.length - 1; U >= 1 && J >= 0 && _[U] !== Z[J]; )
+`), X = H.length - 1, J = Z.length - 1; X >= 1 && J >= 0 && H[X] !== Z[J]; )
             J--;
-          for (; U >= 1 && J >= 0; U--, J--)
-            if (_[U] !== Z[J]) {
-              if (U !== 1 || J !== 1)
+          for (; X >= 1 && J >= 0; X--, J--)
+            if (H[X] !== Z[J]) {
+              if (X !== 1 || J !== 1)
                 do
-                  if (U--, J--, J < 0 || _[U] !== Z[J]) {
+                  if (X--, J--, J < 0 || H[X] !== Z[J]) {
                     var te = `
-` + _[U].replace(" at new ", " at ");
-                    return n.displayName && te.includes("<anonymous>") && (te = te.replace("<anonymous>", n.displayName)), typeof n == "function" && Ee.set(n, te), te;
+` + H[X].replace(" at new ", " at ");
+                    return s.displayName && te.includes("<anonymous>") && (te = te.replace("<anonymous>", s.displayName)), typeof s == "function" && Ee.set(s, te), te;
                   }
-                while (U >= 1 && J >= 0);
+                while (X >= 1 && J >= 0);
               break;
             }
         }
       } finally {
-        Se = !1, Re.current = $, Et(), Error.prepareStackTrace = z;
+        Se = !1, Ce.current = B, Et(), Error.prepareStackTrace = F;
       }
-      var ce = n ? n.displayName || n.name : "", Ze = ce ? ve(ce) : "";
-      return typeof n == "function" && Ee.set(n, Ze), Ze;
+      var ce = s ? s.displayName || s.name : "", Ze = ce ? ve(ce) : "";
+      return typeof s == "function" && Ee.set(s, Ze), Ze;
     }
-    function yt(n, g, b) {
-      return ze(n, !1);
+    function yt(s, g, b) {
+      return ze(s, !1);
     }
-    function xt(n) {
-      var g = n.prototype;
+    function xt(s) {
+      var g = s.prototype;
       return !!(g && g.isReactComponent);
     }
-    function be(n, g, b) {
-      if (n == null)
+    function be(s, g, b) {
+      if (s == null)
         return "";
-      if (typeof n == "function")
-        return ze(n, xt(n));
-      if (typeof n == "string")
-        return ve(n);
-      switch (n) {
+      if (typeof s == "function")
+        return ze(s, xt(s));
+      if (typeof s == "string")
+        return ve(s);
+      switch (s) {
         case c:
           return ve("Suspense");
         case h:
           return ve("SuspenseList");
       }
-      if (typeof n == "object")
-        switch (n.$$typeof) {
+      if (typeof s == "object")
+        switch (s.$$typeof) {
           case d:
-            return yt(n.render);
+            return yt(s.render);
           case p:
-            return be(n.type, g, b);
+            return be(s.type, g, b);
           case f: {
-            var I = n, z = I._payload, $ = I._init;
+            var I = s, F = I._payload, B = I._init;
             try {
-              return be($(z), g, b);
+              return be(B(F), g, b);
             } catch {
             }
           }
         }
       return "";
     }
-    var ye = Object.prototype.hasOwnProperty, Fe = {}, qe = x.ReactDebugCurrentFrame;
-    function xe(n) {
-      if (n) {
-        var g = n._owner, b = be(n.type, n._source, g ? g.type : null);
-        qe.setExtraStackFrame(b);
+    var ye = Object.prototype.hasOwnProperty, Fe = {}, Ye = x.ReactDebugCurrentFrame;
+    function xe(s) {
+      if (s) {
+        var g = s._owner, b = be(s.type, s._source, g ? g.type : null);
+        Ye.setExtraStackFrame(b);
       } else
-        qe.setExtraStackFrame(null);
+        Ye.setExtraStackFrame(null);
     }
-    function Rt(n, g, b, I, z) {
+    function Ct(s, g, b, I, F) {
       {
-        var $ = Function.call.bind(ye);
-        for (var N in n)
-          if ($(n, N)) {
-            var _ = void 0;
+        var B = Function.call.bind(ye);
+        for (var L in s)
+          if (B(s, L)) {
+            var H = void 0;
             try {
-              if (typeof n[N] != "function") {
-                var Z = Error((I || "React class") + ": " + b + " type `" + N + "` is invalid; it must be a function, usually from the `prop-types` package, but received `" + typeof n[N] + "`.This often happens because of typos such as `PropTypes.function` instead of `PropTypes.func`.");
+              if (typeof s[L] != "function") {
+                var Z = Error((I || "React class") + ": " + b + " type `" + L + "` is invalid; it must be a function, usually from the `prop-types` package, but received `" + typeof s[L] + "`.This often happens because of typos such as `PropTypes.function` instead of `PropTypes.func`.");
                 throw Z.name = "Invariant Violation", Z;
               }
-              _ = n[N](g, N, I, b, null, "SECRET_DO_NOT_PASS_THIS_OR_YOU_WILL_BE_FIRED");
-            } catch (U) {
-              _ = U;
+              H = s[L](g, L, I, b, null, "SECRET_DO_NOT_PASS_THIS_OR_YOU_WILL_BE_FIRED");
+            } catch (X) {
+              H = X;
             }
-            _ && !(_ instanceof Error) && (xe(z), v("%s: type specification of %s `%s` is invalid; the type checker function must return `null` or an `Error` but returned a %s. You may have forgotten to pass an argument to the type checker creator (arrayOf, instanceOf, objectOf, oneOf, oneOfType, and shape all require an argument).", I || "React class", b, N, typeof _), xe(null)), _ instanceof Error && !(_.message in Fe) && (Fe[_.message] = !0, xe(z), v("Failed %s type: %s", b, _.message), xe(null));
+            H && !(H instanceof Error) && (xe(F), v("%s: type specification of %s `%s` is invalid; the type checker function must return `null` or an `Error` but returned a %s. You may have forgotten to pass an argument to the type checker creator (arrayOf, instanceOf, objectOf, oneOf, oneOfType, and shape all require an argument).", I || "React class", b, L, typeof H), xe(null)), H instanceof Error && !(H.message in Fe) && (Fe[H.message] = !0, xe(F), v("Failed %s type: %s", b, H.message), xe(null));
           }
       }
     }
-    var Ct = Array.isArray;
-    function De(n) {
-      return Ct(n);
+    var Rt = Array.isArray;
+    function we(s) {
+      return Rt(s);
     }
-    function St(n) {
+    function St(s) {
       {
-        var g = typeof Symbol == "function" && Symbol.toStringTag, b = g && n[Symbol.toStringTag] || n.constructor.name || "Object";
+        var g = typeof Symbol == "function" && Symbol.toStringTag, b = g && s[Symbol.toStringTag] || s.constructor.name || "Object";
         return b;
       }
     }
-    function Dt(n) {
+    function wt(s) {
       try {
-        return Ye(n), !1;
+        return qe(s), !1;
       } catch {
         return !0;
       }
     }
-    function Ye(n) {
-      return "" + n;
+    function qe(s) {
+      return "" + s;
     }
-    function $e(n) {
-      if (Dt(n))
-        return v("The provided key is an unsupported type %s. This value must be coerced to a string before before using it here.", St(n)), Ye(n);
+    function $e(s) {
+      if (wt(s))
+        return v("The provided key is an unsupported type %s. This value must be coerced to a string before before using it here.", St(s)), qe(s);
     }
-    var fe = x.ReactCurrentOwner, wt = {
+    var fe = x.ReactCurrentOwner, Dt = {
       key: !0,
       ref: !0,
       __self: !0,
       __source: !0
-    }, Be, Ve, we;
-    we = {};
-    function Tt(n) {
-      if (ye.call(n, "ref")) {
-        var g = Object.getOwnPropertyDescriptor(n, "ref").get;
+    }, Be, Ve, De;
+    De = {};
+    function Tt(s) {
+      if (ye.call(s, "ref")) {
+        var g = Object.getOwnPropertyDescriptor(s, "ref").get;
         if (g && g.isReactWarning)
           return !1;
       }
-      return n.ref !== void 0;
+      return s.ref !== void 0;
     }
-    function Mt(n) {
-      if (ye.call(n, "key")) {
-        var g = Object.getOwnPropertyDescriptor(n, "key").get;
+    function Mt(s) {
+      if (ye.call(s, "key")) {
+        var g = Object.getOwnPropertyDescriptor(s, "key").get;
         if (g && g.isReactWarning)
           return !1;
       }
-      return n.key !== void 0;
+      return s.key !== void 0;
     }
-    function It(n, g) {
-      if (typeof n.ref == "string" && fe.current && g && fe.current.stateNode !== g) {
-        var b = V(fe.current.type);
-        we[b] || (v('Component "%s" contains the string ref "%s". Support for string refs will be removed in a future major release. This case cannot be automatically converted to an arrow function. We ask you to manually fix this case by using useRef() or createRef() instead. Learn more about using refs safely here: https://reactjs.org/link/strict-mode-string-ref', V(fe.current.type), n.ref), we[b] = !0);
+    function It(s, g) {
+      if (typeof s.ref == "string" && fe.current && g && fe.current.stateNode !== g) {
+        var b = G(fe.current.type);
+        De[b] || (v('Component "%s" contains the string ref "%s". Support for string refs will be removed in a future major release. This case cannot be automatically converted to an arrow function. We ask you to manually fix this case by using useRef() or createRef() instead. Learn more about using refs safely here: https://reactjs.org/link/strict-mode-string-ref', G(fe.current.type), s.ref), De[b] = !0);
       }
     }
-    function jt(n, g) {
+    function kt(s, g) {
       {
         var b = function() {
           Be || (Be = !0, v("%s: `key` is not a prop. Trying to access it will result in `undefined` being returned. If you need to access the same value within the child component, you should pass it as a different prop. (https://reactjs.org/link/special-props)", g));
         };
-        b.isReactWarning = !0, Object.defineProperty(n, "key", {
+        b.isReactWarning = !0, Object.defineProperty(s, "key", {
           get: b,
           configurable: !0
         });
       }
     }
-    function kt(n, g) {
+    function jt(s, g) {
       {
         var b = function() {
           Ve || (Ve = !0, v("%s: `ref` is not a prop. Trying to access it will result in `undefined` being returned. If you need to access the same value within the child component, you should pass it as a different prop. (https://reactjs.org/link/special-props)", g));
         };
-        b.isReactWarning = !0, Object.defineProperty(n, "ref", {
+        b.isReactWarning = !0, Object.defineProperty(s, "ref", {
           get: b,
           configurable: !0
         });
       }
     }
-    var Wt = function(n, g, b, I, z, $, N) {
-      var _ = {
+    var Wt = function(s, g, b, I, F, B, L) {
+      var H = {
         // This tag allows us to uniquely identify this as a React Element
         $$typeof: t,
         // Built-in properties that belong on the element
-        type: n,
+        type: s,
         key: g,
         ref: b,
-        props: N,
+        props: L,
         // Record the component responsible for creating this element.
-        _owner: $
+        _owner: B
       };
-      return _._store = {}, Object.defineProperty(_._store, "validated", {
+      return H._store = {}, Object.defineProperty(H._store, "validated", {
         configurable: !1,
         enumerable: !1,
         writable: !0,
         value: !1
-      }), Object.defineProperty(_, "_self", {
+      }), Object.defineProperty(H, "_self", {
         configurable: !1,
         enumerable: !1,
         writable: !1,
         value: I
-      }), Object.defineProperty(_, "_source", {
+      }), Object.defineProperty(H, "_source", {
         configurable: !1,
         enumerable: !1,
         writable: !1,
-        value: z
-      }), Object.freeze && (Object.freeze(_.props), Object.freeze(_)), _;
+        value: F
+      }), Object.freeze && (Object.freeze(H.props), Object.freeze(H)), H;
     };
-    function _t(n, g, b, I, z) {
+    function _t(s, g, b, I, F) {
       {
-        var $, N = {}, _ = null, Z = null;
-        b !== void 0 && ($e(b), _ = "" + b), Mt(g) && ($e(g.key), _ = "" + g.key), Tt(g) && (Z = g.ref, It(g, z));
-        for ($ in g)
-          ye.call(g, $) && !wt.hasOwnProperty($) && (N[$] = g[$]);
-        if (n && n.defaultProps) {
-          var U = n.defaultProps;
-          for ($ in U)
-            N[$] === void 0 && (N[$] = U[$]);
+        var B, L = {}, H = null, Z = null;
+        b !== void 0 && ($e(b), H = "" + b), Mt(g) && ($e(g.key), H = "" + g.key), Tt(g) && (Z = g.ref, It(g, F));
+        for (B in g)
+          ye.call(g, B) && !Dt.hasOwnProperty(B) && (L[B] = g[B]);
+        if (s && s.defaultProps) {
+          var X = s.defaultProps;
+          for (B in X)
+            L[B] === void 0 && (L[B] = X[B]);
         }
-        if (_ || Z) {
-          var J = typeof n == "function" ? n.displayName || n.name || "Unknown" : n;
-          _ && jt(N, J), Z && kt(N, J);
+        if (H || Z) {
+          var J = typeof s == "function" ? s.displayName || s.name || "Unknown" : s;
+          H && kt(L, J), Z && jt(L, J);
         }
-        return Wt(n, _, Z, z, I, fe.current, N);
+        return Wt(s, H, Z, F, I, fe.current, L);
       }
     }
     var Te = x.ReactCurrentOwner, Ge = x.ReactDebugCurrentFrame;
-    function de(n) {
-      if (n) {
-        var g = n._owner, b = be(n.type, n._source, g ? g.type : null);
+    function de(s) {
+      if (s) {
+        var g = s._owner, b = be(s.type, s._source, g ? g.type : null);
         Ge.setExtraStackFrame(b);
       } else
         Ge.setExtraStackFrame(null);
     }
     var Me;
     Me = !1;
-    function Ie(n) {
-      return typeof n == "object" && n !== null && n.$$typeof === t;
+    function Ie(s) {
+      return typeof s == "object" && s !== null && s.$$typeof === t;
     }
-    function Xe() {
+    function Ue() {
       {
         if (Te.current) {
-          var n = V(Te.current.type);
-          if (n)
+          var s = G(Te.current.type);
+          if (s)
             return `
 
-Check the render method of \`` + n + "`.";
+Check the render method of \`` + s + "`.";
         }
         return "";
       }
     }
-    function Ht(n) {
+    function Ht(s) {
       {
-        if (n !== void 0) {
-          var g = n.fileName.replace(/^.*[\\\/]/, ""), b = n.lineNumber;
+        if (s !== void 0) {
+          var g = s.fileName.replace(/^.*[\\\/]/, ""), b = s.lineNumber;
           return `
 
 Check your code at ` + g + ":" + b + ".";
@@ -511,12 +511,12 @@ Check your code at ` + g + ":" + b + ".";
         return "";
       }
     }
-    var Ue = {};
-    function Ot(n) {
+    var Xe = {};
+    function Ot(s) {
       {
-        var g = Xe();
+        var g = Ue();
         if (!g) {
-          var b = typeof n == "string" ? n : n.displayName || n.name;
+          var b = typeof s == "string" ? s : s.displayName || s.name;
           b && (g = `
 
 Check the top-level render call using <` + b + ">.");
@@ -524,41 +524,41 @@ Check the top-level render call using <` + b + ">.");
         return g;
       }
     }
-    function Qe(n, g) {
+    function Qe(s, g) {
       {
-        if (!n._store || n._store.validated || n.key != null)
+        if (!s._store || s._store.validated || s.key != null)
           return;
-        n._store.validated = !0;
+        s._store.validated = !0;
         var b = Ot(g);
-        if (Ue[b])
+        if (Xe[b])
           return;
-        Ue[b] = !0;
+        Xe[b] = !0;
         var I = "";
-        n && n._owner && n._owner !== Te.current && (I = " It was passed a child from " + V(n._owner.type) + "."), de(n), v('Each child in a list should have a unique "key" prop.%s%s See https://reactjs.org/link/warning-keys for more information.', b, I), de(null);
+        s && s._owner && s._owner !== Te.current && (I = " It was passed a child from " + G(s._owner.type) + "."), de(s), v('Each child in a list should have a unique "key" prop.%s%s See https://reactjs.org/link/warning-keys for more information.', b, I), de(null);
       }
     }
-    function Je(n, g) {
+    function Je(s, g) {
       {
-        if (typeof n != "object")
+        if (typeof s != "object")
           return;
-        if (De(n))
-          for (var b = 0; b < n.length; b++) {
-            var I = n[b];
+        if (we(s))
+          for (var b = 0; b < s.length; b++) {
+            var I = s[b];
             Ie(I) && Qe(I, g);
           }
-        else if (Ie(n))
-          n._store && (n._store.validated = !0);
-        else if (n) {
-          var z = R(n);
-          if (typeof z == "function" && z !== n.entries)
-            for (var $ = z.call(n), N; !(N = $.next()).done; )
-              Ie(N.value) && Qe(N.value, g);
+        else if (Ie(s))
+          s._store && (s._store.validated = !0);
+        else if (s) {
+          var F = C(s);
+          if (typeof F == "function" && F !== s.entries)
+            for (var B = F.call(s), L; !(L = B.next()).done; )
+              Ie(L.value) && Qe(L.value, g);
         }
       }
     }
-    function Nt(n) {
+    function Nt(s) {
       {
-        var g = n.type;
+        var g = s.type;
         if (g == null || typeof g == "string")
           return;
         var b;
@@ -571,63 +571,63 @@ Check the top-level render call using <` + b + ">.");
         else
           return;
         if (b) {
-          var I = V(g);
-          Rt(b, n.props, "prop", I, n);
+          var I = G(g);
+          Ct(b, s.props, "prop", I, s);
         } else if (g.PropTypes !== void 0 && !Me) {
           Me = !0;
-          var z = V(g);
-          v("Component %s declared `PropTypes` instead of `propTypes`. Did you misspell the property assignment?", z || "Unknown");
+          var F = G(g);
+          v("Component %s declared `PropTypes` instead of `propTypes`. Did you misspell the property assignment?", F || "Unknown");
         }
         typeof g.getDefaultProps == "function" && !g.getDefaultProps.isReactClassApproved && v("getDefaultProps is only used on classic React.createClass definitions. Use a static property named `defaultProps` instead.");
       }
     }
-    function Lt(n) {
+    function Lt(s) {
       {
-        for (var g = Object.keys(n.props), b = 0; b < g.length; b++) {
+        for (var g = Object.keys(s.props), b = 0; b < g.length; b++) {
           var I = g[b];
           if (I !== "children" && I !== "key") {
-            de(n), v("Invalid prop `%s` supplied to `React.Fragment`. React.Fragment can only have `key` and `children` props.", I), de(null);
+            de(s), v("Invalid prop `%s` supplied to `React.Fragment`. React.Fragment can only have `key` and `children` props.", I), de(null);
             break;
           }
         }
-        n.ref !== null && (de(n), v("Invalid attribute `ref` supplied to `React.Fragment`."), de(null));
+        s.ref !== null && (de(s), v("Invalid attribute `ref` supplied to `React.Fragment`."), de(null));
       }
     }
-    function Ke(n, g, b, I, z, $) {
+    function Ke(s, g, b, I, F, B) {
       {
-        var N = W(n);
-        if (!N) {
-          var _ = "";
-          (n === void 0 || typeof n == "object" && n !== null && Object.keys(n).length === 0) && (_ += " You likely forgot to export your component from the file it's defined in, or you might have mixed up default and named imports.");
-          var Z = Ht(z);
-          Z ? _ += Z : _ += Xe();
-          var U;
-          n === null ? U = "null" : De(n) ? U = "array" : n !== void 0 && n.$$typeof === t ? (U = "<" + (V(n.type) || "Unknown") + " />", _ = " Did you accidentally export a JSX literal instead of a component?") : U = typeof n, v("React.jsx: type is invalid -- expected a string (for built-in components) or a class/function (for composite components) but got: %s.%s", U, _);
+        var L = _(s);
+        if (!L) {
+          var H = "";
+          (s === void 0 || typeof s == "object" && s !== null && Object.keys(s).length === 0) && (H += " You likely forgot to export your component from the file it's defined in, or you might have mixed up default and named imports.");
+          var Z = Ht(F);
+          Z ? H += Z : H += Ue();
+          var X;
+          s === null ? X = "null" : we(s) ? X = "array" : s !== void 0 && s.$$typeof === t ? (X = "<" + (G(s.type) || "Unknown") + " />", H = " Did you accidentally export a JSX literal instead of a component?") : X = typeof s, v("React.jsx: type is invalid -- expected a string (for built-in components) or a class/function (for composite components) but got: %s.%s", X, H);
         }
-        var J = _t(n, g, b, z, $);
+        var J = _t(s, g, b, F, B);
         if (J == null)
           return J;
-        if (N) {
+        if (L) {
           var te = g.children;
           if (te !== void 0)
             if (I)
-              if (De(te)) {
+              if (we(te)) {
                 for (var ce = 0; ce < te.length; ce++)
-                  Je(te[ce], n);
+                  Je(te[ce], s);
                 Object.freeze && Object.freeze(te);
               } else
                 v("React.jsx: Static children should always be an array. You are likely explicitly calling React.jsxs or React.jsxDEV. Use the Babel transform instead.");
             else
-              Je(te, n);
+              Je(te, s);
         }
-        return n === r ? Lt(J) : Nt(J), J;
+        return s === r ? Lt(J) : Nt(J), J;
       }
     }
-    function Pt(n, g, b) {
-      return Ke(n, g, b, !0);
+    function Pt(s, g, b) {
+      return Ke(s, g, b, !0);
     }
-    function At(n, g, b) {
-      return Ke(n, g, b, !1);
+    function At(s, g, b) {
+      return Ke(s, g, b, !1);
     }
     var zt = At, Ft = Pt;
     ge.Fragment = r, ge.jsx = zt, ge.jsxs = Ft;
@@ -640,58 +640,58 @@ function Oe({
   eventItem: t,
   title: e,
   startTime: r,
-  endTime: s,
-  statusColor: o,
-  subtitleGetter: i,
+  endTime: n,
+  statusColor: i,
+  subtitleGetter: o,
   viewEventClick: a,
   viewEventText: d,
   viewEvent2Click: c,
   viewEvent2Text: h,
   eventItemPopoverTemplateResolver: p
 }) {
-  const { localeMoment: f, config: m } = y, E = f(r), C = f(s);
+  const { localeMoment: f, config: m } = y, E = f(r), R = f(n);
   if (p != null)
-    return p(y, t, e, E, C, o);
-  let R = /* @__PURE__ */ l.jsx("div", {});
-  if (i !== void 0) {
-    let T = i(y, t);
-    T != null && (R = /* @__PURE__ */ l.jsxs(ue, { align: "middle", children: [
+    return p(y, t, e, E, R, i);
+  let C = /* @__PURE__ */ l.jsx("div", {});
+  if (o !== void 0) {
+    let D = o(y, t);
+    D != null && (C = /* @__PURE__ */ l.jsxs(ue, { align: "middle", children: [
       /* @__PURE__ */ l.jsx(ee, { span: 2, children: /* @__PURE__ */ l.jsx("div", {}) }),
-      /* @__PURE__ */ l.jsx(ee, { span: 22, className: "overflow-text", children: /* @__PURE__ */ l.jsx("span", { className: "header2-text", title: T, children: T }) })
+      /* @__PURE__ */ l.jsx(ee, { span: 22, className: "overflow-text", children: /* @__PURE__ */ l.jsx("span", { className: "header2-text", title: D, children: D }) })
     ] }));
   }
   let x = /* @__PURE__ */ l.jsx("div", {});
   if (d !== void 0 && a !== void 0 && (t.clickable1 == null || t.clickable1)) {
-    let T = /* @__PURE__ */ l.jsx(ee, { span: 22, children: /* @__PURE__ */ l.jsx("span", { className: "header2-text", style: { color: "#108EE9", cursor: "pointer" }, onClick: () => a(y, t), children: d }) });
-    h !== void 0 && c !== void 0 && (t.clickable2 == null || t.clickable2) && (T = /* @__PURE__ */ l.jsxs(ee, { span: 22, children: [
+    let D = /* @__PURE__ */ l.jsx(ee, { span: 22, children: /* @__PURE__ */ l.jsx("span", { className: "header2-text", style: { color: "#108EE9", cursor: "pointer" }, onClick: () => a(y, t), children: d }) });
+    h !== void 0 && c !== void 0 && (t.clickable2 == null || t.clickable2) && (D = /* @__PURE__ */ l.jsxs(ee, { span: 22, children: [
       /* @__PURE__ */ l.jsx("span", { className: "header2-text", style: { color: "#108EE9", cursor: "pointer" }, onClick: () => a(y, t), children: d }),
       /* @__PURE__ */ l.jsx("span", { className: "header2-text", style: { color: "#108EE9", cursor: "pointer", marginLeft: "16px" }, onClick: () => c(y, t), children: h })
     ] })), x = /* @__PURE__ */ l.jsxs(ue, { align: "middle", children: [
       /* @__PURE__ */ l.jsx(ee, { span: 2, children: /* @__PURE__ */ l.jsx("div", {}) }),
-      T
+      D
     ] });
   } else if (h !== void 0 && c !== void 0 && (t.clickable2 == null || t.clickable2)) {
-    let T = /* @__PURE__ */ l.jsx(ee, { span: 22, children: /* @__PURE__ */ l.jsx("span", { className: "header2-text", style: { color: "#108EE9", cursor: "pointer" }, onClick: () => c(y, t), children: h }) });
+    let D = /* @__PURE__ */ l.jsx(ee, { span: 22, children: /* @__PURE__ */ l.jsx("span", { className: "header2-text", style: { color: "#108EE9", cursor: "pointer" }, onClick: () => c(y, t), children: h }) });
     x = /* @__PURE__ */ l.jsxs(ue, { align: "middle", children: [
       /* @__PURE__ */ l.jsx(ee, { span: 2, children: /* @__PURE__ */ l.jsx("div", {}) }),
-      T
+      D
     ] });
   }
   let v = m.eventItemPopoverDateFormat;
   return /* @__PURE__ */ l.jsxs("div", { style: { width: "300px" }, children: [
     /* @__PURE__ */ l.jsxs(ue, { align: "middle", children: [
-      /* @__PURE__ */ l.jsx(ee, { span: 2, children: /* @__PURE__ */ l.jsx("div", { className: "status-dot", style: { backgroundColor: o } }) }),
+      /* @__PURE__ */ l.jsx(ee, { span: 2, children: /* @__PURE__ */ l.jsx("div", { className: "status-dot", style: { backgroundColor: i } }) }),
       /* @__PURE__ */ l.jsx(ee, { span: 22, className: "overflow-text", children: /* @__PURE__ */ l.jsx("span", { className: "header2-text", title: e, children: e }) })
     ] }),
-    R,
+    C,
     /* @__PURE__ */ l.jsxs(ue, { align: "middle", children: [
       /* @__PURE__ */ l.jsx(ee, { span: 2, children: /* @__PURE__ */ l.jsx("div", {}) }),
       /* @__PURE__ */ l.jsxs(ee, { span: 22, children: [
         /* @__PURE__ */ l.jsx("span", { className: "header1-text", children: E.format("HH:mm") }),
         /* @__PURE__ */ l.jsx("span", { className: "help-text", style: { marginLeft: "8px" }, children: E.format(v) }),
         /* @__PURE__ */ l.jsx("span", { className: "header2-text", style: { marginLeft: "8px" }, children: "-" }),
-        /* @__PURE__ */ l.jsx("span", { className: "header1-text", style: { marginLeft: "8px" }, children: C.format("HH:mm") }),
-        /* @__PURE__ */ l.jsx("span", { className: "help-text", style: { marginLeft: "8px" }, children: C.format(v) })
+        /* @__PURE__ */ l.jsx("span", { className: "header1-text", style: { marginLeft: "8px" }, children: R.format("HH:mm") }),
+        /* @__PURE__ */ l.jsx("span", { className: "help-text", style: { marginLeft: "8px" }, children: R.format(v) })
       ] })
     ] }),
     x
@@ -711,14 +711,14 @@ Oe.propTypes = {
   viewEvent2Text: u.string,
   eventItemPopoverTemplateResolver: u.func
 };
-const H = "YYYY-MM-DD", L = "YYYY-MM-DD HH:mm:ss", D = { Day: 0, Week: 1, Month: 2, Quarter: 3, Year: 4, Custom: 5, Custom1: 6, Custom2: 7 }, X = { Day: 0, Hour: 1 }, ae = { Top: 0, TopRight: 1, TopLeft: 2, Bottom: 3, BottomRight: 4, BottomLeft: 5 }, ie = { EVENT: "event" }, re = "ontouchstart" in window;
+const W = "YYYY-MM-DD", P = "YYYY-MM-DD HH:mm:ss", w = { Day: 0, Week: 1, Month: 2, Quarter: 3, Year: 4, Custom: 5, Custom1: 6, Custom2: 7 }, O = { Day: 0, Hour: 1, Week: 2, Month: 3, Year: 4 }, ae = { Top: 0, TopRight: 1, TopLeft: 2, Bottom: 3, BottomRight: 4, BottomLeft: 5 }, ie = { EVENT: "event" }, re = "ontouchstart" in window;
 class Ne extends _e {
   constructor(e) {
     super(e);
     M(this, "initStartDrag", (e) => {
-      const { schedulerData: r, eventItem: s } = this.props;
-      let o = r._getEventSlotId(s), i = r.getSlotById(o);
-      if (i && i.groupOnly || r._isResizing())
+      const { schedulerData: r, eventItem: n } = this.props;
+      let i = r._getEventSlotId(n), o = r.getSlotById(i);
+      if (o && o.groupOnly || r._isResizing())
         return;
       e.stopPropagation();
       let a = 0;
@@ -748,23 +748,23 @@ class Ne extends _e {
         r = e.changedTouches[0].pageX;
       } else
         r = e.clientX;
-      const { left: s, width: o, leftIndex: i, rightIndex: a, schedulerData: d } = this.props;
-      let c = d.getContentCellWidth(), h = i > 0 ? 5 : 6, p = c - h, f = a * c - h;
+      const { left: n, width: i, leftIndex: o, rightIndex: a, schedulerData: d } = this.props;
+      let c = d.getContentCellWidth(), h = o > 0 ? 5 : 6, p = c - h, f = a * c - h;
       const { startX: m } = this.state;
-      let E = s + r - m, C = o + m - r;
-      C < p ? (C = p, E = (a - 1) * c + (a - 1 > 0 ? 2 : 3)) : C > f && (C = f, E = 3), this.setState({ left: E, width: C });
+      let E = n + r - m, R = i + m - r;
+      R < p ? (R = p, E = (a - 1) * c + (a - 1 > 0 ? 2 : 3)) : R > f && (R = f, E = 3), this.setState({ left: E, width: R });
     });
     M(this, "stopStartDrag", (e) => {
       e.stopPropagation(), re ? (this.startResizer.removeEventListener("touchmove", this.doStartDrag, !1), this.startResizer.removeEventListener("touchend", this.stopStartDrag, !1), this.startResizer.removeEventListener("touchcancel", this.cancelStartDrag, !1)) : (document.documentElement.removeEventListener("mousemove", this.doStartDrag, !1), document.documentElement.removeEventListener("mouseup", this.stopStartDrag, !1)), document.onselectstart = null, document.ondragstart = null;
-      const { width: r, left: s, top: o, leftIndex: i, rightIndex: a, schedulerData: d, eventItem: c, updateEventStart: h, conflictOccurred: p } = this.props;
+      const { width: r, left: n, top: i, leftIndex: o, rightIndex: a, schedulerData: d, eventItem: c, updateEventStart: h, conflictOccurred: p } = this.props;
       if (d._stopResizing(), this.state.width === r)
         return;
       let f = 0;
       if (re) {
         if (e.changedTouches.length == 0) {
           this.setState({
-            left: s,
-            top: o,
+            left: n,
+            top: i,
             width: r
           });
           return;
@@ -772,63 +772,63 @@ class Ne extends _e {
         f = e.changedTouches[0].pageX;
       } else
         f = e.clientX;
-      const { cellUnit: m, events: E, config: C, localeMoment: R } = d;
-      let x = d.getContentCellWidth(), v = i > 0 ? 5 : 6, T = x - v, w = a * x - v;
-      const { startX: j } = this.state;
-      let k = r + j - f, O = f - j, P = O < 0 ? -1 : O === 0 ? 0 : 1, S = (P > 0 ? Math.floor(Math.abs(O) / x) : Math.ceil(Math.abs(O) / x)) * P;
-      k < T ? S = a - i - 1 : k > w && (S = -i);
-      let W = R(c.start).add(m === X.Hour ? S * C.minuteStep : S, m === X.Hour ? "minutes" : "days").format(L);
-      if (S !== 0 && m !== X.Hour && C.displayWeekend === !1)
+      const { cellUnit: m, events: E, config: R, localeMoment: C } = d;
+      let x = d.getContentCellWidth(), v = o > 0 ? 5 : 6, D = x - v, T = a * x - v;
+      const { startX: k } = this.state;
+      let j = r + k - f, N = f - k, A = N < 0 ? -1 : N === 0 ? 0 : 1, S = (A > 0 ? Math.floor(Math.abs(N) / x) : Math.ceil(Math.abs(N) / x)) * A;
+      j < D ? S = a - o - 1 : j > T && (S = -o);
+      let _ = C(c.start).add(m === O.Hour ? S * R.minuteStep : S, m === O.Hour ? "minutes" : "days").format(P);
+      if (S !== 0 && m !== O.Hour && R.displayWeekend === !1)
         if (S > 0) {
-          let G = 0, A = 0;
+          let U = 0, z = 0;
           for (; ; ) {
-            A++;
-            let F = R(c.start).add(A, "days"), Y = F.weekday();
-            if (Y !== 0 && Y !== 6 && (G++, G === S)) {
-              W = F.format(L);
+            z++;
+            let Y = C(c.start).add(z, "days"), $ = Y.weekday();
+            if ($ !== 0 && $ !== 6 && (U++, U === S)) {
+              _ = Y.format(P);
               break;
             }
           }
         } else {
-          let G = 0, A = 0;
+          let U = 0, z = 0;
           for (; ; ) {
-            A--;
-            let F = R(c.start).add(A, "days"), Y = F.weekday();
-            if (Y !== 0 && Y !== 6 && (G--, G === S)) {
-              W = F.format(L);
+            z--;
+            let Y = C(c.start).add(z, "days"), $ = Y.weekday();
+            if ($ !== 0 && $ !== 6 && (U--, U === S)) {
+              _ = Y.format(P);
               break;
             }
           }
         }
-      let q = !1, Q = d._getEventSlotId(c), V, K = d.getSlotById(Q);
-      if (K && (V = K.name), C.checkConflict) {
-        let G = R(W), A = R(c.end);
-        E.forEach((F) => {
-          if (d._getEventSlotId(F) === Q && F.id !== c.id) {
-            let Y = R(F.start), B = R(F.end);
-            (G >= Y && G < B || A > Y && A <= B || Y >= G && Y < A || B > G && B <= A) && (q = !0);
+      let q = !1, Q = d._getEventSlotId(c), G, K = d.getSlotById(Q);
+      if (K && (G = K.name), R.checkConflict) {
+        let U = C(_), z = C(c.end);
+        E.forEach((Y) => {
+          if (d._getEventSlotId(Y) === Q && Y.id !== c.id) {
+            let $ = C(Y.start), V = C(Y.end);
+            (U >= $ && U < V || z > $ && z <= V || $ >= U && $ < z || V > U && V <= z) && (q = !0);
           }
         });
       }
       q ? (this.setState({
-        left: s,
-        top: o,
+        left: n,
+        top: i,
         width: r
-      }), p != null ? p(d, "StartResize", c, ie.EVENT, Q, V, W, c.end) : console.log("Conflict occurred, set conflictOccurred func in Scheduler to handle it"), this.subscribeResizeEvent(this.props)) : h != null && h(d, c, W);
+      }), p != null ? p(d, "StartResize", c, ie.EVENT, Q, G, _, c.end) : console.log("Conflict occurred, set conflictOccurred func in Scheduler to handle it"), this.subscribeResizeEvent(this.props)) : h != null && h(d, c, _);
     });
     M(this, "cancelStartDrag", (e) => {
       e.stopPropagation(), this.startResizer.removeEventListener("touchmove", this.doStartDrag, !1), this.startResizer.removeEventListener("touchend", this.stopStartDrag, !1), this.startResizer.removeEventListener("touchcancel", this.cancelStartDrag, !1), document.onselectstart = null, document.ondragstart = null;
-      const { schedulerData: r, left: s, top: o, width: i } = this.props;
+      const { schedulerData: r, left: n, top: i, width: o } = this.props;
       r._stopResizing(), this.setState({
-        left: s,
-        top: o,
-        width: i
+        left: n,
+        top: i,
+        width: o
       });
     });
     M(this, "initEndDrag", (e) => {
-      const { schedulerData: r, eventItem: s } = this.props;
-      let o = r._getEventSlotId(s), i = r.getSlotById(o);
-      if (i && i.groupOnly || r._isResizing())
+      const { schedulerData: r, eventItem: n } = this.props;
+      let i = r._getEventSlotId(n), o = r.getSlotById(i);
+      if (o && o.groupOnly || r._isResizing())
         return;
       e.stopPropagation();
       let a = 0;
@@ -858,23 +858,23 @@ class Ne extends _e {
         r = e.changedTouches[0].pageX;
       } else
         r = e.clientX;
-      const { width: s, leftIndex: o, schedulerData: i } = this.props, { headers: a } = i;
-      let d = i.getContentCellWidth(), c = o > 0 ? 5 : 6, h = d - c, p = (a.length - o) * d - c;
+      const { width: n, leftIndex: i, schedulerData: o } = this.props, { headers: a } = o;
+      let d = o.getContentCellWidth(), c = i > 0 ? 5 : 6, h = d - c, p = (a.length - i) * d - c;
       const { endX: f } = this.state;
-      let m = s + r - f;
+      let m = n + r - f;
       m < h ? m = h : m > p && (m = p), this.setState({ width: m });
     });
     M(this, "stopEndDrag", (e) => {
       e.stopPropagation(), re ? (this.endResizer.removeEventListener("touchmove", this.doEndDrag, !1), this.endResizer.removeEventListener("touchend", this.stopEndDrag, !1), this.endResizer.removeEventListener("touchcancel", this.cancelEndDrag, !1)) : (document.documentElement.removeEventListener("mousemove", this.doEndDrag, !1), document.documentElement.removeEventListener("mouseup", this.stopEndDrag, !1)), document.onselectstart = null, document.ondragstart = null;
-      const { width: r, left: s, top: o, leftIndex: i, rightIndex: a, schedulerData: d, eventItem: c, updateEventEnd: h, conflictOccurred: p } = this.props;
+      const { width: r, left: n, top: i, leftIndex: o, rightIndex: a, schedulerData: d, eventItem: c, updateEventEnd: h, conflictOccurred: p } = this.props;
       if (d._stopResizing(), this.state.width === r)
         return;
       let f = 0;
       if (re) {
         if (e.changedTouches.length == 0) {
           this.setState({
-            left: s,
-            top: o,
+            left: n,
+            top: i,
             width: r
           });
           return;
@@ -882,114 +882,114 @@ class Ne extends _e {
         f = e.changedTouches[0].pageX;
       } else
         f = e.clientX;
-      const { headers: m, cellUnit: E, events: C, config: R, localeMoment: x } = d;
-      let v = d.getContentCellWidth(), T = i > 0 ? 5 : 6, w = v - T, j = (m.length - i) * v - T;
-      const { endX: k } = this.state;
-      let O = r + f - k, P = O - r, S = P < 0 ? -1 : P === 0 ? 0 : 1, W = (S < 0 ? Math.floor(Math.abs(P) / v) : Math.ceil(Math.abs(P) / v)) * S;
-      O < w ? W = i - a + 1 : O > j && (W = m.length - a);
-      let q = x(c.end).add(E === X.Hour ? W * R.minuteStep : W, E === X.Hour ? "minutes" : "days").format(L);
-      if (W !== 0 && E !== X.Hour && R.displayWeekend === !1)
-        if (W > 0) {
-          let A = 0, F = 0;
+      const { headers: m, cellUnit: E, events: R, config: C, localeMoment: x } = d;
+      let v = d.getContentCellWidth(), D = o > 0 ? 5 : 6, T = v - D, k = (m.length - o) * v - D;
+      const { endX: j } = this.state;
+      let N = r + f - j, A = N - r, S = A < 0 ? -1 : A === 0 ? 0 : 1, _ = (S < 0 ? Math.floor(Math.abs(A) / v) : Math.ceil(Math.abs(A) / v)) * S;
+      N < T ? _ = o - a + 1 : N > k && (_ = m.length - a);
+      let q = x(c.end).add(E === O.Hour ? _ * C.minuteStep : _, E === O.Hour ? "minutes" : "days").format(P);
+      if (_ !== 0 && E !== O.Hour && C.displayWeekend === !1)
+        if (_ > 0) {
+          let z = 0, Y = 0;
           for (; ; ) {
-            F++;
-            let Y = x(c.end).add(F, "days"), B = Y.weekday();
-            if (B !== 0 && B !== 6 && (A++, A === W)) {
-              q = Y.format(L);
+            Y++;
+            let $ = x(c.end).add(Y, "days"), V = $.weekday();
+            if (V !== 0 && V !== 6 && (z++, z === _)) {
+              q = $.format(P);
               break;
             }
           }
         } else {
-          let A = 0, F = 0;
+          let z = 0, Y = 0;
           for (; ; ) {
-            F--;
-            let Y = x(c.end).add(F, "days"), B = Y.weekday();
-            if (B !== 0 && B !== 6 && (A--, A === W)) {
-              q = Y.format(L);
+            Y--;
+            let $ = x(c.end).add(Y, "days"), V = $.weekday();
+            if (V !== 0 && V !== 6 && (z--, z === _)) {
+              q = $.format(P);
               break;
             }
           }
         }
-      let Q = !1, V = d._getEventSlotId(c), K, G = d.getSlotById(V);
-      if (G && (K = G.name), R.checkConflict) {
-        let A = x(c.start), F = x(q);
-        C.forEach((Y) => {
-          if (d._getEventSlotId(Y) === V && Y.id !== c.id) {
-            let B = x(Y.start), ne = x(Y.end);
-            (A >= B && A < ne || F > B && F <= ne || B >= A && B < F || ne > A && ne <= F) && (Q = !0);
+      let Q = !1, G = d._getEventSlotId(c), K, U = d.getSlotById(G);
+      if (U && (K = U.name), C.checkConflict) {
+        let z = x(c.start), Y = x(q);
+        R.forEach(($) => {
+          if (d._getEventSlotId($) === G && $.id !== c.id) {
+            let V = x($.start), ne = x($.end);
+            (z >= V && z < ne || Y > V && Y <= ne || V >= z && V < Y || ne > z && ne <= Y) && (Q = !0);
           }
         });
       }
       Q ? (this.setState({
-        left: s,
-        top: o,
+        left: n,
+        top: i,
         width: r
-      }), p != null ? p(d, "EndResize", c, ie.EVENT, V, K, c.start, q) : console.log("Conflict occurred, set conflictOccurred func in Scheduler to handle it"), this.subscribeResizeEvent(this.props)) : h != null && h(d, c, q);
+      }), p != null ? p(d, "EndResize", c, ie.EVENT, G, K, c.start, q) : console.log("Conflict occurred, set conflictOccurred func in Scheduler to handle it"), this.subscribeResizeEvent(this.props)) : h != null && h(d, c, q);
     });
     M(this, "cancelEndDrag", (e) => {
       e.stopPropagation(), this.endResizer.removeEventListener("touchmove", this.doEndDrag, !1), this.endResizer.removeEventListener("touchend", this.stopEndDrag, !1), this.endResizer.removeEventListener("touchcancel", this.cancelEndDrag, !1), document.onselectstart = null, document.ondragstart = null;
-      const { schedulerData: r, left: s, top: o, width: i } = this.props;
+      const { schedulerData: r, left: n, top: i, width: o } = this.props;
       r._stopResizing(), this.setState({
-        left: s,
-        top: o,
-        width: i
+        left: n,
+        top: i,
+        width: o
       });
     });
     M(this, "startResizable", (e) => {
-      const { eventItem: r, isInPopover: s, schedulerData: o } = e, { config: i } = o;
-      return i.startResizable === !0 && s === !1 && (r.resizable == null || r.resizable !== !1) && (r.startResizable == null || r.startResizable !== !1);
+      const { eventItem: r, isInPopover: n, schedulerData: i } = e, { config: o } = i;
+      return o.startResizable === !0 && n === !1 && (r.resizable == null || r.resizable !== !1) && (r.startResizable == null || r.startResizable !== !1);
     });
     M(this, "endResizable", (e) => {
-      const { eventItem: r, isInPopover: s, schedulerData: o } = e, { config: i } = o;
-      return i.endResizable === !0 && s === !1 && (r.resizable == null || r.resizable !== !1) && (r.endResizable == null || r.endResizable !== !1);
+      const { eventItem: r, isInPopover: n, schedulerData: i } = e, { config: o } = i;
+      return o.endResizable === !0 && n === !1 && (r.resizable == null || r.resizable !== !1) && (r.endResizable == null || r.endResizable !== !1);
     });
     M(this, "subscribeResizeEvent", (e) => {
       this.startResizer != null && (re || (this.startResizer.removeEventListener("mousedown", this.initStartDrag, !1), this.startResizable(e) && this.startResizer.addEventListener("mousedown", this.initStartDrag, !1))), this.endResizer != null && (re || (this.endResizer.removeEventListener("mousedown", this.initEndDrag, !1), this.endResizable(e) && this.endResizer.addEventListener("mousedown", this.initEndDrag, !1)));
     });
-    const { left: r, top: s, width: o } = e;
+    const { left: r, top: n, width: i } = e;
     this.state = {
       left: r,
-      top: s,
-      width: o
+      top: n,
+      width: i
     }, this.startResizer = null, this.endResizer = null;
   }
   UNSAFE_componentWillReceiveProps(e) {
-    const { left: r, top: s, width: o } = e;
+    const { left: r, top: n, width: i } = e;
     this.setState({
       left: r,
-      top: s,
-      width: o
+      top: n,
+      width: i
     }), this.subscribeResizeEvent(e);
   }
   componentDidMount() {
     this.subscribeResizeEvent(this.props);
   }
   render() {
-    const { eventItem: e, isStart: r, isEnd: s, isInPopover: o, eventItemClick: i, schedulerData: a, isDragging: d, connectDragSource: c, connectDragPreview: h, eventItemTemplateResolver: p } = this.props, { config: f, localeMoment: m } = a, { left: E, width: C, top: R } = this.state;
-    let x = r ? s ? "round-all" : "round-head" : s ? "round-tail" : "round-none", v = f.defaultEventBgColor;
+    const { eventItem: e, isStart: r, isEnd: n, isInPopover: i, eventItemClick: o, schedulerData: a, isDragging: d, connectDragSource: c, connectDragPreview: h, eventItemTemplateResolver: p } = this.props, { config: f, localeMoment: m } = a, { left: E, width: R, top: C } = this.state;
+    let x = r ? n ? "round-all" : "round-head" : n ? "round-tail" : "round-none", v = f.defaultEventBgColor;
     e.bgColor && (v = e.bgColor);
-    let T = a.behaviors.getEventTextFunc(a, e), w = /* @__PURE__ */ l.jsx(Oe, { ...this.props, eventItem: e, title: e.title, startTime: e.start, endTime: e.end, statusColor: v }), j = m(e.start), k = o ? `${j.format("HH:mm")} ${T}` : T, O = /* @__PURE__ */ l.jsx("div", {});
-    this.startResizable(this.props) && (O = /* @__PURE__ */ l.jsx("div", { className: "event-resizer event-start-resizer", ref: (q) => this.startResizer = q }));
-    let P = /* @__PURE__ */ l.jsx("div", {});
-    this.endResizable(this.props) && (P = /* @__PURE__ */ l.jsx("div", { className: "event-resizer event-end-resizer", ref: (q) => this.endResizer = q }));
-    let S = /* @__PURE__ */ l.jsx("div", { className: x + " event-item", style: { height: f.eventItemHeight, backgroundColor: v }, children: /* @__PURE__ */ l.jsx("span", { style: { marginLeft: "10px", lineHeight: `${f.eventItemHeight}px` }, children: k }) }, e.id);
-    p != null && (S = p(a, e, v, r, s, "event-item", f.eventItemHeight, void 0));
-    let W = /* @__PURE__ */ l.jsxs(
+    let D = a.behaviors.getEventTextFunc(a, e), T = /* @__PURE__ */ l.jsx(Oe, { ...this.props, eventItem: e, title: e.title, startTime: e.start, endTime: e.end, statusColor: v }), k = m(e.start), j = i ? `${k.format("HH:mm")} ${D}` : D, N = /* @__PURE__ */ l.jsx("div", {});
+    this.startResizable(this.props) && (N = /* @__PURE__ */ l.jsx("div", { className: "event-resizer event-start-resizer", ref: (q) => this.startResizer = q }));
+    let A = /* @__PURE__ */ l.jsx("div", {});
+    this.endResizable(this.props) && (A = /* @__PURE__ */ l.jsx("div", { className: "event-resizer event-end-resizer", ref: (q) => this.endResizer = q }));
+    let S = /* @__PURE__ */ l.jsx("div", { className: x + " event-item", style: { height: f.eventItemHeight, backgroundColor: v }, children: /* @__PURE__ */ l.jsx("span", { style: { marginLeft: "10px", lineHeight: `${f.eventItemHeight}px` }, children: j }) }, e.id);
+    p != null && (S = p(a, e, v, r, n, "event-item", f.eventItemHeight, void 0));
+    let _ = /* @__PURE__ */ l.jsxs(
       "a",
       {
         className: "timeline-event",
-        style: { left: E, width: C, top: R },
+        style: { left: E, width: R, top: C },
         onClick: () => {
-          i && i(a, e);
+          o && o(a, e);
         },
         children: [
           S,
-          O,
-          P
+          N,
+          A
         ]
       }
     );
-    return d ? null : a._isResizing() || f.eventItemPopoverEnabled == !1 || e.showPopover == !1 ? /* @__PURE__ */ l.jsx("div", { children: h(c(W)) }) : /* @__PURE__ */ l.jsx(He, { placement: "bottomLeft", content: w, trigger: "hover", children: h(c(W)) });
+    return d ? null : a._isResizing() || f.eventItemPopoverEnabled == !1 || e.showPopover == !1 ? /* @__PURE__ */ l.jsx("div", { children: h(c(_)) }) : /* @__PURE__ */ l.jsx(He, { placement: "bottomLeft", content: T, trigger: "hover", children: h(c(_)) });
   }
 }
 M(Ne, "propTypes", {
@@ -1025,47 +1025,47 @@ class ot {
       endDrag: (t, e, r) => {
         if (!e.didDrop())
           return;
-        const { moveEvent: s, newEvent: o, schedulerData: i } = t, { events: a, config: d, viewType: c, localeMoment: h } = i, p = e.getItem(), f = e.getItemType(), m = e.getDropResult();
-        let E = m.slotId, C = m.slotName, R = m.start, x = m.end, v = m.initialStart;
+        const { moveEvent: n, newEvent: i, schedulerData: o } = t, { events: a, config: d, viewType: c, localeMoment: h } = o, p = e.getItem(), f = e.getItemType(), m = e.getDropResult();
+        let E = m.slotId, R = m.slotName, C = m.start, x = m.end, v = m.initialStart;
         m.initialEnd;
-        let T = "New", w = f === ie.EVENT;
-        if (w) {
-          const k = p;
+        let D = "New", T = f === ie.EVENT;
+        if (T) {
+          const j = p;
           if (d.relativeMove)
-            R = h(k.start).add(h(R).diff(h(v)), "ms").format(L);
-          else if (c !== D.Day) {
-            let O = h(R);
-            R = h(k.start).year(O.year()).month(O.month()).date(O.date()).format(L);
+            C = h(j.start).add(h(C).diff(h(v)), "ms").format(P);
+          else if (c !== w.Day) {
+            let N = h(C);
+            C = h(j.start).year(N.year()).month(N.month()).date(N.date()).format(P);
           }
-          if (x = h(R).add(h(k.end).diff(h(k.start)), "ms").format(L), d.crossResourceMove === !1) {
-            E = i._getEventSlotId(p), C = void 0;
-            let O = i.getSlotById(E);
-            O && (C = O.name);
+          if (x = h(C).add(h(j.end).diff(h(j.start)), "ms").format(P), d.crossResourceMove === !1) {
+            E = o._getEventSlotId(p), R = void 0;
+            let N = o.getSlotById(E);
+            N && (R = N.name);
           }
-          T = "Move";
+          D = "Move";
         }
-        let j = !1;
+        let k = !1;
         if (d.checkConflict) {
-          let k = h(R), O = h(x);
-          a.forEach((P) => {
-            if (i._getEventSlotId(P) === E && (!w || P.id !== p.id)) {
-              let S = h(P.start), W = h(P.end);
-              (k >= S && k < W || O > S && O <= W || S >= k && S < O || W > k && W <= O) && (j = !0);
+          let j = h(C), N = h(x);
+          a.forEach((A) => {
+            if (o._getEventSlotId(A) === E && (!T || A.id !== p.id)) {
+              let S = h(A.start), _ = h(A.end);
+              (j >= S && j < _ || N > S && N <= _ || S >= j && S < N || _ > j && _ <= N) && (k = !0);
             }
           });
         }
-        if (j) {
-          const { conflictOccurred: k } = t;
-          k != null ? k(i, T, p, f, E, C, R, x) : console.log("Conflict occurred, set conflictOccurred func in Scheduler to handle it");
+        if (k) {
+          const { conflictOccurred: j } = t;
+          j != null ? j(o, D, p, f, E, R, C, x) : console.log("Conflict occurred, set conflictOccurred func in Scheduler to handle it");
         } else
-          w ? s !== void 0 && s(i, p, E, C, R, x) : o !== void 0 && o(i, E, C, R, x, f, p);
+          T ? n !== void 0 && n(o, p, E, R, C, x) : i !== void 0 && i(o, E, R, C, x, f, p);
       },
       canDrag: (t) => {
-        const { schedulerData: e, resourceEvents: r } = t, s = this.resolveDragObjFunc(t);
+        const { schedulerData: e, resourceEvents: r } = t, n = this.resolveDragObjFunc(t);
         if (e._isResizing())
           return !1;
-        const { config: o } = e;
-        return o.movable && (r == null || !r.groupOnly) && (s.movable == null || s.movable !== !1);
+        const { config: i } = e;
+        return i.movable && (r == null || !r.groupOnly) && (n.movable == null || n.movable !== !1);
       }
     }));
     M(this, "getDragCollect", (t, e) => ({
@@ -1087,62 +1087,65 @@ class rr {
   constructor(t, e) {
     M(this, "getDropSpec", () => ({
       drop: (t, e, r) => {
-        const { schedulerData: s, resourceEvents: o } = t, { cellUnit: i, localeMoment: a } = s, d = e.getItemType(), c = pe(r.eventContainer);
-        let h = s.getContentCellWidth(), p = null, f = null;
+        const { schedulerData: n, resourceEvents: i } = t, { cellUnit: o, localeMoment: a } = n, d = e.getItemType(), c = pe(r.eventContainer);
+        let h = n.getContentCellWidth(), p = null, f = null;
         if (d === ie.EVENT) {
           const x = e.getInitialClientOffset();
           let v = Math.floor((x.x - c.x) / h);
-          p = o.headerItems[v].start, f = o.headerItems[v].end, i !== X.Hour && (f = a(o.headerItems[v].start).hour(23).minute(59).second(59).format(L));
+          p = i.headerItems[v].start, f = i.headerItems[v].end, o !== O.Hour && (f = a(i.headerItems[v].start).hour(23).minute(59).second(59).format(P));
         }
         const m = e.getClientOffset();
-        let E = Math.floor((m.x - c.x) / h), C = o.headerItems[E].start, R = o.headerItems[E].end;
-        return i !== X.Hour && (R = a(o.headerItems[E].start).hour(23).minute(59).second(59).format(L)), {
-          slotId: o.slotId,
-          slotName: o.slotName,
-          start: C,
-          end: R,
+        let E = Math.floor((m.x - c.x) / h);
+        if (!i.headerItems[E])
+          return;
+        let R = i.headerItems[E].start, C = i.headerItems[E].end;
+        return o !== O.Hour && (C = a(i.headerItems[E].start).hour(23).minute(59).second(59).format(P)), {
+          slotId: i.slotId,
+          slotName: i.slotName,
+          start: R,
+          end: C,
           initialStart: p,
           initialEnd: f
         };
       },
       hover: (t, e, r) => {
-        const { schedulerData: s, resourceEvents: o, movingEvent: i } = t, { cellUnit: a, config: d, viewType: c, localeMoment: h } = s, p = e.getItem(), f = e.getItemType(), m = pe(r.eventContainer);
-        let E = s.getContentCellWidth(), C = null;
+        const { schedulerData: n, resourceEvents: i, movingEvent: o } = t, { cellUnit: a, config: d, viewType: c, localeMoment: h } = n, p = e.getItem(), f = e.getItemType(), m = pe(r.eventContainer);
+        let E = n.getContentCellWidth(), R = null;
         if (f === ie.EVENT) {
-          const P = e.getInitialClientOffset();
-          let S = Math.floor((P.x - m.x) / E);
-          C = o.headerItems[S].start, o.headerItems[S].end, a !== X.Hour && h(o.headerItems[S].start).hour(23).minute(59).second(59).format(L);
+          const A = e.getInitialClientOffset();
+          let S = Math.floor((A.x - m.x) / E);
+          R = i.headerItems[S].start, i.headerItems[S].end, a !== O.Hour && h(i.headerItems[S].start).hour(23).minute(59).second(59).format(P);
         }
-        const R = e.getClientOffset();
-        let x = Math.floor((R.x - m.x) / E);
-        if (!o.headerItems[x])
+        const C = e.getClientOffset();
+        let x = Math.floor((C.x - m.x) / E);
+        if (!i.headerItems[x])
           return;
-        let v = o.headerItems[x].start, T = o.headerItems[x].end;
-        a !== X.Hour && (T = h(o.headerItems[x].start).hour(23).minute(59).second(59).format(L));
-        let w = o.slotId, j = o.slotName, k = "New";
+        let v = i.headerItems[x].start, D = i.headerItems[x].end;
+        a !== O.Hour && (D = h(i.headerItems[x].start).hour(23).minute(59).second(59).format(P));
+        let T = i.slotId, k = i.slotName, j = "New";
         if (f === ie.EVENT) {
-          const P = p;
+          const A = p;
           if (d.relativeMove)
-            v = h(P.start).add(h(v).diff(h(C)), "ms").format(L);
-          else if (c !== D.Day) {
+            v = h(A.start).add(h(v).diff(h(R)), "ms").format(P);
+          else if (c !== w.Day) {
             let S = h(v);
-            v = h(P.start).year(S.year()).month(S.month()).date(S.date()).format(L);
+            v = h(A.start).year(S.year()).month(S.month()).date(S.date()).format(P);
           }
-          if (T = h(v).add(h(P.end).diff(h(P.start)), "ms").format(L), d.crossResourceMove === !1) {
-            w = s._getEventSlotId(p), j = void 0;
-            let S = s.getSlotById(w);
-            S && (j = S.name);
+          if (D = h(v).add(h(A.end).diff(h(A.start)), "ms").format(P), d.crossResourceMove === !1) {
+            T = n._getEventSlotId(p), k = void 0;
+            let S = n.getSlotById(T);
+            S && (k = S.name);
           }
-          k = "Move";
+          j = "Move";
         }
-        i && i(s, w, j, v, T, k, f, p);
+        o && o(n, T, k, v, D, j, f, p);
       },
       canDrop: (t, e) => {
-        const { schedulerData: r, resourceEvents: s } = t, o = e.getItem();
+        const { schedulerData: r, resourceEvents: n } = t, i = e.getItem();
         if (r._isResizing())
           return !1;
-        const { config: i } = r;
-        return i.movable && !s.groupOnly && (o.movable == null || o.movable !== !1);
+        const { config: o } = r;
+        return o.movable && !n.groupOnly && (i.movable == null || i.movable !== !1);
       }
     }));
     M(this, "getDropCollect", (t, e) => ({
@@ -1156,22 +1159,22 @@ class rr {
     }), this.DecoratedComponent = e;
   }
 }
-function at({ schedulerData: y, contentScrollbarHeight: t, slotClickedFunc: e, slotItemTemplateResolver: r, toggleExpandFunc: s }) {
-  const { renderData: o } = y, i = y.getResourceTableWidth() - 2, a = t, d = o.filter((m) => m.render), c = (m) => {
-    s && s(y, m.slotId);
+function at({ schedulerData: y, contentScrollbarHeight: t, slotClickedFunc: e, slotItemTemplateResolver: r, toggleExpandFunc: n }) {
+  const { renderData: i } = y, o = y.getResourceTableWidth() - 2, a = t, d = i.filter((m) => m.render), c = (m) => {
+    n && n(y, m.slotId);
   }, h = (m) => {
     e && e(y, m);
   }, p = (m) => {
-    const E = Array.from({ length: m.indent }, (T, w) => /* @__PURE__ */ l.jsx("span", { className: "expander-space" }, `es${w}`)), C = m.hasChildren ? m.expanded ? /* @__PURE__ */ l.jsx(Bt, { onClick: () => c(m) }, `es${m.indent}`) : /* @__PURE__ */ l.jsx(Vt, { onClick: () => c(m) }, `es${m.indent}`) : /* @__PURE__ */ l.jsx("span", { className: "expander-space" }, `es${m.indent}`);
-    E.push(C);
-    const R = e ? /* @__PURE__ */ l.jsx("a", { className: "slot-text", onClick: () => h(m), children: m.slotName }) : /* @__PURE__ */ l.jsx("span", { className: "slot-text", children: m.slotName });
+    const E = Array.from({ length: m.indent }, (D, T) => /* @__PURE__ */ l.jsx("span", { className: "expander-space" }, `es${T}`)), R = m.hasChildren ? m.expanded ? /* @__PURE__ */ l.jsx(Bt, { onClick: () => c(m) }, `es${m.indent}`) : /* @__PURE__ */ l.jsx(Vt, { onClick: () => c(m) }, `es${m.indent}`) : /* @__PURE__ */ l.jsx("span", { className: "expander-space" }, `es${m.indent}`);
+    E.push(R);
+    const C = e ? /* @__PURE__ */ l.jsx("a", { className: "slot-text", onClick: () => h(m), children: m.slotName }) : /* @__PURE__ */ l.jsx("span", { className: "slot-text", children: m.slotName });
     let x = /* @__PURE__ */ l.jsx("div", { title: m.slotName, className: "overflow-text header2-text", style: { textAlign: "left" }, children: /* @__PURE__ */ l.jsxs("span", { className: "slot-cell", children: [
       E,
-      R
+      C
     ] }) });
     if (r) {
-      const T = r(y, m, e, i, "overflow-text header2-text");
-      T && (x = T);
+      const D = r(y, m, e, o, "overflow-text header2-text");
+      D && (x = D);
     }
     const v = {
       height: m.rowHeight,
@@ -1189,50 +1192,62 @@ at.propTypes = {
   toggleExpandFunc: u.func
 };
 function lt({ schedulerData: y, nonAgendaCellHeaderTemplateResolver: t }) {
-  const { headers: e, cellUnit: r, config: s, localeMoment: o } = y, i = y.getTableHeaderHeight(), a = y.getContentCellWidth(), d = y.getMinuteStepsInHour(), c = (f, m, E) => {
-    const C = o(f.time), R = !!f.nonWorkingTime;
-    let x = R ? { width: a * d, color: s.nonWorkingTimeHeadColor, backgroundColor: s.nonWorkingTimeHeadBgColor } : { width: a * d };
-    E || (x.width = a), m === e.length - (E ? d : 1) && (x = R ? { color: s.nonWorkingTimeHeadColor, backgroundColor: s.nonWorkingTimeHeadBgColor } : {});
-    const v = (E ? s.nonAgendaDayCellHeaderFormat : s.nonAgendaOtherCellHeaderFormat).split("|").map((w) => C.format(w));
-    if (typeof t == "function")
-      return t(y, f, v, x);
-    const T = v.map((w, j) => /* @__PURE__ */ l.jsx("div", { children: w }, j));
-    return /* @__PURE__ */ l.jsx("th", { className: "header3-text", style: x, children: /* @__PURE__ */ l.jsx("div", { children: T }) }, f.time);
-  }, p = (() => e.map((f, m) => {
-    if (r === X.Hour && m % d !== 0)
-      return null;
-    const E = r === X.Hour;
-    return c(f, m, E);
-  }))();
-  return /* @__PURE__ */ l.jsx("thead", { children: /* @__PURE__ */ l.jsx("tr", { style: { height: i }, children: p }) });
+  const { headers: e, cellUnit: r, config: n, localeMoment: i } = y, o = y.getTableHeaderHeight(), a = y.getContentCellWidth(), d = y.getMinuteStepsInHour(), c = typeof t == "function" ? t : null, h = e.map((p, f) => {
+    if (r === O.Hour && f % d !== 0)
+      return /* @__PURE__ */ l.jsx(l.Fragment, {});
+    const { time: m, nonWorkingTime: E } = p, R = i(m);
+    let C = {};
+    r === O.Hour ? (C = E ? { width: a * d, color: n.nonWorkingTimeHeadColor, backgroundColor: n.nonWorkingTimeHeadBgColor } : { width: a * d }, f === e.length - d && (C = E ? { color: n.nonWorkingTimeHeadColor, backgroundColor: n.nonWorkingTimeHeadColor } : {})) : (C = E ? { width: a, color: n.nonWorkingTimeHeadColor, backgroundColor: n.nonWorkingTimeHeadBgColor } : { width: a }, f === e.length - 1 && (C = p.nonWorkingTime ? { color: n.nonWorkingTimeHeadColor, backgroundColor: n.nonWorkingTimeHeadBgColor } : {}));
+    let x;
+    switch (r) {
+      case O.Hour:
+        x = n.nonAgendaDayCellHeaderFormat;
+        break;
+      case O.Week:
+        x = n.nonAgendaWeekCellHeaderFormat;
+        break;
+      case O.Month:
+        x = n.nonAgendaMonthCellHeaderFormat;
+        break;
+      case O.Year:
+        x = n.nonAgendaYearCellHeaderFormat;
+        break;
+      default:
+        x = n.nonAgendaOtherCellHeaderFormat;
+        break;
+    }
+    const v = x.split("|").map((k) => R.format(k)), D = v.map((k, j) => /* @__PURE__ */ l.jsx("div", { children: k }, j));
+    return c ? c(y, p, v, C) : /* @__PURE__ */ l.jsx("th", { className: "header3-text", style: C, children: /* @__PURE__ */ l.jsx("div", { children: D }) }, m);
+  });
+  return /* @__PURE__ */ l.jsx("thead", { children: /* @__PURE__ */ l.jsx("tr", { style: { height: o }, children: h }) });
 }
 lt.propTypes = {
   schedulerData: u.object.isRequired,
   nonAgendaCellHeaderTemplateResolver: u.func
 };
 function dt({ schedulerData: y }) {
-  const { renderData: t, headers: e, config: r, behaviors: s } = y;
-  let o = y.getContentCellWidth();
-  const i = t.filter((a) => a.render).map(({ slotId: a, groupOnly: d, rowHeight: c }) => {
+  const { renderData: t, headers: e, config: r, behaviors: n } = y;
+  let i = y.getContentCellWidth();
+  const o = t.filter((a) => a.render).map(({ slotId: a, groupOnly: d, rowHeight: c }) => {
     let h = e.map((p, f) => {
-      const m = `${a}_${p.time}`, E = f === e.length - 1 ? {} : { width: o };
-      if (p.nonWorkingTime && (E.backgroundColor = r.nonWorkingTimeBodyBgColor), d && (E.backgroundColor = r.groupOnlySlotColor), s.getNonAgendaViewBodyCellBgColorFunc) {
-        let C = s.getNonAgendaViewBodyCellBgColorFunc(y, a, p);
-        C && (E.backgroundColor = C);
+      const m = `${a}_${p.time}`, E = f === e.length - 1 ? {} : { width: i };
+      if (p.nonWorkingTime && (E.backgroundColor = r.nonWorkingTimeBodyBgColor), d && (E.backgroundColor = r.groupOnlySlotColor), n.getNonAgendaViewBodyCellBgColorFunc) {
+        let R = n.getNonAgendaViewBodyCellBgColorFunc(y, a, p);
+        R && (E.backgroundColor = R);
       }
       return /* @__PURE__ */ l.jsx("td", { style: E, children: /* @__PURE__ */ l.jsx("div", {}) }, m);
     });
     return /* @__PURE__ */ l.jsx("tr", { style: { height: c }, children: h }, a);
   });
-  return /* @__PURE__ */ l.jsx("tbody", { children: i });
+  return /* @__PURE__ */ l.jsx("tbody", { children: o });
 }
 dt.propTypes = {
   schedulerData: u.object.isRequired
 };
-function ct({ number: y, left: t, width: e, top: r, clickAction: s, headerItem: o, schedulerData: i }) {
-  const { config: a } = i;
+function ct({ number: y, left: t, width: e, top: r, clickAction: n, headerItem: i, schedulerData: o }) {
+  const { config: a } = o;
   let d = "+" + y + "more";
-  return /* @__PURE__ */ l.jsx("a", { className: "timeline-event", style: { left: t, width: e, top: r }, onClick: () => s(o), children: /* @__PURE__ */ l.jsx("div", { style: { height: a.eventItemHeight, color: "#999", textAlign: "center" }, children: d }) });
+  return /* @__PURE__ */ l.jsx("a", { className: "timeline-event", style: { left: t, width: e, top: r }, onClick: () => n(i), children: /* @__PURE__ */ l.jsx("div", { style: { height: a.eventItemHeight, color: "#999", textAlign: "center" }, children: d }) });
 }
 ct.propTypes = {
   schedulerData: u.object.isRequired,
@@ -1243,13 +1258,13 @@ ct.propTypes = {
   clickAction: u.func.isRequired,
   headerItem: u.object.isRequired
 };
-function ut({ summary: y, left: t, width: e, top: r, schedulerData: s }) {
-  const { config: o } = s, i = y.color || o.summaryColor;
+function ut({ summary: y, left: t, width: e, top: r, schedulerData: n }) {
+  const { config: i } = n, o = y.color || i.summaryColor;
   let a = "center";
-  o.summaryPos === ae.TopRight || o.summaryPos === ae.BottomRight ? a = "right" : (o.summaryPos === ae.TopLeft || o.summaryPos === ae.BottomLeft) && (a = "left");
+  i.summaryPos === ae.TopRight || i.summaryPos === ae.BottomRight ? a = "right" : (i.summaryPos === ae.TopLeft || i.summaryPos === ae.BottomLeft) && (a = "left");
   const d = {
-    height: o.eventItemHeight,
-    color: i,
+    height: i.eventItemHeight,
+    color: o,
     textAlign: a,
     margin: "0 6px",
     fontSize: y.fontSize
@@ -1264,14 +1279,14 @@ ut.propTypes = {
   top: u.number.isRequired
 };
 function ht({ left: y, width: t, schedulerData: e }) {
-  const { config: r } = e, s = {
+  const { config: r } = e, n = {
     left: y,
     width: t,
     top: 0,
     bottom: 0,
     backgroundColor: r.selectedAreaColor
   };
-  return /* @__PURE__ */ l.jsx("div", { className: "selected-area", style: s });
+  return /* @__PURE__ */ l.jsx("div", { className: "selected-area", style: n });
 }
 ht.propTypes = {
   schedulerData: u.object.isRequired,
@@ -1287,21 +1302,21 @@ class ft extends _e {
       if (r || (e.srcElement || e.target) !== this.eventContainer)
         return;
       e.stopPropagation();
-      const { resourceEvents: s } = this.props;
-      if (s.groupOnly)
+      const { resourceEvents: n } = this.props;
+      if (n.groupOnly)
         return;
-      let o = 0;
+      let i = 0;
       if (le) {
         if (e.changedTouches.length == 0)
           return;
-        o = e.changedTouches[0].pageX;
+        i = e.changedTouches[0].pageX;
       } else {
         if (e.buttons !== void 0 && e.buttons !== 1)
           return;
-        o = e.clientX;
+        i = e.clientX;
       }
-      const { schedulerData: i } = this.props;
-      let a = i.getContentCellWidth(), d = pe(this.eventContainer), c = o - d.x, h = Math.floor(c / a), p = h * a, f = Math.ceil(c / a), m = (f - h) * a;
+      const { schedulerData: o } = this.props;
+      let a = o.getContentCellWidth(), d = pe(this.eventContainer), c = i - d.x, h = Math.floor(c / a), p = h * a, f = Math.ceil(c / a), m = (f - h) * a;
       this.setState({
         startX: c,
         left: p,
@@ -1324,11 +1339,11 @@ class ft extends _e {
         r = e.changedTouches[0].pageX;
       } else
         r = e.clientX;
-      const { startX: s } = this.state, { schedulerData: o } = this.props, { headers: i } = o;
-      let a = o.getContentCellWidth(), d = pe(this.eventContainer), c = r - d.x, h = Math.floor(Math.min(s, c) / a);
+      const { startX: n } = this.state, { schedulerData: i } = this.props, { headers: o } = i;
+      let a = i.getContentCellWidth(), d = pe(this.eventContainer), c = r - d.x, h = Math.floor(Math.min(n, c) / a);
       h = h < 0 ? 0 : h;
-      let p = h * a, f = Math.ceil(Math.max(s, c) / a);
-      f = f > i.length ? i.length : f;
+      let p = h * a, f = Math.ceil(Math.max(n, c) / a);
+      f = f > o.length ? o.length : f;
       let m = (f - h) * a;
       this.setState({
         leftIndex: h,
@@ -1340,11 +1355,11 @@ class ft extends _e {
     });
     M(this, "stopDrag", (e) => {
       e.stopPropagation();
-      const { schedulerData: r, newEvent: s, resourceEvents: o } = this.props, { headers: i, events: a, config: d, cellUnit: c, localeMoment: h } = r, { leftIndex: p, rightIndex: f } = this.state;
+      const { schedulerData: r, newEvent: n, resourceEvents: i } = this.props, { headers: o, events: a, config: d, cellUnit: c, localeMoment: h } = r, { leftIndex: p, rightIndex: f } = this.state;
       le ? (document.documentElement.removeEventListener("touchmove", this.doDrag, !1), document.documentElement.removeEventListener("touchend", this.stopDrag, !1), document.documentElement.removeEventListener("touchcancel", this.cancelDrag, !1)) : (document.documentElement.removeEventListener("mousemove", this.doDrag, !1), document.documentElement.removeEventListener("mouseup", this.stopDrag, !1)), document.onselectstart = null, document.ondragstart = null;
-      let m = i[p].time, E = o.headerItems[f - 1].end;
-      c !== X.Hour && (E = h(o.headerItems[f - 1].start).hour(23).minute(59).second(59).format(L));
-      let C = o.slotId, R = o.slotName;
+      let m = o[p].time, E = i.headerItems[f - 1].end;
+      c !== O.Hour && (E = h(i.headerItems[f - 1].start).hour(23).minute(59).second(59).format(P));
+      let R = i.slotId, C = i.slotName;
       this.setState({
         startX: 0,
         leftIndex: 0,
@@ -1355,11 +1370,11 @@ class ft extends _e {
       });
       let x = !1;
       if (d.checkConflict) {
-        let v = h(m), T = h(E);
-        a.forEach((w) => {
-          if (r._getEventSlotId(w) === C) {
-            let j = h(w.start), k = h(w.end);
-            (v >= j && v < k || T > j && T <= k || j >= v && j < T || k > v && k <= T) && (x = !0);
+        let v = h(m), D = h(E);
+        a.forEach((T) => {
+          if (r._getEventSlotId(T) === R) {
+            let k = h(T.start), j = h(T.end);
+            (v >= k && v < j || D > k && D <= j || k >= v && k < D || j > v && j <= D) && (x = !0);
           }
         });
       }
@@ -1372,18 +1387,18 @@ class ft extends _e {
             id: void 0,
             start: m,
             end: E,
-            slotId: C,
-            slotName: R,
+            slotId: R,
+            slotName: C,
             title: void 0
           },
           ie.EVENT,
-          C,
           R,
+          C,
           m,
           E
         ) : console.log("Conflict occurred, set conflictOccurred func in Scheduler to handle it");
       } else
-        s != null && s(r, C, R, m, E);
+        n != null && n(r, R, C, m, E);
     });
     M(this, "cancelDrag", (e) => {
       e.stopPropagation();
@@ -1398,14 +1413,14 @@ class ft extends _e {
       }));
     });
     M(this, "onAddMoreClick", (e) => {
-      const { onSetAddMoreState: r, resourceEvents: s, schedulerData: o } = this.props;
+      const { onSetAddMoreState: r, resourceEvents: n, schedulerData: i } = this.props;
       if (r) {
-        const { config: i } = o;
-        let a = o.getContentCellWidth(), d = s.headerItems.indexOf(e);
+        const { config: o } = i;
+        let a = i.getContentCellWidth(), d = n.headerItems.indexOf(e);
         if (d !== -1) {
           let c = d * (a - 1), h = pe(this.eventContainer);
           c = c + h.x;
-          let p = h.y, f = (e.count + 1) * i.eventItemLineHeight + 20;
+          let p = h.y, f = (e.count + 1) * o.eventItemLineHeight + 20;
           r({
             headerItem: e,
             left: c,
@@ -1432,46 +1447,46 @@ class ft extends _e {
     le || this.eventContainer.removeEventListener("mousedown", this.initDrag, !1), e.schedulerData.config.creatable && (le || this.eventContainer.addEventListener("mousedown", this.initDrag, !1));
   }
   render() {
-    const { resourceEvents: e, schedulerData: r, connectDropTarget: s, dndSource: o } = this.props, { cellUnit: i, startDate: a, endDate: d, config: c, localeMoment: h } = r, { isSelecting: p, left: f, width: m } = this.state;
-    let E = r.getContentCellWidth(), C = r.getCellMaxEvents(), R = r.getContentTableWidth(), x = o.getDragSource(), v = p ? /* @__PURE__ */ l.jsx(ht, { ...this.props, left: f, width: m }) : /* @__PURE__ */ l.jsx("div", {}), T = [];
-    return e.headerItems.forEach((w, j) => {
-      if (w.count > 0 || w.summary != null) {
-        let k = c.summaryPos === ae.TopRight || c.summaryPos === ae.Top || c.summaryPos === ae.TopLeft, O = e.hasSummary && k ? 1 + c.eventItemLineHeight : 1, P = w.addMore === 0 ? C : w.addMoreIndex;
-        if (w.events.forEach((S, W) => {
-          if (W < P && S !== void 0 && S.render) {
+    const { resourceEvents: e, schedulerData: r, connectDropTarget: n, dndSource: i } = this.props, { cellUnit: o, startDate: a, endDate: d, config: c, localeMoment: h } = r, { isSelecting: p, left: f, width: m } = this.state;
+    let E = r.getContentCellWidth(), R = r.getCellMaxEvents(), C = r.getContentTableWidth(), x = i.getDragSource(), v = p ? /* @__PURE__ */ l.jsx(ht, { ...this.props, left: f, width: m }) : /* @__PURE__ */ l.jsx("div", {}), D = [];
+    return e.headerItems.forEach((T, k) => {
+      if (T.count > 0 || T.summary != null) {
+        let j = c.summaryPos === ae.TopRight || c.summaryPos === ae.Top || c.summaryPos === ae.TopLeft, N = e.hasSummary && j ? 1 + c.eventItemLineHeight : 1, A = T.addMore === 0 ? R : T.addMoreIndex;
+        if (T.events.forEach((S, _) => {
+          if (_ < A && S !== void 0 && S.render) {
             let q = h(a), Q = h(d).add(1, "days");
-            i === X.Hour && (q = h(a).add(c.dayStartFrom, "hours"), Q = h(d).add(c.dayStopTo + 1, "hours"));
-            let V = h(S.eventItem.start), K = h(S.eventItem.end), G = V >= q, A = K <= Q, F = j * E + (j > 0 ? 2 : 3), Y = S.span * E - (j > 0 ? 5 : 6) > 0 ? S.span * E - (j > 0 ? 5 : 6) : 0, B = O + W * c.eventItemLineHeight, ne = /* @__PURE__ */ he(
+            o === O.Hour && (q = h(a).add(c.dayStartFrom, "hours"), Q = h(d).add(c.dayStopTo + 1, "hours"));
+            let G = h(S.eventItem.start), K = h(S.eventItem.end), U = G >= q, z = K <= Q, Y = k * E + (k > 0 ? 2 : 3), $ = S.span * E - (k > 0 ? 5 : 6) > 0 ? S.span * E - (k > 0 ? 5 : 6) : 0, V = N + _ * c.eventItemLineHeight, ne = /* @__PURE__ */ he(
               x,
               {
                 ...this.props,
                 key: S.eventItem.id,
                 eventItem: S.eventItem,
-                isStart: G,
-                isEnd: A,
+                isStart: U,
+                isEnd: z,
                 isInPopover: !1,
-                left: F,
-                width: Y,
-                top: B,
-                leftIndex: j,
-                rightIndex: j + S.span
+                left: Y,
+                width: $,
+                top: V,
+                leftIndex: k,
+                rightIndex: k + S.span
               }
             );
-            T.push(ne);
+            D.push(ne);
           }
-        }), w.addMore > 0) {
-          let S = j * E + (j > 0 ? 2 : 3), W = E - (j > 0 ? 5 : 6), q = O + w.addMoreIndex * c.eventItemLineHeight, Q = /* @__PURE__ */ he(ct, { ...this.props, key: w.time, headerItem: w, number: w.addMore, left: S, width: W, top: q, clickAction: this.onAddMoreClick });
-          T.push(Q);
+        }), T.addMore > 0) {
+          let S = k * E + (k > 0 ? 2 : 3), _ = E - (k > 0 ? 5 : 6), q = N + T.addMoreIndex * c.eventItemLineHeight, Q = /* @__PURE__ */ he(ct, { ...this.props, key: T.time, headerItem: T, number: T.addMore, left: S, width: _, top: q, clickAction: this.onAddMoreClick });
+          D.push(Q);
         }
-        if (w.summary != null) {
-          let S = k ? 1 : e.rowHeight - c.eventItemLineHeight + 1, W = j * E + (j > 0 ? 2 : 3), q = E - (j > 0 ? 5 : 6), Q = `${e.slotId}_${w.time}`, V = /* @__PURE__ */ l.jsx(ut, { schedulerData: r, summary: w.summary, left: W, width: q, top: S }, Q);
-          T.push(V);
+        if (T.summary != null) {
+          let S = j ? 1 : e.rowHeight - c.eventItemLineHeight + 1, _ = k * E + (k > 0 ? 2 : 3), q = E - (k > 0 ? 5 : 6), Q = `${e.slotId}_${T.time}`, G = /* @__PURE__ */ l.jsx(ut, { schedulerData: r, summary: T.summary, left: _, width: q, top: S }, Q);
+          D.push(G);
         }
       }
-    }), /* @__PURE__ */ l.jsx("tr", { children: /* @__PURE__ */ l.jsx("td", { style: { width: R }, children: s(
+    }), /* @__PURE__ */ l.jsx("tr", { children: /* @__PURE__ */ l.jsx("td", { style: { width: C }, children: n(
       /* @__PURE__ */ l.jsxs("div", { ref: this.eventContainerRef, className: "event-container", style: { height: e.rowHeight }, children: [
         v,
-        T
+        D
       ] })
     ) }) });
   }
@@ -1496,14 +1511,14 @@ M(ft, "propTypes", {
   eventItemTemplateResolver: u.func
 });
 function mt(y) {
-  const { eventItem: t, isStart: e, isEnd: r, eventItemClick: s, schedulerData: o, eventItemTemplateResolver: i } = y, { config: a, behaviors: d } = o, c = e ? r ? "round-all" : "round-head" : r ? "round-tail" : "round-none", h = t.bgColor || a.defaultEventBgColor, p = d.getEventTextFunc(o, t);
+  const { eventItem: t, isStart: e, isEnd: r, eventItemClick: n, schedulerData: i, eventItemTemplateResolver: o } = y, { config: a, behaviors: d } = i, c = e ? r ? "round-all" : "round-head" : r ? "round-tail" : "round-none", h = t.bgColor || a.defaultEventBgColor, p = d.getEventTextFunc(i, t);
   let f = /* @__PURE__ */ l.jsx("div", { className: `${c} event-item`, style: { height: a.eventItemHeight, maxWidth: a.agendaMaxEventWidth, backgroundColor: h }, children: /* @__PURE__ */ l.jsx("span", { style: { marginLeft: "10px", lineHeight: `${a.eventItemHeight}px` }, children: p }) }, t.id);
-  i && (f = i(o, t, h, e, r, "event-item", a.eventItemHeight, a.agendaMaxEventWidth));
+  o && (f = o(i, t, h, e, r, "event-item", a.eventItemHeight, a.agendaMaxEventWidth));
   const m = () => {
-    s && s(o, t);
+    n && n(i, t);
   }, E = /* @__PURE__ */ l.jsx("a", { className: "day-event", onClick: m, children: f });
-  let C = /* @__PURE__ */ l.jsx(Oe, { ...y, title: t.title, startTime: t.start, endTime: t.end, statusColor: h });
-  return a.eventItemPopoverEnabled ? /* @__PURE__ */ l.jsx(He, { placement: "bottomLeft", content: C, trigger: "hover", children: E }) : /* @__PURE__ */ l.jsx("span", { children: E });
+  let R = /* @__PURE__ */ l.jsx(Oe, { ...y, title: t.title, startTime: t.start, endTime: t.end, statusColor: h });
+  return a.eventItemPopoverEnabled ? /* @__PURE__ */ l.jsx(He, { placement: "bottomLeft", content: R, trigger: "hover", children: E }) : /* @__PURE__ */ l.jsx("span", { children: E });
 }
 mt.propTypes = {
   schedulerData: u.object.isRequired,
@@ -1519,25 +1534,25 @@ mt.propTypes = {
   eventItemTemplateResolver: u.func
 };
 function gt(y) {
-  const { schedulerData: t, resourceEvents: e, slotClickedFunc: r, slotItemTemplateResolver: s } = y, { startDate: o, endDate: i, config: a, localeMoment: d } = t, { slotId: c, slotName: h, headerItems: p } = e;
+  const { schedulerData: t, resourceEvents: e, slotClickedFunc: r, slotItemTemplateResolver: n } = y, { startDate: i, endDate: o, config: a, localeMoment: d } = t, { slotId: c, slotName: h, headerItems: p } = e;
   let m = t.getResourceTableWidth() - 2;
-  const E = d(o).format(H), C = d(i).add(1, "days").format(H);
-  let R = [];
-  p.forEach(({ start: T, end: w, events: j }) => {
-    E === d(T).format(H) && C === d(w).format(H) && j.forEach(({ eventItem: k }) => {
-      const { start: O, end: P, id: S } = k, W = d(o), q = d(i).add(1, "days"), Q = d(O) >= W, V = d(P) < q, K = /* @__PURE__ */ he(mt, { ...y, key: S, eventItem: k, isStart: Q, isEnd: V });
-      j.push(K);
+  const E = d(i).format(W), R = d(o).add(1, "days").format(W);
+  let C = [];
+  p.forEach(({ start: D, end: T, events: k }) => {
+    E === d(D).format(W) && R === d(T).format(W) && k.forEach(({ eventItem: j }) => {
+      const { start: N, end: A, id: S } = j, _ = d(i), q = d(o).add(1, "days"), Q = d(N) >= _, G = d(A) < q, K = /* @__PURE__ */ he(mt, { ...y, key: S, eventItem: j, isStart: Q, isEnd: G });
+      k.push(K);
     });
   });
   const x = r && /* @__PURE__ */ l.jsx("a", { onClick: () => r(t, e), children: h });
   let v = /* @__PURE__ */ l.jsx("div", { style: { width: m }, title: h, className: "overflow-text header2-text", children: x || /* @__PURE__ */ l.jsx("span", { children: h }) });
-  if (s) {
-    const T = s(t, e, r, m, "overflow-text header2-text");
-    T && (v = T);
+  if (n) {
+    const D = n(t, e, r, m, "overflow-text header2-text");
+    D && (v = D);
   }
   return /* @__PURE__ */ l.jsxs("tr", { style: { minHeight: a.eventItemLineHeight + 2 }, children: [
     /* @__PURE__ */ l.jsx("td", { "data-resource-id": c, children: v }),
-    /* @__PURE__ */ l.jsx("td", { children: /* @__PURE__ */ l.jsx("div", { className: "day-event-container", children: R }) })
+    /* @__PURE__ */ l.jsx("td", { children: /* @__PURE__ */ l.jsx("div", { className: "day-event-container", children: C }) })
   ] });
 }
 gt.propTypes = {
@@ -1553,7 +1568,7 @@ gt.propTypes = {
   slotItemTemplateResolver: u.func
 };
 function pt(y) {
-  const { schedulerData: t } = y, { config: e, renderData: r, getResourceTableWidth: s, getTableHeaderHeight: o, isEventPerspective: i } = t, a = s(), d = o(), c = r.map((f) => /* @__PURE__ */ he(gt, { ...y, resourceEvents: f, key: f.slotId })), h = i ? e.taskName : e.resourceName, p = e.agendaViewHeader;
+  const { schedulerData: t } = y, { config: e, renderData: r, getResourceTableWidth: n, getTableHeaderHeight: i, isEventPerspective: o } = t, a = n(), d = i(), c = r.map((f) => /* @__PURE__ */ he(gt, { ...y, resourceEvents: f, key: f.slotId })), h = o ? e.taskName : e.resourceName, p = e.agendaViewHeader;
   return /* @__PURE__ */ l.jsx("tr", { children: /* @__PURE__ */ l.jsx("td", { children: /* @__PURE__ */ l.jsxs("table", { className: "scheduler-table", children: [
     /* @__PURE__ */ l.jsx("thead", { children: /* @__PURE__ */ l.jsxs("tr", { style: { height: d }, children: [
       /* @__PURE__ */ l.jsx("th", { style: { width: a }, className: "header3-text", children: h }),
@@ -1573,37 +1588,37 @@ pt.propTypes = {
   slotClickedFunc: oe.func
 };
 function nr(y) {
-  const [t] = $t(new ot((w) => w.eventItem, Ne)), { headerItem: e, left: r, top: s, height: o, closeAction: i, schedulerData: a } = y, { config: d, localeMoment: c } = a, { time: h, start: p, end: f, events: m } = e;
-  let E = c(h).format(d.addMorePopoverHeaderFormat), C = c(p), R = c(f), x = 0, v = t.getDragSource();
-  const T = m.map((w) => {
-    if (w !== void 0) {
+  const [t] = $t(new ot((T) => T.eventItem, Ne)), { headerItem: e, left: r, top: n, height: i, closeAction: o, schedulerData: a } = y, { config: d, localeMoment: c } = a, { time: h, start: p, end: f, events: m } = e;
+  let E = c(h).format(d.addMorePopoverHeaderFormat), R = c(p), C = c(f), x = 0, v = t.getDragSource();
+  const D = m.map((T) => {
+    if (T !== void 0) {
       x++;
-      let j = c(w.eventItem.start), k = c(w.eventItem.end), O = j >= C, P = k < R, S = 10, W = 138, q = 12 + x * d.eventItemLineHeight;
+      let k = c(T.eventItem.start), j = c(T.eventItem.end), N = k >= R, A = j < C, S = 10, _ = 138, q = 12 + x * d.eventItemLineHeight;
       return /* @__PURE__ */ he(
         v,
         {
           ...y,
-          key: w.eventItem.id,
-          eventItem: w.eventItem,
+          key: T.eventItem.id,
+          eventItem: T.eventItem,
           leftIndex: 0,
           isInPopover: !0,
-          isStart: O,
-          isEnd: P,
+          isStart: N,
+          isEnd: A,
           rightIndex: 1,
           left: S,
-          width: W,
+          width: _,
           top: q
         }
       );
     }
     return null;
   });
-  return /* @__PURE__ */ l.jsxs("div", { className: "add-more-popover-overlay", style: { left: r, top: s, height: o, width: "170px" }, children: [
+  return /* @__PURE__ */ l.jsxs("div", { className: "add-more-popover-overlay", style: { left: r, top: n, height: i, width: "170px" }, children: [
     /* @__PURE__ */ l.jsxs(ue, { justify: "space-between", align: "middle", children: [
       /* @__PURE__ */ l.jsx(ee, { span: "22", children: /* @__PURE__ */ l.jsx("span", { className: "base-text", children: E }) }),
-      /* @__PURE__ */ l.jsx(ee, { span: "2", children: /* @__PURE__ */ l.jsx("span", { onClick: () => i(void 0), children: /* @__PURE__ */ l.jsx(Gt, {}) }) })
+      /* @__PURE__ */ l.jsx(ee, { span: "2", children: /* @__PURE__ */ l.jsx("span", { onClick: () => o(void 0), children: /* @__PURE__ */ l.jsx(Gt, {}) }) })
     ] }),
-    T
+    D
   ] });
 }
 nr.propTypes = {
@@ -1680,38 +1695,41 @@ const rt = {
   addMorePopoverHeaderFormat: "MMM D, YYYY dddd",
   eventItemPopoverDateFormat: "MMM D",
   nonAgendaDayCellHeaderFormat: "ha",
+  nonAgendaWeekCellHeaderFormat: "ww/YYYY",
+  nonAgendaMonthCellHeaderFormat: "MMM YYYY",
+  nonAgendaYearCellHeaderFormat: "YYYY",
   nonAgendaOtherCellHeaderFormat: "ddd M/D",
   minuteStep: 30,
   views: [
-    { viewName: "Day", viewType: D.Day, showAgenda: !1, isEventPerspective: !1 },
-    { viewName: "Week", viewType: D.Week, showAgenda: !1, isEventPerspective: !1 },
-    { viewName: "Month", viewType: D.Month, showAgenda: !1, isEventPerspective: !1 },
-    { viewName: "Quarter", viewType: D.Quarter, showAgenda: !1, isEventPerspective: !1 },
-    { viewName: "Year", viewType: D.Year, showAgenda: !1, isEventPerspective: !1 }
+    { viewName: "Day", viewType: w.Day, showAgenda: !1, isEventPerspective: !1 },
+    { viewName: "Week", viewType: w.Week, showAgenda: !1, isEventPerspective: !1 },
+    { viewName: "Month", viewType: w.Month, showAgenda: !1, isEventPerspective: !1 },
+    { viewName: "Quarter", viewType: w.Quarter, showAgenda: !1, isEventPerspective: !1 },
+    { viewName: "Year", viewType: w.Year, showAgenda: !1, isEventPerspective: !1 }
   ]
 }, sr = (y, t, e, r) => {
-  const s = y.localeMoment(e), o = y.localeMoment(r);
-  let i;
+  const n = y.localeMoment(e), i = y.localeMoment(r);
+  let o;
   switch (t) {
-    case D.Week:
-    case D.Custom:
-    case D.Custom1:
-    case D.Custom2:
-      s !== o && (i = `${s.format("MMM D")}-${o.format("D, YYYY")}`, s.month() !== o.month() && (i = `${s.format("MMM D")}-${o.format("MMM D, YYYY")}`), s.year() !== o.year() && (i = `${s.format("MMM D, YYYY")}-${o.format("MMM D, YYYY")}`));
+    case w.Week:
+    case w.Custom:
+    case w.Custom1:
+    case w.Custom2:
+      n !== i && (o = `${n.format("MMM D")}-${i.format("D, YYYY")}`, n.month() !== i.month() && (o = `${n.format("MMM D")}-${i.format("MMM D, YYYY")}`), n.year() !== i.year() && (o = `${n.format("MMM D, YYYY")}-${i.format("MMM D, YYYY")}`));
       break;
-    case D.Month:
-      i = s.format("MMMM YYYY");
+    case w.Month:
+      o = n.format("MMMM YYYY");
       break;
-    case D.Quarter:
-      i = `${s.format("MMM D")}-${o.format("MMM D, YYYY")}`;
+    case w.Quarter:
+      o = `${n.format("MMM D")}-${i.format("MMM D, YYYY")}`;
       break;
-    case D.Year:
-      i = s.format("YYYY");
+    case w.Year:
+      o = n.format("YYYY");
       break;
     default:
-      i = s.format("MMM D, YYYY");
+      o = n.format("MMM D, YYYY");
   }
-  return i;
+  return o;
 }, ir = (y, t) => {
   if (!y.isEventPerspective)
     return t.title;
@@ -1719,12 +1737,12 @@ const rt = {
   return e ? e.name : t.title;
 }, or = (y, t, e) => y.localeMoment(), ar = (y, t) => {
   const { localeMoment: e, cellUnit: r } = y;
-  if (r === X.Hour) {
-    const o = e(t).hour();
-    return o < 9 || o > 18;
+  if (r === O.Hour) {
+    const i = e(t).hour();
+    return i < 9 || i > 18;
   }
-  const s = e(t).weekday();
-  return s === 0 || s === 6;
+  const n = e(t).weekday();
+  return n === 0 || n === 6;
 }, nt = {
   getSummaryFunc: void 0,
   getCustomDateFunc: void 0,
@@ -1738,8 +1756,8 @@ const rt = {
   //getSummaryFunc: getSummary,
 };
 class br {
-  constructor(t = je().format(H), e = D.Week, r = !1, s = !1, o = void 0, i = void 0, a = void 0) {
-    this.resources = [], this.events = [], this.eventGroups = [], this.eventGroupsAutoGenerated = !0, this.viewType = e, this.cellUnit = e === D.Day ? X.Hour : X.Day, this.showAgenda = r, this.isEventPerspective = s, this.resizing = !1, this.scrollToSpecialMoment = !1, this.documentWidth = 0, this.localeMoment = je, a && (this.localeMoment = a), this.config = o == null ? rt : { ...rt, ...o }, this._validateMinuteStep(this.config.minuteStep), this.behaviors = i == null ? nt : { ...nt, ...i }, this._resolveDate(0, t), this._createHeaders(), this._createRenderData();
+  constructor(t = ke().format(W), e = w.Week, r = !1, n = !1, i = void 0, o = void 0, a = void 0) {
+    this.resources = [], this.events = [], this.eventGroups = [], this.eventGroupsAutoGenerated = !0, this.viewType = e, this.cellUnit = e === w.Day ? O.Hour : O.Day, this.showAgenda = r, this.isEventPerspective = n, this.resizing = !1, this.scrollToSpecialMoment = !1, this.documentWidth = 0, this.localeMoment = ke, a && (this.localeMoment = a), this.config = i == null ? rt : { ...rt, ...i }, this._validateMinuteStep(this.config.minuteStep), this.behaviors = o == null ? nt : { ...nt, ...o }, this._resolveDate(0, t), this._createHeaders(), this._createRenderData();
   }
   setLocaleMoment(t) {
     t && (this.localeMoment = t, this._createHeaders(), this._createRenderData());
@@ -1771,14 +1789,14 @@ class br {
   }
   removeEventGroupById(t) {
     let e = -1;
-    this.eventGroups.forEach((r, s) => {
-      r.id === t && (e = s);
+    this.eventGroups.forEach((r, n) => {
+      r.id === t && (e = n);
     }), e !== -1 && this.eventGroups.splice(e, 1);
   }
   containsEventGroupId(t) {
     let e = -1;
-    return this.eventGroups.forEach((r, s) => {
-      r.id === t && (e = s);
+    return this.eventGroups.forEach((r, n) => {
+      r.id === t && (e = n);
     }), e !== -1;
   }
   setEvents(t) {
@@ -1793,25 +1811,25 @@ class br {
   next() {
     this._resolveDate(1), this.events = [], this._createHeaders(), this._createRenderData();
   }
-  setDate(t = je().format(H)) {
+  setDate(t = ke().format(W)) {
     this._resolveDate(0, t), this.events = [], this._createHeaders(), this._createRenderData();
   }
-  setViewType(t = D.Week, e = !1, r = !1) {
-    if (this.showAgenda = e, this.isEventPerspective = r, this.cellUnit = X.Day, this.viewType !== t) {
-      let s = this.startDate;
-      if (t === D.Custom || t === D.Custom1 || t === D.Custom2)
-        this.viewType = t, this._resolveDate(0, s);
+  setViewType(t = w.Week, e = !1, r = !1) {
+    if (this.showAgenda = e, this.isEventPerspective = r, this.cellUnit = O.Day, this.viewType !== t) {
+      let n = this.startDate;
+      if (t === w.Custom || t === w.Custom1 || t === w.Custom2)
+        this.viewType = t, this._resolveDate(0, n);
       else {
         if (this.viewType < t)
-          t === D.Week ? (this.startDate = this.localeMoment(s).startOf("week").format(H), this.endDate = this.localeMoment(this.startDate).endOf("week").format(H)) : t === D.Month ? (this.startDate = this.localeMoment(s).startOf("month").format(H), this.endDate = this.localeMoment(this.startDate).endOf("month").format(H)) : t === D.Quarter ? (this.startDate = this.localeMoment(s).startOf("quarter").format(H), this.endDate = this.localeMoment(this.startDate).endOf("quarter").format(H)) : t === D.Year && (this.startDate = this.localeMoment(s).startOf("year").format(H), this.endDate = this.localeMoment(this.startDate).endOf("year").format(H));
+          t === w.Week ? (this.startDate = this.localeMoment(n).startOf("week").format(W), this.endDate = this.localeMoment(this.startDate).endOf("week").format(W)) : t === w.Month ? (this.startDate = this.localeMoment(n).startOf("month").format(W), this.endDate = this.localeMoment(this.startDate).endOf("month").format(W)) : t === w.Quarter ? (this.startDate = this.localeMoment(n).startOf("quarter").format(W), this.endDate = this.localeMoment(this.startDate).endOf("quarter").format(W)) : t === w.Year && (this.startDate = this.localeMoment(n).startOf("year").format(W), this.endDate = this.localeMoment(this.startDate).endOf("year").format(W));
         else {
-          let o = this.localeMoment(this.startDate), i = this.localeMoment(this.endDate).add(1, "days");
+          let i = this.localeMoment(this.startDate), o = this.localeMoment(this.endDate).add(1, "days");
           if (this.selectDate !== void 0) {
             let d = this.localeMoment(this.selectDate);
-            d >= o && d < i && (s = this.selectDate);
+            d >= i && d < o && (n = this.selectDate);
           }
           let a = this.localeMoment();
-          a >= o && a < i && (s = a.format(H)), t === D.Day ? (this.startDate = s, this.endDate = this.startDate, this.cellUnit = X.Hour) : t === D.Week ? (this.startDate = this.localeMoment(s).startOf("week").format(H), this.endDate = this.localeMoment(this.startDate).endOf("week").format(H)) : t === D.Month ? (this.startDate = this.localeMoment(s).startOf("month").format(H), this.endDate = this.localeMoment(this.startDate).endOf("month").format(H)) : t === D.Quarter && (this.startDate = this.localeMoment(s).startOf("quarter").format(H), this.endDate = this.localeMoment(this.startDate).endOf("quarter").format(H));
+          a >= i && a < o && (n = a.format(W)), t === w.Day ? (this.startDate = n, this.endDate = this.startDate, this.cellUnit = O.Hour) : t === w.Week ? (this.startDate = this.localeMoment(n).startOf("week").format(W), this.endDate = this.localeMoment(this.startDate).endOf("week").format(W)) : t === w.Month ? (this.startDate = this.localeMoment(n).startOf("month").format(W), this.endDate = this.localeMoment(this.startDate).endOf("month").format(W)) : t === w.Quarter && (this.startDate = this.localeMoment(n).startOf("quarter").format(W), this.endDate = this.localeMoment(this.startDate).endOf("quarter").format(W));
         }
         this.viewType = t;
       }
@@ -1825,18 +1843,18 @@ class br {
     return !!this.config.schedulerWidth.endsWith && this.config.schedulerWidth.endsWith("%");
   }
   toggleExpandStatus(t) {
-    let e = !1, r = -1, s = !1, o = /* @__PURE__ */ new Map();
-    this.renderData.forEach((i) => {
+    let e = !1, r = -1, n = !1, i = /* @__PURE__ */ new Map();
+    this.renderData.forEach((o) => {
       if (e === !1)
-        i.slotId === t && i.hasChildren && (e = !0, s = !i.expanded, i.expanded = s, r = i.indent, o.set(i.indent, {
-          expanded: i.expanded,
-          render: i.render
+        o.slotId === t && o.hasChildren && (e = !0, n = !o.expanded, o.expanded = n, r = o.indent, i.set(o.indent, {
+          expanded: o.expanded,
+          render: o.render
         }));
-      else if (i.indent > r) {
-        let a = o.get(i.indent - 1);
-        i.render = a.expanded && a.render, i.hasChildren && o.set(i.indent, {
-          expanded: i.expanded,
-          render: i.render
+      else if (o.indent > r) {
+        let a = i.get(o.indent - 1);
+        o.render = a.expanded && a.render, o.hasChildren && i.set(o.indent, {
+          expanded: o.expanded,
+          render: o.render
         });
       } else
         e = !1;
@@ -1873,8 +1891,8 @@ class br {
   }
   getSlotById(t) {
     let e = this.getSlots(), r;
-    return e.forEach((s) => {
-      s.id === t && (r = s);
+    return e.forEach((n) => {
+      n.id === t && (r = n);
     }), r;
   }
   getResourceById(t) {
@@ -1893,7 +1911,7 @@ class br {
     }), t;
   }
   getCellMaxEvents() {
-    return this.viewType === D.Week ? this.config.weekMaxEvents : this.viewType === D.Day ? this.config.dayMaxEvents : this.viewType === D.Month ? this.config.monthMaxEvents : this.viewType === D.Year ? this.config.yearMaxEvents : this.viewType === D.Quarter ? this.config.quarterMaxEvents : this.config.customMaxEvents;
+    return this.viewType === w.Week ? this.config.weekMaxEvents : this.viewType === w.Day ? this.config.dayMaxEvents : this.viewType === w.Month ? this.config.monthMaxEvents : this.viewType === w.Year ? this.config.yearMaxEvents : this.viewType === w.Quarter ? this.config.quarterMaxEvents : this.config.customMaxEvents;
   }
   getDateLabel() {
     let t = this.localeMoment(this.startDate), e = this.localeMoment(this.endDate), r = t.format("LL");
@@ -1908,11 +1926,15 @@ class br {
   updateEventEnd(t, e) {
     t.end = e, this._createRenderData();
   }
-  moveEvent(t, e, r, s, o) {
-    this._detachEvent(t), this.isEventPerspective ? (t.groupId = e, t.groupName = r) : t.resourceId = e, t.end = o, t.start = s, this._attachEvent(t), this._createRenderData();
+  swapEvent(t, e) {
+    var r = Object.assign({}, t), n = Object.assign({}, e);
+    this._detachEvent(t), this._detachEvent(e), this.isEventPerspective ? (r.groupId = e.groupId, r.groupName = e.groupName, n.groupId = t.groupId, n.groupName = t.groupName) : (r.resourceId = e.resourceId, n.resourceId = t.resourceId), r.end = e.end, r.start = e.start, n.end = t.end, n.start = t.start, this._attachEvent(r), this._attachEvent(n), this._createRenderData();
   }
-  isEventInTimeWindow(t, e, r, s) {
-    return t < s && e > r;
+  moveEvent(t, e, r, n, i) {
+    this._detachEvent(t), this.isEventPerspective ? (t.groupId = e, t.groupName = r) : t.resourceId = e, t.end = i, t.start = n, this._attachEvent(t), this._createRenderData();
+  }
+  isEventInTimeWindow(t, e, r, n) {
+    return t < n && e > r;
   }
   removeEvent(t) {
     let e = this.events.indexOf(t);
@@ -1920,15 +1942,15 @@ class br {
   }
   removeEventById(t) {
     let e = -1;
-    this.events.forEach((r, s) => {
-      r.id === t && (e = s);
+    this.events.forEach((r, n) => {
+      r.id === t && (e = n);
     }), e !== -1 && (this.events.splice(e, 1), this._createRenderData());
   }
   getResourceTableConfigWidth() {
-    return this.showAgenda ? this.config.agendaResourceTableWidth : this.viewType === D.Week ? this.config.weekResourceTableWidth : this.viewType === D.Day ? this.config.dayResourceTableWidth : this.viewType === D.Month ? this.config.monthResourceTableWidth : this.viewType === D.Year ? this.config.yearResourceTableWidth : this.viewType === D.Quarter ? this.config.quarterResourceTableWidth : this.config.customResourceTableWidth;
+    return this.showAgenda ? this.config.agendaResourceTableWidth : this.viewType === w.Week ? this.config.weekResourceTableWidth : this.viewType === w.Day ? this.config.dayResourceTableWidth : this.viewType === w.Month ? this.config.monthResourceTableWidth : this.viewType === w.Year ? this.config.yearResourceTableWidth : this.viewType === w.Quarter ? this.config.quarterResourceTableWidth : this.config.customResourceTableWidth;
   }
   getContentCellConfigWidth() {
-    return this.viewType === D.Week ? this.config.weekCellWidth : this.viewType === D.Day ? this.config.dayCellWidth : this.viewType === D.Month ? this.config.monthCellWidth : this.viewType === D.Year ? this.config.yearCellWidth : this.viewType === D.Quarter ? this.config.quarterCellWidth : this.config.customCellWidth;
+    return this.viewType === w.Week ? this.config.weekCellWidth : this.viewType === w.Day ? this.config.dayCellWidth : this.viewType === w.Month ? this.config.monthCellWidth : this.viewType === w.Year ? this.config.yearCellWidth : this.viewType === w.Quarter ? this.config.quarterCellWidth : this.config.customCellWidth;
   }
   _setDocumentWidth(t) {
     t >= 0 && (this.documentWidth = t);
@@ -1939,9 +1961,9 @@ class br {
   }
   _attachEvent(t) {
     let e = 0, r = this.localeMoment(t.start);
-    this.events.forEach((s, o) => {
-      let i = this.localeMoment(s.start);
-      r >= i && (e = o + 1);
+    this.events.forEach((n, i) => {
+      let o = this.localeMoment(n.start);
+      r >= o && (e = i + 1);
     }), this.events.splice(e, 0, t);
   }
   _handleRecurringEvents() {
@@ -1949,10 +1971,10 @@ class br {
     t.forEach((e) => {
       this._detachEvent(e);
     }), t.forEach((e) => {
-      let r = this.localeMoment(this.startDate), s = this.localeMoment(this.endDate).add(1, "days"), o = this.localeMoment(e.start), i = this.localeMoment(e.end), a = ke(e.rrule), d, c = a.origOptions.until || s.toDate();
-      if (a.origOptions.dtstart && (d = this.localeMoment(a.origOptions.dtstart)), s < c && (a.origOptions.until = s.toDate()), a = ke(a.toString()), e.exdates || e.exrule) {
+      let r = this.localeMoment(this.startDate), n = this.localeMoment(this.endDate).add(1, "days"), i = this.localeMoment(e.start), o = this.localeMoment(e.end), a = je(e.rrule), d, c = a.origOptions.until || n.toDate();
+      if (a.origOptions.dtstart && (d = this.localeMoment(a.origOptions.dtstart)), n < c && (a.origOptions.until = n.toDate()), a = je(a.toString()), e.exdates || e.exrule) {
         const f = new Zt();
-        f.rrule(a), e.exrule && f.exrule(ke(e.exrule)), e.exdates && e.exdates.forEach((m) => {
+        f.rrule(a), e.exrule && f.exrule(je(e.exrule)), e.exdates && e.exdates.forEach((m) => {
           f.exdate(this.localeMoment(m).toDate());
         }), a = f;
       }
@@ -1962,26 +1984,26 @@ class br {
         recurringEventStart: e.start,
         recurringEventEnd: e.end,
         id: `${e.id}-${m}`,
-        start: a.origOptions.tzid ? this.localeMoment.utc(f).utcOffset(this.localeMoment().utcOffset(), !0).format(L) : this.localeMoment(f).format(L),
-        end: a.origOptions.tzid ? this.localeMoment.utc(f).utcOffset(this.localeMoment().utcOffset(), !0).add(i.diff(o), "ms").add(this.localeMoment(c).utcOffset() - this.localeMoment(e.start).utcOffset(), "m").format(L) : this.localeMoment(f).add(i.diff(o), "ms").format(L)
+        start: a.origOptions.tzid ? this.localeMoment.utc(f).utcOffset(this.localeMoment().utcOffset(), !0).format(P) : this.localeMoment(f).format(P),
+        end: a.origOptions.tzid ? this.localeMoment.utc(f).utcOffset(this.localeMoment().utcOffset(), !0).add(o.diff(i), "ms").add(this.localeMoment(c).utcOffset() - this.localeMoment(e.start).utcOffset(), "m").format(P) : this.localeMoment(f).add(o.diff(i), "ms").format(P)
       })).forEach((f) => {
         let m = this.localeMoment(f.start), E = this.localeMoment(f.end);
-        this.isEventInTimeWindow(m, E, r, s) && (!d || m >= d) && this._attachEvent(f);
+        this.isEventInTimeWindow(m, E, r, n) && (!d || m >= d) && this._attachEvent(f);
       });
     });
   }
   _resolveDate(t, e = void 0) {
-    if (e != null && (this.selectDate = this.localeMoment(e).format(H)), this.viewType === D.Week)
-      this.startDate = e != null ? this.localeMoment(e).startOf("week").format(H) : this.localeMoment(this.startDate).add(t, "weeks").format(H), this.endDate = this.localeMoment(this.startDate).endOf("week").format(H);
-    else if (this.viewType === D.Day)
-      this.startDate = e != null ? this.selectDate : this.localeMoment(this.startDate).add(t, "days").format(H), this.endDate = this.startDate;
-    else if (this.viewType === D.Month)
-      this.startDate = e != null ? this.localeMoment(e).startOf("month").format(H) : this.localeMoment(this.startDate).add(t, "months").format(H), this.endDate = this.localeMoment(this.startDate).endOf("month").format(H);
-    else if (this.viewType === D.Quarter)
-      this.startDate = e != null ? this.localeMoment(e).startOf("quarter").format(H) : this.localeMoment(this.startDate).add(t, "quarters").format(H), this.endDate = this.localeMoment(this.startDate).endOf("quarter").format(H);
-    else if (this.viewType === D.Year)
-      this.startDate = e != null ? this.localeMoment(e).startOf("year").format(H) : this.localeMoment(this.startDate).add(t, "years").format(H), this.endDate = this.localeMoment(this.startDate).endOf("year").format(H);
-    else if (this.viewType === D.Custom || this.viewType === D.Custom1 || this.viewType === D.Custom2)
+    if (e != null && (this.selectDate = this.localeMoment(e).format(W)), this.viewType === w.Week)
+      this.startDate = e != null ? this.localeMoment(e).startOf("week").format(W) : this.localeMoment(this.startDate).add(t, "weeks").format(W), this.endDate = this.localeMoment(this.startDate).endOf("week").format(W);
+    else if (this.viewType === w.Day)
+      this.startDate = e != null ? this.selectDate : this.localeMoment(this.startDate).add(t, "days").format(W), this.endDate = this.startDate;
+    else if (this.viewType === w.Month)
+      this.startDate = e != null ? this.localeMoment(e).startOf("month").format(W) : this.localeMoment(this.startDate).add(t, "months").format(W), this.endDate = this.localeMoment(this.startDate).endOf("month").format(W);
+    else if (this.viewType === w.Quarter)
+      this.startDate = e != null ? this.localeMoment(e).startOf("quarter").format(W) : this.localeMoment(this.startDate).add(t, "quarters").format(W), this.endDate = this.localeMoment(this.startDate).endOf("quarter").format(W);
+    else if (this.viewType === w.Year)
+      this.startDate = e != null ? this.localeMoment(e).startOf("year").format(W) : this.localeMoment(this.startDate).add(t, "years").format(W), this.endDate = this.localeMoment(this.startDate).endOf("year").format(W);
+    else if (this.viewType === w.Custom || this.viewType === w.Custom1 || this.viewType === w.Custom2)
       if (this.behaviors.getCustomDateFunc != null) {
         let r = this.behaviors.getCustomDateFunc(this, t, e);
         this.startDate = r.startDate, this.endDate = r.endDate, r.cellUnit && (this.cellUnit = r.cellUnit);
@@ -1989,39 +2011,61 @@ class br {
         throw new Error("This is custom view type, set behaviors.getCustomDateFunc func to resolve the time window(startDate and endDate) yourself");
   }
   _createHeaders() {
-    let t = [], e = this.localeMoment(this.startDate), r = this.localeMoment(this.endDate), s = e;
+    let t = [], e = this.localeMoment(this.startDate), r = this.localeMoment(this.endDate), n = e;
     if (this.showAgenda)
-      t.push({ time: s.format(L), nonWorkingTime: !1 });
-    else if (this.cellUnit === X.Hour)
-      for (e = e.add(this.config.dayStartFrom, "hours"), r = r.add(this.config.dayStopTo, "hours"), s = e; s >= e && s <= r; ) {
+      t.push({ time: n.format(P), nonWorkingTime: !1 });
+    else if (this.cellUnit === O.Hour) {
+      e = e.add(this.config.dayStartFrom, "hours"), r = r.add(this.config.dayStopTo, "hours"), e.hour() == 0 && (e = e.add(this.config.dayStartFrom, "hours")), r.hour() == 0 && (r = r.add(this.config.dayStopTo, "hours")), n = e;
+      let i = -1;
+      for (; n >= e && n <= r; ) {
+        if (n.hour() == i) {
+          n = n.add(1, "hours");
+          continue;
+        }
+        i = n.hour();
         let o = this.getMinuteStepsInHour();
-        for (let i = 0; i < o; i++) {
-          let a = s.hour();
-          if (a >= this.config.dayStartFrom && a <= this.config.dayStopTo) {
-            let d = s.format(L), c = this.behaviors.isNonWorkingTimeFunc(this, d);
-            t.push({ time: d, nonWorkingTime: c });
+        for (let a = 0; a < o; a++) {
+          let d = n.hour();
+          if (d >= this.config.dayStartFrom && d <= this.config.dayStopTo) {
+            let c = n.format(P), h = this.behaviors.isNonWorkingTimeFunc(this, c);
+            t.push({ time: c, nonWorkingTime: h });
           }
-          s = s.add(this.config.minuteStep, "minutes");
+          n = n.add(this.config.minuteStep, "minutes");
         }
       }
-    else
-      for (; s >= e && s <= r; ) {
-        let o = s.format(L), i = s.weekday();
-        if (this.config.displayWeekend || i !== 0 && i !== 6) {
-          let a = this.behaviors.isNonWorkingTimeFunc(this, o);
-          t.push({ time: o, nonWorkingTime: a });
+    } else if (this.cellUnit === O.Day)
+      for (; n >= e && n <= r; ) {
+        let i = n.format(P), o = n.weekday();
+        if (this.config.displayWeekend || o !== 0 && o !== 6) {
+          let a = this.behaviors.isNonWorkingTimeFunc(this, i);
+          t.push({ time: i, nonWorkingTime: a });
         }
-        s = s.add(1, "days");
+        n = n.add(1, "days");
+      }
+    else if (this.cellUnit === O.Week)
+      for (; n >= e && n <= r; ) {
+        let i = n.format(W);
+        t.push({ time: i }), n = n.add(1, "weeks").startOf("week");
+      }
+    else if (this.cellUnit === O.Month)
+      for (; n >= e && n <= r; ) {
+        let i = n.format(W);
+        t.push({ time: i }), n = n.add(1, "months").startOf("month");
+      }
+    else if (this.cellUnit === O.Year)
+      for (; n >= e && n <= r; ) {
+        let i = n.format(W);
+        t.push({ time: i }), n = n.add(1, "years").startOf("year");
       }
     this.headers = t;
   }
   _createInitHeaderEvents(t) {
-    let e = this.localeMoment(t.time), r = e.format(L), s = this.showAgenda ? this.viewType === D.Week ? e.add(1, "weeks").format(L) : this.viewType === D.Day ? e.add(1, "days").format(L) : this.viewType === D.Month ? e.add(1, "months").format(L) : this.viewType === D.Year ? e.add(1, "years").format(L) : this.viewType === D.Quarter ? e.add(1, "quarters").format(L) : this.localeMoment(this.endDate).add(1, "days").format(L) : this.cellUnit === X.Hour ? e.add(this.config.minuteStep, "minutes").format(L) : e.add(1, "days").format(L);
+    let e = this.localeMoment(t.time), r = e.format(P), n = this.showAgenda ? this.viewType === w.Week ? e.add(1, "weeks").format(P) : this.viewType === w.Day ? e.add(1, "days").format(P) : this.viewType === w.Month ? e.add(1, "months").format(P) : this.viewType === w.Year ? e.add(1, "years").format(P) : this.viewType === w.Quarter ? e.add(1, "quarters").format(P) : this.localeMoment(this.endDate).add(1, "days").format(P) : this.cellUnit === O.Hour ? e.add(this.config.minuteStep, "minutes").format(P) : this.cellUnit === O.Year ? e.add(1, "years").format(W) : this.cellUnit === O.Month ? e.add(1, "months").format(W) : this.cellUnit === O.Week ? e.add(1, "weeks").format(W) : e.add(1, "days").format(P);
     return {
       time: t.time,
       nonWorkingTime: t.nonWorkingTime,
       start: r,
-      end: s,
+      end: n,
       count: 0,
       addMore: 0,
       addMoreIndex: 0,
@@ -2047,18 +2091,18 @@ class br {
   _generateEventGroups() {
     let t = [], e = /* @__PURE__ */ new Set();
     this.events.forEach((r) => {
-      let s = this._getEventGroupId(r), o = this._getEventGroupName(r);
-      e.has(s) || (t.push({
-        id: s,
-        name: o,
+      let n = this._getEventGroupId(r), i = this._getEventGroupName(r);
+      e.has(n) || (t.push({
+        id: n,
+        name: i,
         state: r
-      }), e.add(s));
+      }), e.add(n));
     }), this.eventGroups = t;
   }
-  _createInitRenderData(t, e, r, s) {
-    let o = t ? e : r, i = [], a = /* @__PURE__ */ new Map();
-    o.forEach((f) => {
-      let m = s.map((v) => this._createInitHeaderEvents(v)), E = {
+  _createInitRenderData(t, e, r, n) {
+    let i = t ? e : r, o = [], a = /* @__PURE__ */ new Map();
+    i.forEach((f) => {
+      let m = n.map((v) => this._createInitHeaderEvents(v)), E = {
         slotId: f.id,
         slotName: f.name,
         parentId: f.parentId,
@@ -2071,25 +2115,25 @@ class br {
         hasChildren: !1,
         expanded: !0,
         render: !0
-      }, C = f.id, R;
-      a.has(C) ? (R = a.get(C), R.data = E) : (R = {
+      }, R = f.id, C;
+      a.has(R) ? (C = a.get(R), C.data = E) : (C = {
         data: E,
         children: []
-      }, a.set(C, R));
+      }, a.set(R, C));
       let x = f.parentId;
-      if (!x || x === C)
-        i.push(R);
+      if (!x || x === R)
+        o.push(C);
       else {
         let v;
         a.has(x) ? v = a.get(x) : (v = {
           data: void 0,
           children: []
-        }, a.set(x, v)), v.children.push(R);
+        }, a.set(x, v)), v.children.push(C);
       }
     });
     let d = [], c;
-    for (c = i.length - 1; c >= 0; c--)
-      d.push(i[c]);
+    for (c = o.length - 1; c >= 0; c--)
+      d.push(o[c]);
     let h = [], p;
     for (; d.length > 0; )
       for (p = d.pop(), p.data.indent > 0 && (p.data.render = this.config.defaultExpanded), p.children.length > 0 && (p.data.hasChildren = !0, p.data.expanded = this.config.defaultExpanded), h.push(p.data), c = p.children.length - 1; c >= 0; c--)
@@ -2099,12 +2143,12 @@ class br {
   _getSpan(t, e, r) {
     if (this.showAgenda)
       return 1;
-    let s = this.localeMoment(t), o = this.localeMoment(e), i = 0;
+    let n = this.localeMoment(t), i = this.localeMoment(e), o = 0;
     for (let a of r) {
-      let d = this.localeMoment(a.time), c = this.cellUnit === X.Hour ? this.localeMoment(a.time).add(this.config.minuteStep, "minutes") : this.localeMoment(a.time).add(1, "days");
-      d < o && c > s && i++;
+      let d = this.localeMoment(a.time), c = this.cellUnit === O.Hour ? this.localeMoment(a.time).add(this.config.minuteStep, "minutes") : this.cellUnit === O.Week ? this.localeMoment(a.time).add(1, "weeks") : this.cellUnit === O.Month ? this.localeMoment(a.time).add(1, "months") : this.cellUnit === O.Year ? this.localeMoment(a.time).add(1, "year") : this.localeMoment(a.time).add(1, "days");
+      d < i && c > n && o++;
     }
-    return i;
+    return o;
   }
   _validateResource(t) {
     if (Object.prototype.toString.call(t) !== "[object Array]")
@@ -2141,60 +2185,60 @@ class br {
       throw console.error("Minute step is not set properly - 60 minutes must be divisible without remainder by this number"), new Error("Minute step is not set properly - 60 minutes must be divisible without remainder by this number");
   }
   _compare(t, e) {
-    let r = this.localeMoment(t.start), s = this.localeMoment(e.start);
-    if (r !== s)
-      return r < s ? -1 : 1;
-    let o = this.localeMoment(t.end), i = this.localeMoment(e.end);
-    return o !== i ? o < i ? -1 : 1 : t.id < e.id ? -1 : 1;
+    let r = this.localeMoment(t.start), n = this.localeMoment(e.start);
+    if (r !== n)
+      return r < n ? -1 : 1;
+    let i = this.localeMoment(t.end), o = this.localeMoment(e.end);
+    return i !== o ? i < o ? -1 : 1 : t.id < e.id ? -1 : 1;
   }
   _createRenderData() {
     let t = this._createInitRenderData(this.isEventPerspective, this.eventGroups, this.resources, this.headers), e = this.getCellMaxEvents();
     const r = 30;
-    this.events.forEach((s) => {
-      let o = t.filter((i) => i.slotId === this._getEventSlotId(s));
-      if (o.length > 0) {
-        let i = o[0], a = this._getSpan(s.start, s.end, this.headers), d = this.localeMoment(s.start), c = this.localeMoment(s.end), h = -1;
-        i.headerItems.forEach((p, f) => {
+    this.events.forEach((n) => {
+      let i = t.filter((o) => o.slotId === this._getEventSlotId(n));
+      if (i.length > 0) {
+        let o = i[0], a = this._getSpan(n.start, n.end, this.headers), d = this.localeMoment(n.start), c = this.localeMoment(n.end), h = -1;
+        o.headerItems.forEach((p, f) => {
           let m = this.localeMoment(p.start);
           if (this.localeMoment(p.end) > d && m < c) {
-            if (p.count = p.count + 1, p.count > i.rowMaxCount) {
-              i.rowMaxCount = p.count;
-              let x = (e <= r && i.rowMaxCount > e ? e : i.rowMaxCount) * this.config.eventItemLineHeight + (this.config.creatable && this.config.checkConflict === !1 ? 20 : 2);
-              x > i.rowHeight && (i.rowHeight = x);
+            if (p.count = p.count + 1, p.count > o.rowMaxCount) {
+              o.rowMaxCount = p.count;
+              let x = (e <= r && o.rowMaxCount > e ? e : o.rowMaxCount) * this.config.eventItemLineHeight + (this.config.creatable && this.config.checkConflict === !1 ? 20 : 2);
+              x > o.rowHeight && (o.rowHeight = x);
             }
             if (h === -1) {
-              let R = 0;
-              for (; p.events[R] !== void 0; )
-                R++;
-              h = R;
+              let C = 0;
+              for (; p.events[C] !== void 0; )
+                C++;
+              h = C;
             }
-            let C = m <= d || f === 0;
-            if (C === !1) {
-              let R = i.headerItems[f - 1], x = this.localeMoment(R.start);
-              (this.localeMoment(R.end) <= d || x >= c) && (C = !0);
+            let R = m <= d || f === 0;
+            if (R === !1) {
+              let C = o.headerItems[f - 1], x = this.localeMoment(C.start);
+              (this.localeMoment(C.end) <= d || x >= c) && (R = !0);
             }
-            p.events[h] = this._createHeaderEvent(C, a, s);
+            p.events[h] = this._createHeaderEvent(R, a, n);
           }
         });
       }
-    }), (e <= r || this.behaviors.getSummaryFunc !== void 0) && t.forEach((s) => {
-      let o = !1;
-      if (s.headerItems.forEach((i) => {
+    }), (e <= r || this.behaviors.getSummaryFunc !== void 0) && t.forEach((n) => {
+      let i = !1;
+      if (n.headerItems.forEach((o) => {
         if (e <= r) {
           let a = 0, d = 0, c = 0;
           for (; c < e - 1; )
-            i.events[c] !== void 0 && (a++, d = c + 1), c++;
-          i.events[c] !== void 0 ? a + 1 < i.count && (i.addMore = i.count - a, i.addMoreIndex = d) : a < i.count && (i.addMore = i.count - a, i.addMoreIndex = d);
+            o.events[c] !== void 0 && (a++, d = c + 1), c++;
+          o.events[c] !== void 0 ? a + 1 < o.count && (o.addMore = o.count - a, o.addMoreIndex = d) : a < o.count && (o.addMore = o.count - a, o.addMoreIndex = d);
         }
         if (this.behaviors.getSummaryFunc !== void 0) {
           let a = [];
-          i.events.forEach((d) => {
+          o.events.forEach((d) => {
             d && d.eventItem && a.push(d.eventItem);
-          }), i.summary = this.behaviors.getSummaryFunc(this, a, s.slotId, s.slotName, i.start, i.end), i.summary && i.summary.text != null && (o = !0);
+          }), o.summary = this.behaviors.getSummaryFunc(this, a, n.slotId, n.slotName, o.start, o.end), o.summary && o.summary.text != null && (i = !0);
         }
-      }), s.hasSummary = o, o) {
-        let a = ((e <= r && s.rowMaxCount > e ? e : s.rowMaxCount) + 1) * this.config.eventItemLineHeight + (this.config.creatable && this.config.checkConflict === !1 ? 20 : 2);
-        a > s.rowHeight && (s.rowHeight = a);
+      }), n.hasSummary = i, i) {
+        let a = ((e <= r && n.rowMaxCount > e ? e : n.rowMaxCount) + 1) * this.config.eventItemLineHeight + (this.config.creatable && this.config.checkConflict === !1 ? 20 : 2);
+        a > n.rowHeight && (n.rowHeight = a);
       }
     }), this.renderData = t;
   }
@@ -2244,7 +2288,7 @@ const yr = {
     },
     {
       id: "r7",
-      name: "Resource7Resource7Resource7Resource7Resource7"
+      name: "Resource7"
     }
   ],
   events: [
@@ -2598,18 +2642,18 @@ class cr extends _e {
     });
     M(this, "resolveScrollbarSize", () => {
       const { schedulerData: e } = this.props;
-      let r = 17, s = 17, o = 17, i = 17, a = e.getSchedulerContentDesiredHeight();
-      this.schedulerContent && (r = this.schedulerContent.offsetHeight - this.schedulerContent.clientHeight, s = this.schedulerContent.offsetWidth - this.schedulerContent.clientWidth), this.schedulerResource && (o = this.schedulerResource.offsetHeight - this.schedulerResource.clientHeight, i = this.schedulerResource.offsetWidth - this.schedulerResource.clientWidth), this.schedulerContentBgTable && this.schedulerContentBgTable.offsetHeight && (a = this.schedulerContentBgTable.offsetHeight);
+      let r = 17, n = 17, i = 17, o = 17, a = e.getSchedulerContentDesiredHeight();
+      this.schedulerContent && (r = this.schedulerContent.offsetHeight - this.schedulerContent.clientHeight, n = this.schedulerContent.offsetWidth - this.schedulerContent.clientWidth), this.schedulerResource && (i = this.schedulerResource.offsetHeight - this.schedulerResource.clientHeight, o = this.schedulerResource.offsetWidth - this.schedulerResource.clientWidth), this.schedulerContentBgTable && this.schedulerContentBgTable.offsetHeight && (a = this.schedulerContentBgTable.offsetHeight);
       let d = {}, c = !1;
       r != this.state.contentScrollbarHeight && (d = {
         ...d,
         contentScrollbarHeight: r
-      }, c = !0), s != this.state.contentScrollbarWidth && (d = { ...d, contentScrollbarWidth: s }, c = !0), a != this.state.contentHeight && (d = { ...d, contentHeight: a }, c = !0), o != this.state.resourceScrollbarHeight && (d = {
+      }, c = !0), n != this.state.contentScrollbarWidth && (d = { ...d, contentScrollbarWidth: n }, c = !0), a != this.state.contentHeight && (d = { ...d, contentHeight: a }, c = !0), i != this.state.resourceScrollbarHeight && (d = {
         ...d,
-        resourceScrollbarHeight: o
-      }, c = !0), i != this.state.resourceScrollbarWidth && (d = {
+        resourceScrollbarHeight: i
+      }, c = !0), o != this.state.resourceScrollbarWidth && (d = {
         ...d,
-        resourceScrollbarWidth: i
+        resourceScrollbarWidth: o
       }, c = !0), c && this.setState(d);
     });
     M(this, "schedulerHeadRef", (e) => {
@@ -2650,18 +2694,18 @@ class cr extends _e {
     });
     M(this, "onSchedulerContentScroll", (e, r) => {
       (this.currentArea === 0 || this.currentArea === -1) && (this.schedulerHead.scrollLeft != this.schedulerContent.scrollLeft && (this.schedulerHead.scrollLeft = this.schedulerContent.scrollLeft), this.schedulerResource.scrollTop != this.schedulerContent.scrollTop && (this.schedulerResource.scrollTop = this.schedulerContent.scrollTop));
-      const { schedulerData: s, onScrollLeft: o, onScrollRight: i, onScrollTop: a, onScrollBottom: d } = this.props, { scrollLeft: c, scrollTop: h } = this.state;
-      this.schedulerContent.scrollLeft !== c ? (this.schedulerContent.scrollLeft === 0 && o != null && o(s, this.schedulerContent, this.schedulerContent.scrollWidth - this.schedulerContent.clientWidth), this.schedulerContent.scrollLeft === this.schedulerContent.scrollWidth - this.schedulerContent.clientWidth && i != null && i(s, this.schedulerContent, this.schedulerContent.scrollWidth - this.schedulerContent.clientWidth)) : this.schedulerContent.scrollTop !== h && (this.schedulerContent.scrollTop === 0 && a != null && a(s, this.schedulerContent, this.schedulerContent.scrollHeight - this.schedulerContent.clientHeight), this.schedulerContent.scrollTop === this.schedulerContent.scrollHeight - this.schedulerContent.clientHeight && d != null && d(s, this.schedulerContent, this.schedulerContent.scrollHeight - this.schedulerContent.clientHeight)), this.setState({
+      const { schedulerData: n, onScrollLeft: i, onScrollRight: o, onScrollTop: a, onScrollBottom: d } = this.props, { scrollLeft: c, scrollTop: h } = this.state;
+      this.schedulerContent.scrollLeft !== c ? (this.schedulerContent.scrollLeft === 0 && i != null && i(n, this.schedulerContent, this.schedulerContent.scrollWidth - this.schedulerContent.clientWidth), this.schedulerContent.scrollLeft === this.schedulerContent.scrollWidth - this.schedulerContent.clientWidth && o != null && o(n, this.schedulerContent, this.schedulerContent.scrollWidth - this.schedulerContent.clientWidth)) : this.schedulerContent.scrollTop !== h && (this.schedulerContent.scrollTop === 0 && a != null && a(n, this.schedulerContent, this.schedulerContent.scrollHeight - this.schedulerContent.clientHeight), this.schedulerContent.scrollTop === this.schedulerContent.scrollHeight - this.schedulerContent.clientHeight && d != null && d(n, this.schedulerContent, this.schedulerContent.scrollHeight - this.schedulerContent.clientHeight)), this.setState({
         scrollLeft: this.schedulerContent.scrollLeft,
         scrollTop: this.schedulerContent.scrollTop
       });
     });
     M(this, "onViewChange", (e) => {
-      const { onViewChange: r, schedulerData: s } = this.props;
-      let o = parseInt(e.target.value.charAt(0)), i = e.target.value.charAt(1) === "1", a = e.target.value.charAt(2) === "1";
-      r(s, {
-        viewType: o,
-        showAgenda: i,
+      const { onViewChange: r, schedulerData: n } = this.props;
+      let i = parseInt(e.target.value.charAt(0)), o = e.target.value.charAt(1) === "1", a = e.target.value.charAt(2) === "1";
+      r(n, {
+        viewType: i,
+        showAgenda: o,
         isEventPerspective: a
       });
     });
@@ -2680,16 +2724,16 @@ class cr extends _e {
       this.setState({
         visible: !1
       });
-      const { onSelectDate: r, schedulerData: s } = this.props;
-      r(s, e);
+      const { onSelectDate: r, schedulerData: n } = this.props;
+      r(n, e);
     });
-    const { schedulerData: r, dndSources: s } = e;
-    let o = [];
-    o.push(new ot((a) => a.eventItem, Ne)), s != null && s.length > 0 && (o = [...o, ...s]);
-    let i = new rr(o, ft);
+    const { schedulerData: r, dndSources: n } = e;
+    let i = [];
+    i.push(new ot((a) => a.eventItem, Ne)), n != null && n.length > 0 && (i = [...i, ...n]);
+    let o = new rr(i, ft);
     this.currentArea = -1, r._setDocumentWidth(document.documentElement.clientWidth), this.state = {
       visible: !1,
-      dndContext: i,
+      dndContext: o,
       contentHeight: r.getSchedulerContentDesiredHeight(),
       contentScrollbarHeight: 17,
       contentScrollbarWidth: 17,
@@ -2706,44 +2750,44 @@ class cr extends _e {
   }
   componentDidUpdate(e, r) {
     this.resolveScrollbarSize();
-    const { schedulerData: s } = this.props, { localeMoment: o, behaviors: i } = s;
-    if (s.getScrollToSpecialMoment() && i.getScrollSpecialMomentFunc && this.schedulerContent && this.schedulerContent.scrollWidth > this.schedulerContent.clientWidth) {
-      let a = o(s.startDate).startOf("day"), d = o(s.endDate).endOf("day"), c = i.getScrollSpecialMomentFunc(s, a, d);
+    const { schedulerData: n } = this.props, { localeMoment: i, behaviors: o } = n;
+    if (n.getScrollToSpecialMoment() && o.getScrollSpecialMomentFunc && this.schedulerContent && this.schedulerContent.scrollWidth > this.schedulerContent.clientWidth) {
+      let a = i(n.startDate).startOf("day"), d = i(n.endDate).endOf("day"), c = o.getScrollSpecialMomentFunc(n, a, d);
       if (c >= a && c <= d) {
         let h = 0;
-        s.headers.forEach((p) => {
-          let f = o(p.time);
+        n.headers.forEach((p) => {
+          let f = i(p.time);
           c >= f && h++;
-        }), this.schedulerContent.scrollLeft = (h - 1) * s.getContentCellWidth(), s.setScrollToSpecialMoment(!1);
+        }), this.schedulerContent.scrollLeft = (h - 1) * n.getContentCellWidth(), n.setScrollToSpecialMoment(!1);
       }
     }
   }
   render() {
-    const { schedulerData: e, leftCustomHeader: r, rightCustomHeader: s } = this.props, { renderData: o, viewType: i, showAgenda: a, isEventPerspective: d, config: c } = e, h = e.getSchedulerWidth(), p = c.calendarPopoverEnabled;
-    let f = e.getDateLabel(), m = `${i}${a ? 1 : 0}${d ? 1 : 0}`, E = c.views.map((v) => /* @__PURE__ */ l.jsx(lr, { value: `${v.viewType}${v.showAgenda ? 1 : 0}${v.isEventPerspective ? 1 : 0}`, children: /* @__PURE__ */ l.jsx("span", { style: { margin: "0px 8px" }, children: v.viewName }) }, `${v.viewType}${v.showAgenda ? 1 : 0}${v.isEventPerspective ? 1 : 0}`)), C = /* @__PURE__ */ l.jsx("tr", {});
+    const { schedulerData: e, leftCustomHeader: r, rightCustomHeader: n } = this.props, { renderData: i, viewType: o, showAgenda: a, isEventPerspective: d, config: c } = e, h = e.getSchedulerWidth(), p = c.calendarPopoverEnabled;
+    let f = e.getDateLabel(), m = `${o}${a ? 1 : 0}${d ? 1 : 0}`, E = c.views.map((v) => /* @__PURE__ */ l.jsx(lr, { value: `${v.viewType}${v.showAgenda ? 1 : 0}${v.isEventPerspective ? 1 : 0}`, children: /* @__PURE__ */ l.jsx("span", { style: { margin: "0px 8px" }, children: v.viewName }) }, `${v.viewType}${v.showAgenda ? 1 : 0}${v.isEventPerspective ? 1 : 0}`)), R = /* @__PURE__ */ l.jsx("tr", {});
     if (a)
-      C = /* @__PURE__ */ l.jsx(pt, { ...this.props });
+      R = /* @__PURE__ */ l.jsx(pt, { ...this.props });
     else {
-      let v = e.getResourceTableWidth(), T = h - v + 1, w = e.getContentTableWidth() - 1, j = this.state.dndContext.getDropTarget(), k = this.state.dndContext.getDndSource(), P = o.filter((B) => B.render).map((B) => /* @__PURE__ */ he(j, { ...this.props, key: B.slotId, resourceEvents: B, dndSource: k })), S = this.state.contentScrollbarHeight, W = this.state.contentScrollbarWidth, q = this.state.resourceScrollbarHeight, Q = this.state.resourceScrollbarWidth, V = this.state.contentHeight, K = q === 0 ? S : 0, A = {
+      let v = e.getResourceTableWidth(), D = h - v + 1, T = e.getContentTableWidth() - 1, k = this.state.dndContext.getDropTarget(), j = this.state.dndContext.getDndSource(), A = i.filter((V) => V.render).map((V) => /* @__PURE__ */ he(k, { ...this.props, key: V.slotId, resourceEvents: V, dndSource: j })), S = this.state.contentScrollbarHeight, _ = this.state.contentScrollbarWidth, q = this.state.resourceScrollbarHeight, Q = this.state.resourceScrollbarWidth, G = this.state.contentHeight, K = q === 0 ? S : 0, z = {
         overflow: "auto",
         margin: "0px",
         position: "relative",
         paddingBottom: S === 0 ? q : 0
-      }, F = {
+      }, Y = {
         overflowX: "auto",
         overflowY: "auto",
         width: v + Q - 2,
-        margin: `0px -${W}px 0px 0px`
+        margin: `0px -${_}px 0px 0px`
       };
-      c.schedulerMaxHeight > 0 && (A = {
-        ...A,
+      c.schedulerMaxHeight > 0 && (z = {
+        ...z,
         maxHeight: c.schedulerMaxHeight - c.tableHeaderHeight
-      }, F = {
-        ...F,
+      }, Y = {
+        ...Y,
         maxHeight: c.schedulerMaxHeight - c.tableHeaderHeight
       });
-      let Y = e.isEventPerspective ? c.taskName : c.resourceName;
-      C = /* @__PURE__ */ l.jsxs("tr", { children: [
+      let $ = e.isEventPerspective ? c.taskName : c.resourceName;
+      R = /* @__PURE__ */ l.jsxs("tr", { children: [
         /* @__PURE__ */ l.jsx("td", { style: { width: v, verticalAlign: "top" }, children: /* @__PURE__ */ l.jsxs("div", { className: "resource-view", children: [
           /* @__PURE__ */ l.jsx(
             "div",
@@ -2761,7 +2805,7 @@ class cr extends _e {
                     overflowY: "hidden",
                     margin: `0px 0px -${S}px`
                   },
-                  children: /* @__PURE__ */ l.jsx("table", { className: "resource-table", children: /* @__PURE__ */ l.jsx("thead", { children: /* @__PURE__ */ l.jsx("tr", { style: { height: c.tableHeaderHeight }, children: /* @__PURE__ */ l.jsx("th", { className: "header3-text", children: Y }) }) }) })
+                  children: /* @__PURE__ */ l.jsx("table", { className: "resource-table", children: /* @__PURE__ */ l.jsx("thead", { children: /* @__PURE__ */ l.jsx("tr", { style: { height: c.tableHeaderHeight }, children: /* @__PURE__ */ l.jsx("th", { className: "header3-text", children: $ }) }) }) })
                 }
               )
             }
@@ -2769,7 +2813,7 @@ class cr extends _e {
           /* @__PURE__ */ l.jsx(
             "div",
             {
-              style: F,
+              style: Y,
               ref: this.schedulerResourceRef,
               onMouseOver: this.onSchedulerResourceMouseOver,
               onMouseOut: this.onSchedulerResourceMouseOut,
@@ -2778,7 +2822,7 @@ class cr extends _e {
             }
           )
         ] }) }),
-        /* @__PURE__ */ l.jsx("td", { children: /* @__PURE__ */ l.jsxs("div", { className: "scheduler-view", style: { width: T, verticalAlign: "top" }, children: [
+        /* @__PURE__ */ l.jsx("td", { children: /* @__PURE__ */ l.jsxs("div", { className: "scheduler-view", style: { width: D, verticalAlign: "top" }, children: [
           /* @__PURE__ */ l.jsx(
             "div",
             {
@@ -2803,8 +2847,8 @@ class cr extends _e {
                     "div",
                     {
                       style: {
-                        paddingRight: `${W}px`,
-                        width: w + W
+                        paddingRight: `${_}px`,
+                        width: T + _
                       },
                       children: /* @__PURE__ */ l.jsx("table", { className: "scheduler-bg-table", children: /* @__PURE__ */ l.jsx(lt, { ...this.props }) })
                     }
@@ -2816,21 +2860,21 @@ class cr extends _e {
           /* @__PURE__ */ l.jsx(
             "div",
             {
-              style: A,
+              style: z,
               ref: this.schedulerContentRef,
               onMouseOver: this.onSchedulerContentMouseOver,
               onMouseOut: this.onSchedulerContentMouseOut,
               onScroll: this.onSchedulerContentScroll,
-              children: /* @__PURE__ */ l.jsxs("div", { style: { width: w, height: V }, children: [
-                /* @__PURE__ */ l.jsx("div", { className: "scheduler-content", children: /* @__PURE__ */ l.jsx("table", { className: "scheduler-content-table", children: /* @__PURE__ */ l.jsx("tbody", { children: P }) }) }),
-                /* @__PURE__ */ l.jsx("div", { className: "scheduler-bg", children: /* @__PURE__ */ l.jsx("table", { className: "scheduler-bg-table", style: { width: w }, ref: this.schedulerContentBgTableRef, children: /* @__PURE__ */ l.jsx(dt, { ...this.props }) }) })
+              children: /* @__PURE__ */ l.jsxs("div", { style: { width: T, height: G }, children: [
+                /* @__PURE__ */ l.jsx("div", { className: "scheduler-content", children: /* @__PURE__ */ l.jsx("table", { className: "scheduler-content-table", children: /* @__PURE__ */ l.jsx("tbody", { children: A }) }) }),
+                /* @__PURE__ */ l.jsx("div", { className: "scheduler-bg", children: /* @__PURE__ */ l.jsx("table", { className: "scheduler-bg-table", style: { width: T }, ref: this.schedulerContentBgTableRef, children: /* @__PURE__ */ l.jsx(dt, { ...this.props }) }) })
               ] })
             }
           )
         ] }) })
       ] });
     }
-    let R = /* @__PURE__ */ l.jsx("div", { className: "popover-calendar", children: /* @__PURE__ */ l.jsx(Qt, { fullscreen: !1, onSelect: this.onSelect }) }), x = /* @__PURE__ */ l.jsx("div", {});
+    let C = /* @__PURE__ */ l.jsx("div", { className: "popover-calendar", children: /* @__PURE__ */ l.jsx(Qt, { fullscreen: !1, onSelect: this.onSelect }) }), x = /* @__PURE__ */ l.jsx("div", {});
     return c.headerEnabled && (x = /* @__PURE__ */ l.jsxs(
       "div",
       {
@@ -2843,20 +2887,20 @@ class cr extends _e {
         children: [
           r,
           /* @__PURE__ */ l.jsx("div", { children: /* @__PURE__ */ l.jsxs("div", { className: "header2-text", children: [
-            /* @__PURE__ */ l.jsx(Xt, { style: { marginRight: "8px" }, className: "icon-nav", onClick: this.goBack }),
-            p ? /* @__PURE__ */ l.jsx(He, { content: R, placement: "bottom", trigger: "click", open: this.state.visible, onOpenChange: this.handleVisibleChange, children: /* @__PURE__ */ l.jsx("span", { className: "header2-text-label", style: { cursor: "pointer" }, children: f }) }) : /* @__PURE__ */ l.jsx("span", { className: "header2-text-label", children: f }),
-            /* @__PURE__ */ l.jsx(Ut, { style: { marginLeft: "8px" }, className: "icon-nav", onClick: this.goNext })
+            /* @__PURE__ */ l.jsx(Ut, { style: { marginRight: "8px" }, className: "icon-nav", onClick: this.goBack }),
+            p ? /* @__PURE__ */ l.jsx(He, { content: C, placement: "bottom", trigger: "click", open: this.state.visible, onOpenChange: this.handleVisibleChange, children: /* @__PURE__ */ l.jsx("span", { className: "header2-text-label", style: { cursor: "pointer" }, children: f }) }) : /* @__PURE__ */ l.jsx("span", { className: "header2-text-label", children: f }),
+            /* @__PURE__ */ l.jsx(Xt, { style: { marginLeft: "8px" }, className: "icon-nav", onClick: this.goNext })
           ] }) }),
           /* @__PURE__ */ l.jsx("div", { children: /* @__PURE__ */ l.jsxs(dr, { defaultValue: m, size: "default", onChange: this.onViewChange, children: [
             E,
             "xx"
           ] }) }),
-          s
+          n
         ]
       }
     )), /* @__PURE__ */ l.jsx("div", { className: "scheduler-component-module", children: /* @__PURE__ */ l.jsxs("table", { id: "RBS-Scheduler-root", className: "scheduler", style: { width: `${h}px` }, children: [
       /* @__PURE__ */ l.jsx("thead", { children: /* @__PURE__ */ l.jsx("tr", { children: /* @__PURE__ */ l.jsx("td", { colSpan: "2", children: x }) }) }),
-      /* @__PURE__ */ l.jsx("tbody", { children: C })
+      /* @__PURE__ */ l.jsx("tbody", { children: R })
     ] }) });
   }
 }
@@ -2894,14 +2938,14 @@ M(cr, "propTypes", {
 });
 export {
   nr as AddMorePopover,
-  X as CellUnits,
-  L as DATETIME_FORMAT,
-  H as DATE_FORMAT,
+  O as CellUnits,
+  P as DATETIME_FORMAT,
+  W as DATE_FORMAT,
   rr as DnDContext,
   ot as DnDSource,
   yr as SampleData,
   cr as Scheduler,
   br as SchedulerData,
   ae as SummaryPos,
-  D as ViewTypes
+  w as ViewTypes
 };
