@@ -594,9 +594,18 @@ export default class SchedulerData {
       if (this.cellUnit === CellUnits.Hour) {
         start = start.add(this.config.dayStartFrom, 'hours');
         end = end.add(this.config.dayStopTo, 'hours');
+        if (start.hour() == 0) start = start.add(this.config.dayStartFrom, 'hours');
+        if (end.hour() == 0) end = end.add(this.config.dayStopTo, 'hours');
         header = start;
 
+        let prevHour = -1;
         while (header >= start && header <= end) {
+          // prevent doubled hours on time change
+          if (header.hour() == prevHour) {
+            header = header.add(1, 'hours');
+            continue;
+          }
+          prevHour = header.hour();
           let minuteSteps = this.getMinuteStepsInHour();
           for (let i = 0; i < minuteSteps; i++) {
             let hour = header.hour();
