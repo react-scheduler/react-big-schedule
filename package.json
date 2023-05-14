@@ -26,13 +26,20 @@
     "Productivity enhancement"
   ],
   "license": "MIT",
-  "author": "Ansul Agrawal (https://github.com/ansulagrawal) and Jitendra Soni (https://github.com/JitendraSoni1234)",
+  "author": "Ansul Agrawal (https://github.com/ansulagrawal)",
   "files": [
     "dist",
     "README.md"
   ],
   "main": "./dist/react-scheduler-master-index.js",
   "module": "./dist/react-scheduler-master-index.js",
+  "exports": {
+    ".": {
+      "import": "./dist/react-scheduler-master-index.js",
+      "require": "./dist/react-scheduler-master-index.js"
+    },
+    "./dist/style.css": "./dist/style.css"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/ansulagrawal/react-scheduler-master.git"
@@ -40,15 +47,10 @@
   "bugs": {
     "url": "https://github.com/ansulagrawal/react-scheduler-master.git/issues"
   },
+  "homepage": "https://github.com/ansulagrawal/react-scheduler-master#readme",
   "publishConfig": {
-    "registry": "https://registry.npmjs.org/"
-  },
-  "exports": {
-    ".": {
-      "import": "./dist/react-scheduler-master-index.js",
-      "require": "./dist/react-scheduler-master-index.js"
-    },
-    "./dist/style.css": "./dist/style.css"
+    "registry": "https://registry.npmjs.org/",
+    "access": "public"
   },
   "scripts": {
     "dev": "vite",
