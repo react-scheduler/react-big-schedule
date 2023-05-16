@@ -1,13 +1,14 @@
 var Yt = Object.defineProperty;
-var qt = (y, t, e) => t in y ? Yt(y, t, { enumerable: !0, configurable: !0, writable: !0, value: e }) : y[t] = e;
-var M = (y, t, e) => (qt(y, typeof t != "symbol" ? t + "" : t, e), e);
+var qt = (b, t, e) => t in b ? Yt(b, t, { enumerable: !0, configurable: !0, writable: !0, value: e }) : b[t] = e;
+var M = (b, t, e) => (qt(b, typeof t != "symbol" ? t + "" : t, e), e);
 import st, { Component as _e, createElement as he, useState as $t } from "react";
 import u, { PropTypes as oe } from "prop-types";
 import { MinusSquareOutlined as Bt, PlusSquareOutlined as Vt, CloseOutlined as Gt, LeftOutlined as Ut, RightOutlined as Xt } from "@ant-design/icons";
-import { Row as ue, Col as ee, Popover as He, Radio as it, Calendar as Qt } from "antd";
-import { DragSource as Jt, DropTarget as Kt } from "react-dnd";
+import { Col as ee, Row as ue, Popover as He, Radio as it, Calendar as Qt } from "antd";
+import { DragSource as Jt, DropTarget as Kt, DndProvider as Zt } from "react-dnd";
 import ke from "moment";
-import { rrulestr as je, RRuleSet as Zt } from "rrule";
+import { rrulestr as je, RRuleSet as er } from "rrule";
+import { HTML5Backend as tr } from "react-dnd-html5-backend";
 var We = { exports: {} }, me = {};
 /**
  * @license React
@@ -19,11 +20,11 @@ var We = { exports: {} }, me = {};
  * LICENSE file in the root directory of this source tree.
  */
 var et;
-function er() {
+function rr() {
   if (et)
     return me;
   et = 1;
-  var y = st, t = Symbol.for("react.element"), e = Symbol.for("react.fragment"), r = Object.prototype.hasOwnProperty, n = y.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED.ReactCurrentOwner, i = { key: !0, ref: !0, __self: !0, __source: !0 };
+  var b = st, t = Symbol.for("react.element"), e = Symbol.for("react.fragment"), r = Object.prototype.hasOwnProperty, n = b.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED.ReactCurrentOwner, i = { key: !0, ref: !0, __self: !0, __source: !0 };
   function o(a, d, c) {
     var h, p = {}, f = null, m = null;
     c !== void 0 && (f = "" + c), d.key !== void 0 && (f = "" + d.key), d.ref !== void 0 && (m = d.ref);
@@ -47,48 +48,48 @@ var ge = {};
  * LICENSE file in the root directory of this source tree.
  */
 var tt;
-function tr() {
+function nr() {
   return tt || (tt = 1, process.env.NODE_ENV !== "production" && function() {
-    var y = st, t = Symbol.for("react.element"), e = Symbol.for("react.portal"), r = Symbol.for("react.fragment"), n = Symbol.for("react.strict_mode"), i = Symbol.for("react.profiler"), o = Symbol.for("react.provider"), a = Symbol.for("react.context"), d = Symbol.for("react.forward_ref"), c = Symbol.for("react.suspense"), h = Symbol.for("react.suspense_list"), p = Symbol.for("react.memo"), f = Symbol.for("react.lazy"), m = Symbol.for("react.offscreen"), E = Symbol.iterator, R = "@@iterator";
+    var b = st, t = Symbol.for("react.element"), e = Symbol.for("react.portal"), r = Symbol.for("react.fragment"), n = Symbol.for("react.strict_mode"), i = Symbol.for("react.profiler"), o = Symbol.for("react.provider"), a = Symbol.for("react.context"), d = Symbol.for("react.forward_ref"), c = Symbol.for("react.suspense"), h = Symbol.for("react.suspense_list"), p = Symbol.for("react.memo"), f = Symbol.for("react.lazy"), m = Symbol.for("react.offscreen"), E = Symbol.iterator, R = "@@iterator";
     function C(s) {
       if (s === null || typeof s != "object")
         return null;
       var g = E && s[E] || s[R];
       return typeof g == "function" ? g : null;
     }
-    var x = y.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
+    var x = b.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
     function v(s) {
       {
-        for (var g = arguments.length, b = new Array(g > 1 ? g - 1 : 0), I = 1; I < g; I++)
-          b[I - 1] = arguments[I];
-        D("error", s, b);
+        for (var g = arguments.length, y = new Array(g > 1 ? g - 1 : 0), I = 1; I < g; I++)
+          y[I - 1] = arguments[I];
+        k("error", s, y);
       }
     }
-    function D(s, g, b) {
+    function k(s, g, y) {
       {
         var I = x.ReactDebugCurrentFrame, F = I.getStackAddendum();
-        F !== "" && (g += "%s", b = b.concat([F]));
-        var B = b.map(function(L) {
+        F !== "" && (g += "%s", y = y.concat([F]));
+        var B = y.map(function(L) {
           return String(L);
         });
         B.unshift("Warning: " + g), Function.prototype.apply.call(console[s], console, B);
       }
     }
-    var T = !1, k = !1, j = !1, N = !1, A = !1, S;
+    var T = !1, D = !1, j = !1, N = !1, A = !1, S;
     S = Symbol.for("react.module.reference");
     function _(s) {
-      return !!(typeof s == "string" || typeof s == "function" || s === r || s === i || A || s === n || s === c || s === h || N || s === m || T || k || j || typeof s == "object" && s !== null && (s.$$typeof === f || s.$$typeof === p || s.$$typeof === o || s.$$typeof === a || s.$$typeof === d || // This needs to include all possible module reference object
+      return !!(typeof s == "string" || typeof s == "function" || s === r || s === i || A || s === n || s === c || s === h || N || s === m || T || D || j || typeof s == "object" && s !== null && (s.$$typeof === f || s.$$typeof === p || s.$$typeof === o || s.$$typeof === a || s.$$typeof === d || // This needs to include all possible module reference object
       // types supported by any Flight configuration anywhere since
       // we don't know which Flight build this will end up being used
       // with.
       s.$$typeof === S || s.getModuleId !== void 0));
     }
-    function q(s, g, b) {
+    function q(s, g, y) {
       var I = s.displayName;
       if (I)
         return I;
       var F = g.displayName || g.name || "";
-      return F !== "" ? b + "(" + F + ")" : b;
+      return F !== "" ? y + "(" + F + ")" : y;
     }
     function Q(s) {
       return s.displayName || "Context";
@@ -120,8 +121,8 @@ function tr() {
             var g = s;
             return Q(g) + ".Consumer";
           case o:
-            var b = s;
-            return Q(b._context) + ".Provider";
+            var y = s;
+            return Q(y._context) + ".Provider";
           case d:
             return q(s, s.render, "ForwardRef");
           case p:
@@ -201,7 +202,7 @@ function tr() {
       }
     }
     var Ce = x.ReactCurrentDispatcher, Re;
-    function ve(s, g, b) {
+    function ve(s, g, y) {
       {
         if (Re === void 0)
           try {
@@ -223,9 +224,9 @@ function tr() {
       if (!s || Se)
         return "";
       {
-        var b = Ee.get(s);
-        if (b !== void 0)
-          return b;
+        var y = Ee.get(s);
+        if (y !== void 0)
+          return y;
       }
       var I;
       Se = !0;
@@ -290,14 +291,14 @@ function tr() {
       var ce = s ? s.displayName || s.name : "", Ze = ce ? ve(ce) : "";
       return typeof s == "function" && Ee.set(s, Ze), Ze;
     }
-    function yt(s, g, b) {
+    function yt(s, g, y) {
       return ze(s, !1);
     }
     function xt(s) {
       var g = s.prototype;
       return !!(g && g.isReactComponent);
     }
-    function be(s, g, b) {
+    function be(s, g, y) {
       if (s == null)
         return "";
       if (typeof s == "function")
@@ -315,11 +316,11 @@ function tr() {
           case d:
             return yt(s.render);
           case p:
-            return be(s.type, g, b);
+            return be(s.type, g, y);
           case f: {
             var I = s, F = I._payload, B = I._init;
             try {
-              return be(B(F), g, b);
+              return be(B(F), g, y);
             } catch {
             }
           }
@@ -329,12 +330,12 @@ function tr() {
     var ye = Object.prototype.hasOwnProperty, Fe = {}, Ye = x.ReactDebugCurrentFrame;
     function xe(s) {
       if (s) {
-        var g = s._owner, b = be(s.type, s._source, g ? g.type : null);
-        Ye.setExtraStackFrame(b);
+        var g = s._owner, y = be(s.type, s._source, g ? g.type : null);
+        Ye.setExtraStackFrame(y);
       } else
         Ye.setExtraStackFrame(null);
     }
-    function Ct(s, g, b, I, F) {
+    function Ct(s, g, y, I, F) {
       {
         var B = Function.call.bind(ye);
         for (var L in s)
@@ -342,14 +343,14 @@ function tr() {
             var H = void 0;
             try {
               if (typeof s[L] != "function") {
-                var Z = Error((I || "React class") + ": " + b + " type `" + L + "` is invalid; it must be a function, usually from the `prop-types` package, but received `" + typeof s[L] + "`.This often happens because of typos such as `PropTypes.function` instead of `PropTypes.func`.");
+                var Z = Error((I || "React class") + ": " + y + " type `" + L + "` is invalid; it must be a function, usually from the `prop-types` package, but received `" + typeof s[L] + "`.This often happens because of typos such as `PropTypes.function` instead of `PropTypes.func`.");
                 throw Z.name = "Invariant Violation", Z;
               }
-              H = s[L](g, L, I, b, null, "SECRET_DO_NOT_PASS_THIS_OR_YOU_WILL_BE_FIRED");
+              H = s[L](g, L, I, y, null, "SECRET_DO_NOT_PASS_THIS_OR_YOU_WILL_BE_FIRED");
             } catch (X) {
               H = X;
             }
-            H && !(H instanceof Error) && (xe(F), v("%s: type specification of %s `%s` is invalid; the type checker function must return `null` or an `Error` but returned a %s. You may have forgotten to pass an argument to the type checker creator (arrayOf, instanceOf, objectOf, oneOf, oneOfType, and shape all require an argument).", I || "React class", b, L, typeof H), xe(null)), H instanceof Error && !(H.message in Fe) && (Fe[H.message] = !0, xe(F), v("Failed %s type: %s", b, H.message), xe(null));
+            H && !(H instanceof Error) && (xe(F), v("%s: type specification of %s `%s` is invalid; the type checker function must return `null` or an `Error` but returned a %s. You may have forgotten to pass an argument to the type checker creator (arrayOf, instanceOf, objectOf, oneOf, oneOfType, and shape all require an argument).", I || "React class", y, L, typeof H), xe(null)), H instanceof Error && !(H.message in Fe) && (Fe[H.message] = !0, xe(F), v("Failed %s type: %s", y, H.message), xe(null));
           }
       }
     }
@@ -359,8 +360,8 @@ function tr() {
     }
     function St(s) {
       {
-        var g = typeof Symbol == "function" && Symbol.toStringTag, b = g && s[Symbol.toStringTag] || s.constructor.name || "Object";
-        return b;
+        var g = typeof Symbol == "function" && Symbol.toStringTag, y = g && s[Symbol.toStringTag] || s.constructor.name || "Object";
+        return y;
       }
     }
     function wt(s) {
@@ -402,40 +403,40 @@ function tr() {
     }
     function It(s, g) {
       if (typeof s.ref == "string" && fe.current && g && fe.current.stateNode !== g) {
-        var b = G(fe.current.type);
-        De[b] || (v('Component "%s" contains the string ref "%s". Support for string refs will be removed in a future major release. This case cannot be automatically converted to an arrow function. We ask you to manually fix this case by using useRef() or createRef() instead. Learn more about using refs safely here: https://reactjs.org/link/strict-mode-string-ref', G(fe.current.type), s.ref), De[b] = !0);
+        var y = G(fe.current.type);
+        De[y] || (v('Component "%s" contains the string ref "%s". Support for string refs will be removed in a future major release. This case cannot be automatically converted to an arrow function. We ask you to manually fix this case by using useRef() or createRef() instead. Learn more about using refs safely here: https://reactjs.org/link/strict-mode-string-ref', G(fe.current.type), s.ref), De[y] = !0);
       }
     }
     function kt(s, g) {
       {
-        var b = function() {
+        var y = function() {
           Be || (Be = !0, v("%s: `key` is not a prop. Trying to access it will result in `undefined` being returned. If you need to access the same value within the child component, you should pass it as a different prop. (https://reactjs.org/link/special-props)", g));
         };
-        b.isReactWarning = !0, Object.defineProperty(s, "key", {
-          get: b,
+        y.isReactWarning = !0, Object.defineProperty(s, "key", {
+          get: y,
           configurable: !0
         });
       }
     }
     function jt(s, g) {
       {
-        var b = function() {
+        var y = function() {
           Ve || (Ve = !0, v("%s: `ref` is not a prop. Trying to access it will result in `undefined` being returned. If you need to access the same value within the child component, you should pass it as a different prop. (https://reactjs.org/link/special-props)", g));
         };
-        b.isReactWarning = !0, Object.defineProperty(s, "ref", {
-          get: b,
+        y.isReactWarning = !0, Object.defineProperty(s, "ref", {
+          get: y,
           configurable: !0
         });
       }
     }
-    var Wt = function(s, g, b, I, F, B, L) {
+    var Wt = function(s, g, y, I, F, B, L) {
       var H = {
         // This tag allows us to uniquely identify this as a React Element
         $$typeof: t,
         // Built-in properties that belong on the element
         type: s,
         key: g,
-        ref: b,
+        ref: y,
         props: L,
         // Record the component responsible for creating this element.
         _owner: B
@@ -457,10 +458,10 @@ function tr() {
         value: F
       }), Object.freeze && (Object.freeze(H.props), Object.freeze(H)), H;
     };
-    function _t(s, g, b, I, F) {
+    function _t(s, g, y, I, F) {
       {
         var B, L = {}, H = null, Z = null;
-        b !== void 0 && ($e(b), H = "" + b), Mt(g) && ($e(g.key), H = "" + g.key), Tt(g) && (Z = g.ref, It(g, F));
+        y !== void 0 && ($e(y), H = "" + y), Mt(g) && ($e(g.key), H = "" + g.key), Tt(g) && (Z = g.ref, It(g, F));
         for (B in g)
           ye.call(g, B) && !Dt.hasOwnProperty(B) && (L[B] = g[B]);
         if (s && s.defaultProps) {
@@ -478,8 +479,8 @@ function tr() {
     var Te = x.ReactCurrentOwner, Ge = x.ReactDebugCurrentFrame;
     function de(s) {
       if (s) {
-        var g = s._owner, b = be(s.type, s._source, g ? g.type : null);
-        Ge.setExtraStackFrame(b);
+        var g = s._owner, y = be(s.type, s._source, g ? g.type : null);
+        Ge.setExtraStackFrame(y);
       } else
         Ge.setExtraStackFrame(null);
     }
@@ -503,10 +504,10 @@ Check the render method of \`` + s + "`.";
     function Ht(s) {
       {
         if (s !== void 0) {
-          var g = s.fileName.replace(/^.*[\\\/]/, ""), b = s.lineNumber;
+          var g = s.fileName.replace(/^.*[\\\/]/, ""), y = s.lineNumber;
           return `
 
-Check your code at ` + g + ":" + b + ".";
+Check your code at ` + g + ":" + y + ".";
         }
         return "";
       }
@@ -516,10 +517,10 @@ Check your code at ` + g + ":" + b + ".";
       {
         var g = Ue();
         if (!g) {
-          var b = typeof s == "string" ? s : s.displayName || s.name;
-          b && (g = `
+          var y = typeof s == "string" ? s : s.displayName || s.name;
+          y && (g = `
 
-Check the top-level render call using <` + b + ">.");
+Check the top-level render call using <` + y + ">.");
         }
         return g;
       }
@@ -529,12 +530,12 @@ Check the top-level render call using <` + b + ">.");
         if (!s._store || s._store.validated || s.key != null)
           return;
         s._store.validated = !0;
-        var b = Ot(g);
-        if (Xe[b])
+        var y = Ot(g);
+        if (Xe[y])
           return;
-        Xe[b] = !0;
+        Xe[y] = !0;
         var I = "";
-        s && s._owner && s._owner !== Te.current && (I = " It was passed a child from " + G(s._owner.type) + "."), de(s), v('Each child in a list should have a unique "key" prop.%s%s See https://reactjs.org/link/warning-keys for more information.', b, I), de(null);
+        s && s._owner && s._owner !== Te.current && (I = " It was passed a child from " + G(s._owner.type) + "."), de(s), v('Each child in a list should have a unique "key" prop.%s%s See https://reactjs.org/link/warning-keys for more information.', y, I), de(null);
       }
     }
     function Je(s, g) {
@@ -542,8 +543,8 @@ Check the top-level render call using <` + b + ">.");
         if (typeof s != "object")
           return;
         if (we(s))
-          for (var b = 0; b < s.length; b++) {
-            var I = s[b];
+          for (var y = 0; y < s.length; y++) {
+            var I = s[y];
             Ie(I) && Qe(I, g);
           }
         else if (Ie(s))
@@ -561,18 +562,18 @@ Check the top-level render call using <` + b + ">.");
         var g = s.type;
         if (g == null || typeof g == "string")
           return;
-        var b;
+        var y;
         if (typeof g == "function")
-          b = g.propTypes;
+          y = g.propTypes;
         else if (typeof g == "object" && (g.$$typeof === d || // Note: Memo only checks outer props here.
         // Inner props are checked in the reconciler.
         g.$$typeof === p))
-          b = g.propTypes;
+          y = g.propTypes;
         else
           return;
-        if (b) {
+        if (y) {
           var I = G(g);
-          Ct(b, s.props, "prop", I, s);
+          Ct(y, s.props, "prop", I, s);
         } else if (g.PropTypes !== void 0 && !Me) {
           Me = !0;
           var F = G(g);
@@ -583,8 +584,8 @@ Check the top-level render call using <` + b + ">.");
     }
     function Lt(s) {
       {
-        for (var g = Object.keys(s.props), b = 0; b < g.length; b++) {
-          var I = g[b];
+        for (var g = Object.keys(s.props), y = 0; y < g.length; y++) {
+          var I = g[y];
           if (I !== "children" && I !== "key") {
             de(s), v("Invalid prop `%s` supplied to `React.Fragment`. React.Fragment can only have `key` and `children` props.", I), de(null);
             break;
@@ -593,7 +594,7 @@ Check the top-level render call using <` + b + ">.");
         s.ref !== null && (de(s), v("Invalid attribute `ref` supplied to `React.Fragment`."), de(null));
       }
     }
-    function Ke(s, g, b, I, F, B) {
+    function Ke(s, g, y, I, F, B) {
       {
         var L = _(s);
         if (!L) {
@@ -604,7 +605,7 @@ Check the top-level render call using <` + b + ">.");
           var X;
           s === null ? X = "null" : we(s) ? X = "array" : s !== void 0 && s.$$typeof === t ? (X = "<" + (G(s.type) || "Unknown") + " />", H = " Did you accidentally export a JSX literal instead of a component?") : X = typeof s, v("React.jsx: type is invalid -- expected a string (for built-in components) or a class/function (for composite components) but got: %s.%s", X, H);
         }
-        var J = _t(s, g, b, F, B);
+        var J = _t(s, g, y, F, B);
         if (J == null)
           return J;
         if (L) {
@@ -623,20 +624,20 @@ Check the top-level render call using <` + b + ">.");
         return s === r ? Lt(J) : Nt(J), J;
       }
     }
-    function Pt(s, g, b) {
-      return Ke(s, g, b, !0);
+    function Pt(s, g, y) {
+      return Ke(s, g, y, !0);
     }
-    function At(s, g, b) {
-      return Ke(s, g, b, !1);
+    function At(s, g, y) {
+      return Ke(s, g, y, !1);
     }
     var zt = At, Ft = Pt;
     ge.Fragment = r, ge.jsx = zt, ge.jsxs = Ft;
   }()), ge;
 }
-process.env.NODE_ENV === "production" ? We.exports = er() : We.exports = tr();
+process.env.NODE_ENV === "production" ? We.exports = rr() : We.exports = nr();
 var l = We.exports;
 function Oe({
-  schedulerData: y,
+  schedulerData: b,
   eventItem: t,
   title: e,
   startTime: r,
@@ -649,12 +650,12 @@ function Oe({
   viewEvent2Text: h,
   eventItemPopoverTemplateResolver: p
 }) {
-  const { localeMoment: f, config: m } = y, E = f(r), R = f(n);
+  const { localeMoment: f, config: m } = b, E = f(r), R = f(n);
   if (p != null)
-    return p(y, t, e, E, R, i);
+    return p(b, t, e, E, R, i);
   let C = /* @__PURE__ */ l.jsx("div", {});
   if (o !== void 0) {
-    let D = o(y, t);
+    let D = o(b, t);
     D != null && (C = /* @__PURE__ */ l.jsxs(ue, { align: "middle", children: [
       /* @__PURE__ */ l.jsx(ee, { span: 2, children: /* @__PURE__ */ l.jsx("div", {}) }),
       /* @__PURE__ */ l.jsx(ee, { span: 22, className: "overflow-text", children: /* @__PURE__ */ l.jsx("span", { className: "header2-text", title: D, children: D }) })
@@ -662,37 +663,37 @@ function Oe({
   }
   let x = /* @__PURE__ */ l.jsx("div", {});
   if (d !== void 0 && a !== void 0 && (t.clickable1 == null || t.clickable1)) {
-    let D = /* @__PURE__ */ l.jsx(ee, { span: 22, children: /* @__PURE__ */ l.jsx("span", { className: "header2-text", style: { color: "#108EE9", cursor: "pointer" }, onClick: () => a(y, t), children: d }) });
+    let D = /* @__PURE__ */ l.jsx(ee, { span: 22, children: /* @__PURE__ */ l.jsx("span", { className: "header2-text", style: { color: "#108EE9", cursor: "pointer" }, onClick: () => a(b, t), children: d }) });
     h !== void 0 && c !== void 0 && (t.clickable2 == null || t.clickable2) && (D = /* @__PURE__ */ l.jsxs(ee, { span: 22, children: [
-      /* @__PURE__ */ l.jsx("span", { className: "header2-text", style: { color: "#108EE9", cursor: "pointer" }, onClick: () => a(y, t), children: d }),
-      /* @__PURE__ */ l.jsx("span", { className: "header2-text", style: { color: "#108EE9", cursor: "pointer", marginLeft: "16px" }, onClick: () => c(y, t), children: h })
+      /* @__PURE__ */ l.jsx("span", { className: "header2-text", style: { color: "#108EE9", cursor: "pointer" }, onClick: () => a(b, t), children: d }),
+      /* @__PURE__ */ l.jsx("span", { className: "header2-text", style: { color: "#108EE9", cursor: "pointer", marginLeft: "16px" }, onClick: () => c(b, t), children: h })
     ] })), x = /* @__PURE__ */ l.jsxs(ue, { align: "middle", children: [
       /* @__PURE__ */ l.jsx(ee, { span: 2, children: /* @__PURE__ */ l.jsx("div", {}) }),
       D
     ] });
   } else if (h !== void 0 && c !== void 0 && (t.clickable2 == null || t.clickable2)) {
-    let D = /* @__PURE__ */ l.jsx(ee, { span: 22, children: /* @__PURE__ */ l.jsx("span", { className: "header2-text", style: { color: "#108EE9", cursor: "pointer" }, onClick: () => c(y, t), children: h }) });
+    let D = /* @__PURE__ */ l.jsx(ee, { span: 22, children: /* @__PURE__ */ l.jsx("span", { className: "header2-text", style: { color: "#108EE9", cursor: "pointer" }, onClick: () => c(b, t), children: h }) });
     x = /* @__PURE__ */ l.jsxs(ue, { align: "middle", children: [
       /* @__PURE__ */ l.jsx(ee, { span: 2, children: /* @__PURE__ */ l.jsx("div", {}) }),
       D
     ] });
   }
-  let v = m.eventItemPopoverDateFormat;
+  const v = m.eventItemPopoverDateFormat, k = m.eventItemPopoverShowColor ? /* @__PURE__ */ l.jsx(ee, { span: 2, children: /* @__PURE__ */ l.jsx("div", { className: "status-dot", style: { backgroundColor: i } }) }) : /* @__PURE__ */ l.jsx(l.Fragment, {}), T = /* @__PURE__ */ l.jsxs(ee, { span: 22, children: [
+    /* @__PURE__ */ l.jsx("span", { className: "header1-text", children: E.format("HH:mm") }),
+    v && /* @__PURE__ */ l.jsx("span", { className: "help-text", style: { marginLeft: "8px" }, children: E.format(v) }),
+    /* @__PURE__ */ l.jsx("span", { className: "header2-text", style: { marginLeft: "8px" }, children: "-" }),
+    /* @__PURE__ */ l.jsx("span", { className: "header1-text", style: { marginLeft: "8px" }, children: R.format("HH:mm") }),
+    v && /* @__PURE__ */ l.jsx("span", { className: "help-text", style: { marginLeft: "8px" }, children: R.format(v) })
+  ] });
   return /* @__PURE__ */ l.jsxs("div", { style: { width: "300px" }, children: [
     /* @__PURE__ */ l.jsxs(ue, { align: "middle", children: [
-      /* @__PURE__ */ l.jsx(ee, { span: 2, children: /* @__PURE__ */ l.jsx("div", { className: "status-dot", style: { backgroundColor: i } }) }),
+      k,
       /* @__PURE__ */ l.jsx(ee, { span: 22, className: "overflow-text", children: /* @__PURE__ */ l.jsx("span", { className: "header2-text", title: e, children: e }) })
     ] }),
     C,
     /* @__PURE__ */ l.jsxs(ue, { align: "middle", children: [
       /* @__PURE__ */ l.jsx(ee, { span: 2, children: /* @__PURE__ */ l.jsx("div", {}) }),
-      /* @__PURE__ */ l.jsxs(ee, { span: 22, children: [
-        /* @__PURE__ */ l.jsx("span", { className: "header1-text", children: E.format("HH:mm") }),
-        /* @__PURE__ */ l.jsx("span", { className: "help-text", style: { marginLeft: "8px" }, children: E.format(v) }),
-        /* @__PURE__ */ l.jsx("span", { className: "header2-text", style: { marginLeft: "8px" }, children: "-" }),
-        /* @__PURE__ */ l.jsx("span", { className: "header1-text", style: { marginLeft: "8px" }, children: R.format("HH:mm") }),
-        /* @__PURE__ */ l.jsx("span", { className: "help-text", style: { marginLeft: "8px" }, children: R.format(v) })
-      ] })
+      T
     ] }),
     x
   ] });
@@ -773,10 +774,10 @@ class Ne extends _e {
       } else
         f = e.clientX;
       const { cellUnit: m, events: E, config: R, localeMoment: C } = d;
-      let x = d.getContentCellWidth(), v = o > 0 ? 5 : 6, D = x - v, T = a * x - v;
-      const { startX: k } = this.state;
-      let j = r + k - f, N = f - k, A = N < 0 ? -1 : N === 0 ? 0 : 1, S = (A > 0 ? Math.floor(Math.abs(N) / x) : Math.ceil(Math.abs(N) / x)) * A;
-      j < D ? S = a - o - 1 : j > T && (S = -o);
+      let x = d.getContentCellWidth(), v = o > 0 ? 5 : 6, k = x - v, T = a * x - v;
+      const { startX: D } = this.state;
+      let j = r + D - f, N = f - D, A = N < 0 ? -1 : N === 0 ? 0 : 1, S = (A > 0 ? Math.floor(Math.abs(N) / x) : Math.ceil(Math.abs(N) / x)) * A;
+      j < k ? S = a - o - 1 : j > T && (S = -o);
       let _ = C(c.start).add(m === O.Hour ? S * R.minuteStep : S, m === O.Hour ? "minutes" : "days").format(P);
       if (S !== 0 && m !== O.Hour && R.displayWeekend === !1)
         if (S > 0) {
@@ -883,10 +884,10 @@ class Ne extends _e {
       } else
         f = e.clientX;
       const { headers: m, cellUnit: E, events: R, config: C, localeMoment: x } = d;
-      let v = d.getContentCellWidth(), D = o > 0 ? 5 : 6, T = v - D, k = (m.length - o) * v - D;
+      let v = d.getContentCellWidth(), k = o > 0 ? 5 : 6, T = v - k, D = (m.length - o) * v - k;
       const { endX: j } = this.state;
       let N = r + f - j, A = N - r, S = A < 0 ? -1 : A === 0 ? 0 : 1, _ = (S < 0 ? Math.floor(Math.abs(A) / v) : Math.ceil(Math.abs(A) / v)) * S;
-      N < T ? _ = o - a + 1 : N > k && (_ = m.length - a);
+      N < T ? _ = o - a + 1 : N > D && (_ = m.length - a);
       let q = x(c.end).add(E === O.Hour ? _ * C.minuteStep : _, E === O.Hour ? "minutes" : "days").format(P);
       if (_ !== 0 && E !== O.Hour && C.displayWeekend === !1)
         if (_ > 0) {
@@ -968,7 +969,7 @@ class Ne extends _e {
     const { eventItem: e, isStart: r, isEnd: n, isInPopover: i, eventItemClick: o, schedulerData: a, isDragging: d, connectDragSource: c, connectDragPreview: h, eventItemTemplateResolver: p } = this.props, { config: f, localeMoment: m } = a, { left: E, width: R, top: C } = this.state;
     let x = r ? n ? "round-all" : "round-head" : n ? "round-tail" : "round-none", v = f.defaultEventBgColor;
     e.bgColor && (v = e.bgColor);
-    let D = a.behaviors.getEventTextFunc(a, e), T = /* @__PURE__ */ l.jsx(Oe, { ...this.props, eventItem: e, title: e.title, startTime: e.start, endTime: e.end, statusColor: v }), k = m(e.start), j = i ? `${k.format("HH:mm")} ${D}` : D, N = /* @__PURE__ */ l.jsx("div", {});
+    let k = a.behaviors.getEventTextFunc(a, e), T = /* @__PURE__ */ l.jsx(Oe, { ...this.props, eventItem: e, title: e.title, startTime: e.start, endTime: e.end, statusColor: v }), D = m(e.start), j = i ? `${D.format("HH:mm")} ${k}` : k, N = /* @__PURE__ */ l.jsx("div", {});
     this.startResizable(this.props) && (N = /* @__PURE__ */ l.jsx("div", { className: "event-resizer event-start-resizer", ref: (q) => this.startResizer = q }));
     let A = /* @__PURE__ */ l.jsx("div", {});
     this.endResizable(this.props) && (A = /* @__PURE__ */ l.jsx("div", { className: "event-resizer event-end-resizer", ref: (q) => this.endResizer = q }));
@@ -1028,7 +1029,7 @@ class ot {
         const { moveEvent: n, newEvent: i, schedulerData: o } = t, { events: a, config: d, viewType: c, localeMoment: h } = o, p = e.getItem(), f = e.getItemType(), m = e.getDropResult();
         let E = m.slotId, R = m.slotName, C = m.start, x = m.end, v = m.initialStart;
         m.initialEnd;
-        let D = "New", T = f === ie.EVENT;
+        let k = "New", T = f === ie.EVENT;
         if (T) {
           const j = p;
           if (d.relativeMove)
@@ -1042,21 +1043,21 @@ class ot {
             let N = o.getSlotById(E);
             N && (R = N.name);
           }
-          D = "Move";
+          k = "Move";
         }
-        let k = !1;
+        let D = !1;
         if (d.checkConflict) {
           let j = h(C), N = h(x);
           a.forEach((A) => {
             if (o._getEventSlotId(A) === E && (!T || A.id !== p.id)) {
               let S = h(A.start), _ = h(A.end);
-              (j >= S && j < _ || N > S && N <= _ || S >= j && S < N || _ > j && _ <= N) && (k = !0);
+              (j >= S && j < _ || N > S && N <= _ || S >= j && S < N || _ > j && _ <= N) && (D = !0);
             }
           });
         }
-        if (k) {
+        if (D) {
           const { conflictOccurred: j } = t;
-          j != null ? j(o, D, p, f, E, R, C, x) : console.log("Conflict occurred, set conflictOccurred func in Scheduler to handle it");
+          j != null ? j(o, k, p, f, E, R, C, x) : console.log("Conflict occurred, set conflictOccurred func in Scheduler to handle it");
         } else
           T ? n !== void 0 && n(o, p, E, R, C, x) : i !== void 0 && i(o, E, R, C, x, f, p);
       },
@@ -1077,13 +1078,13 @@ class ot {
     this.resolveDragObjFunc = t, this.DecoratedComponent = e, this.dndType = r, this.dragSource = Jt(this.dndType, this.getDragSpec(), this.getDragCollect)(this.DecoratedComponent);
   }
 }
-function pe(y) {
-  let t = 0, e = 0, r = y;
+function pe(b) {
+  let t = 0, e = 0, r = b;
   for (; r; )
     t += r.offsetLeft - r.scrollLeft, e += r.offsetTop - r.scrollTop, r = r.offsetParent;
   return { x: t, y: e };
 }
-class rr {
+class sr {
   constructor(t, e) {
     M(this, "getDropSpec", () => ({
       drop: (t, e, r) => {
@@ -1120,9 +1121,9 @@ class rr {
         let x = Math.floor((C.x - m.x) / E);
         if (!i.headerItems[x])
           return;
-        let v = i.headerItems[x].start, D = i.headerItems[x].end;
-        a !== O.Hour && (D = h(i.headerItems[x].start).hour(23).minute(59).second(59).format(P));
-        let T = i.slotId, k = i.slotName, j = "New";
+        let v = i.headerItems[x].start, k = i.headerItems[x].end;
+        a !== O.Hour && (k = h(i.headerItems[x].start).hour(23).minute(59).second(59).format(P));
+        let T = i.slotId, D = i.slotName, j = "New";
         if (f === ie.EVENT) {
           const A = p;
           if (d.relativeMove)
@@ -1131,14 +1132,14 @@ class rr {
             let S = h(v);
             v = h(A.start).year(S.year()).month(S.month()).date(S.date()).format(P);
           }
-          if (D = h(v).add(h(A.end).diff(h(A.start)), "ms").format(P), d.crossResourceMove === !1) {
-            T = n._getEventSlotId(p), k = void 0;
+          if (k = h(v).add(h(A.end).diff(h(A.start)), "ms").format(P), d.crossResourceMove === !1) {
+            T = n._getEventSlotId(p), D = void 0;
             let S = n.getSlotById(T);
-            S && (k = S.name);
+            S && (D = S.name);
           }
           j = "Move";
         }
-        o && o(n, T, k, v, D, j, f, p);
+        o && o(n, T, D, v, k, j, f, p);
       },
       canDrop: (t, e) => {
         const { schedulerData: r, resourceEvents: n } = t, i = e.getItem();
@@ -1159,13 +1160,13 @@ class rr {
     }), this.DecoratedComponent = e;
   }
 }
-function at({ schedulerData: y, contentScrollbarHeight: t, slotClickedFunc: e, slotItemTemplateResolver: r, toggleExpandFunc: n }) {
-  const { renderData: i } = y, o = y.getResourceTableWidth() - 2, a = t, d = i.filter((m) => m.render), c = (m) => {
-    n && n(y, m.slotId);
+function at({ schedulerData: b, contentScrollbarHeight: t, slotClickedFunc: e, slotItemTemplateResolver: r, toggleExpandFunc: n }) {
+  const { renderData: i } = b, o = b.getResourceTableWidth() - 2, a = t, d = i.filter((m) => m.render), c = (m) => {
+    n && n(b, m.slotId);
   }, h = (m) => {
-    e && e(y, m);
+    e && e(b, m);
   }, p = (m) => {
-    const E = Array.from({ length: m.indent }, (D, T) => /* @__PURE__ */ l.jsx("span", { className: "expander-space" }, `es${T}`)), R = m.hasChildren ? m.expanded ? /* @__PURE__ */ l.jsx(Bt, { onClick: () => c(m) }, `es${m.indent}`) : /* @__PURE__ */ l.jsx(Vt, { onClick: () => c(m) }, `es${m.indent}`) : /* @__PURE__ */ l.jsx("span", { className: "expander-space" }, `es${m.indent}`);
+    const E = Array.from({ length: m.indent }, (k, T) => /* @__PURE__ */ l.jsx("span", { className: "expander-space" }, `es${T}`)), R = m.hasChildren ? m.expanded ? /* @__PURE__ */ l.jsx(Bt, { onClick: () => c(m) }, `es${m.indent}`) : /* @__PURE__ */ l.jsx(Vt, { onClick: () => c(m) }, `es${m.indent}`) : /* @__PURE__ */ l.jsx("span", { className: "expander-space" }, `es${m.indent}`);
     E.push(R);
     const C = e ? /* @__PURE__ */ l.jsx("a", { className: "slot-text", onClick: () => h(m), children: m.slotName }) : /* @__PURE__ */ l.jsx("span", { className: "slot-text", children: m.slotName });
     let x = /* @__PURE__ */ l.jsx("div", { title: m.slotName, className: "overflow-text header2-text", style: { textAlign: "left" }, children: /* @__PURE__ */ l.jsxs("span", { className: "slot-cell", children: [
@@ -1173,12 +1174,12 @@ function at({ schedulerData: y, contentScrollbarHeight: t, slotClickedFunc: e, s
       C
     ] }) });
     if (r) {
-      const D = r(y, m, e, o, "overflow-text header2-text");
-      D && (x = D);
+      const k = r(b, m, e, o, "overflow-text header2-text");
+      k && (x = k);
     }
     const v = {
       height: m.rowHeight,
-      backgroundColor: m.groupOnly ? y.config.groupOnlySlotColor : void 0
+      backgroundColor: m.groupOnly ? b.config.groupOnlySlotColor : void 0
     };
     return /* @__PURE__ */ l.jsx("tr", { children: /* @__PURE__ */ l.jsx("td", { "data-resource-id": m.slotId, style: v, children: x }) }, m.slotId);
   }, f = d.map(p);
@@ -1191,8 +1192,8 @@ at.propTypes = {
   slotItemTemplateResolver: u.func,
   toggleExpandFunc: u.func
 };
-function lt({ schedulerData: y, nonAgendaCellHeaderTemplateResolver: t }) {
-  const { headers: e, cellUnit: r, config: n, localeMoment: i } = y, o = y.getTableHeaderHeight(), a = y.getContentCellWidth(), d = y.getMinuteStepsInHour(), c = typeof t == "function" ? t : null, h = e.map((p, f) => {
+function lt({ schedulerData: b, nonAgendaCellHeaderTemplateResolver: t }) {
+  const { headers: e, cellUnit: r, config: n, localeMoment: i } = b, o = b.getTableHeaderHeight(), a = b.getContentCellWidth(), d = b.getMinuteStepsInHour(), c = typeof t == "function" ? t : null, h = e.map((p, f) => {
     if (r === O.Hour && f % d !== 0)
       return /* @__PURE__ */ l.jsx(l.Fragment, {});
     const { time: m, nonWorkingTime: E } = p, R = i(m);
@@ -1216,8 +1217,8 @@ function lt({ schedulerData: y, nonAgendaCellHeaderTemplateResolver: t }) {
         x = n.nonAgendaOtherCellHeaderFormat;
         break;
     }
-    const v = x.split("|").map((k) => R.format(k)), D = v.map((k, j) => /* @__PURE__ */ l.jsx("div", { children: k }, j));
-    return c ? c(y, p, v, C) : /* @__PURE__ */ l.jsx("th", { className: "header3-text", style: C, children: /* @__PURE__ */ l.jsx("div", { children: D }) }, m);
+    const v = x.split("|").map((D) => R.format(D)), k = v.map((D, j) => /* @__PURE__ */ l.jsx("div", { children: D }, j));
+    return c ? c(b, p, v, C) : /* @__PURE__ */ l.jsx("th", { className: "header3-text", style: C, children: /* @__PURE__ */ l.jsx("div", { children: k }) }, m);
   });
   return /* @__PURE__ */ l.jsx("thead", { children: /* @__PURE__ */ l.jsx("tr", { style: { height: o }, children: h }) });
 }
@@ -1225,14 +1226,14 @@ lt.propTypes = {
   schedulerData: u.object.isRequired,
   nonAgendaCellHeaderTemplateResolver: u.func
 };
-function dt({ schedulerData: y }) {
-  const { renderData: t, headers: e, config: r, behaviors: n } = y;
-  let i = y.getContentCellWidth();
+function dt({ schedulerData: b }) {
+  const { renderData: t, headers: e, config: r, behaviors: n } = b;
+  let i = b.getContentCellWidth();
   const o = t.filter((a) => a.render).map(({ slotId: a, groupOnly: d, rowHeight: c }) => {
     let h = e.map((p, f) => {
       const m = `${a}_${p.time}`, E = f === e.length - 1 ? {} : { width: i };
       if (p.nonWorkingTime && (E.backgroundColor = r.nonWorkingTimeBodyBgColor), d && (E.backgroundColor = r.groupOnlySlotColor), n.getNonAgendaViewBodyCellBgColorFunc) {
-        let R = n.getNonAgendaViewBodyCellBgColorFunc(y, a, p);
+        let R = n.getNonAgendaViewBodyCellBgColorFunc(b, a, p);
         R && (E.backgroundColor = R);
       }
       return /* @__PURE__ */ l.jsx("td", { style: E, children: /* @__PURE__ */ l.jsx("div", {}) }, m);
@@ -1244,9 +1245,9 @@ function dt({ schedulerData: y }) {
 dt.propTypes = {
   schedulerData: u.object.isRequired
 };
-function ct({ number: y, left: t, width: e, top: r, clickAction: n, headerItem: i, schedulerData: o }) {
+function ct({ number: b, left: t, width: e, top: r, clickAction: n, headerItem: i, schedulerData: o }) {
   const { config: a } = o;
-  let d = "+" + y + "more";
+  let d = "+" + b + "more";
   return /* @__PURE__ */ l.jsx("a", { className: "timeline-event", style: { left: t, width: e, top: r }, onClick: () => n(i), children: /* @__PURE__ */ l.jsx("div", { style: { height: a.eventItemHeight, color: "#999", textAlign: "center" }, children: d }) });
 }
 ct.propTypes = {
@@ -1258,8 +1259,8 @@ ct.propTypes = {
   clickAction: u.func.isRequired,
   headerItem: u.object.isRequired
 };
-function ut({ summary: y, left: t, width: e, top: r, schedulerData: n }) {
-  const { config: i } = n, o = y.color || i.summaryColor;
+function ut({ summary: b, left: t, width: e, top: r, schedulerData: n }) {
+  const { config: i } = n, o = b.color || i.summaryColor;
   let a = "center";
   i.summaryPos === ae.TopRight || i.summaryPos === ae.BottomRight ? a = "right" : (i.summaryPos === ae.TopLeft || i.summaryPos === ae.BottomLeft) && (a = "left");
   const d = {
@@ -1267,9 +1268,9 @@ function ut({ summary: y, left: t, width: e, top: r, schedulerData: n }) {
     color: o,
     textAlign: a,
     margin: "0 6px",
-    fontSize: y.fontSize
+    fontSize: b.fontSize
   };
-  return /* @__PURE__ */ l.jsx("a", { className: "timeline-event header2-text", style: { left: t, width: e, top: r, cursor: "default" }, children: /* @__PURE__ */ l.jsx("div", { style: d, children: y.text }) });
+  return /* @__PURE__ */ l.jsx("a", { className: "timeline-event header2-text", style: { left: t, width: e, top: r, cursor: "default" }, children: /* @__PURE__ */ l.jsx("div", { style: d, children: b.text }) });
 }
 ut.propTypes = {
   schedulerData: u.object.isRequired,
@@ -1278,9 +1279,9 @@ ut.propTypes = {
   width: u.number.isRequired,
   top: u.number.isRequired
 };
-function ht({ left: y, width: t, schedulerData: e }) {
+function ht({ left: b, width: t, schedulerData: e }) {
   const { config: r } = e, n = {
-    left: y,
+    left: b,
     width: t,
     top: 0,
     bottom: 0,
@@ -1370,11 +1371,11 @@ class ft extends _e {
       });
       let x = !1;
       if (d.checkConflict) {
-        let v = h(m), D = h(E);
+        let v = h(m), k = h(E);
         a.forEach((T) => {
           if (r._getEventSlotId(T) === R) {
-            let k = h(T.start), j = h(T.end);
-            (v >= k && v < j || D > k && D <= j || k >= v && k < D || j > v && j <= D) && (x = !0);
+            let D = h(T.start), j = h(T.end);
+            (v >= D && v < j || k > D && k <= j || D >= v && D < k || j > v && j <= k) && (x = !0);
           }
         });
       }
@@ -1448,15 +1449,15 @@ class ft extends _e {
   }
   render() {
     const { resourceEvents: e, schedulerData: r, connectDropTarget: n, dndSource: i } = this.props, { cellUnit: o, startDate: a, endDate: d, config: c, localeMoment: h } = r, { isSelecting: p, left: f, width: m } = this.state;
-    let E = r.getContentCellWidth(), R = r.getCellMaxEvents(), C = r.getContentTableWidth(), x = i.getDragSource(), v = p ? /* @__PURE__ */ l.jsx(ht, { ...this.props, left: f, width: m }) : /* @__PURE__ */ l.jsx("div", {}), D = [];
-    return e.headerItems.forEach((T, k) => {
+    let E = r.getContentCellWidth(), R = r.getCellMaxEvents(), C = r.getContentTableWidth(), x = i.getDragSource(), v = p ? /* @__PURE__ */ l.jsx(ht, { ...this.props, left: f, width: m }) : /* @__PURE__ */ l.jsx("div", {}), k = [];
+    return e.headerItems.forEach((T, D) => {
       if (T.count > 0 || T.summary != null) {
         let j = c.summaryPos === ae.TopRight || c.summaryPos === ae.Top || c.summaryPos === ae.TopLeft, N = e.hasSummary && j ? 1 + c.eventItemLineHeight : 1, A = T.addMore === 0 ? R : T.addMoreIndex;
         if (T.events.forEach((S, _) => {
           if (_ < A && S !== void 0 && S.render) {
             let q = h(a), Q = h(d).add(1, "days");
             o === O.Hour && (q = h(a).add(c.dayStartFrom, "hours"), Q = h(d).add(c.dayStopTo + 1, "hours"));
-            let G = h(S.eventItem.start), K = h(S.eventItem.end), U = G >= q, z = K <= Q, Y = k * E + (k > 0 ? 2 : 3), $ = S.span * E - (k > 0 ? 5 : 6) > 0 ? S.span * E - (k > 0 ? 5 : 6) : 0, V = N + _ * c.eventItemLineHeight, ne = /* @__PURE__ */ he(
+            let G = h(S.eventItem.start), K = h(S.eventItem.end), U = G >= q, z = K <= Q, Y = D * E + (D > 0 ? 2 : 3), $ = S.span * E - (D > 0 ? 5 : 6) > 0 ? S.span * E - (D > 0 ? 5 : 6) : 0, V = N + _ * c.eventItemLineHeight, ne = /* @__PURE__ */ he(
               x,
               {
                 ...this.props,
@@ -1468,25 +1469,25 @@ class ft extends _e {
                 left: Y,
                 width: $,
                 top: V,
-                leftIndex: k,
-                rightIndex: k + S.span
+                leftIndex: D,
+                rightIndex: D + S.span
               }
             );
-            D.push(ne);
+            k.push(ne);
           }
         }), T.addMore > 0) {
-          let S = k * E + (k > 0 ? 2 : 3), _ = E - (k > 0 ? 5 : 6), q = N + T.addMoreIndex * c.eventItemLineHeight, Q = /* @__PURE__ */ he(ct, { ...this.props, key: T.time, headerItem: T, number: T.addMore, left: S, width: _, top: q, clickAction: this.onAddMoreClick });
-          D.push(Q);
+          let S = D * E + (D > 0 ? 2 : 3), _ = E - (D > 0 ? 5 : 6), q = N + T.addMoreIndex * c.eventItemLineHeight, Q = /* @__PURE__ */ he(ct, { ...this.props, key: T.time, headerItem: T, number: T.addMore, left: S, width: _, top: q, clickAction: this.onAddMoreClick });
+          k.push(Q);
         }
         if (T.summary != null) {
-          let S = j ? 1 : e.rowHeight - c.eventItemLineHeight + 1, _ = k * E + (k > 0 ? 2 : 3), q = E - (k > 0 ? 5 : 6), Q = `${e.slotId}_${T.time}`, G = /* @__PURE__ */ l.jsx(ut, { schedulerData: r, summary: T.summary, left: _, width: q, top: S }, Q);
-          D.push(G);
+          let S = j ? 1 : e.rowHeight - c.eventItemLineHeight + 1, _ = D * E + (D > 0 ? 2 : 3), q = E - (D > 0 ? 5 : 6), Q = `${e.slotId}_${T.time}`, G = /* @__PURE__ */ l.jsx(ut, { schedulerData: r, summary: T.summary, left: _, width: q, top: S }, Q);
+          k.push(G);
         }
       }
     }), /* @__PURE__ */ l.jsx("tr", { children: /* @__PURE__ */ l.jsx("td", { style: { width: C }, children: n(
       /* @__PURE__ */ l.jsxs("div", { ref: this.eventContainerRef, className: "event-container", style: { height: e.rowHeight }, children: [
         v,
-        D
+        k
       ] })
     ) }) });
   }
@@ -1510,14 +1511,14 @@ M(ft, "propTypes", {
   newEvent: u.func,
   eventItemTemplateResolver: u.func
 });
-function mt(y) {
-  const { eventItem: t, isStart: e, isEnd: r, eventItemClick: n, schedulerData: i, eventItemTemplateResolver: o } = y, { config: a, behaviors: d } = i, c = e ? r ? "round-all" : "round-head" : r ? "round-tail" : "round-none", h = t.bgColor || a.defaultEventBgColor, p = d.getEventTextFunc(i, t);
+function mt(b) {
+  const { eventItem: t, isStart: e, isEnd: r, eventItemClick: n, schedulerData: i, eventItemTemplateResolver: o } = b, { config: a, behaviors: d } = i, c = e ? r ? "round-all" : "round-head" : r ? "round-tail" : "round-none", h = t.bgColor || a.defaultEventBgColor, p = d.getEventTextFunc(i, t);
   let f = /* @__PURE__ */ l.jsx("div", { className: `${c} event-item`, style: { height: a.eventItemHeight, maxWidth: a.agendaMaxEventWidth, backgroundColor: h }, children: /* @__PURE__ */ l.jsx("span", { style: { marginLeft: "10px", lineHeight: `${a.eventItemHeight}px` }, children: p }) }, t.id);
   o && (f = o(i, t, h, e, r, "event-item", a.eventItemHeight, a.agendaMaxEventWidth));
   const m = () => {
     n && n(i, t);
   }, E = /* @__PURE__ */ l.jsx("a", { className: "day-event", onClick: m, children: f });
-  let R = /* @__PURE__ */ l.jsx(Oe, { ...y, title: t.title, startTime: t.start, endTime: t.end, statusColor: h });
+  let R = /* @__PURE__ */ l.jsx(Oe, { ...b, title: t.title, startTime: t.start, endTime: t.end, statusColor: h });
   return a.eventItemPopoverEnabled ? /* @__PURE__ */ l.jsx(He, { placement: "bottomLeft", content: R, trigger: "hover", children: E }) : /* @__PURE__ */ l.jsx("span", { children: E });
 }
 mt.propTypes = {
@@ -1533,22 +1534,22 @@ mt.propTypes = {
   viewEvent2Text: u.string,
   eventItemTemplateResolver: u.func
 };
-function gt(y) {
-  const { schedulerData: t, resourceEvents: e, slotClickedFunc: r, slotItemTemplateResolver: n } = y, { startDate: i, endDate: o, config: a, localeMoment: d } = t, { slotId: c, slotName: h, headerItems: p } = e;
+function gt(b) {
+  const { schedulerData: t, resourceEvents: e, slotClickedFunc: r, slotItemTemplateResolver: n } = b, { startDate: i, endDate: o, config: a, localeMoment: d } = t, { slotId: c, slotName: h, headerItems: p } = e;
   let m = t.getResourceTableWidth() - 2;
   const E = d(i).format(W), R = d(o).add(1, "days").format(W);
   let C = [];
-  p.forEach(({ start: D, end: T, events: k }) => {
-    E === d(D).format(W) && R === d(T).format(W) && k.forEach(({ eventItem: j }) => {
-      const { start: N, end: A, id: S } = j, _ = d(i), q = d(o).add(1, "days"), Q = d(N) >= _, G = d(A) < q, K = /* @__PURE__ */ he(mt, { ...y, key: S, eventItem: j, isStart: Q, isEnd: G });
-      k.push(K);
+  p.forEach(({ start: k, end: T, events: D }) => {
+    E === d(k).format(W) && R === d(T).format(W) && D.forEach(({ eventItem: j }) => {
+      const { start: N, end: A, id: S } = j, _ = d(i), q = d(o).add(1, "days"), Q = d(N) >= _, G = d(A) < q, K = /* @__PURE__ */ he(mt, { ...b, key: S, eventItem: j, isStart: Q, isEnd: G });
+      D.push(K);
     });
   });
   const x = r && /* @__PURE__ */ l.jsx("a", { onClick: () => r(t, e), children: h });
   let v = /* @__PURE__ */ l.jsx("div", { style: { width: m }, title: h, className: "overflow-text header2-text", children: x || /* @__PURE__ */ l.jsx("span", { children: h }) });
   if (n) {
-    const D = n(t, e, r, m, "overflow-text header2-text");
-    D && (v = D);
+    const k = n(t, e, r, m, "overflow-text header2-text");
+    k && (v = k);
   }
   return /* @__PURE__ */ l.jsxs("tr", { style: { minHeight: a.eventItemLineHeight + 2 }, children: [
     /* @__PURE__ */ l.jsx("td", { "data-resource-id": c, children: v }),
@@ -1567,8 +1568,8 @@ gt.propTypes = {
   slotClickedFunc: u.func,
   slotItemTemplateResolver: u.func
 };
-function pt(y) {
-  const { schedulerData: t } = y, { config: e, renderData: r, getResourceTableWidth: n, getTableHeaderHeight: i, isEventPerspective: o } = t, a = n(), d = i(), c = r.map((f) => /* @__PURE__ */ he(gt, { ...y, resourceEvents: f, key: f.slotId })), h = o ? e.taskName : e.resourceName, p = e.agendaViewHeader;
+function pt(b) {
+  const { schedulerData: t } = b, { config: e, renderData: r, getResourceTableWidth: n, getTableHeaderHeight: i, isEventPerspective: o } = t, a = n(), d = i(), c = r.map((f) => /* @__PURE__ */ he(gt, { ...b, resourceEvents: f, key: f.slotId })), h = o ? e.taskName : e.resourceName, p = e.agendaViewHeader;
   return /* @__PURE__ */ l.jsx("tr", { children: /* @__PURE__ */ l.jsx("td", { children: /* @__PURE__ */ l.jsxs("table", { className: "scheduler-table", children: [
     /* @__PURE__ */ l.jsx("thead", { children: /* @__PURE__ */ l.jsxs("tr", { style: { height: d }, children: [
       /* @__PURE__ */ l.jsx("th", { style: { width: a }, className: "header3-text", children: h }),
@@ -1587,17 +1588,17 @@ pt.propTypes = {
   viewEvent2Text: oe.string,
   slotClickedFunc: oe.func
 };
-function nr(y) {
-  const [t] = $t(new ot((T) => T.eventItem, Ne)), { headerItem: e, left: r, top: n, height: i, closeAction: o, schedulerData: a } = y, { config: d, localeMoment: c } = a, { time: h, start: p, end: f, events: m } = e;
+function ir(b) {
+  const [t] = $t(new ot((T) => T.eventItem, Ne)), { headerItem: e, left: r, top: n, height: i, closeAction: o, schedulerData: a } = b, { config: d, localeMoment: c } = a, { time: h, start: p, end: f, events: m } = e;
   let E = c(h).format(d.addMorePopoverHeaderFormat), R = c(p), C = c(f), x = 0, v = t.getDragSource();
-  const D = m.map((T) => {
+  const k = m.map((T) => {
     if (T !== void 0) {
       x++;
-      let k = c(T.eventItem.start), j = c(T.eventItem.end), N = k >= R, A = j < C, S = 10, _ = 138, q = 12 + x * d.eventItemLineHeight;
+      let D = c(T.eventItem.start), j = c(T.eventItem.end), N = D >= R, A = j < C, S = 10, _ = 138, q = 12 + x * d.eventItemLineHeight;
       return /* @__PURE__ */ he(
         v,
         {
-          ...y,
+          ...b,
           key: T.eventItem.id,
           eventItem: T.eventItem,
           leftIndex: 0,
@@ -1618,10 +1619,10 @@ function nr(y) {
       /* @__PURE__ */ l.jsx(ee, { span: "22", children: /* @__PURE__ */ l.jsx("span", { className: "base-text", children: E }) }),
       /* @__PURE__ */ l.jsx(ee, { span: "2", children: /* @__PURE__ */ l.jsx("span", { onClick: () => o(void 0), children: /* @__PURE__ */ l.jsx(Gt, {}) }) })
     ] }),
-    D
+    k
   ] });
 }
-nr.propTypes = {
+ir.propTypes = {
   schedulerData: u.object.isRequired,
   headerItem: u.object.isRequired,
   left: u.number.isRequired,
@@ -1683,6 +1684,7 @@ const rt = {
   checkConflict: !1,
   scrollToSpecialMomentEnabled: !0,
   eventItemPopoverEnabled: !0,
+  eventItemPopoverShowColor: !0,
   calendarPopoverEnabled: !0,
   recurringEventsEnabled: !0,
   headerEnabled: !0,
@@ -1707,8 +1709,8 @@ const rt = {
     { viewName: "Quarter", viewType: w.Quarter, showAgenda: !1, isEventPerspective: !1 },
     { viewName: "Year", viewType: w.Year, showAgenda: !1, isEventPerspective: !1 }
   ]
-}, sr = (y, t, e, r) => {
-  const n = y.localeMoment(e), i = y.localeMoment(r);
+}, or = (b, t, e, r) => {
+  const n = b.localeMoment(e), i = b.localeMoment(r);
   let o;
   switch (t) {
     case w.Week:
@@ -1730,13 +1732,13 @@ const rt = {
       o = n.format("MMM D, YYYY");
   }
   return o;
-}, ir = (y, t) => {
-  if (!y.isEventPerspective)
+}, ar = (b, t) => {
+  if (!b.isEventPerspective)
     return t.title;
-  const e = y.resources.find((r) => r.id === t.resourceId);
+  const e = b.resources.find((r) => r.id === t.resourceId);
   return e ? e.name : t.title;
-}, or = (y, t, e) => y.localeMoment(), ar = (y, t) => {
-  const { localeMoment: e, cellUnit: r } = y;
+}, lr = (b, t, e) => b.localeMoment(), dr = (b, t) => {
+  const { localeMoment: e, cellUnit: r } = b;
   if (r === O.Hour) {
     const i = e(t).hour();
     return i < 9 || i > 18;
@@ -1747,15 +1749,15 @@ const rt = {
   getSummaryFunc: void 0,
   getCustomDateFunc: void 0,
   getNonAgendaViewBodyCellBgColorFunc: void 0,
-  getScrollSpecialMomentFunc: or,
-  getDateLabelFunc: sr,
-  getEventTextFunc: ir,
-  isNonWorkingTimeFunc: ar
+  getScrollSpecialMomentFunc: lr,
+  getDateLabelFunc: or,
+  getEventTextFunc: ar,
+  isNonWorkingTimeFunc: dr
   // getNonAgendaViewBodyCellBgColorFunc: getNonAgendaViewBodyCellBgColor,
   //getCustomDateFunc: getCustomDate,
   //getSummaryFunc: getSummary,
 };
-class br {
+class Cr {
   constructor(t = ke().format(W), e = w.Week, r = !1, n = !1, i = void 0, o = void 0, a = void 0) {
     this.resources = [], this.events = [], this.eventGroups = [], this.eventGroupsAutoGenerated = !0, this.viewType = e, this.cellUnit = e === w.Day ? O.Hour : O.Day, this.showAgenda = r, this.isEventPerspective = n, this.resizing = !1, this.scrollToSpecialMoment = !1, this.documentWidth = 0, this.localeMoment = ke, a && (this.localeMoment = a), this.config = i == null ? rt : { ...rt, ...i }, this._validateMinuteStep(this.config.minuteStep), this.behaviors = o == null ? nt : { ...nt, ...o }, this._resolveDate(0, t), this._createHeaders(), this._createRenderData();
   }
@@ -1973,7 +1975,7 @@ class br {
     }), t.forEach((e) => {
       let r = this.localeMoment(this.startDate), n = this.localeMoment(this.endDate).add(1, "days"), i = this.localeMoment(e.start), o = this.localeMoment(e.end), a = je(e.rrule), d, c = a.origOptions.until || n.toDate();
       if (a.origOptions.dtstart && (d = this.localeMoment(a.origOptions.dtstart)), n < c && (a.origOptions.until = n.toDate()), a = je(a.toString()), e.exdates || e.exrule) {
-        const f = new Zt();
+        const f = new er();
         f.rrule(a), e.exrule && f.exrule(je(e.exrule)), e.exdates && e.exdates.forEach((m) => {
           f.exdate(this.localeMoment(m).toDate());
         }), a = f;
@@ -2252,7 +2254,7 @@ class br {
     return this.resizing;
   }
 }
-const yr = {
+const Rr = {
   resources: [
     {
       id: "r0",
@@ -2629,8 +2631,11 @@ const yr = {
     }
   ]
 };
-const lr = it.Button, dr = it.Group;
-class cr extends _e {
+function Sr(b) {
+  return (t) => /* @__PURE__ */ l.jsx(Zt, { backend: tr, children: /* @__PURE__ */ l.jsx(b, { ...t }) });
+}
+const cr = it.Button, ur = it.Group;
+class hr extends _e {
   constructor(e) {
     super(e);
     M(this, "onWindowResize", (e) => {
@@ -2730,7 +2735,7 @@ class cr extends _e {
     const { schedulerData: r, dndSources: n } = e;
     let i = [];
     i.push(new ot((a) => a.eventItem, Ne)), n != null && n.length > 0 && (i = [...i, ...n]);
-    let o = new rr(i, ft);
+    let o = new sr(i, ft);
     this.currentArea = -1, r._setDocumentWidth(document.documentElement.clientWidth), this.state = {
       visible: !1,
       dndContext: o,
@@ -2764,11 +2769,11 @@ class cr extends _e {
   }
   render() {
     const { schedulerData: e, leftCustomHeader: r, rightCustomHeader: n } = this.props, { renderData: i, viewType: o, showAgenda: a, isEventPerspective: d, config: c } = e, h = e.getSchedulerWidth(), p = c.calendarPopoverEnabled;
-    let f = e.getDateLabel(), m = `${o}${a ? 1 : 0}${d ? 1 : 0}`, E = c.views.map((v) => /* @__PURE__ */ l.jsx(lr, { value: `${v.viewType}${v.showAgenda ? 1 : 0}${v.isEventPerspective ? 1 : 0}`, children: /* @__PURE__ */ l.jsx("span", { style: { margin: "0px 8px" }, children: v.viewName }) }, `${v.viewType}${v.showAgenda ? 1 : 0}${v.isEventPerspective ? 1 : 0}`)), R = /* @__PURE__ */ l.jsx("tr", {});
+    let f = e.getDateLabel(), m = `${o}${a ? 1 : 0}${d ? 1 : 0}`, E = c.views.map((v) => /* @__PURE__ */ l.jsx(cr, { value: `${v.viewType}${v.showAgenda ? 1 : 0}${v.isEventPerspective ? 1 : 0}`, children: /* @__PURE__ */ l.jsx("span", { style: { margin: "0px 8px" }, children: v.viewName }) }, `${v.viewType}${v.showAgenda ? 1 : 0}${v.isEventPerspective ? 1 : 0}`)), R = /* @__PURE__ */ l.jsx("tr", {});
     if (a)
       R = /* @__PURE__ */ l.jsx(pt, { ...this.props });
     else {
-      let v = e.getResourceTableWidth(), D = h - v + 1, T = e.getContentTableWidth() - 1, k = this.state.dndContext.getDropTarget(), j = this.state.dndContext.getDndSource(), A = i.filter((V) => V.render).map((V) => /* @__PURE__ */ he(k, { ...this.props, key: V.slotId, resourceEvents: V, dndSource: j })), S = this.state.contentScrollbarHeight, _ = this.state.contentScrollbarWidth, q = this.state.resourceScrollbarHeight, Q = this.state.resourceScrollbarWidth, G = this.state.contentHeight, K = q === 0 ? S : 0, z = {
+      let v = e.getResourceTableWidth(), k = h - v + 1, T = e.getContentTableWidth() - 1, D = this.state.dndContext.getDropTarget(), j = this.state.dndContext.getDndSource(), A = i.filter((V) => V.render).map((V) => /* @__PURE__ */ he(D, { ...this.props, key: V.slotId, resourceEvents: V, dndSource: j })), S = this.state.contentScrollbarHeight, _ = this.state.contentScrollbarWidth, q = this.state.resourceScrollbarHeight, Q = this.state.resourceScrollbarWidth, G = this.state.contentHeight, K = q === 0 ? S : 0, z = {
         overflow: "auto",
         margin: "0px",
         position: "relative",
@@ -2822,7 +2827,7 @@ class cr extends _e {
             }
           )
         ] }) }),
-        /* @__PURE__ */ l.jsx("td", { children: /* @__PURE__ */ l.jsxs("div", { className: "scheduler-view", style: { width: D, verticalAlign: "top" }, children: [
+        /* @__PURE__ */ l.jsx("td", { children: /* @__PURE__ */ l.jsxs("div", { className: "scheduler-view", style: { width: k, verticalAlign: "top" }, children: [
           /* @__PURE__ */ l.jsx(
             "div",
             {
@@ -2891,7 +2896,7 @@ class cr extends _e {
             p ? /* @__PURE__ */ l.jsx(He, { content: C, placement: "bottom", trigger: "click", open: this.state.visible, onOpenChange: this.handleVisibleChange, children: /* @__PURE__ */ l.jsx("span", { className: "header2-text-label", style: { cursor: "pointer" }, children: f }) }) : /* @__PURE__ */ l.jsx("span", { className: "header2-text-label", children: f }),
             /* @__PURE__ */ l.jsx(Xt, { style: { marginLeft: "8px" }, className: "icon-nav", onClick: this.goNext })
           ] }) }),
-          /* @__PURE__ */ l.jsx("div", { children: /* @__PURE__ */ l.jsxs(dr, { defaultValue: m, size: "default", onChange: this.onViewChange, children: [
+          /* @__PURE__ */ l.jsx("div", { children: /* @__PURE__ */ l.jsxs(ur, { defaultValue: m, size: "default", onChange: this.onViewChange, children: [
             E,
             "xx"
           ] }) }),
@@ -2904,7 +2909,7 @@ class cr extends _e {
     ] }) });
   }
 }
-M(cr, "propTypes", {
+M(hr, "propTypes", {
   schedulerData: u.object.isRequired,
   prevClick: u.func.isRequired,
   nextClick: u.func.isRequired,
@@ -2937,15 +2942,16 @@ M(cr, "propTypes", {
   onScrollBottom: u.func
 });
 export {
-  nr as AddMorePopover,
+  ir as AddMorePopover,
   O as CellUnits,
   P as DATETIME_FORMAT,
   W as DATE_FORMAT,
-  rr as DnDContext,
+  sr as DnDContext,
   ot as DnDSource,
-  yr as SampleData,
-  cr as Scheduler,
-  br as SchedulerData,
+  Rr as SampleData,
+  hr as Scheduler,
+  Cr as SchedulerData,
   ae as SummaryPos,
-  w as ViewTypes
+  w as ViewTypes,
+  Sr as wrapFunction
 };
