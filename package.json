@@ -1,8 +1,8 @@
 {
-  "name": "react-scheduler-master",
-  "version": "0.1.0",
+  "name": "react-big-schedule",
+  "version": "0.0.0",
   "type": "module",
-  "description": "React Scheduler master is a powerful and intuitive scheduler and resource planning solution built with React. Seamlessly integrate this modern browser-compatible component into your applications to effectively manage time, appointments, and resources. With drag-and-drop functionality, interactive UI, and granular views, react-scheduler-master empowers users to effortlessly schedule and allocate resources with precision. Enhance productivity and streamline your workflow with this React-based solution, designed to optimize time management and simplify calendar-based operations. Perfect for applications requiring advanced scheduling capabilities, react-scheduler-master offers a seamless and intuitive experience for managing appointments, resource allocation, and time slots. Unlock the potential of your React projects with react-scheduler-master and revolutionize the way you handle scheduling and resource planning. It is the updated version of react-big-scheduler",
+  "description": "React Scheduler master is a powerful and intuitive scheduler and resource planning solution built with React. Seamlessly integrate this modern browser-compatible component into your applications to effectively manage time, appointments, and resources. With drag-and-drop functionality, interactive UI, and granular views, react-big-schedule empowers users to effortlessly schedule and allocate resources with precision. Enhance productivity and streamline your workflow with this React-based solution, designed to optimize time management and simplify calendar-based operations. Perfect for applications requiring advanced scheduling capabilities, react-big-schedule offers a seamless and intuitive experience for managing appointments, resource allocation, and time slots. Unlock the potential of your React projects with react-big-schedule and revolutionize the way you handle scheduling and resource planning. It is the updated version of react-big-scheduler",
   "keywords": [
     "react scheduler",
     "react",
@@ -32,22 +32,22 @@
     "dist",
     "README.md"
   ],
-  "main": "./dist/react-scheduler-master-index.js",
-  "module": "./dist/react-scheduler-master-index.js",
+  "main": "./dist/react-big-schedule-index.js",
+  "module": "./dist/react-big-schedule-index.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/ansulagrawal/react-scheduler-master.git"
+    "url": "https://github.com/ansulagrawal/react-big-schedule.git"
   },
   "bugs": {
-    "url": "https://github.com/ansulagrawal/react-scheduler-master.git/issues"
+    "url": "https://github.com/ansulagrawal/react-big-schedule.git/issues"
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
   },
   "exports": {
     ".": {
-      "import": "./dist/react-scheduler-master-index.js",
-      "require": "./dist/react-scheduler-master-index.js"
+      "import": "./dist/react-big-schedule-index.js",
+      "require": "./dist/react-big-schedule-index.js"
     },
     "./dist/style.css": "./dist/style.css"
   },
