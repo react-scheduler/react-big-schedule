@@ -1,22 +1,16 @@
 # 1.0.0 (2023-05-21)
 
 
-### Feat
+### Features
 
-* Added Release configration ([a1d607d](https://github.com/ansulagrawal/react-big-schedule/commit/a1d607da8ea9f9bf3f886264cdeee61ed1d6b9fa))
-
-
-### Fix
-
-* Fix Project Settings ([56a843f](https://github.com/ansulagrawal/react-big-schedule/commit/56a843f5674278a91fafc93233be391c29ee06bc))
-
+* Updated Package Versions ([a1d607d](https://github.com/ansulagrawal/react-big-schedule/commit/a1d607da8ea9f9bf3f886264cdeee61ed1d6b9fa))
 
 ### BREAKING CHANGES
 
-* Added Change Log File.
-Added License File
-Added Semantic Release Config File.
-* Updated Node Version
-Updated Ant Design Version
-Updated React-DND
-Fix Package Name
+* Updated Node Version from 14 -> 18
+* Updated Ant Design Version 3.16.6 -> 5.0.1
+* Updated React DND Version 7.5.0 -> 14.0.5
+* Updated react-dnd-html5-backend version 7.5.0 -> 14.1.0
+* Updated React version 16 -> 18
+* Updated rrule version 2.6.0 -> 2.7.2
+* Change Configure from webpack to Vite
