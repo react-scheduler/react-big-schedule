@@ -1,4 +1,8 @@
-# React Big Schedule (react-big-schedule)
+# React Big Schedule (react-big-schedule) [![NPM version][npm-image]][npm-url]
+ 
+ [npm-image]: http://img.shields.io/npm/v/react-big-schedule.svg?style=flat-square
+ [npm-url]: http://npmjs.org/package/react-big-schedule
+
 
 React Big Schedule is a powerful and intuitive scheduler and resource planning solution built with React. Seamlessly integrate this modern, browser-compatible component into your applications to effectively manage time, appointments, and resources. With drag-and-drop functionality, interactive UI, and granular views, react-big-schedule empowers users to effortlessly schedule and allocate resources with precision.
 
