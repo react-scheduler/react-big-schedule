@@ -3,7 +3,7 @@
 
 ### Features
 
-* Updated Package Versions ([a1d607d](https://github.com/ansulagrawal/react-big-schedule/commit/a1d607da8ea9f9bf3f886264cdeee61ed1d6b9fa))
+* Updated Package Versions
 
 ### BREAKING CHANGES
 
