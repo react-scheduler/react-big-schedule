@@ -1,6 +1,8 @@
-# React Big Schedule (react-big-schedule) [![NPM version][npm-image]][npm-url]
+# React Big Schedule (react-big-schedule) 
+ [![NPM version][npm-image]][npm-url] [![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](https://choosealicense.com/licenses/mit/)  
+
  
- [npm-image]: http://img.shields.io/npm/v/react-big-schedule.svg?style=flat-square
+ [npm-image]: http://img.shields.io/npm/v/react-big-schedule.svg
  [npm-url]: http://npmjs.org/package/react-big-schedule
 
 
@@ -16,6 +18,14 @@ To install react-big-schedule, use npm:
 ```bash
   npm install react-big-schedule
 ```
+
+## Tech Stack  
+
+* React
+* Ant Design
+* react-dnd
+* react-dnd-html5-backend
+* vite
 
 ## Features
 
