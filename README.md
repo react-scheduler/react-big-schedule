@@ -1,5 +1,5 @@
 # React Big Schedule (react-big-schedule) 
- [![NPM version][npm-image]][npm-url] [![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](https://choosealicense.com/licenses/mit/)  
+ [![NPM version][npm-image]][npm-url] [![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](https://github.com/ansulagrawal/react-big-schedule/blob/master/LICENSE)  
 
  
  [npm-image]: http://img.shields.io/npm/v/react-big-schedule.svg
