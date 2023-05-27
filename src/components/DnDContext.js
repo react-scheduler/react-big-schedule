@@ -30,6 +30,9 @@ export default class DnDContext {
         }
         const point = monitor.getClientOffset();
         let leftIndex = Math.floor((point.x - pos.x) / cellWidth);
+        if (!resourceEvents.headerItems[leftIndex]) {
+          return;
+        }
         let startTime = resourceEvents.headerItems[leftIndex].start;
         let endTime = resourceEvents.headerItems[leftIndex].end;
         if (cellUnit !== CellUnits.Hour) endTime = localeMoment(resourceEvents.headerItems[leftIndex].start).hour(23).minute(59).second(59).format(DATETIME_FORMAT);
