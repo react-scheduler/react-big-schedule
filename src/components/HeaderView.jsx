@@ -8,52 +8,69 @@ function HeaderView({ schedulerData, nonAgendaCellHeaderTemplateResolver }) {
   const cellWidth = schedulerData.getContentCellWidth();
   const minuteStepsInHour = schedulerData.getMinuteStepsInHour();
 
-  const renderHeaderCell = (item, index, isHourCell) => {
-    const datetime = localeMoment(item.time);
-    const isNonWorkingTime = !!item.nonWorkingTime;
+  const nonAgendaResolver = typeof nonAgendaCellHeaderTemplateResolver === 'function' ? nonAgendaCellHeaderTemplateResolver : null;
 
-    let style = isNonWorkingTime
-      ? { width: cellWidth * minuteStepsInHour, color: config.nonWorkingTimeHeadColor, backgroundColor: config.nonWorkingTimeHeadBgColor }
-      : { width: cellWidth * minuteStepsInHour };
+  const headerList = headers.map((item, index) => {
+    if (cellUnit === CellUnits.Hour && index % minuteStepsInHour !== 0) {
+      return <></>;
+    }
+    const { time, nonWorkingTime } = item;
+    const datetime = localeMoment(time);
 
-    if (!isHourCell) {
-      style.width = cellWidth;
+    let style = {};
+    if (cellUnit === CellUnits.Hour) {
+      style = nonWorkingTime
+        ? { width: cellWidth * minuteStepsInHour, color: config.nonWorkingTimeHeadColor, backgroundColor: config.nonWorkingTimeHeadBgColor }
+        : { width: cellWidth * minuteStepsInHour };
+
+      if (index === headers.length - minuteStepsInHour) {
+        style = nonWorkingTime ? { color: config.nonWorkingTimeHeadColor, backgroundColor: config.nonWorkingTimeHeadColor } : {};
+      }
+    } else {
+      style = nonWorkingTime ? { width: cellWidth, color: config.nonWorkingTimeHeadColor, backgroundColor: config.nonWorkingTimeHeadBgColor } : { width: cellWidth };
+      if (index === headers.length - 1) {
+        style = item.nonWorkingTime ? { color: config.nonWorkingTimeHeadColor, backgroundColor: config.nonWorkingTimeHeadBgColor } : {};
+      }
     }
 
-    if (index === headers.length - (isHourCell ? minuteStepsInHour : 1)) {
-      style = isNonWorkingTime ? { color: config.nonWorkingTimeHeadColor, backgroundColor: config.nonWorkingTimeHeadBgColor } : {};
+    let cellFormat;
+
+    switch (cellUnit) {
+      case CellUnits.Hour:
+        cellFormat = config.nonAgendaDayCellHeaderFormat;
+        break;
+      case CellUnits.Week:
+        cellFormat = config.nonAgendaWeekCellHeaderFormat;
+        break;
+      case CellUnits.Month:
+        cellFormat = config.nonAgendaMonthCellHeaderFormat;
+        break;
+      case CellUnits.Year:
+        cellFormat = config.nonAgendaYearCellHeaderFormat;
+        break;
+      default:
+        cellFormat = config.nonAgendaOtherCellHeaderFormat;
+        break;
     }
 
-    const pFormattedList = (isHourCell ? config.nonAgendaDayCellHeaderFormat : config.nonAgendaOtherCellHeaderFormat).split('|').map(format => datetime.format(format));
+    const pFormattedList = cellFormat.split('|').map(item => datetime.format(item));
 
-    if (typeof nonAgendaCellHeaderTemplateResolver === 'function') {
-      return nonAgendaCellHeaderTemplateResolver(schedulerData, item, pFormattedList, style);
-    }
+    const pList = pFormattedList.map((item, index) => <div key={index}>{item}</div>);
 
-    const pList = pFormattedList.map((formattedItem, pIndex) => <div key={pIndex}>{formattedItem}</div>);
-
-    return (
-      <th key={item.time} className='header3-text' style={style}>
+    const element = nonAgendaResolver ? (
+      nonAgendaResolver(schedulerData, item, pFormattedList, style)
+    ) : (
+      <th key={time} className='header3-text' style={style}>
         <div>{pList}</div>
       </th>
     );
-  };
 
-  const renderHeaderCells = () => {
-    return headers.map((item, index) => {
-      if (cellUnit === CellUnits.Hour && index % minuteStepsInHour !== 0) {
-        return null;
-      }
-      const isHourCell = cellUnit === CellUnits.Hour;
-      return renderHeaderCell(item, index, isHourCell);
-    });
-  };
-
-  const headerCells = renderHeaderCells();
+    return element;
+  });
 
   return (
     <thead>
-      <tr style={{ height: headerHeight }}>{headerCells}</tr>
+      <tr style={{ height: headerHeight }}>{headerList}</tr>
     </thead>
   );
 }
