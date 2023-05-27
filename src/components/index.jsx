@@ -14,6 +14,7 @@ import AddMorePopover from './AddMorePopover';
 import SchedulerData from './SchedulerData';
 import SampleData from '../sample-data/sample1';
 import { ViewTypes, CellUnits, SummaryPos, DATETIME_FORMAT, DATE_FORMAT } from '../config/default';
+import wrapFunction from './wrapFunction';
 import '../css/style.css';
 
 const RadioButton = Radio.Button;
@@ -500,4 +501,4 @@ class Scheduler extends Component {
   };
 }
 
-export { Scheduler, DATETIME_FORMAT, DATE_FORMAT, SchedulerData, ViewTypes, CellUnits, SummaryPos, DnDSource, DnDContext, AddMorePopover, SampleData };
+export { Scheduler, DATETIME_FORMAT, DATE_FORMAT, SchedulerData, ViewTypes, CellUnits, SummaryPos, DnDSource, DnDContext, AddMorePopover, SampleData, wrapFunction };
