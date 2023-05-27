@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import { Scheduler, SchedulerData, ViewTypes, SampleData, AddMorePopover } from '../components/index';
-import withDnDContext from './withDnDContext';
+import { Scheduler, SchedulerData, ViewTypes, SampleData, AddMorePopover, wrapFunction } from '../components/index';
 
 class AddMore extends Component {
   constructor(props) {
@@ -192,4 +191,4 @@ class AddMore extends Component {
   };
 }
 
-export default withDnDContext(AddMore);
+export default wrapFunction(AddMore);
