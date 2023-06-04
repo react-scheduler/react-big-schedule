@@ -1,3 +1,19 @@
+# [3.0.0](https://github.com/ansulagrawal/react-big-schedule/compare/2.0.0...3.0.0) (2023-06-04)
+
+
+### Feat
+
+* Added Multiple Example files ([c857a1a](https://github.com/ansulagrawal/react-big-schedule/commit/c857a1a1a4836af53f014c1ec61a7bdb87cc7bd8))
+
+
+### BREAKING CHANGES
+
+* Added CustomEventStyle Example File.
+Added CustomHeader Example File.
+Added CustomPopoverStyle Example File
+Removed Styling From all Example Files.
+Added Styling directly in main.jsx Fix
+
 # [2.0.0](https://github.com/ansulagrawal/react-big-schedule/compare/1.0.0...2.0.0) (2023-05-27)
 
 
