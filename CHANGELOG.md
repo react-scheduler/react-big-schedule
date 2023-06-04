@@ -1,3 +1,18 @@
+# [3.0.1](https://github.com/ansulagrawal/react-big-schedule/compare/3.0.0...3.0.1) (2023-06-04)
+
+## HotFix
+
+- Fixed exporting of CSS file in the build process to ensure proper functionality.
+
+## Configuration Changes
+
+- Removed publishing on GitHub as npm is already available for distribution.
+
+## Breaking Changes
+None.
+
+Note: Please note that this release includes a hotfix for the CSS file export issue and configuration changes related to publishing on GitHub. No breaking changes have been introduced in this release.
+
 # [3.0.0](https://github.com/ansulagrawal/react-big-schedule/compare/2.0.0...3.0.0) (2023-06-04)
 
 
