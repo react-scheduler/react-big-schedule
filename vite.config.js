@@ -22,4 +22,5 @@ export default defineConfig({
     },
   },
   plugins: [react()],
+  scripts: [{ src: './copy-css.js', inline: true }],
 });
