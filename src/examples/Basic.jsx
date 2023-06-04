@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { Scheduler, SchedulerData, ViewType, DemoData, wrapperFun } from '../components/index';
-import '../css/style.css';
 
 class Basic extends Component {
   constructor(props) {

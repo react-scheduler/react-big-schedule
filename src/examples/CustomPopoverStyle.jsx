@@ -1,73 +1,45 @@
-import { Component } from 'react';
-import { Scheduler, SchedulerData, ViewType, AddMorePopover, DemoData, wrapperFun } from '../components/index';
+import React, { Component } from 'react';
+import { Col, Row, Button } from 'antd';
+import { Scheduler, SchedulerData, ViewType, DemoData, wrapperFun } from '../components/index';
 
-class AddMore extends Component {
+class CustomPopoverStyle extends Component {
   constructor(props) {
     super(props);
 
-    let schedulerData = new SchedulerData('2022-12-18', ViewType.Week, false, false, {
-      dayMaxEvents: 2,
-      weekMaxEvents: 4,
-      monthMaxEvents: 4,
-      quarterMaxEvents: 4,
-      yearMaxEvents: 4,
-    });
+    let schedulerData = new SchedulerData('2022-12-18', ViewType.Week);
     schedulerData.localeDayjs.locale('en');
     schedulerData.setResources(DemoData.resources);
     schedulerData.setEvents(DemoData.events);
     this.state = {
       viewModel: schedulerData,
-      headerItem: undefined,
-      left: 0,
-      top: 0,
-      height: 0,
     };
   }
 
   render() {
     const { viewModel } = this.state;
-
-    let popover = <div />;
-    if (this.state.headerItem !== undefined) {
-      popover = (
-        <AddMorePopover
-          headerItem={this.state.headerItem}
-          eventItemClick={this.eventClicked}
-          viewEventClick={this.ops1}
-          viewEventText='Ops 1'
-          viewEvent2Click={this.ops2}
-          viewEvent2Text='Ops 2'
-          schedulerData={viewModel}
-          closeAction={this.onSetAddMoreState}
-          left={this.state.left}
-          top={this.state.top}
-          height={this.state.height}
-          moveEvent={this.moveEvent}
-        />
-      );
-    }
-
     return (
       <div>
-        <Scheduler
-          schedulerData={viewModel}
-          prevClick={this.prevClick}
-          nextClick={this.nextClick}
-          onSelectDate={this.onSelectDate}
-          onViewChange={this.onViewChange}
-          eventItemClick={this.eventClicked}
-          viewEventClick={this.ops1}
-          viewEventText='Ops 1'
-          viewEvent2Text='Ops 2'
-          viewEvent2Click={this.ops2}
-          updateEventStart={this.updateEventStart}
-          updateEventEnd={this.updateEventEnd}
-          moveEvent={this.moveEvent}
-          newEvent={this.newEvent}
-          onSetAddMoreState={this.onSetAddMoreState}
-          toggleExpandFunc={this.toggleExpandFunc}
-        />
-        {popover}
+        <div>
+          <h3 style={{ textAlign: 'center' }}>Custom popover style example</h3>
+          <Scheduler
+            schedulerData={viewModel}
+            prevClick={this.prevClick}
+            nextClick={this.nextClick}
+            onSelectDate={this.onSelectDate}
+            onViewChange={this.onViewChange}
+            eventItemClick={this.eventClicked}
+            viewEventClick={this.ops1}
+            viewEventText='Ops 1'
+            viewEvent2Text='Ops 2'
+            viewEvent2Click={this.ops2}
+            updateEventStart={this.updateEventStart}
+            updateEventEnd={this.updateEventEnd}
+            moveEvent={this.moveEvent}
+            newEvent={this.newEvent}
+            eventItemPopoverTemplateResolver={this.eventItemPopoverTemplateResolver}
+            toggleExpandFunc={this.toggleExpandFunc}
+          />
+        </div>
       </div>
     );
   }
@@ -169,19 +141,53 @@ class AddMore extends Component {
     }
   };
 
-  onSetAddMoreState = newState => {
-    if (newState === undefined) {
-      this.setState({
-        headerItem: undefined,
-        left: 0,
-        top: 0,
-        height: 0,
-      });
-    } else {
-      this.setState({
-        ...newState,
-      });
-    }
+  eventItemPopoverTemplateResolver = (schedulerData, eventItem, title, start, end, statusColor) => {
+    return (
+      // <React.Fragment>
+      //     <h3>{title}</h3>
+      //     <h5>{start.format("HH:mm")} - {end.format("HH:mm")}</h5>
+      //     <img src="./icons8-ticket-96.png" />
+      // </React.Fragment>
+      <div style={{ width: '300px' }}>
+        <Row type='flex' align='middle'>
+          <Col span={2}>
+            <div className='status-dot' style={{ backgroundColor: statusColor }} />
+          </Col>
+          <Col span={22} className='overflow-text'>
+            <span className='header2-text' title={title}>
+              {title}
+            </span>
+          </Col>
+        </Row>
+        <Row type='flex' align='middle'>
+          <Col span={2}>
+            <div />
+          </Col>
+          <Col span={22}>
+            <span className='header1-text'>
+              {start.format('HH:mm')} - {end.format('HH:mm')}
+            </span>
+          </Col>
+        </Row>
+        <Row type='flex' align='middle'>
+          <Col span={2}>
+            <div />
+          </Col>
+          <Col span={22}>
+            <Button
+              onClick={() => {
+                this.demoButtonClicked(eventItem);
+              }}>
+              Demo
+            </Button>
+          </Col>
+        </Row>
+      </div>
+    );
+  };
+
+  demoButtonClicked = eventItem => {
+    alert(`You just clicked demo button. event title: ${eventItem.title}`);
   };
 
   toggleExpandFunc = (schedulerData, slotId) => {
@@ -192,4 +198,4 @@ class AddMore extends Component {
   };
 }
 
-export default wrapperFun(AddMore);
+export default wrapperFun(CustomPopoverStyle);
