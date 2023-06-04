@@ -1,18 +1,29 @@
 # [3.0.0](https://github.com/ansulagrawal/react-big-schedule/compare/2.0.0...3.0.0) (2023-06-04)
 
 
-### Feat
+## Features:
+- Removed usage of `UNSAFE_componentWillReceiveProps`.
+- Fixed event span for day `viewType`.
+- Added generics to Scheduler and `SchedulerProps` to extend the `EventItem` type.
+- Added option to hide resource view.
+- Added option to change event item popover placement.
+- Fixed custom view event span.
+- Fixed scheduler header span for day view.
+- Improved locale support.
+- Added options to place the event item popover at the mouse position using `eventItemPopoverPlacement`: `topLeftMousePosition`, `bottomLeftMousePosition`, `topRightMousePosition`, `bottomRightMousePosition`.
+- Shifted from moment to dayjs library.
 
-* Added Multiple Example files ([c857a1a](https://github.com/ansulagrawal/react-big-schedule/commit/c857a1a1a4836af53f014c1ec61a7bdb87cc7bd8))
+  ## Breaking Changes:
+- Removed usage of `UNSAFE_componentWillReceiveProps`. Update your code to use alternative lifecycle methods or hooks as necessary.
+- Event span for day `viewType` has been fixed. Review your code if you were relying on the previous behaviour.
+- If you were extending the `Scheduler` component or using `SchedulerProps`, update your code to include generics for `EventItem` type.
+- If you were relying on the previous behaviour of resource view visibility, update your code to use the new option to hide it.
+- If you were customizing the event item popover placement, update your code to use the new option to change the placement.
+- Custom view event span and scheduler header span for day view have been fixed. Check your code if you were affected by these issues.
+- If you were relying on the previous behaviour of the `moment` library, note that the shift to `dayjs` may require adjustments to your code.
 
+Thanks to [@hbatalhaStch](https://github.com/hbatalhaStch) for suggesting improvements. 
 
-### BREAKING CHANGES
-
-* Added CustomEventStyle Example File.
-Added CustomHeader Example File.
-Added CustomPopoverStyle Example File
-Removed Styling From all Example Files.
-Added Styling directly in main.jsx Fix
 
 # [2.0.0](https://github.com/ansulagrawal/react-big-schedule/compare/1.0.0...2.0.0) (2023-05-27)
 
