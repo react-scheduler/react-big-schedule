@@ -40,11 +40,7 @@ jobs:
       - name: Create .npmrc file
         run: |
           echo registry=https://registry.npmjs.org/ > .npmrc
-          echo @ansulagrawal:registry=https://npm.pkg.github.com/ > .npmrc
-          echo '//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN  }}' >> .npmrc
-          echo '//npm.pkg.github.com/:_authToken=${{ secrets.NPM_TOKEN  }}' >> .npmrc
 
       - run: npx semantic-release
         env:
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
