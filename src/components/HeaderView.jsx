@@ -1,83 +1,104 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { CellUnits } from '../config/default';
+import React, { Component } from 'react';
+import { PropTypes } from 'prop-types';
+import { CellUnit } from './index';
 
-function HeaderView({ schedulerData, nonAgendaCellHeaderTemplateResolver }) {
-  const { headers, cellUnit, config, localeMoment } = schedulerData;
-  const headerHeight = schedulerData.getTableHeaderHeight();
-  const cellWidth = schedulerData.getContentCellWidth();
-  const minuteStepsInHour = schedulerData.getMinuteStepsInHour();
+class HeaderView extends Component {
+  constructor(props) {
+    super(props);
+  }
 
-  const nonAgendaResolver = typeof nonAgendaCellHeaderTemplateResolver === 'function' ? nonAgendaCellHeaderTemplateResolver : null;
+  static propTypes = {
+    schedulerData: PropTypes.object.isRequired,
+    nonAgendaCellHeaderTemplateResolver: PropTypes.func,
+  };
 
-  const headerList = headers.map((item, index) => {
-    if (cellUnit === CellUnits.Hour && index % minuteStepsInHour !== 0) {
-      return <></>;
-    }
-    const { time, nonWorkingTime } = item;
-    const datetime = localeMoment(time);
+  render() {
+    const { schedulerData, nonAgendaCellHeaderTemplateResolver } = this.props;
+    const { headers, cellUnit, config, localeDayjs } = schedulerData;
+    let headerHeight = schedulerData.getTableHeaderHeight();
+    let cellWidth = schedulerData.getContentCellWidth();
+    let minuteStepsInHour = schedulerData.getMinuteStepsInHour();
 
+    let headerList = [];
     let style = {};
-    if (cellUnit === CellUnits.Hour) {
-      style = nonWorkingTime
-        ? { width: cellWidth * minuteStepsInHour, color: config.nonWorkingTimeHeadColor, backgroundColor: config.nonWorkingTimeHeadBgColor }
-        : { width: cellWidth * minuteStepsInHour };
+    if (cellUnit === CellUnit.Hour) {
+      headers.forEach((item, index) => {
+        if (index % minuteStepsInHour === 0) {
+          let datetime = localeDayjs(new Date(item.time));
+          const isCurrentTime = datetime.isSame(new Date(), 'hour');
 
-      if (index === headers.length - minuteStepsInHour) {
-        style = nonWorkingTime ? { color: config.nonWorkingTimeHeadColor, backgroundColor: config.nonWorkingTimeHeadColor } : {};
-      }
+          style = !!item.nonWorkingTime
+            ? {
+                width: cellWidth * minuteStepsInHour,
+                color: config.nonWorkingTimeHeadColor,
+                backgroundColor: config.nonWorkingTimeHeadBgColor,
+              }
+            : {
+                width: cellWidth * minuteStepsInHour,
+              };
+
+          if (index === headers.length - minuteStepsInHour)
+            style = !!item.nonWorkingTime ? { color: config.nonWorkingTimeHeadColor, backgroundColor: config.nonWorkingTimeHeadBgColor } : {};
+
+          let pFormattedList = config.nonAgendaDayCellHeaderFormat.split('|').map(item => datetime.format(item));
+          let element;
+
+          if (typeof nonAgendaCellHeaderTemplateResolver === 'function') {
+            element = nonAgendaCellHeaderTemplateResolver(schedulerData, item, pFormattedList, style);
+          } else {
+            const pList = pFormattedList.map((item, index) => <div key={index}>{item}</div>);
+
+            element = (
+              <th key={item.time} className='header3-text' style={style}>
+                <div>{pList}</div>
+              </th>
+            );
+          }
+
+          headerList.push(element);
+        }
+      });
     } else {
-      style = nonWorkingTime ? { width: cellWidth, color: config.nonWorkingTimeHeadColor, backgroundColor: config.nonWorkingTimeHeadBgColor } : { width: cellWidth };
-      if (index === headers.length - 1) {
-        style = item.nonWorkingTime ? { color: config.nonWorkingTimeHeadColor, backgroundColor: config.nonWorkingTimeHeadBgColor } : {};
-      }
+      headerList = headers.map((item, index) => {
+        let datetime = localeDayjs(new Date(item.time));
+        style = !!item.nonWorkingTime
+          ? {
+              width: cellWidth,
+              color: config.nonWorkingTimeHeadColor,
+              backgroundColor: config.nonWorkingTimeHeadBgColor,
+            }
+          : { width: cellWidth };
+        if (index === headers.length - 1) style = !!item.nonWorkingTime ? { color: config.nonWorkingTimeHeadColor, backgroundColor: config.nonWorkingTimeHeadBgColor } : {};
+        let cellFormat =
+          cellUnit === CellUnit.Week
+            ? config.nonAgendaWeekCellHeaderFormat
+            : cellUnit === CellUnit.Month
+            ? config.nonAgendaMonthCellHeaderFormat
+            : cellUnit === CellUnit.Year
+            ? config.nonAgendaYearCellHeaderFormat
+            : config.nonAgendaOtherCellHeaderFormat;
+        let pFormattedList = cellFormat.split('|').map(item => datetime.format(item));
+
+        if (typeof nonAgendaCellHeaderTemplateResolver === 'function') {
+          return nonAgendaCellHeaderTemplateResolver(schedulerData, item, pFormattedList, style);
+        }
+
+        const pList = pFormattedList.map((item, index) => <div key={index}>{item}</div>);
+
+        return (
+          <th key={item.time} className='header3-text' style={style}>
+            <div>{pList}</div>
+          </th>
+        );
+      });
     }
 
-    let cellFormat;
-
-    switch (cellUnit) {
-      case CellUnits.Hour:
-        cellFormat = config.nonAgendaDayCellHeaderFormat;
-        break;
-      case CellUnits.Week:
-        cellFormat = config.nonAgendaWeekCellHeaderFormat;
-        break;
-      case CellUnits.Month:
-        cellFormat = config.nonAgendaMonthCellHeaderFormat;
-        break;
-      case CellUnits.Year:
-        cellFormat = config.nonAgendaYearCellHeaderFormat;
-        break;
-      default:
-        cellFormat = config.nonAgendaOtherCellHeaderFormat;
-        break;
-    }
-
-    const pFormattedList = cellFormat.split('|').map(item => datetime.format(item));
-
-    const pList = pFormattedList.map((item, index) => <div key={index}>{item}</div>);
-
-    const element = nonAgendaResolver ? (
-      nonAgendaResolver(schedulerData, item, pFormattedList, style)
-    ) : (
-      <th key={time} className='header3-text' style={style}>
-        <div>{pList}</div>
-      </th>
+    return (
+      <thead>
+        <tr style={{ height: headerHeight }}>{headerList}</tr>
+      </thead>
     );
-
-    return element;
-  });
-
-  return (
-    <thead>
-      <tr style={{ height: headerHeight }}>{headerList}</tr>
-    </thead>
-  );
+  }
 }
-
-HeaderView.propTypes = {
-  schedulerData: PropTypes.object.isRequired,
-  nonAgendaCellHeaderTemplateResolver: PropTypes.func,
-};
 
 export default HeaderView;

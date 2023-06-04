@@ -1,14 +1,26 @@
 import React, { Component } from 'react';
-import { Scheduler, SchedulerData, ViewTypes, SampleData, wrapFunction } from '../components/index';
+import { Scheduler, SchedulerData, ViewType, DemoData, wrapperFun } from '../components/index';
+import '../css/style.css';
 
 class Basic extends Component {
   constructor(props) {
     super(props);
 
-    let schedulerData = new SchedulerData('2017-12-18', ViewTypes.Week);
-    schedulerData.localeMoment.locale('en');
-    schedulerData.setResources(SampleData.resources);
-    schedulerData.setEvents(SampleData.events);
+    let schedulerData = new SchedulerData('2022-12-02', ViewType.Month, false, false, {
+      dayMaxEvents: 99,
+      weekMaxEvents: 9669,
+      monthMaxEvents: 9669,
+      quarterMaxEvents: 6599,
+      yearMaxEvents: 9956,
+      customMaxEvents: 9965,
+      eventItemPopoverTrigger: 'click',
+      schedulerContentHeight: '350px',
+    });
+
+    schedulerData.setSchedulerLocale('pt-br');
+    schedulerData.setCalendarPopoverLocale('pt_BR');
+    schedulerData.setResources(DemoData.resources);
+    schedulerData.setEvents(DemoData.events);
     this.state = {
       viewModel: schedulerData,
     };
@@ -23,7 +35,7 @@ class Basic extends Component {
         nextClick={this.nextClick}
         onSelectDate={this.onSelectDate}
         onViewChange={this.onViewChange}
-        eventItemClick={this.eventClicked}
+        // eventItemClick={this.eventClicked}
         viewEventClick={this.ops1}
         viewEventText='Ops 1'
         viewEvent2Text='Ops 2'
@@ -43,26 +55,27 @@ class Basic extends Component {
 
   prevClick = schedulerData => {
     schedulerData.prev();
-    schedulerData.setEvents(SampleData.events);
-    this.setState({
-      viewModel: schedulerData,
-    });
+    schedulerData.setEvents(DemoData.events);
+    this.setState({ viewModel: schedulerData });
   };
 
   nextClick = schedulerData => {
     schedulerData.next();
     schedulerData.setEvents(DemoData.events);
-    this.setState({
-      viewModel: schedulerData,
-    });
+    this.setState({ viewModel: schedulerData });
   };
 
   onViewChange = (schedulerData, view) => {
+    const start = new Date();
     schedulerData.setViewType(view.viewType, view.showAgenda, view.isEventPerspective);
     schedulerData.setEvents(DemoData.events);
-    this.setState({
-      viewModel: schedulerData,
-    });
+    this.setState({ viewModel: schedulerData });
+    function secondsBetween(date1, date2) {
+      var diff = Math.abs(date1.getTime() - date2.getTime());
+      return diff / 1000;
+    }
+
+    console.log('Elapsed seconds: ' + secondsBetween(start, new Date()));
   };
 
   onSelectDate = (schedulerData, date) => {
@@ -126,7 +139,11 @@ class Basic extends Component {
   };
 
   moveEvent = (schedulerData, event, slotId, slotName, start, end) => {
-    if (confirm(`Do you want to move the event? {eventId: ${event.id}, eventTitle: ${event.title}, newSlotId: ${slotId}, newSlotName: ${slotName}, newStart: ${start}, newEnd: ${end}`)) {
+    if (
+      confirm(
+        `Do you want to move the event? {eventId: ${event.id}, eventTitle: ${event.title}, newSlotId: ${slotId}, newSlotName: ${slotName}, newStart: ${start}, newEnd: ${end}`
+      )
+    ) {
       schedulerData.moveEvent(event, slotId, slotName, start, end);
       this.setState({
         viewModel: schedulerData,
@@ -135,7 +152,7 @@ class Basic extends Component {
   };
 
   onScrollRight = (schedulerData, schedulerContent, maxScrollLeft) => {
-    if (schedulerData.ViewTypes === ViewTypes.Day) {
+    if (schedulerData.ViewTypes === ViewType.Day) {
       schedulerData.next();
       schedulerData.setEvents(DemoData.events);
       this.setState({
@@ -147,7 +164,7 @@ class Basic extends Component {
   };
 
   onScrollLeft = (schedulerData, schedulerContent, maxScrollLeft) => {
-    if (schedulerData.ViewTypes === ViewTypes.Day) {
+    if (schedulerData.ViewTypes === ViewType.Day) {
       schedulerData.prev();
       schedulerData.setEvents(DemoData.events);
       this.setState({
@@ -174,4 +191,4 @@ class Basic extends Component {
   };
 }
 
-export default wrapFunction(Basic);
+export default wrapperFun(Basic);

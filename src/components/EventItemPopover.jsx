@@ -1,7 +1,8 @@
+import React from 'react';
 import PropTypes from 'prop-types';
 import { Col, Row } from 'antd';
 
-function EventItemPopover({
+const EventItemPopover = ({
   schedulerData,
   eventItem,
   title,
@@ -14,21 +15,47 @@ function EventItemPopover({
   viewEvent2Click,
   viewEvent2Text,
   eventItemPopoverTemplateResolver,
-}) {
-  const { localeMoment, config } = schedulerData;
-  const start = localeMoment(startTime);
-  const end = localeMoment(endTime);
+}) => {
+  const { localeDayjs, config } = schedulerData;
+  const start = localeDayjs(new Date(startTime));
+  const end = localeDayjs(new Date(endTime));
 
-  if (eventItemPopoverTemplateResolver != undefined) {
+  if (eventItemPopoverTemplateResolver) {
     return eventItemPopoverTemplateResolver(schedulerData, eventItem, title, start, end, statusColor);
   }
 
-  let subtitleRow = <div />;
-  if (subtitleGetter !== undefined) {
-    let subtitle = subtitleGetter(schedulerData, eventItem);
-    if (subtitle != undefined) {
-      subtitleRow = (
-        <Row align='middle'>
+  const subtitle = subtitleGetter ? subtitleGetter(schedulerData, eventItem) : null;
+  const showViewEvent = viewEventText && viewEventClick && (eventItem.clickable1 === undefined || eventItem.clickable1);
+  const showViewEvent2 = viewEvent2Text && viewEvent2Click && (eventItem.clickable2 === undefined || eventItem.clickable2);
+
+  const renderViewEvent = () => (
+    <span className='header2-text' style={{ color: '#108EE9', cursor: 'pointer' }} onClick={() => viewEventClick(schedulerData, eventItem)}>
+      {viewEventText}
+    </span>
+  );
+
+  const renderViewEvent2 = () => (
+    <span className='header2-text' style={{ color: '#108EE9', cursor: 'pointer', marginLeft: '16px' }} onClick={() => viewEvent2Click(schedulerData, eventItem)}>
+      {viewEvent2Text}
+    </span>
+  );
+
+  return (
+    <div style={{ width: config.eventItemPopoverWidth }}>
+      <Row type='flex' align='middle'>
+        {config.eventItemPopoverShowColor && (
+          <Col span={2}>
+            <div className='status-dot' style={{ backgroundColor: statusColor }} />
+          </Col>
+        )}
+        <Col span={22} className='overflow-text'>
+          <span className='header2-text' title={title}>
+            {`${title}`}
+          </span>
+        </Col>
+      </Row>
+      {subtitle && (
+        <Row type='flex' align='middle'>
           <Col span={2}>
             <div />
           </Col>
@@ -38,109 +65,45 @@ function EventItemPopover({
             </span>
           </Col>
         </Row>
-      );
-    }
-  }
-
-  let opsRow = <div />;
-  if (viewEventText !== undefined && viewEventClick !== undefined && (eventItem.clickable1 == undefined || eventItem.clickable1)) {
-    let col = (
-      <Col span={22}>
-        <span className='header2-text' style={{ color: '#108EE9', cursor: 'pointer' }} onClick={() => viewEventClick(schedulerData, eventItem)}>
-          {viewEventText}
-        </span>
-      </Col>
-    );
-    if (viewEvent2Text !== undefined && viewEvent2Click !== undefined && (eventItem.clickable2 == undefined || eventItem.clickable2)) {
-      col = (
+      )}
+      <Row type='flex' align='middle'>
+        <Col span={2}>
+          <div />
+        </Col>
         <Col span={22}>
-          <span className='header2-text' style={{ color: '#108EE9', cursor: 'pointer' }} onClick={() => viewEventClick(schedulerData, eventItem)}>
-            {viewEventText}
+          <span className='header1-text'>{start.format('HH:mm')}</span>
+          {config.eventItemPopoverDateFormat && (
+            <span className='help-text' style={{ marginLeft: '8px' }}>
+              {start.format(config.eventItemPopoverDateFormat)}
+            </span>
+          )}
+          <span className='header2-text' style={{ marginLeft: '8px' }}>
+            -
           </span>
-          <span className='header2-text' style={{ color: '#108EE9', cursor: 'pointer', marginLeft: '16px' }} onClick={() => viewEvent2Click(schedulerData, eventItem)}>
-            {viewEvent2Text}
+          <span className='header1-text' style={{ marginLeft: '8px' }}>
+            {end.format('HH:mm')}
           </span>
+          {config.eventItemPopoverDateFormat && (
+            <span className='help-text' style={{ marginLeft: '8px' }}>
+              {end.format(config.eventItemPopoverDateFormat)}
+            </span>
+          )}
         </Col>
-      );
-    }
-    opsRow = (
-      <Row align='middle'>
-        <Col span={2}>
-          <div />
-        </Col>
-        {col}
       </Row>
-    );
-  } else if (viewEvent2Text !== undefined && viewEvent2Click !== undefined && (eventItem.clickable2 == undefined || eventItem.clickable2)) {
-    let col = (
-      <Col span={22}>
-        <span className='header2-text' style={{ color: '#108EE9', cursor: 'pointer' }} onClick={() => viewEvent2Click(schedulerData, eventItem)}>
-          {viewEvent2Text}
-        </span>
-      </Col>
-    );
-    opsRow = (
-      <Row align='middle'>
-        <Col span={2}>
-          <div />
-        </Col>
-        {col}
-      </Row>
-    );
-  }
-  const dateFormat = config.eventItemPopoverDateFormat;
-
-  const colorRow = config.eventItemPopoverShowColor ? (
-    <Col span={2}>
-      <div className='status-dot' style={{ backgroundColor: statusColor }} />
-    </Col>
-  ) : (
-    <></>
-  );
-
-  const dateTimeRow = (
-    <Col span={22}>
-      <span className='header1-text'>{start.format('HH:mm')}</span>
-      {dateFormat && (
-        <span className='help-text' style={{ marginLeft: '8px' }}>
-          {start.format(dateFormat)}
-        </span>
+      {(showViewEvent || showViewEvent2) && (
+        <Row type='flex' align='middle'>
+          <Col span={2}>
+            <div />
+          </Col>
+          <Col span={22}>
+            {showViewEvent && renderViewEvent()}
+            {showViewEvent2 && renderViewEvent2()}
+          </Col>
+        </Row>
       )}
-      <span className='header2-text' style={{ marginLeft: '8px' }}>
-        -
-      </span>
-      <span className='header1-text' style={{ marginLeft: '8px' }}>
-        {end.format('HH:mm')}
-      </span>
-      {dateFormat && (
-        <span className='help-text' style={{ marginLeft: '8px' }}>
-          {end.format(dateFormat)}
-        </span>
-      )}
-    </Col>
-  );
-
-  return (
-    <div style={{ width: '300px' }}>
-      <Row align='middle'>
-        {colorRow}
-        <Col span={22} className='overflow-text'>
-          <span className='header2-text' title={title}>
-            {title}
-          </span>
-        </Col>
-      </Row>
-      {subtitleRow}
-      <Row align='middle'>
-        <Col span={2}>
-          <div />
-        </Col>
-        {dateTimeRow}
-      </Row>
-      {opsRow}
     </div>
   );
-}
+};
 
 EventItemPopover.propTypes = {
   schedulerData: PropTypes.object.isRequired,

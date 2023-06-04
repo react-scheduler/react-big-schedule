@@ -1,49 +1,41 @@
-import React, { Component } from 'react';
-import { Scheduler, SchedulerData, ViewTypes, SampleData } from '../components/index';
-import withDragDropContext from './withDnDContext';
+import { Component } from 'react';
+import { Scheduler, SchedulerData, ViewType, DemoData, wrapperFun } from '../components/index';
+import '../css/style.css';
 
 class OverlapCheck extends Component {
   constructor(props) {
     super(props);
 
-    let schedulerData = new SchedulerData('2017-12-18', ViewTypes.Week, false, false, {
-      checkConflict: true,
-    });
-    schedulerData.localeMoment.locale('en');
-    schedulerData.setResources(SampleData.resources);
-    schedulerData.setEvents(SampleData.events);
-    this.state = {
-      viewModel: schedulerData,
-    };
+    let schedulerData = new SchedulerData('2022-12-18', ViewType.Week, false, false, { checkConflict: true });
+    schedulerData.localeDayjs.locale('en');
+    schedulerData.setResources(DemoData.resources);
+    schedulerData.setEvents(DemoData.events);
+    this.state = { viewModel: schedulerData };
   }
 
   render() {
     const { viewModel } = this.state;
     return (
       <div>
-        <div>
-          <h3 style={{ textAlign: 'center' }}>
-            Overlap check
-          </h3>
-          <Scheduler
-            schedulerData={viewModel}
-            prevClick={this.prevClick}
-            nextClick={this.nextClick}
-            onSelectDate={this.onSelectDate}
-            onViewChange={this.onViewChange}
-            eventItemClick={this.eventClicked}
-            viewEventClick={this.ops1}
-            viewEventText='Ops 1'
-            viewEvent2Text='Ops 2'
-            viewEvent2Click={this.ops2}
-            updateEventStart={this.updateEventStart}
-            updateEventEnd={this.updateEventEnd}
-            moveEvent={this.moveEvent}
-            newEvent={this.newEvent}
-            conflictOccurred={this.conflictOccurred}
-            toggleExpandFunc={this.toggleExpandFunc}
-          />
-        </div>
+        <h3 style={{ textAlign: 'center' }}>Overlap check</h3>
+        <Scheduler
+          schedulerData={viewModel}
+          prevClick={this.prevClick}
+          nextClick={this.nextClick}
+          onSelectDate={this.onSelectDate}
+          onViewChange={this.onViewChange}
+          eventItemClick={this.eventClicked}
+          viewEventClick={this.ops1}
+          viewEventText='Ops 1'
+          viewEvent2Text='Ops 2'
+          viewEvent2Click={this.ops2}
+          updateEventStart={this.updateEventStart}
+          updateEventEnd={this.updateEventEnd}
+          moveEvent={this.moveEvent}
+          newEvent={this.newEvent}
+          conflictOccurred={this.conflictOccurred}
+          toggleExpandFunc={this.toggleExpandFunc}
+        />
       </div>
     );
   }
@@ -51,33 +43,25 @@ class OverlapCheck extends Component {
   prevClick = schedulerData => {
     schedulerData.prev();
     schedulerData.setEvents(DemoData.events);
-    this.setState({
-      viewModel: schedulerData,
-    });
+    this.setState({ viewModel: schedulerData });
   };
 
   nextClick = schedulerData => {
     schedulerData.next();
     schedulerData.setEvents(DemoData.events);
-    this.setState({
-      viewModel: schedulerData,
-    });
+    this.setState({ viewModel: schedulerData });
   };
 
   onViewChange = (schedulerData, view) => {
     schedulerData.setViewType(view.viewType, view.showAgenda, view.isEventPerspective);
     schedulerData.setEvents(DemoData.events);
-    this.setState({
-      viewModel: schedulerData,
-    });
+    this.setState({ viewModel: schedulerData });
   };
 
   onSelectDate = (schedulerData, date) => {
     schedulerData.setDate(date);
     schedulerData.setEvents(DemoData.events);
-    this.setState({
-      viewModel: schedulerData,
-    });
+    this.setState({ viewModel: schedulerData });
   };
 
   eventClicked = (schedulerData, event) => {
@@ -151,10 +135,8 @@ class OverlapCheck extends Component {
 
   toggleExpandFunc = (schedulerData, slotId) => {
     schedulerData.toggleExpandStatus(slotId);
-    this.setState({
-      viewModel: schedulerData,
-    });
+    this.setState({ viewModel: schedulerData });
   };
 }
 
-export default withDragDropContext(OverlapCheck);
+export default wrapperFun(OverlapCheck);

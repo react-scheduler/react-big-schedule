@@ -1,35 +1,29 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
+import { Col, Row } from 'antd';
+import { CloseOutlined } from '@ant-design/icons';
 import EventItem from './EventItem';
 import DnDSource from './DnDSource';
-import { CloseOutlined } from '@ant-design/icons';
-import { Col, Row } from 'antd';
 
 function AddMorePopover(props) {
-  const [dndSource] = useState(new DnDSource(p => p.eventItem, EventItem));
-
-  const { headerItem, left, top, height, closeAction, schedulerData } = props;
-
-  const { config, localeMoment } = schedulerData;
-
+  const { schedulerData, headerItem, left, top, height, closeAction } = props;
+  const { config, localeDayjs } = schedulerData;
   const { time, start, end, events } = headerItem;
 
-  let header = localeMoment(time).format(config.addMorePopoverHeaderFormat);
-  let durationStart = localeMoment(start);
-  let durationEnd = localeMoment(end);
-  let i = 0;
-  let DnDEventItem = dndSource.getDragSource();
+  const [dndSource] = useState(new DnDSource(p => p.eventItem, EventItem, schedulerData.config.dragAndDropEnabled));
 
-  const eventList = events.map(evt => {
+  const header = localeDayjs(new Date(time)).format(config.addMorePopoverHeaderFormat);
+  const durationStart = localeDayjs(new Date(start));
+  const durationEnd = localeDayjs(end);
+  const DnDEventItem = dndSource.getDragSource();
+  const eventList = events.map((evt, i) => {
     if (evt !== undefined) {
-      i++;
-      let eventStart = localeMoment(evt.eventItem.start);
-      let eventEnd = localeMoment(evt.eventItem.end);
-      let isStart = eventStart >= durationStart;
-      let isEnd = eventEnd < durationEnd;
-      let eventItemLeft = 10;
-      let eventItemWidth = 138;
-      let eventItemTop = 12 + i * config.eventItemLineHeight;
+      const eventStart = localeDayjs(evt.eventItem.start);
+      const eventEnd = localeDayjs(evt.eventItem.end);
+      const isStart = eventStart >= durationStart;
+      const isEnd = eventEnd < durationEnd;
+      const eventItemTop = 12 + (i + 1) * config.eventItemLineHeight;
+
       return (
         <DnDEventItem
           {...props}
@@ -40,8 +34,8 @@ function AddMorePopover(props) {
           isStart={isStart}
           isEnd={isEnd}
           rightIndex={1}
-          left={eventItemLeft}
-          width={eventItemWidth}
+          left={10}
+          width={138}
           top={eventItemTop}
         />
       );
@@ -52,21 +46,19 @@ function AddMorePopover(props) {
   return (
     <div className='add-more-popover-overlay' style={{ left, top, height, width: '170px' }}>
       <Row justify='space-between' align='middle'>
-        <Col span='22'>
+        <Col span={22}>
           <span className='base-text'>{header}</span>
         </Col>
-        <Col span='2'>
+        <Col span={2}>
           <span onClick={() => closeAction(undefined)}>
             <CloseOutlined />
           </span>
         </Col>
       </Row>
-      {eventList}
+      {eventList?.filter(Boolean)}
     </div>
   );
 }
-
-export default AddMorePopover;
 
 AddMorePopover.propTypes = {
   schedulerData: PropTypes.object.isRequired,
@@ -84,3 +76,5 @@ AddMorePopover.propTypes = {
   viewEvent2Text: PropTypes.string,
   eventItemTemplateResolver: PropTypes.func,
 };
+
+export default AddMorePopover;

@@ -1,17 +1,17 @@
-import { PropTypes } from 'prop-types';
+import React from 'react';
+import PropTypes from 'prop-types';
 import AgendaResourceEvents from './AgendaResourceEvents';
 
 function AgendaView(props) {
   const { schedulerData } = props;
-  const { config, renderData, getResourceTableWidth, getTableHeaderHeight, isEventPerspective } = schedulerData;
+  const { config, renderData } = schedulerData;
 
-  const agendaResourceTableWidth = getResourceTableWidth();
-  const tableHeaderHeight = getTableHeaderHeight();
+  const agendaResourceTableWidth = schedulerData.getResourceTableWidth();
+  const tableHeaderHeight = schedulerData.getTableHeaderHeight();
+  const resourceName = schedulerData.isEventPerspective ? config.taskName : config.resourceName;
+  const agendaViewHeader = config.agendaViewHeader;
 
   const resourceEventsList = renderData.map(item => <AgendaResourceEvents {...props} resourceEvents={item} key={item.slotId} />);
-
-  const resourceName = isEventPerspective ? config.taskName : config.resourceName;
-  const agendaViewHeader = config.agendaViewHeader;
 
   return (
     <tr>

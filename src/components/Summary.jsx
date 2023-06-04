@@ -1,11 +1,12 @@
+import React from 'react';
 import PropTypes from 'prop-types';
 import { SummaryPos } from '../config/default';
 
-function Summary({ summary, left, width, top, schedulerData }) {
+const Summary = ({ schedulerData, summary, left, width, top }) => {
   const { config } = schedulerData;
-  const color = summary.color || config.summaryColor;
-
+  const color = summary.color !== undefined ? summary.color : config.summaryColor;
   let textAlign = 'center';
+
   if (config.summaryPos === SummaryPos.TopRight || config.summaryPos === SummaryPos.BottomRight) {
     textAlign = 'right';
   } else if (config.summaryPos === SummaryPos.TopLeft || config.summaryPos === SummaryPos.BottomLeft) {
@@ -14,10 +15,11 @@ function Summary({ summary, left, width, top, schedulerData }) {
 
   const style = {
     height: config.eventItemHeight,
-    color,
-    textAlign,
-    margin: '0 6px',
-    fontSize: summary.fontSize,
+    color: color,
+    textAlign: textAlign,
+    marginLeft: '6px',
+    marginRight: '6px',
+    ...(summary.fontSize !== undefined ? { fontSize: summary.fontSize } : {}),
   };
 
   return (
@@ -25,7 +27,7 @@ function Summary({ summary, left, width, top, schedulerData }) {
       <div style={style}>{summary.text}</div>
     </a>
   );
-}
+};
 
 Summary.propTypes = {
   schedulerData: PropTypes.object.isRequired,
@@ -34,4 +36,5 @@ Summary.propTypes = {
   width: PropTypes.number.isRequired,
   top: PropTypes.number.isRequired,
 };
+
 export default Summary;
