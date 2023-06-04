@@ -2,24 +2,22 @@ import PropTypes from 'prop-types';
 
 function BodyView({ schedulerData }) {
   const { renderData, headers, config, behaviors } = schedulerData;
-  let width = schedulerData.getContentCellWidth();
+  const width = schedulerData.getContentCellWidth();
 
   const tableRows = renderData
     .filter(o => o.render)
     .map(({ slotId, groupOnly, rowHeight }) => {
-      let rowCells = headers.map((header, index) => {
+      const rowCells = headers.map((header, index) => {
         const key = `${slotId}_${header.time}`;
         const style = index === headers.length - 1 ? {} : { width };
         if (!!header.nonWorkingTime) {
           style.backgroundColor = config.nonWorkingTimeBodyBgColor;
         }
-
         if (groupOnly) {
           style.backgroundColor = config.groupOnlySlotColor;
         }
-
         if (!!behaviors.getNonAgendaViewBodyCellBgColorFunc) {
-          let cellBgColor = behaviors.getNonAgendaViewBodyCellBgColorFunc(schedulerData, slotId, header);
+          const cellBgColor = behaviors.getNonAgendaViewBodyCellBgColorFunc(schedulerData, slotId, header);
           if (!!cellBgColor) {
             style.backgroundColor = cellBgColor;
           }

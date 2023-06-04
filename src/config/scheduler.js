@@ -1,10 +1,13 @@
-import { ViewTypes, SummaryPos } from './default';
+import { ViewType, SummaryPos } from './default';
 
 export default {
   schedulerWidth: '100%',
   besidesWidth: 20,
   schedulerMaxHeight: 0,
   tableHeaderHeight: 40,
+  schedulerContentHeight: '500px',
+
+  responsiveByParent: false,
 
   agendaResourceTableWidth: 160,
   agendaMaxEventWidth: 100,
@@ -30,6 +33,10 @@ export default {
   yearMaxEvents: 99,
   customMaxEvents: 99,
 
+  eventItemPopoverTrigger: 'hover',
+  eventItemPopoverPlacement: 'bottomLeft',
+  eventItemPopoverWidth: 300,
+
   eventItemHeight: 22,
   eventItemLineHeight: 24,
   nonAgendaSlotMinHeight: 0,
@@ -50,15 +57,21 @@ export default {
   creatable: true,
   crossResourceMove: true,
   checkConflict: false,
-  scrollToSpecialMomentEnabled: true,
+  scrollToSpecialDayjsEnabled: true,
   eventItemPopoverEnabled: true,
   eventItemPopoverShowColor: true,
   calendarPopoverEnabled: true,
   recurringEventsEnabled: true,
+  viewChangeSpinEnabled: true,
+  dateChangeSpinEnabled: true,
   headerEnabled: true,
+  resourceViewEnabled: true,
   displayWeekend: true,
   relativeMove: true,
   defaultExpanded: true,
+  dragAndDropEnabled: true,
+
+  schedulerHeaderEventsFuncsTimeoutMs: 100,
 
   resourceName: 'Resource Name',
   taskName: 'Task Name',
@@ -74,10 +87,10 @@ export default {
   minuteStep: 30,
 
   views: [
-    { viewName: 'Day', viewType: ViewTypes.Day, showAgenda: false, isEventPerspective: false },
-    { viewName: 'Week', viewType: ViewTypes.Week, showAgenda: false, isEventPerspective: false },
-    { viewName: 'Month', viewType: ViewTypes.Month, showAgenda: false, isEventPerspective: false },
-    { viewName: 'Quarter', viewType: ViewTypes.Quarter, showAgenda: false, isEventPerspective: false },
-    { viewName: 'Year', viewType: ViewTypes.Year, showAgenda: false, isEventPerspective: false },
+    { viewName: 'Day', viewType: ViewType.Day, showAgenda: false, isEventPerspective: false },
+    { viewName: 'Week', viewType: ViewType.Week, showAgenda: false, isEventPerspective: false },
+    { viewName: 'Month', viewType: ViewType.Month, showAgenda: false, isEventPerspective: false },
+    { viewName: 'Quarter', viewType: ViewType.Quarter, showAgenda: false, isEventPerspective: false },
+    { viewName: 'Year', viewType: ViewType.Year, showAgenda: false, isEventPerspective: false },
   ],
 };

@@ -1,12 +1,11 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import { PropTypes } from 'prop-types';
 import AddMore from './AddMore';
 import Summary from './Summary';
 import SelectedArea from './SelectedArea';
-import { DnDTypes, CellUnits, DATETIME_FORMAT, SummaryPos } from '../config/default';
+import { CellUnit, DATETIME_FORMAT, SummaryPos } from './index';
 import { getPos } from '../helper/utility';
-
-const supportTouch = 'ontouchstart' in window;
+import { DnDTypes } from '../config/default';
 
 class ResourceEvents extends Component {
   constructor(props) {
@@ -17,6 +16,7 @@ class ResourceEvents extends Component {
       left: 0,
       width: 0,
     };
+    this.supportTouch = false; //'ontouchstart' in window;
   }
 
   static propTypes = {
@@ -42,8 +42,10 @@ class ResourceEvents extends Component {
   componentDidMount() {
     const { schedulerData } = this.props;
     const { config } = schedulerData;
+    this.supportTouch = 'ontouchstart' in window;
+
     if (config.creatable === true) {
-      if (supportTouch) {
+      if (this.supportTouch) {
         // this.eventContainer.addEventListener('touchstart', this.initDrag, false);
       } else {
         this.eventContainer.addEventListener('mousedown', this.initDrag, false);
@@ -51,17 +53,19 @@ class ResourceEvents extends Component {
     }
   }
 
-  UNSAFE_componentWillReceiveProps(np) {
-    if (supportTouch) {
-      // this.eventContainer.removeEventListener('touchstart', this.initDrag, false);
-    } else {
-      this.eventContainer.removeEventListener('mousedown', this.initDrag, false);
-    }
-    if (np.schedulerData.config.creatable) {
-      if (supportTouch) {
-        // this.eventContainer.addEventListener('touchstart', this.initDrag, false);
+  componentDidUpdate(prevProps, nextProps) {
+    if (prevProps !== this.props) {
+      if (this.supportTouch) {
+        // this.eventContainer.removeEventListener('touchstart', this.initDrag, false);
       } else {
-        this.eventContainer.addEventListener('mousedown', this.initDrag, false);
+        this.eventContainer.removeEventListener('mousedown', this.initDrag, false);
+      }
+      if (this.props.schedulerData.config.creatable) {
+        if (this.supportTouch) {
+          // this.eventContainer.addEventListener('touchstart', this.initDrag, false);
+        } else {
+          this.eventContainer.addEventListener('mousedown', this.initDrag, false);
+        }
       }
     }
   }
@@ -76,7 +80,7 @@ class ResourceEvents extends Component {
     const { resourceEvents } = this.props;
     if (resourceEvents.groupOnly) return;
     let clientX = 0;
-    if (supportTouch) {
+    if (this.supportTouch) {
       if (ev.changedTouches.length == 0) return;
       const touch = ev.changedTouches[0];
       clientX = touch.pageX;
@@ -103,7 +107,7 @@ class ResourceEvents extends Component {
       isSelecting: true,
     });
 
-    if (supportTouch) {
+    if (this.supportTouch) {
       document.documentElement.addEventListener('touchmove', this.doDrag, false);
       document.documentElement.addEventListener('touchend', this.stopDrag, false);
       document.documentElement.addEventListener('touchcancel', this.cancelDrag, false);
@@ -123,7 +127,7 @@ class ResourceEvents extends Component {
     ev.stopPropagation();
 
     let clientX = 0;
-    if (supportTouch) {
+    if (this.supportTouch) {
       if (ev.changedTouches.length == 0) return;
       const touch = ev.changedTouches[0];
       clientX = touch.pageX;
@@ -156,9 +160,9 @@ class ResourceEvents extends Component {
     ev.stopPropagation();
 
     const { schedulerData, newEvent, resourceEvents } = this.props;
-    const { headers, events, config, cellUnit, localeMoment } = schedulerData;
+    const { headers, events, config, cellUnit, localeDayjs } = schedulerData;
     const { leftIndex, rightIndex } = this.state;
-    if (supportTouch) {
+    if (this.supportTouch) {
       document.documentElement.removeEventListener('touchmove', this.doDrag, false);
       document.documentElement.removeEventListener('touchend', this.stopDrag, false);
       document.documentElement.removeEventListener('touchcancel', this.cancelDrag, false);
@@ -171,8 +175,8 @@ class ResourceEvents extends Component {
 
     let startTime = headers[leftIndex].time;
     let endTime = resourceEvents.headerItems[rightIndex - 1].end;
-    if (cellUnit !== CellUnits.Hour)
-      endTime = localeMoment(resourceEvents.headerItems[rightIndex - 1].start)
+    if (cellUnit !== CellUnit.Hour)
+      endTime = localeDayjs(new Date(resourceEvents.headerItems[rightIndex - 1].start))
         .hour(23)
         .minute(59)
         .second(59)
@@ -191,13 +195,13 @@ class ResourceEvents extends Component {
 
     let hasConflict = false;
     if (config.checkConflict) {
-      let start = localeMoment(startTime),
-        end = localeMoment(endTime);
+      let start = localeDayjs(new Date(startTime)),
+        end = localeDayjs(endTime);
 
       events.forEach(e => {
         if (schedulerData._getEventSlotId(e) === slotId) {
-          let eStart = localeMoment(e.start),
-            eEnd = localeMoment(e.end);
+          let eStart = localeDayjs(e.start),
+            eEnd = localeDayjs(e.end);
           if ((start >= eStart && start < eEnd) || (end > eStart && end <= eEnd) || (eStart >= start && eStart < end) || (eEnd > start && eEnd <= end)) hasConflict = true;
         }
       });
@@ -254,7 +258,7 @@ class ResourceEvents extends Component {
 
   render() {
     const { resourceEvents, schedulerData, connectDropTarget, dndSource } = this.props;
-    const { cellUnit, startDate, endDate, config, localeMoment } = schedulerData;
+    const { cellUnit, startDate, endDate, config, localeDayjs } = schedulerData;
     const { isSelecting, left, width } = this.state;
     let cellWidth = schedulerData.getContentCellWidth();
     let cellMaxEvents = schedulerData.getCellMaxEvents();
@@ -272,14 +276,14 @@ class ResourceEvents extends Component {
 
         headerItem.events.forEach((evt, idx) => {
           if (idx < renderEventsMaxIndex && evt !== undefined && evt.render) {
-            let durationStart = localeMoment(startDate);
-            let durationEnd = localeMoment(endDate).add(1, 'days');
-            if (cellUnit === CellUnits.Hour) {
-              durationStart = localeMoment(startDate).add(config.dayStartFrom, 'hours');
-              durationEnd = localeMoment(endDate).add(config.dayStopTo + 1, 'hours');
+            let durationStart = localeDayjs(new Date(startDate));
+            let durationEnd = localeDayjs(endDate).add(1, 'days');
+            if (cellUnit === CellUnit.Hour) {
+              durationStart = localeDayjs(new Date(startDate)).add(config.dayStartFrom, 'hours');
+              durationEnd = localeDayjs(endDate).add(config.dayStopTo + 1, 'hours');
             }
-            let eventStart = localeMoment(evt.eventItem.start);
-            let eventEnd = localeMoment(evt.eventItem.end);
+            let eventStart = localeDayjs(evt.eventItem.start);
+            let eventEnd = localeDayjs(evt.eventItem.end);
             let isStart = eventStart >= durationStart;
             let isEnd = eventEnd <= durationEnd;
             let left = index * cellWidth + (index > 0 ? 2 : 3);
@@ -308,7 +312,18 @@ class ResourceEvents extends Component {
           let left = index * cellWidth + (index > 0 ? 2 : 3);
           let width = cellWidth - (index > 0 ? 5 : 6);
           let top = marginTop + headerItem.addMoreIndex * config.eventItemLineHeight;
-          let addMoreItem = <AddMore {...this.props} key={headerItem.time} headerItem={headerItem} number={headerItem.addMore} left={left} width={width} top={top} clickAction={this.onAddMoreClick} />;
+          let addMoreItem = (
+            <AddMore
+              {...this.props}
+              key={headerItem.time}
+              headerItem={headerItem}
+              number={headerItem.addMore}
+              left={left}
+              width={width}
+              top={top}
+              clickAction={this.onAddMoreClick}
+            />
+          );
           eventList.push(addMoreItem);
         }
 
@@ -323,16 +338,15 @@ class ResourceEvents extends Component {
       }
     });
 
+    const eventContainer = (
+      <div ref={this.eventContainerRef} className='event-container' style={{ height: resourceEvents.rowHeight }}>
+        {selectedArea}
+        {eventList}
+      </div>
+    );
     return (
       <tr>
-        <td style={{ width: rowWidth }}>
-          {connectDropTarget(
-            <div ref={this.eventContainerRef} className='event-container' style={{ height: resourceEvents.rowHeight }}>
-              {selectedArea}
-              {eventList}
-            </div>
-          )}
-        </td>
+        <td style={{ width: rowWidth }}>{config.dragAndDropEnabled ? connectDropTarget(eventContainer) : eventContainer}</td>
       </tr>
     );
   }

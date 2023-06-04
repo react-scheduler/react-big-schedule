@@ -1,20 +1,21 @@
-import React, { Component } from 'react';
-import { Scheduler, SchedulerData, ViewTypes, SampleData, AddMorePopover, wrapFunction } from '../components/index';
+import { Component } from 'react';
+import { Scheduler, SchedulerData, ViewType, AddMorePopover, DemoData, wrapperFun } from '../components/index';
+import '../css/style.css';
 
 class AddMore extends Component {
   constructor(props) {
     super(props);
 
-    let schedulerData = new SchedulerData('2022-12-18', ViewTypes.Week, false, false, {
+    let schedulerData = new SchedulerData('2022-12-18', ViewType.Week, false, false, {
       dayMaxEvents: 2,
       weekMaxEvents: 4,
       monthMaxEvents: 4,
       quarterMaxEvents: 4,
       yearMaxEvents: 4,
     });
-    schedulerData.localeMoment.locale('en');
-    schedulerData.setResources(SampleData.resources);
-    schedulerData.setEvents(SampleData.events);
+    schedulerData.localeDayjs.locale('en');
+    schedulerData.setResources(DemoData.resources);
+    schedulerData.setEvents(DemoData.events);
     this.state = {
       viewModel: schedulerData,
       headerItem: undefined,
@@ -49,35 +50,32 @@ class AddMore extends Component {
 
     return (
       <div>
-        <div>
-          <h3 style={{ textAlign: 'center' }}>Add more</h3>
-          <Scheduler
-            schedulerData={viewModel}
-            prevClick={this.prevClick}
-            nextClick={this.nextClick}
-            onSelectDate={this.onSelectDate}
-            onViewChange={this.onViewChange}
-            eventItemClick={this.eventClicked}
-            viewEventClick={this.ops1}
-            viewEventText='Ops 1'
-            viewEvent2Text='Ops 2'
-            viewEvent2Click={this.ops2}
-            updateEventStart={this.updateEventStart}
-            updateEventEnd={this.updateEventEnd}
-            moveEvent={this.moveEvent}
-            newEvent={this.newEvent}
-            onSetAddMoreState={this.onSetAddMoreState}
-            toggleExpandFunc={this.toggleExpandFunc}
-          />
-          {popover}
-        </div>
+        <Scheduler
+          schedulerData={viewModel}
+          prevClick={this.prevClick}
+          nextClick={this.nextClick}
+          onSelectDate={this.onSelectDate}
+          onViewChange={this.onViewChange}
+          eventItemClick={this.eventClicked}
+          viewEventClick={this.ops1}
+          viewEventText='Ops 1'
+          viewEvent2Text='Ops 2'
+          viewEvent2Click={this.ops2}
+          updateEventStart={this.updateEventStart}
+          updateEventEnd={this.updateEventEnd}
+          moveEvent={this.moveEvent}
+          newEvent={this.newEvent}
+          onSetAddMoreState={this.onSetAddMoreState}
+          toggleExpandFunc={this.toggleExpandFunc}
+        />
+        {popover}
       </div>
     );
   }
 
   prevClick = schedulerData => {
     schedulerData.prev();
-    schedulerData.setEvents(SampleData.events);
+    schedulerData.setEvents(DemoData.events);
     this.setState({
       viewModel: schedulerData,
     });
@@ -85,7 +83,7 @@ class AddMore extends Component {
 
   nextClick = schedulerData => {
     schedulerData.next();
-    schedulerData.setEvents(SampleData.events);
+    schedulerData.setEvents(DemoData.events);
     this.setState({
       viewModel: schedulerData,
     });
@@ -93,7 +91,7 @@ class AddMore extends Component {
 
   onViewChange = (schedulerData, view) => {
     schedulerData.setViewType(view.viewType, view.showAgenda, view.isEventPerspective);
-    schedulerData.setEvents(SampleData.events);
+    schedulerData.setEvents(DemoData.events);
     this.setState({
       viewModel: schedulerData,
     });
@@ -101,7 +99,7 @@ class AddMore extends Component {
 
   onSelectDate = (schedulerData, date) => {
     schedulerData.setDate(date);
-    schedulerData.setEvents(SampleData.events);
+    schedulerData.setEvents(DemoData.events);
     this.setState({
       viewModel: schedulerData,
     });
@@ -160,7 +158,11 @@ class AddMore extends Component {
   };
 
   moveEvent = (schedulerData, event, slotId, slotName, start, end) => {
-    if (confirm(`Do you want to move the event? {eventId: ${event.id}, eventTitle: ${event.title}, newSlotId: ${slotId}, newSlotName: ${slotName}, newStart: ${start}, newEnd: ${end}`)) {
+    if (
+      confirm(
+        `Do you want to move the event? {eventId: ${event.id}, eventTitle: ${event.title}, newSlotId: ${slotId}, newSlotName: ${slotName}, newStart: ${start}, newEnd: ${end}`
+      )
+    ) {
       schedulerData.moveEvent(event, slotId, slotName, start, end);
       this.setState({
         viewModel: schedulerData,
@@ -191,4 +193,4 @@ class AddMore extends Component {
   };
 }
 
-export default wrapFunction(AddMore);
+export default wrapperFun(AddMore);

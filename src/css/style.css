@@ -1,3 +1,9 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
 .header1-text {
   font-size: 25px;
   color: #90cdf9;
@@ -126,6 +132,7 @@ table.scheduler-table tr:last-child td {
 
 .timeline-event {
   position: absolute;
+  cursor: pointer;
 }
 
 .day-event {

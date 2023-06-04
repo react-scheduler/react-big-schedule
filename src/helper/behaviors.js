@@ -1,125 +1,84 @@
-import { ViewTypes, CellUnits, DATE_FORMAT } from '../config/default';
+import { ViewType, CellUnit } from '../components';
 
 //getSummary func example
 export const getSummary = (schedulerData, headerEvents, slotId, slotName, headerStart, headerEnd) => ({ text: 'Summary', color: 'red', fontSize: '1.2rem' });
 
 //getCustomDate example
-export const getCustomDate = (schedulerData, num, date = undefined) => {
-  const { viewType } = schedulerData;
-  let selectDate = date !== undefined ? date : schedulerData.startDate;
-
+export const getCustomDate = (schedulerData, num, date = schedulerData.startDate) => {
+  const { viewType, localeDayjs } = schedulerData;
   let startDate, endDate, cellUnit;
 
-  if (viewType === ViewTypes.Custom1) {
-    let monday = schedulerData.localeMoment(selectDate).startOf('week').format(DATE_FORMAT);
-    startDate =
-      num === 0
-        ? monday
-        : schedulerData
-            .localeMoment(monday)
-            .add(2 * num, 'weeks')
-            .format(DATE_FORMAT);
-    endDate = schedulerData.localeMoment(startDate).add(1, 'weeks').endOf('week').format(DATE_FORMAT);
-    cellUnit = CellUnits.Day;
-  } else if (viewType === ViewTypes.Custom2) {
-    let firstDayOfMonth = schedulerData.localeMoment(selectDate).startOf('month').format(DATE_FORMAT);
-    startDate =
-      num === 0
-        ? firstDayOfMonth
-        : schedulerData
-            .localeMoment(firstDayOfMonth)
-            .add(2 * num, 'months')
-            .format(DATE_FORMAT);
-    endDate = schedulerData.localeMoment(startDate).add(1, 'months').endOf('month').format(DATE_FORMAT);
-    cellUnit = CellUnits.Day;
+  if (viewType === ViewType.Custom1) {
+    const monday = localeDayjs(new Date(date)).startOf('week');
+    startDate = num === 0 ? monday : localeDayjs(new Date(monday)).add(2 * num, 'weeks');
+    endDate = localeDayjs(new Date(startDate)).add(1, 'weeks').endOf('week');
+    cellUnit = CellUnit.Day;
+  } else if (viewType === ViewType.Custom2) {
+    const firstDayOfMonth = localeDayjs(new Date(date)).startOf('month');
+    startDate = num === 0 ? firstDayOfMonth : localeDayjs(new Date(firstDayOfMonth)).add(2 * num, 'months');
+    endDate = localeDayjs(new Date(startDate)).add(1, 'months').endOf('month');
+    cellUnit = CellUnit.Day;
   } else {
-    startDate =
-      num === 0
-        ? selectDate
-        : schedulerData
-            .localeMoment(selectDate)
-            .add(2 * num, 'days')
-            .format(DATE_FORMAT);
-    endDate = schedulerData.localeMoment(startDate).add(1, 'days').format(DATE_FORMAT);
-    cellUnit = CellUnits.Hour;
+    startDate = num === 0 ? date : localeDayjs(new Date(date)).add(2 * num, 'days');
+    endDate = localeDayjs(new Date(startDate)).add(1, 'days');
+    cellUnit = CellUnit.Hour;
   }
 
   return { startDate, endDate, cellUnit };
 };
 
 //getNonAgendaViewBodyCellBgColor example
-export const getNonAgendaViewBodyCellBgColor = (schedulerData, slotId, header) => {
-  if (!header.nonWorkingTime) {
-    return '#87e8de';
-  }
-
-  return undefined;
-};
+export const getNonAgendaViewBodyCellBgColor = (schedulerData, slotId, header) => (header.nonWorkingTime ? undefined : '#87e8de');
 
 //getDateLabel func example
 export const getDateLabel = (schedulerData, viewType, startDate, endDate) => {
-  const start = schedulerData.localeMoment(startDate);
-  const end = schedulerData.localeMoment(endDate);
-  let dateLabel;
+  const { localeDayjs } = schedulerData;
+  const start = localeDayjs(new Date(startDate));
+  const end = localeDayjs(endDate);
+  let dateLabel = '';
 
-  switch (viewType) {
-    case ViewTypes.Week:
-    case ViewTypes.Custom:
-    case ViewTypes.Custom1:
-    case ViewTypes.Custom2:
-      if (start !== end) {
-        dateLabel = `${start.format('MMM D')}-${end.format('D, YYYY')}`;
-        if (start.month() !== end.month()) dateLabel = `${start.format('MMM D')}-${end.format('MMM D, YYYY')}`;
-        if (start.year() !== end.year()) dateLabel = `${start.format('MMM D, YYYY')}-${end.format('MMM D, YYYY')}`;
-      }
-      break;
-    case ViewTypes.Month:
-      dateLabel = start.format('MMMM YYYY');
-      break;
-    case ViewTypes.Quarter:
-      dateLabel = `${start.format('MMM D')}-${end.format('MMM D, YYYY')}`;
-      break;
-    case ViewTypes.Year:
-      dateLabel = start.format('YYYY');
-      break;
-    default:
-      dateLabel = start.format('MMM D, YYYY');
+  if (viewType === ViewType.Week || (start !== end && (viewType === ViewType.Custom || viewType === ViewType.Custom1 || viewType === ViewType.Custom2))) {
+    dateLabel = `${start.format('MMM D')}-${end.format('D, YYYY')}`;
+    if (start.month() !== end.month()) dateLabel = `${start.format('MMM D')}-${end.format('MMM D, YYYY')}`;
+    if (start.year() !== end.year()) dateLabel = `${start.format('MMM D, YYYY')}-${end.format('MMM D, YYYY')}`;
+  } else if (viewType === ViewType.Month) {
+    dateLabel = start.format('MMMM YYYY');
+  } else if (viewType === ViewType.Quarter) {
+    dateLabel = `${start.format('MMM D')}-${end.format('MMM D, YYYY')}`;
+  } else if (viewType === ViewType.Year) {
+    dateLabel = start.format('YYYY');
+  } else {
+    dateLabel = start.format('MMM D, YYYY');
   }
 
   return dateLabel;
 };
 
-export const getEventText = (schedulerData, event) => {
-  if (!schedulerData.isEventPerspective) return event.title;
+export const getEventText = (schedulerData, event) =>
+  schedulerData.isEventPerspective ? schedulerData.resources.find(item => item.id === event.resourceId)?.name || event.title : event.title;
 
-  const resource = schedulerData.resources.find(item => item.id === event.resourceId);
-  return resource ? resource.name : event.title;
+export const getScrollSpecialDayjs = schedulerData => {
+  const { localeDayjs } = schedulerData;
+  return localeDayjs(new Date());
 };
 
-// return endMoment;
-export const getScrollSpecialMoment = (schedulerData, startMoment, endMoment) => schedulerData.localeMoment();
-
 export const isNonWorkingTime = (schedulerData, time) => {
-  const { localeMoment, cellUnit } = schedulerData;
-
-  if (cellUnit === CellUnits.Hour) {
-    const hour = localeMoment(time).hour();
+  const { localeDayjs, cellUnit } = schedulerData;
+  if (cellUnit === CellUnit.Hour) {
+    const hour = localeDayjs(new Date(time)).hour();
     return hour < 9 || hour > 18;
+  } else {
+    const dayOfWeek = localeDayjs(new Date(time)).weekday();
+    return dayOfWeek === 0 || dayOfWeek === 6;
   }
-
-  const dayOfWeek = localeMoment(time).weekday();
-  return dayOfWeek === 0 || dayOfWeek === 6;
 };
 
 export default {
-    getSummaryFunc: undefined,
-    getCustomDateFunc: undefined,
-    getNonAgendaViewBodyCellBgColorFunc: undefined,
-    getScrollSpecialMomentFunc: getScrollSpecialMoment,
-    getDateLabelFunc: getDateLabel,
-    getEventTextFunc: getEventText,
-    isNonWorkingTimeFunc: isNonWorkingTime,
-    // getNonAgendaViewBodyCellBgColorFunc: getNonAgendaViewBodyCellBgColor,
-    //getCustomDateFunc: getCustomDate,
-    //getSummaryFunc: getSummary,
+  getSummaryFunc: undefined,
+  getCustomDateFunc: undefined,
+  getNonAgendaViewBodyCellBgColorFunc: undefined,
+  getScrollSpecialDayjsFunc: getScrollSpecialDayjs,
+  getDateLabelFunc: getDateLabel,
+  getEventTextFunc: getEventText,
+  isNonWorkingTimeFunc: isNonWorkingTime,
 };

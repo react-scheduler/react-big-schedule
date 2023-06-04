@@ -1,60 +1,55 @@
+import React from 'react';
 import PropTypes from 'prop-types';
 import { MinusSquareOutlined, PlusSquareOutlined } from '@ant-design/icons';
 
-function ResourceView({ schedulerData, contentScrollbarHeight, slotClickedFunc, slotItemTemplateResolver, toggleExpandFunc }) {
+const ResourceView = ({ schedulerData, contentScrollbarHeight, slotClickedFunc, slotItemTemplateResolver, toggleExpandFunc }) => {
   const { renderData } = schedulerData;
-
   const width = schedulerData.getResourceTableWidth() - 2;
   const paddingBottom = contentScrollbarHeight;
   const displayRenderData = renderData.filter(o => o.render);
 
   const handleToggleExpand = item => {
-    if (toggleExpandFunc) {
+    if (!!toggleExpandFunc) {
       toggleExpandFunc(schedulerData, item.slotId);
     }
   };
 
-  const handleSlotClick = item => {
-    if (slotClickedFunc) {
-      slotClickedFunc(schedulerData, item);
-    }
-  };
+  const renderSlotItem = (item, indents) => {
+    let indent = <span key={`es${item.indent}`} className='expander-space'></span>;
 
-  const renderSlotItem = item => {
-    const indents = Array.from({ length: item.indent }, (_, i) => <span key={`es${i}`} className='expander-space'></span>);
-
-    const indent = item.hasChildren ? (
-      item.expanded ? (
-        <MinusSquareOutlined key={`es${item.indent}`} onClick={() => handleToggleExpand(item)} />
+    if (item.hasChildren) {
+      indent = item.expanded ? (
+        <MinusSquareOutlined key={`es${item.indent}`} style={{}} className='' onClick={() => handleToggleExpand(item)} />
       ) : (
-        <PlusSquareOutlined key={`es${item.indent}`} onClick={() => handleToggleExpand(item)} />
-      )
-    ) : (
-      <span key={`es${item.indent}`} className='expander-space'></span>
-    );
+        <PlusSquareOutlined key={`es${item.indent}`} style={{}} className='' onClick={() => handleToggleExpand(item)} />
+      );
+    }
 
     indents.push(indent);
 
-    const slotContent = slotClickedFunc ? (
-      <a className='slot-text' onClick={() => handleSlotClick(item)}>
-        {item.slotName}
-      </a>
+    const slotCell = slotClickedFunc ? (
+      <span className='slot-cell'>
+        {indents}
+        <a style={{ cursor: 'pointer' }} className='slot-text' onClick={() => slotClickedFunc(schedulerData, item)}>
+          {item.slotName}
+        </a>
+      </span>
     ) : (
-      <span className='slot-text'>{item.slotName}</span>
+      <span className='slot-cell'>
+        {indents}
+        <span className='slot-text' style={{ cursor: slotClickedFunc === undefined ? undefined : 'pointer' }}>{item.slotName}</span>
+      </span>
     );
 
     let slotItem = (
       <div title={item.slotName} className='overflow-text header2-text' style={{ textAlign: 'left' }}>
-        <span className='slot-cell'>
-          {indents}
-          {slotContent}
-        </span>
+        {slotCell}
       </div>
     );
 
-    if (slotItemTemplateResolver) {
+    if (!!slotItemTemplateResolver) {
       const temp = slotItemTemplateResolver(schedulerData, item, slotClickedFunc, width, 'overflow-text header2-text');
-      if (temp) {
+      if (!!temp) {
         slotItem = temp;
       }
     }
@@ -73,16 +68,23 @@ function ResourceView({ schedulerData, contentScrollbarHeight, slotClickedFunc, 
     );
   };
 
-  const resourceList = displayRenderData.map(renderSlotItem);
+  const resourceList = displayRenderData.map(item => {
+    const indents = [];
+    for (let i = 0; i < item.indent; i++) {
+      indents.push(<span key={`es${i}`} className='expander-space'></span>);
+    }
+
+    return renderSlotItem(item, indents);
+  });
 
   return (
-    <div style={{ paddingBottom }}>
+    <div style={{ paddingBottom: paddingBottom }}>
       <table className='resource-table'>
         <tbody>{resourceList}</tbody>
       </table>
     </div>
   );
-}
+};
 
 ResourceView.propTypes = {
   schedulerData: PropTypes.object.isRequired,

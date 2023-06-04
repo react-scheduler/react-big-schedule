@@ -16,11 +16,10 @@ function AgendaEventItem(props) {
     </div>
   );
 
-  if (eventItemTemplateResolver) eventItemTemplate = eventItemTemplateResolver(schedulerData, eventItem, bgColor, isStart, isEnd, 'event-item', config.eventItemHeight, config.agendaMaxEventWidth);
-
-  const handleClick = () => {
-    if (eventItemClick) eventItemClick(schedulerData, eventItem);
-  };
+  if (eventItemTemplateResolver) {
+    eventItemTemplate = eventItemTemplateResolver(schedulerData, eventItem, bgColor, isStart, isEnd, 'event-item', config.eventItemHeight, config.agendaMaxEventWidth);
+  }
+  const handleClick = () => eventItemClick?.(schedulerData, eventItem);
 
   const eventLink = (
     <a className='day-event' onClick={handleClick}>
@@ -39,8 +38,6 @@ function AgendaEventItem(props) {
   );
 }
 
-export default AgendaEventItem;
-
 AgendaEventItem.propTypes = {
   schedulerData: PropTypes.object.isRequired,
   eventItem: PropTypes.object.isRequired,
@@ -54,3 +51,5 @@ AgendaEventItem.propTypes = {
   viewEvent2Text: PropTypes.string,
   eventItemTemplateResolver: PropTypes.func,
 };
+
+export default AgendaEventItem;

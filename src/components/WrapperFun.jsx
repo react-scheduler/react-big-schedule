@@ -1,13 +1,11 @@
-import React from 'react';
+import * as React from 'react'
+import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend';
-import { DndProvider } from 'react-dnd';
 
-function wrapFunction(Component) {
+export default Component => {
   return props => (
     <DndProvider backend={HTML5Backend}>
       <Component {...props} />
     </DndProvider>
-  );
+  )
 }
-
-export default wrapFunction;
