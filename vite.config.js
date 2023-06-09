@@ -7,8 +7,6 @@ export default defineConfig({
     lib: {
       entry: path.resolve(__dirname, 'src/components/index.jsx'),
       name: 'react-big-schedule',
-      formats: ['es'],
-      fileName: 'react-big-schedule-[name]',
     },
     rollupOptions: {
       external: ['react', 'react-dom', 'react-dnd', 'react-dnd-html5-backend', 'rrule', 'antd', '@ant-design/icons', 'moment', 'prop-types'],

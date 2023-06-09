@@ -49,10 +49,10 @@
   },
   "exports": {
     ".": {
-      "import": "./dist/react-big-schedule-index.js",
-      "require": "./dist/react-big-schedule-index.js"
+      "import": "./dist/react-big-schedule.mjs",
+      "require": "./dist/react-big-schedule.umd.js"
     },
-    "./dist/style.css": "./dist/style.css"
+    "./dist/*": "./dist/*"
   },
   "scripts": {
     "dev": "vite",
