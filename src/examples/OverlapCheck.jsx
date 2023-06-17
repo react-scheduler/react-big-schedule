@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import React, { Component } from 'react';
 import { Scheduler, SchedulerData, ViewType, DemoData, wrapperFun } from '../components/index';
 import '../css/style.css';
 

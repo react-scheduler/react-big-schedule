@@ -143,11 +143,6 @@ class CustomPopoverStyle extends Component {
 
   eventItemPopoverTemplateResolver = (schedulerData, eventItem, title, start, end, statusColor) => {
     return (
-      // <React.Fragment>
-      //     <h3>{title}</h3>
-      //     <h5>{start.format("HH:mm")} - {end.format("HH:mm")}</h5>
-      //     <img src="./icons8-ticket-96.png" />
-      // </React.Fragment>
       <div style={{ width: '300px' }}>
         <Row type='flex' align='middle'>
           <Col span={2}>

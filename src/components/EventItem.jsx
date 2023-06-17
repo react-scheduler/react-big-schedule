@@ -488,9 +488,9 @@ class EventItem extends Component {
     let start = localeDayjs(new Date(eventItem.start));
     let eventTitle = isInPopover ? `${start.format('HH:mm')} ${titleText}` : titleText;
     let startResizeDiv = <div />;
-    if (this.startResizable(this.props)) startResizeDiv = <div className='event-resizer event-start-resizer' ref={ref => (this.startResizer = ref)}></div>;
+    if (this.startResizable(this.props)) startResizeDiv = <div className="event-resizer event-start-resizer" ref={ref => (this.startResizer = ref)}></div>;
     let endResizeDiv = <div />;
-    if (this.endResizable(this.props)) endResizeDiv = <div className='event-resizer event-end-resizer' ref={ref => (this.endResizer = ref)}></div>;
+    if (this.endResizable(this.props)) endResizeDiv = <div className="event-resizer event-end-resizer" ref={ref => (this.endResizer = ref)}></div>;
 
     let eventItemTemplate = (
       <div className={roundCls + ' event-item'} key={eventItem.id} style={{ height: config.eventItemHeight, backgroundColor: bgColor }}>
@@ -502,7 +502,7 @@ class EventItem extends Component {
 
     let a = (
       <a
-        className='timeline-event'
+        className="timeline-event"
         ref={this.eventItemRef}
         onMouseMove={isPopoverPlacementMousePosition ? this.handleMouseMove : undefined}
         style={{ left: left, width: width, top: top }}
@@ -563,7 +563,7 @@ class EventItem extends Component {
       <div>{aItem}</div>
     ) : (
       <Popover
-        transitionName={isPopoverPlacementMousePosition ? '' : undefined}
+        motion={isPopoverPlacementMousePosition ? '' : undefined}
         align={
           isPopoverPlacementMousePosition
             ? {
@@ -577,7 +577,8 @@ class EventItem extends Component {
         }
         placement={isPopoverPlacementMousePosition ? mousePositionPlacement : popoverPlacement}
         content={content}
-        trigger={config.eventItemPopoverTrigger}>
+        trigger={config.eventItemPopoverTrigger}
+        overlayClassName="scheduler-event-item-popover">
         {aItem}
       </Popover>
     );

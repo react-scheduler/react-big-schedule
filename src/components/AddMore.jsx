@@ -1,3 +1,4 @@
+import React from 'react';
 import PropTypes from 'prop-types';
 
 const AddMore = ({ schedulerData, number, left, width, top, clickAction, headerItem }) => {

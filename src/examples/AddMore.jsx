@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import React, { Component } from 'react';
 import { Scheduler, SchedulerData, ViewType, AddMorePopover, DemoData, wrapperFun } from '../components/index';
 
 class AddMore extends Component {
@@ -34,9 +34,9 @@ class AddMore extends Component {
           headerItem={this.state.headerItem}
           eventItemClick={this.eventClicked}
           viewEventClick={this.ops1}
-          viewEventText='Ops 1'
+          viewEventText="Ops 1"
           viewEvent2Click={this.ops2}
-          viewEvent2Text='Ops 2'
+          viewEvent2Text="Ops 2"
           schedulerData={viewModel}
           closeAction={this.onSetAddMoreState}
           left={this.state.left}
@@ -57,8 +57,8 @@ class AddMore extends Component {
           onViewChange={this.onViewChange}
           eventItemClick={this.eventClicked}
           viewEventClick={this.ops1}
-          viewEventText='Ops 1'
-          viewEvent2Text='Ops 2'
+          viewEventText="Ops 1"
+          viewEvent2Text="Ops 2"
           viewEvent2Click={this.ops2}
           updateEventStart={this.updateEventStart}
           updateEventEnd={this.updateEventEnd}
