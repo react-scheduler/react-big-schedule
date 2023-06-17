@@ -1,31 +1,33 @@
 # [4.0.0](https://github.com/ansulagrawal/react-big-schedule/compare/3.0.2...4.0.0) (2023-06-17)
 
-
 ### Bug Fixes
 
-* Fix the configration issue ([3d85183](https://github.com/ansulagrawal/react-big-schedule/commit/3d8518369c868087bea320aa2b62958c758e3acc))
+- Fix the configration issue 
+- Remove unnecessary package dependencies
+- Remove build from github
 
+### Major Changes
 
-* Merge pull request #25 from ansulagrawal/configration-fix ([c92a64d](https://github.com/ansulagrawal/react-big-schedule/commit/c92a64dff63ab8bb3a741483f573e5311fb35d46)), closes [#25](https://github.com/ansulagrawal/react-big-schedule/issues/25)
-
+- Shifted from Vite to Webpack for stable release
+- Made a stable import for all formats
 
 ### BREAKING CHANGES
 
-* Fix the configration.
-Removed unwanted Files.
-Moved from vite to webpack
-Remove unwanted packages
-* Fix the configration.
-Removed unwanted Files.
-Moved from vite to webpack
+- Fix the configration.
+- Removed unwanted Packages i.e. Vite, moment.
+- Added Package dayjs
+- Moved from vite to webpack for stable release
+- Fix the configration.
+- Removed unwanted Files.
+- Moved from vite to webpack
 
 # [3.0.2](https://github.com/ansulagrawal/react-big-schedule/compare/3.0.1...3.0.2) (2023-06-11)
 
-## New Feature:
+### New Feature:
 
 - Added support for importing the React Big Schedule library in the umd.js format.
 
-## Hotfix:
+### Hotfix:
 
 - Fixed an issue with importing the React Big Schedule library into the project.
 - Fixed an issue with importing the locale for antd and dayjs.
@@ -37,15 +39,15 @@ Note:
 
 # [3.0.1](https://github.com/ansulagrawal/react-big-schedule/compare/3.0.0...3.0.1) (2023-06-04)
 
-## HotFix
+### HotFix
 
 - Fixed exporting of CSS file in the build process to ensure proper functionality.
 
-## Configuration Changes
+### Configuration Changes
 
 - Removed publishing on GitHub as npm is already available for distribution.
 
-## Breaking Changes
+### Breaking Changes
 
 None.
 
@@ -53,7 +55,7 @@ Note: Please note that this release includes a hotfix for the CSS file export is
 
 # [3.0.0](https://github.com/ansulagrawal/react-big-schedule/compare/2.0.0...3.0.0) (2023-06-04)
 
-## Features:
+### Features:
 
 - Removed usage of `UNSAFE_componentWillReceiveProps`.
 - Fixed event span for day `viewType`.
@@ -66,7 +68,7 @@ Note: Please note that this release includes a hotfix for the CSS file export is
 - Added options to place the event item popover at the mouse position using `eventItemPopoverPlacement`: `topLeftMousePosition`, `bottomLeftMousePosition`, `topRightMousePosition`, `bottomRightMousePosition`.
 - Shifted from moment to dayjs library.
 
-  ## Breaking Changes:
+### Breaking Changes:
 
 - Removed usage of `UNSAFE_componentWillReceiveProps`. Update your code to use alternative lifecycle methods or hooks as necessary.
 - Event span for day `viewType` has been fixed. Review your code if you were relying on the previous behaviour.
