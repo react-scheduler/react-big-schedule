@@ -1,4 +1,4 @@
-# [4.2.0](https://github.com/ansulagrawal/react-big-schedule/compare/3.0.2...4.2.0) (2023-06-17)
+# [4.2.0](https://github.com/ansulagrawal/react-big-schedule/compare/4.0.0...4.2.0) (2023-06-17)
 
 ### Bug Fixes
 
