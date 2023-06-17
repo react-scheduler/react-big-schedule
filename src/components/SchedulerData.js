@@ -38,7 +38,7 @@ export default class SchedulerData {
   setSchedulerLocale(preset) {
     if (!preset) return;
 
-    this.localeDayjs.locale(l);
+    this.localeDayjs.locale(preset);
     this._shouldReloadViewType = true;
     this.setViewType(this.viewType, this.showAgenda, this.isEventPerspective);
   }
