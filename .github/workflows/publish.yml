@@ -34,6 +34,9 @@ jobs:
       - name: Test
         run: npm run test --if-present
 
+      - name: Install Babel CLI
+        run: npm install --save-dev  @babel/cli
+
       - name: Build
         run: npm run build
 
