@@ -1,3 +1,24 @@
+# [4.0.0](https://github.com/ansulagrawal/react-big-schedule/compare/3.0.2...4.0.0) (2023-06-17)
+
+
+### Bug Fixes
+
+* Fix the configration issue ([3d85183](https://github.com/ansulagrawal/react-big-schedule/commit/3d8518369c868087bea320aa2b62958c758e3acc))
+
+
+* Merge pull request #25 from ansulagrawal/configration-fix ([c92a64d](https://github.com/ansulagrawal/react-big-schedule/commit/c92a64dff63ab8bb3a741483f573e5311fb35d46)), closes [#25](https://github.com/ansulagrawal/react-big-schedule/issues/25)
+
+
+### BREAKING CHANGES
+
+* Fix the configration.
+Removed unwanted Files.
+Moved from vite to webpack
+Remove unwanted packages
+* Fix the configration.
+Removed unwanted Files.
+Moved from vite to webpack
+
 # [3.0.2](https://github.com/ansulagrawal/react-big-schedule/compare/3.0.1...3.0.2) (2023-06-11)
 
 ## New Feature:
