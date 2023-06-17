@@ -1,3 +1,4 @@
+import React from 'react';
 import PropTypes from 'prop-types';
 import { Popover } from 'antd';
 import EventItemPopover from './EventItemPopover';
@@ -22,7 +23,7 @@ function AgendaEventItem(props) {
   const handleClick = () => eventItemClick?.(schedulerData, eventItem);
 
   const eventLink = (
-    <a className='day-event' onClick={handleClick}>
+    <a className="day-event" onClick={handleClick}>
       {eventItemTemplate}
     </a>
   );
@@ -30,7 +31,7 @@ function AgendaEventItem(props) {
   let content = <EventItemPopover {...props} title={eventItem.title} startTime={eventItem.start} endTime={eventItem.end} statusColor={bgColor} />;
 
   return config.eventItemPopoverEnabled ? (
-    <Popover placement='bottomLeft' content={content} trigger='hover'>
+    <Popover placement="bottomLeft" content={content} trigger="hover" overlayClassName="scheduler-agenda-event-popover">
       {eventLink}
     </Popover>
   ) : (

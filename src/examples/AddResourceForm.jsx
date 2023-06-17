@@ -1,4 +1,4 @@
-import { forwardRef } from 'react';
+import React, { forwardRef } from 'react';
 import { Modal, Form, Input } from 'antd';
 
 const FormItem = Form.Item;

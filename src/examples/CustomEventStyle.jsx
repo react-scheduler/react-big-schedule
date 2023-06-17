@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import React, { Component } from 'react';
 import { SchedulerData, ViewType, DemoData, Scheduler, wrapperFun } from '../components/index';
 
 class CustomEventStyle extends Component {

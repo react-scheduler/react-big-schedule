@@ -47,7 +47,7 @@ const SchedulerHeader = ({ onViewChange, goNext, goBack, onSelectDate, scheduler
   };
 
   const popover = (
-    <div className='popover-calendar'>
+    <div className="popover-calendar">
       <Calendar
         locale={calendarLocale}
         defaultValue={dayjs(selectDate)}
@@ -69,23 +69,23 @@ const SchedulerHeader = ({ onViewChange, goNext, goBack, onSelectDate, scheduler
   ));
 
   return (
-    <Row gutter={[10, 10]} type='flex' align='middle' justify='space-between' style={{ marginBottom: '24px' }}>
+    <Row gutter={[10, 10]} type="flex" align="middle" justify="space-between" style={{ marginBottom: '24px' }}>
       {leftCustomHeader}
       <Col>
-        <div className='header2-text'>
+        <div className="header2-text">
           <Space>
             <div>
-              <LeftOutlined type='left' style={{ marginRight: '8px' }} className='icon-nav' onClick={() => handleEvents(goBack, false)} />
+              <LeftOutlined type="left" style={{ marginRight: '8px' }} className="icon-nav" onClick={() => handleEvents(goBack, false)} />
               {config.calendarPopoverEnabled ? (
-                <Popover content={popover} placement='bottomLeft' trigger='click' open={visible} onOpenChange={setVisible}>
-                  <span className='header2-text-label' style={{ cursor: 'pointer' }}>
+                <Popover content={popover} placement="bottomLeft" trigger="click" open={visible} onOpenChange={setVisible} overlayClassName="scheduler-header-popover">
+                  <span className="header2-text-label" style={{ cursor: 'pointer' }}>
                     {dateLabel}
                   </span>
                 </Popover>
               ) : (
-                <span className='header2-text-label'>{dateLabel}</span>
+                <span className="header2-text-label">{dateLabel}</span>
               )}
-              <RightOutlined type='right' style={{ marginLeft: '8px' }} className='icon-nav' onClick={() => handleEvents(goNext, false)} />
+              <RightOutlined type="right" style={{ marginLeft: '8px' }} className="icon-nav" onClick={() => handleEvents(goNext, false)} />
             </div>
             <Spin spinning={dateSpinning} />
           </Space>
@@ -94,7 +94,7 @@ const SchedulerHeader = ({ onViewChange, goNext, goBack, onSelectDate, scheduler
       <Col>
         <Space>
           <Spin spinning={viewSpinning} />
-          <RadioGroup buttonStyle='solid' defaultValue={defaultValue} size='default' onChange={event => handleEvents(onViewChange, true, event)}>
+          <RadioGroup buttonStyle="solid" defaultValue={defaultValue} size="default" onChange={event => handleEvents(onViewChange, true, event)}>
             {radioButtonList}
           </RadioGroup>
         </Space>

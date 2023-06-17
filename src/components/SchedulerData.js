@@ -6,8 +6,6 @@ import { RRuleSet, rrulestr } from 'rrule';
 import config from '../config/scheduler';
 import behaviors from '../helper/behaviors';
 import { ViewType, CellUnit, DATE_FORMAT, DATETIME_FORMAT } from './index';
-import dayjsLocaleImport from '../helper/dayjs-locale';
-import antdLocaleImport from '../helper/antd-locale';
 
 export default class SchedulerData {
   constructor(date = dayjs(), viewType = ViewType.Week, showAgenda = false, isEventPerspective = false, newConfig = undefined, newBehaviors = undefined) {
@@ -42,17 +40,11 @@ export default class SchedulerData {
 
     let l = preset;
     if (typeof preset === 'string') {
-      dayjsLocaleImport(preset)
-        .then(localeModule => {
-          l = localeModule.default;
+      l = require(`dayjs/locale/${preset}.js`);
 
-          if (!!object) {
-            Object.entries(object).forEach(([key, value]) => (l[key] = value));
-          }
-        })
-        .catch(error => {
-          console.error('Error loading locale:', error);
-        });
+      if (!!object) {
+        Object.entries(object).forEach(([key, value]) => (l[key] = value));
+      }
     }
 
     this.localeDayjs.locale(l);
@@ -62,13 +54,7 @@ export default class SchedulerData {
 
   setCalendarPopoverLocale(lang) {
     if (!!lang && typeof lang === 'string') {
-      antdLocaleImport(lang)
-        .then(localeModule => {
-          this.calendarPopoverLocale = localeModule.default || Locale;
-        })
-        .catch(error => {
-          console.error('Error loading locale:', error);
-        });
+      this.calendarPopoverLocale = require(`antd/locale/${lang}.js`);
     }
   }
 

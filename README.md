@@ -25,7 +25,7 @@ To install react-big-schedule, use npm:
 * Ant Design
 * react-dnd
 * react-dnd-html5-backend
-* vite
+* webpack
 * dayjs
 
 ## Features
