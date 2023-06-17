@@ -22,7 +22,7 @@ async function build() {
   const targetDir = path.resolve(root, 'dist');
   const jsTarget = targetDir;
   const cssTarget = path.resolve(targetDir, 'css');
-  const excludedFolders = ['examples'];
+  const excludedFolders = ['examples', 'main.jsx'];
 
   try {
     // clean
