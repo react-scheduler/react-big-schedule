@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import * as dayjsLocale from 'dayjs/locale/pt-br';
+import * as antdLocale from 'antd/locale/pt_BR';
 
 import { Scheduler, SchedulerData, ViewType, DemoData, wrapperFun } from '../index';
 
@@ -18,8 +20,8 @@ class Basic extends Component {
       schedulerContentHeight: '350px',
     });
 
-    schedulerData.setSchedulerLocale('pt-br');
-    schedulerData.setCalendarPopoverLocale('pt_BR');
+    schedulerData.setSchedulerLocale(dayjsLocale);
+    schedulerData.setCalendarPopoverLocale(antdLocale);
     schedulerData.setResources(DemoData.resources);
     schedulerData.setEvents(DemoData.events);
     this.state = {
