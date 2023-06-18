@@ -35,34 +35,32 @@ body:
         4. See error
     validations:
       required: true
-  - type: textarea
-    id: expectedbehavior
+  - type: input
+    id: operating_system
     attributes:
-      label: Expected Behavior
-      placeholder: Describe what you expected to happen
+      label: Operating System
+      placeholder: Enter your operating system
     validations:
       required: true
-  - type: textarea
-    id: actualbehavior
+  - type: input
+    id: browser
     attributes:
-      label: Actual Behavior
-      placeholder: Describe what actually happened
+      label: Browser
+      placeholder: Enter your browser
     validations:
       required: true
-  - type: textarea
-    id: screenshots
+  - type: input
+    id: react_version
     attributes:
-      label: Screenshots
-      placeholder: If applicable, add screenshots to help explain the problem
-  - type: textarea
-    id: environment
+      label: React version
+      placeholder: Enter your React version
+    validations:
+      required: true
+  - type: input
+    id: schedule_version
     attributes:
-      label: Environment
-      placeholder: |
-        - Operating System:
-        - Browser:
-        - React version:
-        - `react-big-schedule` version:
+      label: react-big-schedule version
+      placeholder: Enter your react-big-schedule version
     validations:
       required: true
   - type: textarea
