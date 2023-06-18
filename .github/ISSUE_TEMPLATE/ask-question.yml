@@ -1,0 +1,25 @@
+name: Ask question
+description: Ask react-big-scheduler-stch related question
+labels: [question]
+body:
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Checklist
+      options:
+        - label: I've looked through the [README](https://github.com/hbatalhaStch/react-big-scheduler#readme)
+          required: true
+        - label: I've verified that I'm running react-big-scheduler-stch version **1.3.0**
+          required: true
+        - label: I've searched the existing issues and discussions for a similar question
+        - label: I've provided relevant code snippets or error messages
+        - label: I've included steps to reproduce the issue
+        - label: I've checked the browser console for any errors
+        - label: I've tested the issue with the latest version of react-big-scheduler-stch
+  - type: textarea
+    id: question
+    attributes:
+      label: Please make sure the question is worded well enough to be understood
+      placeholder: Provide any additional information and as much context and examples as possible
+    validations:
+      required: true
