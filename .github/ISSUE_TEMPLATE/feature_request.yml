@@ -1,0 +1,51 @@
+name: Feature request
+description: Request a new functionality
+labels: [triage, enhancement]
+body:
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Checklist
+      options:
+        - label: I've looked through the [README](https://github.com/ansulagrawal/react-big-schedule#readme)
+          required: true
+        - label: I've verified that I'm running react-big-schedule version **4.2.0**
+          required: true
+        - label: I've searched existing feature requests and confirmed that this request is not a duplicate
+          required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: What problem does this feature solve?
+      placeholder: Explain your use case, context, and rationale behind this feature request
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposed-solution
+    attributes:
+      label: Proposed Solution
+      placeholder: Explain your proposed solution and how it would address the problem
+    validations:
+      required: true
+
+  - type: textarea
+    id: benefits
+    attributes:
+      label: Benefits
+      placeholder: Describe the benefits and impact of implementing this feature
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives Considered
+      placeholder: List any alternatives you have considered or evaluated
+
+  - type: textarea
+    id: additional-info
+    attributes:
+      label: Additional Information
+      placeholder: Include any additional information or context that might be useful
