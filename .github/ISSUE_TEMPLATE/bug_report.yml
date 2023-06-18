@@ -40,8 +40,6 @@ body:
     attributes:
       label: Operating System
       placeholder: Enter your operating system
-      width: 50%
-      format: single-line
     validations:
       required: true
   - type: input
@@ -49,8 +47,6 @@ body:
     attributes:
       label: Browser
       placeholder: Enter your browser
-      width: 50%
-      format: single-line
     validations:
       required: true
   - type: input
@@ -58,8 +54,6 @@ body:
     attributes:
       label: React version
       placeholder: Enter your React version
-      width: 50%
-      format: single-line
     validations:
       required: true
   - type: input
@@ -67,8 +61,6 @@ body:
     attributes:
       label: react-big-schedule version
       placeholder: Enter your react-big-schedule version
-      width: 50%
-      format: single-line
     validations:
       required: true
   - type: textarea
