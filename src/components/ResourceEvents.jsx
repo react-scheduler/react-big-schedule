@@ -277,7 +277,7 @@ class ResourceEvents extends Component {
         headerItem.events.forEach((evt, idx) => {
           if (idx < renderEventsMaxIndex && evt !== undefined && evt.render) {
             let durationStart = localeDayjs(new Date(startDate));
-            let durationEnd = localeDayjs(endDate).add(1, 'days');
+            let durationEnd = localeDayjs(endDate);
             if (cellUnit === CellUnit.Hour) {
               durationStart = localeDayjs(new Date(startDate)).add(config.dayStartFrom, 'hours');
               durationEnd = localeDayjs(endDate).add(config.dayStopTo + 1, 'hours');
