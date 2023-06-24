@@ -1,6 +1,6 @@
 {
   "name": "react-big-schedule",
-  "version": "4.2.0",
+  "version": "4.2.1",
   "description": "React Big Schedule  is a powerful and intuitive scheduler and resource planning solution built with React. Seamlessly integrate this modern browser-compatible component into your applications to effectively manage time, appointments, and resources. With drag-and-drop functionality, interactive UI, and granular views, react-big-schedule empowers users to effortlessly schedule and allocate resources with precision. Enhance productivity and streamline your workflow with this React-based solution, designed to optimize time management and simplify calendar-based operations. Perfect for applications requiring advanced scheduling capabilities, react-big-schedule offers a seamless and intuitive experience for managing appointments, resource allocation, and time slots. Unlock the potential of your React projects with react-big-schedule and revolutionize the way you handle scheduling and resource planning. It is the updated version of react-big-scheduler",
   "keywords": [
     "react big schedule",
@@ -57,7 +57,7 @@
   },
   "dependencies": {
     "@ant-design/icons": "^5.1.4",
-    "antd": "^5.6.1",
+    "antd": "^5.6.2",
     "dayjs": "^1.11.8",
     "prop-types": "^15.8.1",
     "react": "^18.2.0",
@@ -67,6 +67,7 @@
     "rrule": "^2.7.2"
   },
   "devDependencies": {
+    "@babel/cli": "^7.22.5",
     "@babel/core": "^7.22.5",
     "@babel/preset-env": "^7.22.5",
     "@babel/preset-react": "^7.22.5",
