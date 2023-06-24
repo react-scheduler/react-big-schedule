@@ -1,31 +1,18 @@
-# [4.2.0](https://github.com/ansulagrawal/react-big-schedule/compare/4.0.0...4.2.0) (2023-06-17)
+## 4.2.1 
+`2023-06-24`
 
-### Bug Fixes
+- Updated Antd Version and added `@babel/cli` package [#39](https://github.com/ansulagrawal/react-big-schedule/pull/39) [@ansulagrawal](https://github.com/ansulagrawal)
+- Fixes for calculating span and isEnd for events. [#35](https://github.com/ansulagrawal/react-big-schedule/pull/35) [@ansulagrawal](https://github.com/ansulagrawal)
+
+## 4.2.0
+`2023-06-17`
 
 - Fix the default export file `index.js`.
-- Fix the `antd locale` and `dayjs locale`.
 - Remove `main.jsx` from the build directory.
-
-### Major Changes
-
 - Fix Importing issue in projects as `src/index.js` file was not properly written.
 - Added `type-definitions` for the library.
 - Fix the locale for both library `antd` and `dayjs`.
 - Fix the `package.json` main parameter value.
-
-### BREAKING CHANGES
-
-- The default export file index.js has been fixed. This may impact projects that were relying on the previous behavior of the file. Please ensure that your project's imports and dependencies are updated accordingly to use the new index.js file.
-
-- The antd and dayjs libraries' locales have been fixed. This may affect projects that were relying on specific locale configurations or were using different locales. Please review your project's usage of these libraries and update any necessary configurations or code that relies on locales.
-
-- The file main.jsx has been removed from the build directory. If your project was directly referencing or depending on this file, you will need to update your code to remove any references to main.jsx and make necessary adjustments to your project's structure.
-
-- The `src/index.js` file has been fixed to resolve importing issues in projects. This change may require modifications to your project's import statements to ensure they correctly reference the updated src/index.js file.
-
-- Type definitions have been added for the library. If your project was relying on the absence of type definitions or using custom typings, you may need to update your code to accommodate the newly added type definitions.
-
-- The package.json file's main parameter value has been fixed. Previously, it was set to lib/index, but it has now been changed to dist/index.js. If your project relies on the main field to specify an entry point or default module, please update it accordingly to reflect the correct file path or module name. This change ensures that the correct file is used as the main module when consuming the package. Failure to update this configuration may result in issues with module resolution and may cause unexpected behavior in your project.
 
 # [4.0.0](https://github.com/ansulagrawal/react-big-schedule/compare/3.0.2...4.0.0) (2023-06-17)
 
