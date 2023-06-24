@@ -13,7 +13,7 @@ process.on('unhandledRejection', err => {
 
 const util = require('util');
 const path = require('path');
-const exec = util.promisify(require('child_process').exec);
+const { exec } = require('child_process');
 const fs = require('fs-extra');
 
 async function build() {
@@ -26,24 +26,28 @@ async function build() {
 
   try {
     // clean
-    process.stdout.write('Cleaning... \n');
+    process.stdout.write('Cleaning...\n');
     const cleanResult = await exec('npm run clean');
 
     // transpiling and copy js
-    process.stdout.write('Transpiling js with babel... \n');
-    const jsResult = await exec(`babel ${sourceDir} --out-dir ${jsTarget} --ignore "${excludedFolders.map(folder => path.join(sourceDir, folder)).join(',')}"`);
+    process.stdout.write('Transpiling js with babel...\n');
+    const ignoreArgs = excludedFolders.map(folder => path.join(sourceDir, folder)).join(',');
+    const jsResult = await util.promisify(exec)(`babel ${sourceDir} --out-dir ${jsTarget} --ignore "${ignoreArgs}"`);
 
-    process.stdout.write('Copying CSS Files... \n');
+    process.stdout.write('Copying CSS Files...\n');
     await fs.copy(`${sourceDir}/css/`, cssTarget);
 
-    process.stdout.write("Copying library style definitions... \n");
+    process.stdout.write('Copying library style definitions...\n');
     await fs.copy(`${root}/typing/index.d.ts`, `${targetDir}/index.d.ts`);
 
-    process.stdout.write('Success! \n');
+    process.stdout.write('Success!\n');
   } catch (e) {
-    console.log(e);
-    process.exit();
+    console.error(e);
+    process.exit(1);
   }
 }
 
-build();
+build().catch(error => {
+  console.error(error);
+  process.exit(1);
+});
