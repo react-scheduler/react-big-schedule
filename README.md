@@ -61,6 +61,7 @@ React Big Schedule is developed and maintained by the React Big Schedule team. W
 Special thanks to the following contributors:
 * Ansul Agrawal ([@ansulagrawal](https://github.com/ansulagrawal))
 * Jitendra Soni ([@JitendraSoni1234](https://github.com/JitendraSoni1234))
+* hbatalhaStch  [[@hbatalhaStch](https://github.com/hbatalhaStch)) 
 
 ## Acknowledgments
 We would like to acknowledge the following projects for their inspiration and contributions:
