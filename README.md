@@ -12,6 +12,10 @@ Enhance productivity and streamline your workflow with this React-based solution
 
 Unlock the potential of your React projects with react-big-schedule and revolutionize the way you handle scheduling and resource planning.
 
+### This project code is forked from:
+* [react-big-scheduler](https://stephenchou1017.github.io/scheduler/#/).
+* [react-big-scheduler-stch](https://github.com/hbatalhaStch/react-big-scheduler).
+
 ## Installation
 
 To install react-big-schedule, use npm:
