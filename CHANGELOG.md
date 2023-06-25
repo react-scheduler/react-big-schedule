@@ -4,7 +4,7 @@
 - Updated Antd Version and added `@babel/cli` package [#39](https://github.com/ansulagrawal/react-big-schedule/pull/39) [@ansulagrawal](https://github.com/ansulagrawal)
 - Fixes for calculating span and isEnd for events. [#35](https://github.com/ansulagrawal/react-big-schedule/pull/35) [@adam-m-clark](https://github.com/adam-m-clark)
 
-Thanks to @adam-m-clark for fixing the span and isEnd Event.
+Thanks to [@adam-m-clark](https://github.com/adam-m-clark) for fixing the span and isEnd Event.
 
 ## 4.2.0
 `2023-06-17`
