@@ -2,7 +2,9 @@
 `2023-06-24`
 
 - Updated Antd Version and added `@babel/cli` package [#39](https://github.com/ansulagrawal/react-big-schedule/pull/39) [@ansulagrawal](https://github.com/ansulagrawal)
-- Fixes for calculating span and isEnd for events. [#35](https://github.com/ansulagrawal/react-big-schedule/pull/35) [@ansulagrawal](https://github.com/ansulagrawal)
+- Fixes for calculating span and isEnd for events. [#35](https://github.com/ansulagrawal/react-big-schedule/pull/35) [@adam-m-clark](https://github.com/adam-m-clark)
+
+Thanks to @adam-m-clark for fixing the span and isEnd Event.
 
 ## 4.2.0
 `2023-06-17`
@@ -94,7 +96,7 @@ Note: Please note that this release includes a hotfix for the CSS file export is
 - Custom view event span and scheduler header span for day view have been fixed. Check your code if you were affected by these issues.
 - If you were relying on the previous behaviour of the `moment` library, note that the shift to `dayjs` may require adjustments to your code.
 
-Thanks to [@hbatalhaStch](https://github.com/hbatalhaStch) for suggesting improvements.
+Thanks to [@hbatalhaStch](https://github.com/hbatalhaStch), Changes has been copied from his repo and done some minor changes.
 
 # [2.0.0](https://github.com/ansulagrawal/react-big-schedule/compare/1.0.0...2.0.0) (2023-05-27)
 
