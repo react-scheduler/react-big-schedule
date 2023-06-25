@@ -12,4 +12,4 @@ function getPos(element) {
   return { x, y };
 }
 
-export { getPos };
+export default { getPos };

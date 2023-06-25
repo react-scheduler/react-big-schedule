@@ -1,12 +1,15 @@
 import { ViewType, CellUnit } from '../components';
 
-//getSummary func example
-export const getSummary = (schedulerData, headerEvents, slotId, slotName, headerStart, headerEnd) => ({ text: 'Summary', color: 'red', fontSize: '1.2rem' });
+// getSummary func example
+// export const getSummary = (schedulerData, headerEvents, slotId, slotName, headerStart, headerEnd) => ({ text: 'Summary', color: 'red', fontSize: '1.2rem' });
+export const getSummary = () => ({ text: 'Summary', color: 'red', fontSize: '1.2rem' });
 
-//getCustomDate example
+// getCustomDate example
 export const getCustomDate = (schedulerData, num, date = schedulerData.startDate) => {
   const { viewType, localeDayjs } = schedulerData;
-  let startDate, endDate, cellUnit;
+  let startDate;
+  let endDate;
+  let cellUnit;
 
   if (viewType === ViewType.Custom1) {
     const monday = localeDayjs(new Date(date)).startOf('week');
@@ -27,10 +30,10 @@ export const getCustomDate = (schedulerData, num, date = schedulerData.startDate
   return { startDate, endDate, cellUnit };
 };
 
-//getNonAgendaViewBodyCellBgColor example
+// getNonAgendaViewBodyCellBgColor example
 export const getNonAgendaViewBodyCellBgColor = (schedulerData, slotId, header) => (header.nonWorkingTime ? undefined : '#87e8de');
 
-//getDateLabel func example
+// getDateLabel func example
 export const getDateLabel = (schedulerData, viewType, startDate, endDate) => {
   const { localeDayjs } = schedulerData;
   const start = localeDayjs(new Date(startDate));
@@ -54,8 +57,7 @@ export const getDateLabel = (schedulerData, viewType, startDate, endDate) => {
   return dateLabel;
 };
 
-export const getEventText = (schedulerData, event) =>
-  schedulerData.isEventPerspective ? schedulerData.resources.find(item => item.id === event.resourceId)?.name || event.title : event.title;
+export const getEventText = (schedulerData, event) => (schedulerData.isEventPerspective ? schedulerData.resources.find(item => item.id === event.resourceId)?.name || event.title : event.title);
 
 export const getScrollSpecialDayjs = schedulerData => {
   const { localeDayjs } = schedulerData;
@@ -67,10 +69,9 @@ export const isNonWorkingTime = (schedulerData, time) => {
   if (cellUnit === CellUnit.Hour) {
     const hour = localeDayjs(new Date(time)).hour();
     return hour < 9 || hour > 18;
-  } else {
-    const dayOfWeek = localeDayjs(new Date(time)).weekday();
-    return dayOfWeek === 0 || dayOfWeek === 6;
   }
+  const dayOfWeek = localeDayjs(new Date(time)).weekday();
+  return dayOfWeek === 0 || dayOfWeek === 6;
 };
 
 export default {
