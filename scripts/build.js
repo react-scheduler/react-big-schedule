@@ -36,9 +36,6 @@ async function build() {
     process.stdout.write('Copying CSS Files... \n');
     await fs.copy(`${sourceDir}/css/`, cssTarget);
 
-    process.stdout.write("Copying library style definitions... \n");
-    await fs.copy(`${root}/typing/index.d.ts`, `${targetDir}/index.d.ts`);
-
     process.stdout.write('Success! \n');
   } catch (e) {
     console.log(e);

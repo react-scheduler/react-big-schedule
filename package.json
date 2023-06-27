@@ -64,7 +64,7 @@
     "react-dnd": "^14.0.5",
     "react-dnd-html5-backend": "^14.1.0",
     "react-dom": "^18.2.0",
-    "rrule": "^2.7.2"
+    "rrule": "^2.7.1"
   },
   "devDependencies": {
     "@babel/cli": "^7.22.5",
