@@ -1,12 +1,26 @@
-## 4.2.1 
+## [4.2.2](https://github.com/ansulagrawal/react-big-schedule/compare/4.2.1...4.2.2) 
+
+`2023-06-27`
+
+- Updated Readme by @ansulagrawal in [#46](https://github.com/ansulagrawal/react-big-schedule/pull/46)
+- Chore(deps-dev): Bump webpack from 5.87.0 to 5.88.0 by @dependabot in [#50](https://github.com/ansulagrawal/react-big-schedule/pull/50)
+- Chore(deps): Bump antd from 5.6.2 to 5.6.3 by @dependabot in [#51](https://github.com/ansulagrawal/react-big-schedule/pull/51)
+
+#### New Contributors
+
+- @dependabot
+
+## [4.2.1](https://github.com/ansulagrawal/react-big-schedule/compare/4.2.0...4.2.1) 
 `2023-06-24`
 
 - Updated Antd Version and added `@babel/cli` package [#39](https://github.com/ansulagrawal/react-big-schedule/pull/39) [@ansulagrawal](https://github.com/ansulagrawal)
 - Fixes for calculating span and isEnd for events. [#35](https://github.com/ansulagrawal/react-big-schedule/pull/35) [@adam-m-clark](https://github.com/adam-m-clark)
 
-Thanks to [@adam-m-clark](https://github.com/adam-m-clark) for fixing the span and isEnd Event.
+#### New Contributors
+- [@adam-m-clark](https://github.com/adam-m-clark)
 
-## 4.2.0
+## [4.2.0](https://github.com/ansulagrawal/react-big-schedule/compare/3.0.2...4.0.0)
+
 `2023-06-17`
 
 - Fix the default export file `index.js`.
@@ -15,38 +29,16 @@ Thanks to [@adam-m-clark](https://github.com/adam-m-clark) for fixing the span a
 - Added `type-definitions` for the library.
 - Fix the locale for both library `antd` and `dayjs`.
 - Fix the `package.json` main parameter value.
-
-# [4.0.0](https://github.com/ansulagrawal/react-big-schedule/compare/3.0.2...4.0.0) (2023-06-17)
-
-### Bug Fixes
-
-- Fix the configration issue 
-- Remove unnecessary package dependencies
-- Remove build from github
-
-### Major Changes
-
-- Shifted from Vite to Webpack for stable release
-- Made a stable import for all formats
-
-### BREAKING CHANGES
-
-- Fix the configration.
-- Removed unwanted Packages i.e. Vite, moment.
-- Added Package dayjs
 - Moved from vite to webpack for stable release
-- Fix the configration.
-- Removed unwanted Files.
-- Moved from vite to webpack
+- Made a stable import for all formats
+- Remove build from github
+- Remove unnecessary package dependencies
 
-# [3.0.2](https://github.com/ansulagrawal/react-big-schedule/compare/3.0.1...3.0.2) (2023-06-11)
 
-### New Feature:
+## [3.0.2](https://github.com/ansulagrawal/react-big-schedule/compare/3.0.1...3.0.2)
+`2023-06-11`
 
 - Added support for importing the React Big Schedule library in the umd.js format.
-
-### Hotfix:
-
 - Fixed an issue with importing the React Big Schedule library into the project.
 - Fixed an issue with importing the locale for antd and dayjs.
 
@@ -55,25 +47,15 @@ Note:
 - With this release, users can now import the React Big Schedule library in the umd.js format, providing more flexibility and compatibility with different project setups.
 - Please ensure to update your projects to this version to take advantage of the new feature and the fixed import issues.
 
-# [3.0.1](https://github.com/ansulagrawal/react-big-schedule/compare/3.0.0...3.0.1) (2023-06-04)
+# [3.0.1](https://github.com/ansulagrawal/react-big-schedule/compare/3.0.0...3.0.1)
 
-### HotFix
+`2023-06-04`
 
 - Fixed exporting of CSS file in the build process to ensure proper functionality.
-
-### Configuration Changes
-
 - Removed publishing on GitHub as npm is already available for distribution.
 
-### Breaking Changes
-
-None.
-
-Note: Please note that this release includes a hotfix for the CSS file export issue and configuration changes related to publishing on GitHub. No breaking changes have been introduced in this release.
-
-# [3.0.0](https://github.com/ansulagrawal/react-big-schedule/compare/2.0.0...3.0.0) (2023-06-04)
-
-### Features:
+# [3.0.0](https://github.com/ansulagrawal/react-big-schedule/compare/2.0.0...3.0.0)
+`2023-06-04`
 
 - Removed usage of `UNSAFE_componentWillReceiveProps`.
 - Fixed event span for day `viewType`.
@@ -86,33 +68,25 @@ Note: Please note that this release includes a hotfix for the CSS file export is
 - Added options to place the event item popover at the mouse position using `eventItemPopoverPlacement`: `topLeftMousePosition`, `bottomLeftMousePosition`, `topRightMousePosition`, `bottomRightMousePosition`.
 - Shifted from moment to dayjs library.
 
-### Breaking Changes:
-
-- Removed usage of `UNSAFE_componentWillReceiveProps`. Update your code to use alternative lifecycle methods or hooks as necessary.
-- Event span for day `viewType` has been fixed. Review your code if you were relying on the previous behaviour.
-- If you were extending the `Scheduler` component or using `SchedulerProps`, update your code to include generics for `EventItem` type.
-- If you were relying on the previous behaviour of resource view visibility, update your code to use the new option to hide it.
-- If you were customizing the event item popover placement, update your code to use the new option to change the placement.
-- Custom view event span and scheduler header span for day view have been fixed. Check your code if you were affected by these issues.
-- If you were relying on the previous behaviour of the `moment` library, note that the shift to `dayjs` may require adjustments to your code.
-
 Thanks to [@hbatalhaStch](https://github.com/hbatalhaStch), Changes has been copied from his repo and done some minor changes.
 
-# [2.0.0](https://github.com/ansulagrawal/react-big-schedule/compare/1.0.0...2.0.0) (2023-05-27)
+#### New Contributors
 
-### Features
+- [@hbatalhaStch](https://github.com/hbatalhaStch)
 
-- Add configurable colour visibility and optional date display in popover. https://github.com/ansulagrawal/react-big-schedule/pull/16
+# [2.0.0](https://github.com/ansulagrawal/react-big-schedule/compare/1.0.0...2.0.0) 
+`2023-05-27`
 
-- Add configurable cell size options for Week, Month, and Year views. https://github.com/ansulagrawal/react-big-schedule/pull/17
+- Add configurable colour visibility and optional date display in popover. [#16](https://github.com/ansulagrawal/react-big-schedule/pull/16)
 
-- Add SWAP event function for event swapping in library. https://github.com/ansulagrawal/react-big-schedule/pull/18
+- Add configurable cell size options for Week, Month, and Year views. [#17](https://github.com/ansulagrawal/react-big-schedule/pull/17)
 
-- Enhance library with wrapper function and streamlined dependencies. https://github.com/ansulagrawal/react-big-schedule/pull/19
-- Fix bugs and enhancement of format. https://github.com/ansulagrawal/react-big-schedule/pull/20
+- Add SWAP event function for event swapping in library. [#18](https://github.com/ansulagrawal/react-big-schedule/pull/18)
 
-### BREAKING CHANGES
+- Enhance library with wrapper function and streamlined dependencies. [#19](https://github.com/ansulagrawal/react-big-schedule/pull/19)
+- Fix bugs and enhancement of format. [#20](https://github.com/ansulagrawal/react-big-schedule/pull/20)
 
+### Breaking Changes:
 - Added a configuration option to show or hide colour in the popover.
 - Made the date in the popover optional. If the `eventItemPopoverDateFormat` is empty, the date will be hidden.
 - Added new configuration options to set the cell size for the Week, Month, and Year views.
@@ -125,13 +99,8 @@ Thanks to [@hbatalhaStch](https://github.com/hbatalhaStch), Changes has been cop
 - Removed the dependency on the `withDndContext` function.
 - Streamlined dependencies, eliminating the need for users to install both `react-dnd-html5-backend` and `react-dnd` separately.
 
-# 1.0.0 (2023-05-21)
-
-### Features
-
-- Updated Package Versions
-
-### BREAKING CHANGES
+## 1.0.0 
+`2023-05-21`
 
 - Updated Node Version from 14 -> 18
 - Updated Ant Design Version 3.16.6 -> 5.0.1
@@ -140,3 +109,7 @@ Thanks to [@hbatalhaStch](https://github.com/hbatalhaStch), Changes has been cop
 - Updated React version 16 -> 18
 - Updated rrule version 2.6.0 -> 2.7.2
 - Change Configure from webpack to Vite
+
+#### New Contributors
+
+- [@ansulagrawal](https://github.com/ansulagrawal)
