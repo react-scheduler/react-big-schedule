@@ -1,4 +1,9 @@
-## [4.2.2](https://github.com/ansulagrawal/react-big-schedule/compare/4.2.1...4.2.2) 
+## [4.2.3](https://github.com/ansulagrawal/react-big-schedule/compare/4.2.2...4.2.3)
+`2023-06-28`
+
+- Fixed the `GetPos` import error by @ansulagrawal in [#59](https://github.com/ansulagrawal/react-big-schedule/pull/59)
+
+## [4.2.2](https://github.com/ansulagrawal/react-big-schedule/compare/4.2.1...4.2.2)
 
 `2023-06-27`
 
@@ -10,13 +15,15 @@
 
 - @dependabot
 
-## [4.2.1](https://github.com/ansulagrawal/react-big-schedule/compare/4.2.0...4.2.1) 
+## [4.2.1](https://github.com/ansulagrawal/react-big-schedule/compare/4.2.0...4.2.1)
+
 `2023-06-24`
 
 - Updated Antd Version and added `@babel/cli` package [#39](https://github.com/ansulagrawal/react-big-schedule/pull/39) [@ansulagrawal](https://github.com/ansulagrawal)
 - Fixes for calculating span and isEnd for events. [#35](https://github.com/ansulagrawal/react-big-schedule/pull/35) [@adam-m-clark](https://github.com/adam-m-clark)
 
 #### New Contributors
+
 - [@adam-m-clark](https://github.com/adam-m-clark)
 
 ## [4.2.0](https://github.com/ansulagrawal/react-big-schedule/compare/3.0.2...4.0.0)
@@ -34,8 +41,8 @@
 - Remove build from github
 - Remove unnecessary package dependencies
 
-
 ## [3.0.2](https://github.com/ansulagrawal/react-big-schedule/compare/3.0.1...3.0.2)
+
 `2023-06-11`
 
 - Added support for importing the React Big Schedule library in the umd.js format.
@@ -55,6 +62,7 @@ Note:
 - Removed publishing on GitHub as npm is already available for distribution.
 
 # [3.0.0](https://github.com/ansulagrawal/react-big-schedule/compare/2.0.0...3.0.0)
+
 `2023-06-04`
 
 - Removed usage of `UNSAFE_componentWillReceiveProps`.
@@ -74,7 +82,8 @@ Thanks to [@hbatalhaStch](https://github.com/hbatalhaStch), Changes has been cop
 
 - [@hbatalhaStch](https://github.com/hbatalhaStch)
 
-# [2.0.0](https://github.com/ansulagrawal/react-big-schedule/compare/1.0.0...2.0.0) 
+# [2.0.0](https://github.com/ansulagrawal/react-big-schedule/compare/1.0.0...2.0.0)
+
 `2023-05-27`
 
 - Add configurable colour visibility and optional date display in popover. [#16](https://github.com/ansulagrawal/react-big-schedule/pull/16)
@@ -87,6 +96,7 @@ Thanks to [@hbatalhaStch](https://github.com/hbatalhaStch), Changes has been cop
 - Fix bugs and enhancement of format. [#20](https://github.com/ansulagrawal/react-big-schedule/pull/20)
 
 ### Breaking Changes:
+
 - Added a configuration option to show or hide colour in the popover.
 - Made the date in the popover optional. If the `eventItemPopoverDateFormat` is empty, the date will be hidden.
 - Added new configuration options to set the cell size for the Week, Month, and Year views.
@@ -99,7 +109,8 @@ Thanks to [@hbatalhaStch](https://github.com/hbatalhaStch), Changes has been cop
 - Removed the dependency on the `withDndContext` function.
 - Streamlined dependencies, eliminating the need for users to install both `react-dnd-html5-backend` and `react-dnd` separately.
 
-## 1.0.0 
+## 1.0.0
+
 `2023-05-21`
 
 - Updated Node Version from 14 -> 18
