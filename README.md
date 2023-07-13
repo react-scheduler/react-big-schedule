@@ -4,9 +4,9 @@
  [npm-image]: http://img.shields.io/npm/v/react-big-schedule.svg
  [npm-url]: http://npmjs.org/package/react-big-schedule
  [mit-image]: https://img.shields.io/badge/License-MIT-green.svg
- [mit-url]: https://github.com/ansulagrawal/react-big-schedule/blob/master/LICENSE
- [codeql-image]: https://github.com/ansulagrawal/react-big-schedule/actions/workflows/github-code-scanning/codeql/badge.svg?branch=master
- [codeql-url]: https://github.com/ansulagrawal/react-big-schedule/actions/workflows/github-code-scanning/codeql
+ [mit-url]: https://github.com/react-scheduler/react-big-schedule/blob/master/LICENSE
+ [codeql-image]: https://github.com/react-scheduler/react-big-schedule/actions/workflows/github-code-scanning/codeql/badge.svg?branch=master
+ [codeql-url]: https://github.com/react-scheduler/react-big-schedule/actions/workflows/github-code-scanning/codeql
 
 
 React Big Schedule is a powerful and intuitive scheduler and resource planning solution built with React. Seamlessly integrate this modern, browser-compatible component into your applications to effectively manage time, appointments, and resources. With drag-and-drop functionality, interactive UI, and granular views, react-big-schedule empowers users to effortlessly schedule and allocate resources with precision.
@@ -57,10 +57,10 @@ Contributions to react-big-schedule are welcome! If you find a bug or want to co
 Please ensure that your code adheres to the project's coding conventions and includes appropriate tests.
 
 ## License
-React Big Schedule is released under the MIT License. See the [LICENSE](https://github.com/ansulagrawal/react-big-schedule/blob/master/LICENSE) file for more details.
+React Big Schedule is released under the MIT License. See the [LICENSE](https://github.com/react-scheduler/react-big-schedule/blob/master/LICENSE) file for more details.
 
 ## Support
-If you have any questions or need support, please create an issue in the [GitHub repository](https://github.com/ansulagrawal/react-big-schedule/issues).
+If you have any questions or need support, please create an issue in the [GitHub repository](https://github.com/react-scheduler/react-big-schedule/issues).
 
 ## Credits
 React Big Schedule is developed and maintained by the React Big Schedule team. We would like to thank the open-source community for their valuable contributions and feedback.
@@ -86,7 +86,7 @@ We would like to acknowledge the following projects for their inspiration and co
 We are continuously working on enhancing react-big-schedule and welcome your feedback and suggestions for future improvements.
 
 ## Changelog
-Please refer to the [CHANGELOG.md](https://github.com/ansulagrawal/react-big-schedule/blob/master/CHANGELOG.md) file.
+Please refer to the [CHANGELOG.md](https://github.com/react-scheduler/react-big-schedule/blob/master/CHANGELOG.md) file.
 
 
 ## Use and Setup

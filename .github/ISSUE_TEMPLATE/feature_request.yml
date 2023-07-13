@@ -7,7 +7,7 @@ body:
     attributes:
       label: Checklist
       options:
-        - label: I've looked through the [README](https://github.com/ansulagrawal/react-big-schedule#readme)
+        - label: I've looked through the [README](https://github.com/react-scheduler/react-big-schedule#readme)
           required: true
         - label: I've verified that I'm running react-big-schedule version **4.2.0**
           required: true
