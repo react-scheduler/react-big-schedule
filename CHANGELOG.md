@@ -1,4 +1,21 @@
+## [4.2.4](https://github.com/ansulagrawal/react-big-schedule/compare/4.2.3...4.2.4)
+
+`2023-07-13`
+
+- Change HeaderView Component from class based to function based by [@DamyanBG](https://github.com/DamyanBG) in [#73](https://github.com/react-scheduler/react-big-schedule/pull/73)
+- Updated library versions by [@dependabot](https://github.com/dependabot)
+  - antd : 5.6.3 -> 5.7.0
+  - dayjs: 1.11.8 -> 1.11.9
+  - rrule: 2.7.1 -> 2.7.2
+  - @babel/cli: 7.22.5 -> 7.22..9
+  - @babel/core: 7.22.5 -> 7.22.9
+  - @babel/preset-env: 7.22.5 -> 7.22.9
+  - babel-loader: 9.1.2 -> 9.1.3
+  - webpack : 5.88.0 -> 5.88.1
+- Converted to an organization by [@ansulagrawal](https://github.com/ansulagrawal)
+
 ## [4.2.3](https://github.com/ansulagrawal/react-big-schedule/compare/4.2.2...4.2.3)
+
 `2023-06-28`
 
 - Fixed the `GetPos` import error by @ansulagrawal in [#59](https://github.com/ansulagrawal/react-big-schedule/pull/59)

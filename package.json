@@ -1,10 +1,12 @@
 {
   "name": "react-big-schedule",
-  "version": "4.2.3",
+  "version": "4.2.4",
   "description": "React Big Schedule  is a powerful and intuitive scheduler and resource planning solution built with React. Seamlessly integrate this modern browser-compatible component into your applications to effectively manage time, appointments, and resources. With drag-and-drop functionality, interactive UI, and granular views, react-big-schedule empowers users to effortlessly schedule and allocate resources with precision. Enhance productivity and streamline your workflow with this React-based solution, designed to optimize time management and simplify calendar-based operations. Perfect for applications requiring advanced scheduling capabilities, react-big-schedule offers a seamless and intuitive experience for managing appointments, resource allocation, and time slots. Unlock the potential of your React projects with react-big-schedule and revolutionize the way you handle scheduling and resource planning. It is the updated version of react-big-scheduler",
   "keywords": [
-    "react big schedule",
     "react-big-schedule",
+    "react-scheduler",
+    "react-schedule",
+    "react big schedule",
     "react scheduler",
     "react-big-scheduler",
     "react scheduler master",
@@ -35,17 +37,16 @@
   "files": [
     "dist",
     "README.md",
-    "License",
-    "CHANGELOG.md"
+    "License"
   ],
   "main": "dist/index.js",
-  "homepage": "https://github.com/ansulagrawal/react-big-schedule",
+  "homepage": "https://react-big-schedule.vercel.app",
   "repository": {
     "type": "git",
-    "url": "https://github.com/ansulagrawal/react-big-schedule.git"
+    "url": "https://github.com/react-scheduler/react-big-schedule"
   },
   "bugs": {
-    "url": "https://github.com/ansulagrawal/react-big-schedule.git/issues"
+    "url": "https://github.com/react-scheduler/react-big-schedule/issues"
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
@@ -64,12 +65,12 @@
     "react-dnd": "^14.0.5",
     "react-dnd-html5-backend": "^14.1.0",
     "react-dom": "^18.2.0",
-    "rrule": "^2.7.1"
+    "rrule": "^2.7.2"
   },
   "devDependencies": {
-    "@babel/cli": "^7.22.6",
-    "@babel/core": "^7.22.8",
-    "@babel/preset-env": "^7.22.7",
+    "@babel/cli": "^7.22.9",
+    "@babel/core": "^7.22.9",
+    "@babel/preset-env": "^7.22.9",
     "@babel/preset-react": "^7.22.5",
     "babel-loader": "^9.1.3",
     "copy-webpack-plugin": "^11.0.0",
