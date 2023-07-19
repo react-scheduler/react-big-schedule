@@ -58,7 +58,7 @@
   },
   "dependencies": {
     "@ant-design/icons": "^5.1.4",
-    "antd": "^5.7.0",
+    "antd": "^5.7.1",
     "dayjs": "^1.11.9",
     "prop-types": "^15.8.1",
     "react": "^18.2.0",
