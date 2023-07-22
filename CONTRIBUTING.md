@@ -1,7 +1,7 @@
 # Contributing Guide for react-big-schedule
 Welcome to the react-big-schedule project! We're thrilled that you're interested in contributing to our open-source scheduling component for React. By contributing to this project, you can help make it even better and support the broader developer community.
 ### Code of Conduct
-Before you start contributing, please take a moment to read our Code of Conduct. We expect all contributors to adhere to these guidelines to ensure a positive and inclusive community for everyone. You can find our Code of Conduct.
+Before you start contributing, please take a moment to read our Code of Conduct. We expect all contributors to adhere to these guidelines to ensure a positive and inclusive community for everyone. You can find our Code of Conduct [here](https://github.com/react-scheduler/react-big-schedule/blob/master/CODE_OF_CONDUCT.md).
 ### Getting Started
 If you're new to the project, it's a good idea to familiarize yourself with the [README.md](https://github.com/react-scheduler/react-big-schedule/blob/master/README.md) file, which provides an overview of the project and its features. Also, explore existing issues and pull requests to understand the ongoing work and discussions.
 ### How to Contribute
