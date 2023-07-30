@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { CellUnit } from './index';
 
-const HeaderView = ({ schedulerData, nonAgendaCellHeaderTemplateResolver }) => {
+function HeaderView({ schedulerData, nonAgendaCellHeaderTemplateResolver }) {
   const { headers, cellUnit, config, localeDayjs } = schedulerData;
   const headerHeight = schedulerData.getTableHeaderHeight();
   const cellWidth = schedulerData.getContentCellWidth();
@@ -16,7 +16,7 @@ const HeaderView = ({ schedulerData, nonAgendaCellHeaderTemplateResolver }) => {
       if (index % minuteStepsInHour === 0) {
         const datetime = localeDayjs(new Date(item.time));
 
-        style = !!item.nonWorkingTime
+        style = item.nonWorkingTime
           ? {
               width: cellWidth * minuteStepsInHour,
               color: config.nonWorkingTimeHeadColor,
@@ -27,7 +27,7 @@ const HeaderView = ({ schedulerData, nonAgendaCellHeaderTemplateResolver }) => {
             };
 
         if (index === headers.length - minuteStepsInHour) {
-          style = !!item.nonWorkingTime ? { color: config.nonWorkingTimeHeadColor, backgroundColor: config.nonWorkingTimeHeadBgColor } : {};
+          style = item.nonWorkingTime ? { color: config.nonWorkingTimeHeadColor, backgroundColor: config.nonWorkingTimeHeadBgColor } : {};
         }
 
         const pFormattedList = config.nonAgendaDayCellHeaderFormat.split('|').map(item => datetime.format(item));
@@ -50,16 +50,15 @@ const HeaderView = ({ schedulerData, nonAgendaCellHeaderTemplateResolver }) => {
   } else {
     headerList = headers.map((item, index) => {
       const datetime = localeDayjs(new Date(item.time));
-      style = !!item.nonWorkingTime
+      style = item.nonWorkingTime
         ? {
             width: cellWidth,
             color: config.nonWorkingTimeHeadColor,
             backgroundColor: config.nonWorkingTimeHeadBgColor,
           }
         : { width: cellWidth };
-      if (index === headers.length - 1) style = !!item.nonWorkingTime ? { color: config.nonWorkingTimeHeadColor, backgroundColor: config.nonWorkingTimeHeadBgColor } : {};
-      const cellFormat =
-        cellUnit === CellUnit.Week
+      if (index === headers.length - 1) style = item.nonWorkingTime ? { color: config.nonWorkingTimeHeadColor, backgroundColor: config.nonWorkingTimeHeadBgColor } : {};
+      const cellFormat = cellUnit === CellUnit.Week
           ? config.nonAgendaWeekCellHeaderFormat
           : cellUnit === CellUnit.Month
           ? config.nonAgendaMonthCellHeaderFormat
@@ -87,7 +86,7 @@ const HeaderView = ({ schedulerData, nonAgendaCellHeaderTemplateResolver }) => {
       <tr style={{ height: headerHeight }}>{headerList}</tr>
     </thead>
   );
-};
+}
 
 HeaderView.propTypes = {
   schedulerData: PropTypes.object.isRequired,
