@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Col, Row } from 'antd';
 
-const EventItemPopover = ({
+function EventItemPopover({
   schedulerData,
   eventItem,
   title,
@@ -15,7 +15,7 @@ const EventItemPopover = ({
   viewEvent2Click,
   viewEvent2Text,
   eventItemPopoverTemplateResolver,
-}) => {
+}) {
   const { localeDayjs, config } = schedulerData;
   const start = localeDayjs(new Date(startTime));
   const end = localeDayjs(new Date(endTime));
@@ -44,7 +44,7 @@ const EventItemPopover = ({
         )}
         <Col span={22} className="overflow-text">
           <span className="header2-text" title={title}>
-            {`${title}`}
+            {title}
           </span>
         </Col>
       </Row>
@@ -97,7 +97,7 @@ const EventItemPopover = ({
       )}
     </div>
   );
-};
+}
 
 EventItemPopover.propTypes = {
   schedulerData: PropTypes.object.isRequired,
