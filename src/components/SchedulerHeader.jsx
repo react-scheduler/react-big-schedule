@@ -8,7 +8,7 @@ import { DATE_FORMAT } from './index';
 const RadioButton = Radio.Button;
 const RadioGroup = Radio.Group;
 
-const SchedulerHeader = ({ onViewChange, goNext, goBack, onSelectDate, schedulerData, leftCustomHeader, rightCustomHeader }) => {
+function SchedulerHeader({ onViewChange, goNext, goBack, onSelectDate, schedulerData, leftCustomHeader, rightCustomHeader }) {
   const [viewSpinning, setViewSpinning] = useState(false);
   const [dateSpinning, setDateSpinning] = useState(false);
   const [visible, setVisible] = useState(false);
@@ -24,9 +24,7 @@ const SchedulerHeader = ({ onViewChange, goNext, goBack, onSelectDate, scheduler
 
     if (isViewSpinning) {
       if (config.viewChangeSpinEnabled) setViewSpinning(true);
-    } else {
-      if (config.dateChangeSpinEnabled) setDateSpinning(true);
-    }
+    } else if (config.dateChangeSpinEnabled) setDateSpinning(true);
 
     const coreFunc = () => {
       if (funcArg !== undefined) func(funcArg);
@@ -34,9 +32,7 @@ const SchedulerHeader = ({ onViewChange, goNext, goBack, onSelectDate, scheduler
 
       if (isViewSpinning) {
         if (config.viewChangeSpinEnabled) setViewSpinning(false);
-      } else {
-        if (config.dateChangeSpinEnabled) setDateSpinning(false);
-      }
+      } else if (config.dateChangeSpinEnabled) setDateSpinning(false);
     };
 
     if (config.viewChangeSpinEnabled || config.dateChangeSpinEnabled) {
@@ -63,7 +59,8 @@ const SchedulerHeader = ({ onViewChange, goNext, goBack, onSelectDate, scheduler
   const radioButtonList = config.views.map(item => (
     <RadioButton
       key={`${item.viewType}${item.showAgenda ? 1 : 0}${item.isEventPerspective ? 1 : 0}`}
-      value={`${item.viewType}${item.showAgenda ? 1 : 0}${item.isEventPerspective ? 1 : 0}`}>
+      value={`${item.viewType}${item.showAgenda ? 1 : 0}${item.isEventPerspective ? 1 : 0}`}
+    >
       <span style={{ margin: '0px 8px' }}>{item.viewName}</span>
     </RadioButton>
   ));
@@ -102,7 +99,7 @@ const SchedulerHeader = ({ onViewChange, goNext, goBack, onSelectDate, scheduler
       {rightCustomHeader}
     </Row>
   );
-};
+}
 
 SchedulerHeader.propTypes = {
   onViewChange: PropTypes.func.isRequired,
