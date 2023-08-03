@@ -6,7 +6,7 @@ class CustomPopoverStyle extends Component {
   constructor(props) {
     super(props);
 
-    let schedulerData = new SchedulerData('2022-12-18', ViewType.Week);
+    const schedulerData = new SchedulerData('2022-12-18', ViewType.Week);
     schedulerData.localeDayjs.locale('en');
     schedulerData.setResources(DemoData.resources);
     schedulerData.setEvents(DemoData.events);
@@ -29,8 +29,8 @@ class CustomPopoverStyle extends Component {
             onViewChange={this.onViewChange}
             eventItemClick={this.eventClicked}
             viewEventClick={this.ops1}
-            viewEventText='Ops 1'
-            viewEvent2Text='Ops 2'
+            viewEventText="Ops 1"
+            viewEvent2Text="Ops 2"
             viewEvent2Click={this.ops2}
             updateEventStart={this.updateEventStart}
             updateEventEnd={this.updateEventEnd}
@@ -95,11 +95,11 @@ class CustomPopoverStyle extends Component {
         if (item.id >= newFreshId) newFreshId = item.id + 1;
       });
 
-      let newEvent = {
+      const newEvent = {
         id: newFreshId,
         title: 'New event you just created',
-        start: start,
-        end: end,
+        start,
+        end,
         resourceId: slotId,
         bgColor: 'purple',
       };
@@ -141,45 +141,47 @@ class CustomPopoverStyle extends Component {
     }
   };
 
-  eventItemPopoverTemplateResolver = (schedulerData, eventItem, title, start, end, statusColor) => {
-    return (
-      <div style={{ width: '300px' }}>
-        <Row type='flex' align='middle'>
-          <Col span={2}>
-            <div className='status-dot' style={{ backgroundColor: statusColor }} />
-          </Col>
-          <Col span={22} className='overflow-text'>
-            <span className='header2-text' title={title}>
-              {title}
-            </span>
-          </Col>
-        </Row>
-        <Row type='flex' align='middle'>
-          <Col span={2}>
-            <div />
-          </Col>
-          <Col span={22}>
-            <span className='header1-text'>
-              {start.format('HH:mm')} - {end.format('HH:mm')}
-            </span>
-          </Col>
-        </Row>
-        <Row type='flex' align='middle'>
-          <Col span={2}>
-            <div />
-          </Col>
-          <Col span={22}>
-            <Button
-              onClick={() => {
+  eventItemPopoverTemplateResolver = (schedulerData, eventItem, title, start, end, statusColor) => (
+    <div style={{ width: '300px' }}>
+      <Row type="flex" align="middle">
+        <Col span={2}>
+          <div className="status-dot" style={{ backgroundColor: statusColor }} />
+        </Col>
+        <Col span={22} className="overflow-text">
+          <span className="header2-text" title={title}>
+            {title}
+          </span>
+        </Col>
+      </Row>
+      <Row type="flex" align="middle">
+        <Col span={2}>
+          <div />
+        </Col>
+        <Col span={22}>
+          <span className="header1-text">
+            {start.format('HH:mm')}
+            {' '}
+            -
+            {end.format('HH:mm')}
+          </span>
+        </Col>
+      </Row>
+      <Row type="flex" align="middle">
+        <Col span={2}>
+          <div />
+        </Col>
+        <Col span={22}>
+          <Button
+            onClick={() => {
                 this.demoButtonClicked(eventItem);
-              }}>
-              Demo
-            </Button>
-          </Col>
-        </Row>
-      </div>
+              }}
+          >
+            Demo
+          </Button>
+        </Col>
+      </Row>
+    </div>
     );
-  };
 
   demoButtonClicked = eventItem => {
     alert(`You just clicked demo button. event title: ${eventItem.title}`);

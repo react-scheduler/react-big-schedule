@@ -5,7 +5,7 @@ class CustomEventStyle extends Component {
   constructor(props) {
     super(props);
 
-    let schedulerData = new SchedulerData('2022-12-18', ViewType.Week, false, false, {
+    const schedulerData = new SchedulerData('2022-12-18', ViewType.Week, false, false, {
       views: [
         { viewName: 'Day(Agenda)', viewType: ViewType.Day, showAgenda: true, isEventPerspective: false },
         { viewName: 'Week', viewType: ViewType.Week, showAgenda: false, isEventPerspective: false },
@@ -35,8 +35,8 @@ class CustomEventStyle extends Component {
             onViewChange={this.onViewChange}
             eventItemClick={this.eventClicked}
             viewEventClick={this.ops1}
-            viewEventText='Ops 1'
-            viewEvent2Text='Ops 2'
+            viewEventText="Ops 1"
+            viewEvent2Text="Ops 2"
             viewEvent2Click={this.ops2}
             updateEventStart={this.updateEventStart}
             updateEventEnd={this.updateEventEnd}
@@ -101,11 +101,11 @@ class CustomEventStyle extends Component {
         if (item.id >= newFreshId) newFreshId = item.id + 1;
       });
 
-      let newEvent = {
+      const newEvent = {
         id: newFreshId,
         title: 'New event you just created',
-        start: start,
-        end: end,
+        start,
+        end,
         resourceId: slotId,
         bgColor: 'purple',
       };
@@ -148,16 +148,16 @@ class CustomEventStyle extends Component {
   };
 
   eventItemTemplateResolver = (schedulerData, event, bgColor, isStart, isEnd, mustAddCssClass, mustBeHeight, agendaMaxEventWidth) => {
-    let borderWidth = isStart ? '4' : '0';
-    let borderColor = 'rgba(0,139,236,1)',
-      backgroundColor = '#80C5F6';
-    let titleText = schedulerData.behaviors.getEventTextFunc(schedulerData, event);
-    if (!!event.type) {
+    const borderWidth = isStart ? '4' : '0';
+    let borderColor = 'rgba(0,139,236,1)';
+      let backgroundColor = '#80C5F6';
+    const titleText = schedulerData.behaviors.getEventTextFunc(schedulerData, event);
+    if (event.type) {
       borderColor = event.type == 1 ? 'rgba(0,139,236,1)' : event.type == 3 ? 'rgba(245,60,43,1)' : '#999';
       backgroundColor = event.type == 1 ? '#80C5F6' : event.type == 3 ? '#FA9E95' : '#D9D9D9';
     }
-    let divStyle = { borderLeft: borderWidth + 'px solid ' + borderColor, backgroundColor: backgroundColor, height: mustBeHeight };
-    if (!!agendaMaxEventWidth) divStyle = { ...divStyle, maxWidth: agendaMaxEventWidth };
+    let divStyle = { borderLeft: `${borderWidth}px solid ${borderColor}`, backgroundColor, height: mustBeHeight };
+    if (agendaMaxEventWidth) divStyle = { ...divStyle, maxWidth: agendaMaxEventWidth };
 
     return (
       <div key={event.id} className={mustAddCssClass} style={divStyle}>

@@ -5,7 +5,7 @@ class CustomHeader extends Component {
   constructor(props) {
     super(props);
 
-    let schedulerData = new SchedulerData('2022-12-18', ViewType.Week);
+    const schedulerData = new SchedulerData('2022-12-18', ViewType.Week);
     schedulerData.localeDayjs.locale('en');
     schedulerData.setResources(DemoData.resources);
     schedulerData.setEvents(DemoData.events);
@@ -17,12 +17,12 @@ class CustomHeader extends Component {
   render() {
     const { viewModel } = this.state;
 
-    let leftCustomHeader = (
+    const leftCustomHeader = (
       <div>
         <span style={{ fontWeight: 'bold', color: 'red' }}>Put your content here</span>
       </div>
     );
-    let rightCustomHeader = (
+    const rightCustomHeader = (
       <div>
         <span style={{ fontWeight: 'bold', color: 'red' }}>or here</span>
       </div>
@@ -40,8 +40,8 @@ class CustomHeader extends Component {
             onViewChange={this.onViewChange}
             eventItemClick={this.eventClicked}
             viewEventClick={this.ops1}
-            viewEventText='Ops 1'
-            viewEvent2Text='Ops 2'
+            viewEventText="Ops 1"
+            viewEvent2Text="Ops 2"
             viewEvent2Click={this.ops2}
             updateEventStart={this.updateEventStart}
             updateEventEnd={this.updateEventEnd}
@@ -107,11 +107,11 @@ class CustomHeader extends Component {
         if (item.id >= newFreshId) newFreshId = item.id + 1;
       });
 
-      let newEvent = {
+      const newEvent = {
         id: newFreshId,
         title: 'New event you just created',
-        start: start,
-        end: end,
+        start,
+        end,
         resourceId: slotId,
         bgColor: 'purple',
       };
