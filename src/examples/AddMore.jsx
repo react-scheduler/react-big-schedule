@@ -5,7 +5,7 @@ class AddMore extends Component {
   constructor(props) {
     super(props);
 
-    let schedulerData = new SchedulerData('2022-12-18', ViewType.Week, false, false, {
+    const schedulerData = new SchedulerData('2022-12-18', ViewType.Week, false, false, {
       dayMaxEvents: 2,
       weekMaxEvents: 4,
       monthMaxEvents: 4,
@@ -123,11 +123,11 @@ class AddMore extends Component {
         if (item.id >= newFreshId) newFreshId = item.id + 1;
       });
 
-      let newEvent = {
+      const newEvent = {
         id: newFreshId,
         title: 'New event you just created',
-        start: start,
-        end: end,
+        start,
+        end,
         resourceId: slotId,
         bgColor: 'purple',
       };

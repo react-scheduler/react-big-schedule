@@ -16,7 +16,7 @@ class ResourceEvents extends Component {
       left: 0,
       width: 0,
     };
-    this.supportTouch = false; //'ontouchstart' in window;
+    this.supportTouch = false; // 'ontouchstart' in window;
   }
 
   static propTypes = {
@@ -90,20 +90,20 @@ class ResourceEvents extends Component {
     }
 
     const { schedulerData } = this.props;
-    let cellWidth = schedulerData.getContentCellWidth();
-    let pos = getPos(this.eventContainer);
-    let startX = clientX - pos.x;
-    let leftIndex = Math.floor(startX / cellWidth);
-    let left = leftIndex * cellWidth;
-    let rightIndex = Math.ceil(startX / cellWidth);
-    let width = (rightIndex - leftIndex) * cellWidth;
+    const cellWidth = schedulerData.getContentCellWidth();
+    const pos = getPos(this.eventContainer);
+    const startX = clientX - pos.x;
+    const leftIndex = Math.floor(startX / cellWidth);
+    const left = leftIndex * cellWidth;
+    const rightIndex = Math.ceil(startX / cellWidth);
+    const width = (rightIndex - leftIndex) * cellWidth;
 
     this.setState({
-      startX: startX,
-      left: left,
-      leftIndex: leftIndex,
-      width: width,
-      rightIndex: rightIndex,
+      startX,
+      left,
+      leftIndex,
+      width,
+      rightIndex,
       isSelecting: true,
     });
 
@@ -137,21 +137,21 @@ class ResourceEvents extends Component {
     const { startX } = this.state;
     const { schedulerData } = this.props;
     const { headers } = schedulerData;
-    let cellWidth = schedulerData.getContentCellWidth();
-    let pos = getPos(this.eventContainer);
-    let currentX = clientX - pos.x;
+    const cellWidth = schedulerData.getContentCellWidth();
+    const pos = getPos(this.eventContainer);
+    const currentX = clientX - pos.x;
     let leftIndex = Math.floor(Math.min(startX, currentX) / cellWidth);
     leftIndex = leftIndex < 0 ? 0 : leftIndex;
-    let left = leftIndex * cellWidth;
+    const left = leftIndex * cellWidth;
     let rightIndex = Math.ceil(Math.max(startX, currentX) / cellWidth);
     rightIndex = rightIndex > headers.length ? headers.length : rightIndex;
-    let width = (rightIndex - leftIndex) * cellWidth;
+    const width = (rightIndex - leftIndex) * cellWidth;
 
     this.setState({
-      leftIndex: leftIndex,
-      left: left,
-      rightIndex: rightIndex,
-      width: width,
+      leftIndex,
+      left,
+      rightIndex,
+      width,
       isSelecting: true,
     });
   };
@@ -173,16 +173,17 @@ class ResourceEvents extends Component {
     document.onselectstart = null;
     document.ondragstart = null;
 
-    let startTime = headers[leftIndex].time;
+    const startTime = headers[leftIndex].time;
     let endTime = resourceEvents.headerItems[rightIndex - 1].end;
-    if (cellUnit !== CellUnit.Hour)
-      endTime = localeDayjs(new Date(resourceEvents.headerItems[rightIndex - 1].start))
+    if (cellUnit !== CellUnit.Hour) {
+ endTime = localeDayjs(new Date(resourceEvents.headerItems[rightIndex - 1].start))
         .hour(23)
         .minute(59)
         .second(59)
         .format(DATETIME_FORMAT);
-    let slotId = resourceEvents.slotId;
-    let slotName = resourceEvents.slotName;
+}
+    const { slotId } = resourceEvents;
+    const { slotName } = resourceEvents;
 
     this.setState({
       startX: 0,
@@ -195,13 +196,13 @@ class ResourceEvents extends Component {
 
     let hasConflict = false;
     if (config.checkConflict) {
-      let start = localeDayjs(new Date(startTime)),
-        end = localeDayjs(endTime);
+      const start = localeDayjs(new Date(startTime));
+        const end = localeDayjs(endTime);
 
       events.forEach(e => {
         if (schedulerData._getEventSlotId(e) === slotId) {
-          let eStart = localeDayjs(e.start),
-            eEnd = localeDayjs(e.end);
+          const eStart = localeDayjs(e.start);
+            const eEnd = localeDayjs(e.end);
           if ((start >= eStart && start < eEnd) || (end > eStart && end <= eEnd) || (eStart >= start && eStart < end) || (eEnd > start && eEnd <= end)) hasConflict = true;
         }
       });
@@ -217,8 +218,8 @@ class ResourceEvents extends Component {
             id: undefined,
             start: startTime,
             end: endTime,
-            slotId: slotId,
-            slotName: slotName,
+            slotId,
+            slotName,
             title: undefined,
           },
           DnDTypes.EVENT,
@@ -230,9 +231,7 @@ class ResourceEvents extends Component {
       } else {
         console.log('Conflict occurred, set conflictOccurred func in Scheduler to handle it');
       }
-    } else {
-      if (newEvent != undefined) newEvent(schedulerData, slotId, slotName, startTime, endTime);
-    }
+    } else if (newEvent != undefined) newEvent(schedulerData, slotId, slotName, startTime, endTime);
   };
 
   cancelDrag = ev => {
@@ -260,19 +259,19 @@ class ResourceEvents extends Component {
     const { resourceEvents, schedulerData, connectDropTarget, dndSource } = this.props;
     const { cellUnit, startDate, endDate, config, localeDayjs } = schedulerData;
     const { isSelecting, left, width } = this.state;
-    let cellWidth = schedulerData.getContentCellWidth();
-    let cellMaxEvents = schedulerData.getCellMaxEvents();
-    let rowWidth = schedulerData.getContentTableWidth();
-    let DnDEventItem = dndSource.getDragSource();
+    const cellWidth = schedulerData.getContentCellWidth();
+    const cellMaxEvents = schedulerData.getCellMaxEvents();
+    const rowWidth = schedulerData.getContentTableWidth();
+    const DnDEventItem = dndSource.getDragSource();
 
-    let selectedArea = isSelecting ? <SelectedArea {...this.props} left={left} width={width} /> : <div />;
+    const selectedArea = isSelecting ? <SelectedArea {...this.props} left={left} width={width} /> : <div />;
 
-    let eventList = [];
+    const eventList = [];
     resourceEvents.headerItems.forEach((headerItem, index) => {
       if (headerItem.count > 0 || headerItem.summary != undefined) {
-        let isTop = config.summaryPos === SummaryPos.TopRight || config.summaryPos === SummaryPos.Top || config.summaryPos === SummaryPos.TopLeft;
-        let marginTop = resourceEvents.hasSummary && isTop ? 1 + config.eventItemLineHeight : 1;
-        let renderEventsMaxIndex = headerItem.addMore === 0 ? cellMaxEvents : headerItem.addMoreIndex;
+        const isTop = config.summaryPos === SummaryPos.TopRight || config.summaryPos === SummaryPos.Top || config.summaryPos === SummaryPos.TopLeft;
+        const marginTop = resourceEvents.hasSummary && isTop ? 1 + config.eventItemLineHeight : 1;
+        const renderEventsMaxIndex = headerItem.addMore === 0 ? cellMaxEvents : headerItem.addMoreIndex;
 
         headerItem.events.forEach((evt, idx) => {
           if (idx < renderEventsMaxIndex && evt !== undefined && evt.render) {
@@ -282,14 +281,14 @@ class ResourceEvents extends Component {
               durationStart = localeDayjs(new Date(startDate)).add(config.dayStartFrom, 'hours');
               durationEnd = localeDayjs(endDate).add(config.dayStopTo + 1, 'hours');
             }
-            let eventStart = localeDayjs(evt.eventItem.start);
-            let eventEnd = localeDayjs(evt.eventItem.end);
-            let isStart = eventStart >= durationStart;
-            let isEnd = eventEnd <= durationEnd;
-            let left = index * cellWidth + (index > 0 ? 2 : 3);
-            let width = evt.span * cellWidth - (index > 0 ? 5 : 6) > 0 ? evt.span * cellWidth - (index > 0 ? 5 : 6) : 0;
-            let top = marginTop + idx * config.eventItemLineHeight;
-            let eventItem = (
+            const eventStart = localeDayjs(evt.eventItem.start);
+            const eventEnd = localeDayjs(evt.eventItem.end);
+            const isStart = eventStart >= durationStart;
+            const isEnd = eventEnd <= durationEnd;
+            const left = index * cellWidth + (index > 0 ? 2 : 3);
+            const width = evt.span * cellWidth - (index > 0 ? 5 : 6) > 0 ? evt.span * cellWidth - (index > 0 ? 5 : 6) : 0;
+            const top = marginTop + idx * config.eventItemLineHeight;
+            const eventItem = (
               <DnDEventItem
                 {...this.props}
                 key={evt.eventItem.id}
@@ -309,10 +308,10 @@ class ResourceEvents extends Component {
         });
 
         if (headerItem.addMore > 0) {
-          let left = index * cellWidth + (index > 0 ? 2 : 3);
-          let width = cellWidth - (index > 0 ? 5 : 6);
-          let top = marginTop + headerItem.addMoreIndex * config.eventItemLineHeight;
-          let addMoreItem = (
+          const left = index * cellWidth + (index > 0 ? 2 : 3);
+          const width = cellWidth - (index > 0 ? 5 : 6);
+          const top = marginTop + headerItem.addMoreIndex * config.eventItemLineHeight;
+          const addMoreItem = (
             <AddMore
               {...this.props}
               key={headerItem.time}
@@ -328,18 +327,18 @@ class ResourceEvents extends Component {
         }
 
         if (headerItem.summary != undefined) {
-          let top = isTop ? 1 : resourceEvents.rowHeight - config.eventItemLineHeight + 1;
-          let left = index * cellWidth + (index > 0 ? 2 : 3);
-          let width = cellWidth - (index > 0 ? 5 : 6);
-          let key = `${resourceEvents.slotId}_${headerItem.time}`;
-          let summary = <Summary key={key} schedulerData={schedulerData} summary={headerItem.summary} left={left} width={width} top={top} />;
+          const top = isTop ? 1 : resourceEvents.rowHeight - config.eventItemLineHeight + 1;
+          const left = index * cellWidth + (index > 0 ? 2 : 3);
+          const width = cellWidth - (index > 0 ? 5 : 6);
+          const key = `${resourceEvents.slotId}_${headerItem.time}`;
+          const summary = <Summary key={key} schedulerData={schedulerData} summary={headerItem.summary} left={left} width={width} top={top} />;
           eventList.push(summary);
         }
       }
     });
 
     const eventContainer = (
-      <div ref={this.eventContainerRef} className='event-container' style={{ height: resourceEvents.rowHeight }}>
+      <div ref={this.eventContainerRef} className="event-container" style={{ height: resourceEvents.rowHeight }}>
         {selectedArea}
         {eventList}
       </div>
@@ -353,22 +352,22 @@ class ResourceEvents extends Component {
 
   onAddMoreClick = headerItem => {
     const { onSetAddMoreState, resourceEvents, schedulerData } = this.props;
-    if (!!onSetAddMoreState) {
+    if (onSetAddMoreState) {
       const { config } = schedulerData;
-      let cellWidth = schedulerData.getContentCellWidth();
-      let index = resourceEvents.headerItems.indexOf(headerItem);
+      const cellWidth = schedulerData.getContentCellWidth();
+      const index = resourceEvents.headerItems.indexOf(headerItem);
       if (index !== -1) {
         let left = index * (cellWidth - 1);
-        let pos = getPos(this.eventContainer);
-        left = left + pos.x;
-        let top = pos.y;
-        let height = (headerItem.count + 1) * config.eventItemLineHeight + 20;
+        const pos = getPos(this.eventContainer);
+        left += pos.x;
+        const top = pos.y;
+        const height = (headerItem.count + 1) * config.eventItemLineHeight + 20;
 
         onSetAddMoreState({
-          headerItem: headerItem,
-          left: left,
-          top: top,
-          height: height,
+          headerItem,
+          left,
+          top,
+          height,
         });
       }
     }

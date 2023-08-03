@@ -11,21 +11,21 @@ function BodyView({ schedulerData }) {
       const rowCells = headers.map((header, index) => {
         const key = `${slotId}_${header.time}`;
         const style = index === headers.length - 1 ? {} : { width };
-        if (!!header.nonWorkingTime) {
+        if (header.nonWorkingTime) {
           style.backgroundColor = config.nonWorkingTimeBodyBgColor;
         }
         if (groupOnly) {
           style.backgroundColor = config.groupOnlySlotColor;
         }
-        if (!!behaviors.getNonAgendaViewBodyCellBgColorFunc) {
+        if (behaviors.getNonAgendaViewBodyCellBgColorFunc) {
           const cellBgColor = behaviors.getNonAgendaViewBodyCellBgColorFunc(schedulerData, slotId, header);
-          if (!!cellBgColor) {
+          if (cellBgColor) {
             style.backgroundColor = cellBgColor;
           }
         }
         return (
           <td key={key} style={style}>
-            <div></div>
+            <div />
           </td>
         );
       });

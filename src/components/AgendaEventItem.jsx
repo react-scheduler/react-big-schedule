@@ -28,7 +28,7 @@ function AgendaEventItem(props) {
     </a>
   );
 
-  let content = <EventItemPopover {...props} title={eventItem.title} startTime={eventItem.start} endTime={eventItem.end} statusColor={bgColor} />;
+  const content = <EventItemPopover {...props} title={eventItem.title} startTime={eventItem.start} endTime={eventItem.end} statusColor={bgColor} />;
 
   return config.eventItemPopoverEnabled ? (
     <Popover placement="bottomLeft" content={content} trigger="hover" overlayClassName="scheduler-agenda-event-popover">
