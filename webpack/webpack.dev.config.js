@@ -1,5 +1,6 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const ESLintWebpackPlugin = require('eslint-webpack-plugin');
 
 module.exports = {
   entry: './src/examples/index.jsx',
@@ -23,7 +24,12 @@ module.exports = {
   resolve: {
     extensions: ['.js', '.jsx'],
   },
-  plugins: [new HtmlWebpackPlugin({ template: './src/index.html', title: 'React Big Schedule' })],
+  plugins: [
+    new HtmlWebpackPlugin({ template: './src/index.html', title: 'React Big Schedule' }),
+    new ESLintWebpackPlugin({
+      emitError: true, emitWarning: false, failOnError: true, extensions: ['js', 'jsx'],
+    }),
+  ],
   devServer: {
     static: { directory: path.join(__dirname, '..', 'dist') },
     compress: true,
