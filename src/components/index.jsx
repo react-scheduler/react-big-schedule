@@ -40,8 +40,8 @@ class Scheduler extends Component {
 
     const { schedulerData, dndSources, parentRef } = props;
     let sources = [];
-    sources.push(new DnDSource(props => props.eventItem, EventItem, schedulerData.config.dragAndDropEnabled));
-    if (dndSources != undefined && dndSources.length > 0) {
+    sources.push(new DnDSource(dndProps => dndProps.eventItem, EventItem, schedulerData.config.dragAndDropEnabled));
+    if (dndSources !== undefined && dndSources.length > 0) {
       sources = [...sources, ...dndSources];
     }
     const dndContext = new DnDContext(sources, ResourceEvents);

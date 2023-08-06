@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Col, Row, Spin, Radio, Space, Popover, Calendar } from 'antd';
 import { RightOutlined, LeftOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs';
-import { DATE_FORMAT } from './index';
+import { DATE_FORMAT } from '../config/default';
 
 const RadioButton = Radio.Button;
 const RadioGroup = Radio.Group;
@@ -20,8 +20,6 @@ function SchedulerHeader({ onViewChange, goNext, goBack, onSelectDate, scheduler
   const defaultValue = `${viewType}${showAgenda ? 1 : 0}${isEventPerspective ? 1 : 0}`;
 
   const handleEvents = (func, isViewSpinning, funcArg = undefined) => {
-    const { config } = schedulerData;
-
     if (isViewSpinning) {
       if (config.viewChangeSpinEnabled) setViewSpinning(true);
     } else if (config.dateChangeSpinEnabled) setDateSpinning(true);
@@ -109,6 +107,11 @@ SchedulerHeader.propTypes = {
   schedulerData: PropTypes.object.isRequired,
   leftCustomHeader: PropTypes.object,
   rightCustomHeader: PropTypes.object,
+};
+
+SchedulerHeader.defaultProps = {
+  leftCustomHeader: null,
+  rightCustomHeader: null,
 };
 
 export default SchedulerHeader;

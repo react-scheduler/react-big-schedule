@@ -12,6 +12,7 @@
     "max-len": ["error", { "code": 200 }],
     "arrow-parens": ["error", "as-needed"],
     "linebreak-style": "off",
-    "object-curly-newline":"off"
+    "object-curly-newline": "off",
+    "react/forbid-prop-types": "off"
   }
 }

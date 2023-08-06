@@ -3,9 +3,8 @@ import { PropTypes } from 'prop-types';
 import AddMore from './AddMore';
 import Summary from './Summary';
 import SelectedArea from './SelectedArea';
-import { CellUnit, DATETIME_FORMAT, SummaryPos } from './index';
+import { CellUnit, DATETIME_FORMAT, SummaryPos, DnDTypes } from '../config/default';
 import { getPos } from '../helper/utility';
-import { DnDTypes } from '../config/default';
 
 class ResourceEvents extends Component {
   constructor(props) {
@@ -176,12 +175,12 @@ class ResourceEvents extends Component {
     const startTime = headers[leftIndex].time;
     let endTime = resourceEvents.headerItems[rightIndex - 1].end;
     if (cellUnit !== CellUnit.Hour) {
- endTime = localeDayjs(new Date(resourceEvents.headerItems[rightIndex - 1].start))
+      endTime = localeDayjs(new Date(resourceEvents.headerItems[rightIndex - 1].start))
         .hour(23)
         .minute(59)
         .second(59)
         .format(DATETIME_FORMAT);
-}
+    }
     const { slotId } = resourceEvents;
     const { slotName } = resourceEvents;
 
@@ -197,12 +196,12 @@ class ResourceEvents extends Component {
     let hasConflict = false;
     if (config.checkConflict) {
       const start = localeDayjs(new Date(startTime));
-        const end = localeDayjs(endTime);
+      const end = localeDayjs(endTime);
 
       events.forEach(e => {
         if (schedulerData._getEventSlotId(e) === slotId) {
           const eStart = localeDayjs(e.start);
-            const eEnd = localeDayjs(e.end);
+          const eEnd = localeDayjs(e.end);
           if ((start >= eStart && start < eEnd) || (end > eStart && end <= eEnd) || (eStart >= start && eStart < end) || (eEnd > start && eEnd <= end)) hasConflict = true;
         }
       });
@@ -210,7 +209,7 @@ class ResourceEvents extends Component {
 
     if (hasConflict) {
       const { conflictOccurred } = this.props;
-      if (conflictOccurred != undefined) {
+      if (conflictOccurred !== undefined) {
         conflictOccurred(
           schedulerData,
           'New',
@@ -226,7 +225,7 @@ class ResourceEvents extends Component {
           slotId,
           slotName,
           startTime,
-          endTime
+          endTime,
         );
       } else {
         console.log('Conflict occurred, set conflictOccurred func in Scheduler to handle it');
