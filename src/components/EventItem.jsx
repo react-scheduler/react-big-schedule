@@ -17,41 +17,14 @@ class EventItem extends Component {
       eventItemLeftRect: 0,
       eventItemRightRect: 0,
     };
-    this.startResizer = null;
-    this.endResizer = null;
+    this.startResizer = undefined;
+    this.endResizer = undefined;
 
     this.supportTouch = false; // 'ontouchstart' in window;
 
     this.eventItemRef = React.createRef();
     this._isMounted = false;
   }
-
-  static propTypes = {
-    schedulerData: PropTypes.object.isRequired,
-    eventItem: PropTypes.object.isRequired,
-    isStart: PropTypes.bool.isRequired,
-    isEnd: PropTypes.bool.isRequired,
-    left: PropTypes.number.isRequired,
-    width: PropTypes.number.isRequired,
-    top: PropTypes.number.isRequired,
-    isInPopover: PropTypes.bool.isRequired,
-    leftIndex: PropTypes.number.isRequired,
-    rightIndex: PropTypes.number.isRequired,
-    isDragging: PropTypes.bool,
-    connectDragSource: PropTypes.func,
-    connectDragPreview: PropTypes.func,
-    updateEventStart: PropTypes.func,
-    updateEventEnd: PropTypes.func,
-    moveEvent: PropTypes.func,
-    subtitleGetter: PropTypes.func,
-    eventItemClick: PropTypes.func,
-    viewEventClick: PropTypes.func,
-    viewEventText: PropTypes.string,
-    viewEvent2Click: PropTypes.func,
-    viewEvent2Text: PropTypes.string,
-    conflictOccurred: PropTypes.func,
-    eventItemTemplateResolver: PropTypes.func,
-  };
 
   componentDidUpdate(prevProps, nextProps) {
     if (prevProps !== this.props) {
@@ -492,7 +465,8 @@ class EventItem extends Component {
         <span style={{ marginLeft: '10px', lineHeight: `${config.eventItemHeight}px` }}>{eventTitle}</span>
       </div>
     );
-    if (eventItemTemplateResolver !== undefined) eventItemTemplate = eventItemTemplateResolver(schedulerData, eventItem, bgColor, isStart, isEnd, 'event-item', config.eventItemHeight, undefined);
+    if (eventItemTemplateResolver !== undefined)
+      eventItemTemplate = eventItemTemplateResolver(schedulerData, eventItem, bgColor, isStart, isEnd, 'event-item', config.eventItemHeight, undefined);
 
     const a = (
       <a
@@ -502,8 +476,7 @@ class EventItem extends Component {
         style={{ left, width, top }}
         onClick={() => {
           if (eventItemClick) eventItemClick(schedulerData, eventItem);
-        }}
-      >
+        }}>
         {eventItemTemplate}
         {startResizeDiv}
         {endResizeDiv}
@@ -571,8 +544,7 @@ class EventItem extends Component {
         placement={isPopoverPlacementMousePosition ? mousePositionPlacement : popoverPlacement}
         content={content}
         trigger={config.eventItemPopoverTrigger}
-        overlayClassName="scheduler-event-item-popover"
-      >
+        overlayClassName="scheduler-event-item-popover">
         {aItem}
       </Popover>
     );
@@ -591,10 +563,10 @@ class EventItem extends Component {
     const { eventItem, isInPopover, schedulerData } = props;
     const { config } = schedulerData;
     return (
-      config.startResizable === true
-      && isInPopover === false
-      && (eventItem.resizable === undefined || eventItem.resizable !== false)
-      && (eventItem.startResizable === undefined || eventItem.startResizable !== false)
+      config.startResizable === true &&
+      isInPopover === false &&
+      (eventItem.resizable === undefined || eventItem.resizable !== false) &&
+      (eventItem.startResizable === undefined || eventItem.startResizable !== false)
     );
   };
 
@@ -602,10 +574,10 @@ class EventItem extends Component {
     const { eventItem, isInPopover, schedulerData } = props;
     const { config } = schedulerData;
     return (
-      config.endResizable === true
-      && isInPopover === false
-      && (eventItem.resizable === undefined || eventItem.resizable !== false)
-      && (eventItem.endResizable === undefined || eventItem.endResizable !== false)
+      config.endResizable === true &&
+      isInPopover === false &&
+      (eventItem.resizable === undefined || eventItem.resizable !== false) &&
+      (eventItem.endResizable === undefined || eventItem.endResizable !== false)
     );
   };
 
@@ -633,4 +605,47 @@ class EventItem extends Component {
   };
 }
 
+EventItem.propTypes = {
+  schedulerData: PropTypes.object.isRequired,
+  eventItem: PropTypes.object.isRequired,
+  isStart: PropTypes.bool.isRequired,
+  isEnd: PropTypes.bool.isRequired,
+  left: PropTypes.number.isRequired,
+  width: PropTypes.number.isRequired,
+  top: PropTypes.number.isRequired,
+  isInPopover: PropTypes.bool.isRequired,
+  leftIndex: PropTypes.number.isRequired,
+  rightIndex: PropTypes.number.isRequired,
+  isDragging: PropTypes.bool,
+  connectDragSource: PropTypes.func,
+  connectDragPreview: PropTypes.func,
+  updateEventStart: PropTypes.func,
+  updateEventEnd: PropTypes.func,
+  moveEvent: PropTypes.func,
+  subtitleGetter: PropTypes.func,
+  eventItemClick: PropTypes.func,
+  viewEventClick: PropTypes.func,
+  viewEventText: PropTypes.string,
+  viewEvent2Click: PropTypes.func,
+  viewEvent2Text: PropTypes.string,
+  conflictOccurred: PropTypes.func,
+  eventItemTemplateResolver: PropTypes.func,
+};
+
+EventItem.defaultProps = {
+  isDragging: undefined,
+  connectDragSource: undefined,
+  connectDragPreview: undefined,
+  updateEventStart: undefined,
+  updateEventEnd: undefined,
+  moveEvent: undefined,
+  subtitleGetter: undefined,
+  eventItemClick: undefined,
+  viewEventClick: undefined,
+  viewEventText: undefined,
+  viewEvent2Click: undefined,
+  viewEvent2Text: undefined,
+  conflictOccurred: undefined,
+  eventItemTemplateResolver: undefined,
+};
 export default EventItem;
