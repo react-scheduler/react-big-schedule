@@ -583,7 +583,7 @@ class EventItem extends Component {
   };
 
   subscribeResizeEvent = props => {
-    if (this.startResizer !== undefined) {
+    if (this.startResizer !== undefined && this.startResizer !== null) {
       if (this.supportTouch) {
         // this.startResizer.removeEventListener('touchstart', this.initStartDrag, false);
         // if (this.startResizable(props))
@@ -593,7 +593,7 @@ class EventItem extends Component {
         if (this.startResizable(props)) this.startResizer.addEventListener('mousedown', this.initStartDrag, false);
       }
     }
-    if (this.endResizer !== undefined) {
+    if (this.endResizer !== undefined && this.endResizer !== null) {
       if (this.supportTouch) {
         // this.endResizer.removeEventListener('touchstart', this.initEndDrag, false);
         // if (this.endResizable(props))

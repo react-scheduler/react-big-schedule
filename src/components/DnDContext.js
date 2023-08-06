@@ -11,6 +11,18 @@ export default class DnDContext {
     this.DecoratedComponent = DecoratedComponent;
   }
 
+  extractInitialTimes = (monitor, pos, cellWidth, resourceEvents, cellUnit, localeDayjs) => {
+    const initialPoint = monitor.getInitialClientOffset();
+    const initialLeftIndex = Math.floor((initialPoint.x - pos.x) / cellWidth);
+    const initialStart = resourceEvents.headerItems[initialLeftIndex].start;
+    let initialEnd = resourceEvents.headerItems[initialLeftIndex].end;
+    if (cellUnit !== CellUnit.Hour) {
+      const end = localeDayjs(new Date(initialStart)).hour(23).minute(59).second(59);
+      initialEnd = end.format(DATETIME_FORMAT);
+    }
+    return { initialStart, initialEnd };
+  };
+
   getDropSpec = () => ({
     drop: (props, monitor, component) => {
       const { schedulerData, resourceEvents } = props;
@@ -21,14 +33,9 @@ export default class DnDContext {
       let initialStartTime = null;
       let initialEndTime = null;
       if (type === DnDTypes.EVENT) {
-        const initialPoint = monitor.getInitialClientOffset();
-        const initialLeftIndex = Math.floor((initialPoint.x - pos.x) / cellWidth);
-        initialStartTime = resourceEvents.headerItems[initialLeftIndex].start;
-        initialEndTime = resourceEvents.headerItems[initialLeftIndex].end;
-        if (cellUnit !== CellUnit.Hour) {
-          initialEndTime = localeDayjs(new Date(resourceEvents.headerItems[initialLeftIndex].start)).hour(23).minute(59).second(59)
-            .format(DATETIME_FORMAT);
-        }
+        const { initialStart, initialEnd } = this.extractInitialTimes(monitor, pos, cellWidth, resourceEvents, cellUnit, localeDayjs);
+        initialStartTime = initialStart;
+        initialEndTime = initialEnd;
       }
       const point = monitor.getClientOffset();
       const leftIndex = Math.floor((point.x - pos.x) / cellWidth);
@@ -60,15 +67,11 @@ export default class DnDContext {
       let initialStart = null;
       let initialEnd = null;
       if (type === DnDTypes.EVENT) {
-        const initialPoint = monitor.getInitialClientOffset();
-        const initialLeftIndex = Math.floor((initialPoint.x - pos.x) / cellWidth);
-        initialStart = resourceEvents.headerItems[initialLeftIndex].start;
-        initialEnd = resourceEvents.headerItems[initialLeftIndex].end;
-        if (cellUnit !== CellUnit.Hour) {
-          initialEnd = localeDayjs(new Date(resourceEvents.headerItems[initialLeftIndex].start)).hour(23).minute(59).second(59)
-            .format(DATETIME_FORMAT);
-        }
+        const { initialStart: iStart, initialEnd: iEnd } = this.extractInitialTimes(monitor, pos, cellWidth, resourceEvents, cellUnit, localeDayjs);
+        initialStart = iStart;
+        initialEnd = iEnd;
       }
+
       const point = monitor.getClientOffset();
       const leftIndex = Math.floor((point.x - pos.x) / cellWidth);
       if (!resourceEvents.headerItems[leftIndex]) {
