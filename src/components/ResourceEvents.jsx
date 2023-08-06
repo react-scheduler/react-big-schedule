@@ -80,7 +80,7 @@ class ResourceEvents extends Component {
     if (resourceEvents.groupOnly) return;
     let clientX = 0;
     if (this.supportTouch) {
-      if (ev.changedTouches.length == 0) return;
+      if (ev.changedTouches.length === 0) return;
       const touch = ev.changedTouches[0];
       clientX = touch.pageX;
     } else {
@@ -127,7 +127,7 @@ class ResourceEvents extends Component {
 
     let clientX = 0;
     if (this.supportTouch) {
-      if (ev.changedTouches.length == 0) return;
+      if (ev.changedTouches.length === 0) return;
       const touch = ev.changedTouches[0];
       clientX = touch.pageX;
     } else {
@@ -230,7 +230,7 @@ class ResourceEvents extends Component {
       } else {
         console.log('Conflict occurred, set conflictOccurred func in Scheduler to handle it');
       }
-    } else if (newEvent != undefined) newEvent(schedulerData, slotId, slotName, startTime, endTime);
+    } else if (newEvent !== undefined) newEvent(schedulerData, slotId, slotName, startTime, endTime);
   };
 
   cancelDrag = ev => {
@@ -267,7 +267,7 @@ class ResourceEvents extends Component {
 
     const eventList = [];
     resourceEvents.headerItems.forEach((headerItem, index) => {
-      if (headerItem.count > 0 || headerItem.summary != undefined) {
+      if (headerItem.count > 0 || headerItem.summary !== undefined) {
         const isTop = config.summaryPos === SummaryPos.TopRight || config.summaryPos === SummaryPos.Top || config.summaryPos === SummaryPos.TopLeft;
         const marginTop = resourceEvents.hasSummary && isTop ? 1 + config.eventItemLineHeight : 1;
         const renderEventsMaxIndex = headerItem.addMore === 0 ? cellMaxEvents : headerItem.addMoreIndex;
@@ -325,7 +325,7 @@ class ResourceEvents extends Component {
           eventList.push(addMoreItem);
         }
 
-        if (headerItem.summary != undefined) {
+        if (headerItem.summary !== undefined) {
           const top = isTop ? 1 : resourceEvents.rowHeight - config.eventItemLineHeight + 1;
           const left = index * cellWidth + (index > 0 ? 2 : 3);
           const width = cellWidth - (index > 0 ? 5 : 6);

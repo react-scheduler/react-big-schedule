@@ -153,8 +153,8 @@ class CustomEventStyle extends Component {
       let backgroundColor = '#80C5F6';
     const titleText = schedulerData.behaviors.getEventTextFunc(schedulerData, event);
     if (event.type) {
-      borderColor = event.type == 1 ? 'rgba(0,139,236,1)' : event.type == 3 ? 'rgba(245,60,43,1)' : '#999';
-      backgroundColor = event.type == 1 ? '#80C5F6' : event.type == 3 ? '#FA9E95' : '#D9D9D9';
+      borderColor = event.type === 1 ? 'rgba(0,139,236,1)' : event.type === 3 ? 'rgba(245,60,43,1)' : '#999';
+      backgroundColor = event.type === 1 ? '#80C5F6' : event.type === 3 ? '#FA9E95' : '#D9D9D9';
     }
     let divStyle = { borderLeft: `${borderWidth}px solid ${borderColor}`, backgroundColor, height: mustBeHeight };
     if (agendaMaxEventWidth) divStyle = { ...divStyle, maxWidth: agendaMaxEventWidth };

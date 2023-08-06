@@ -119,7 +119,7 @@ export default class DnDContext {
       const item = monitor.getItem();
       if (schedulerData._isResizing()) return false;
       const { config } = schedulerData;
-      return config.movable && !resourceEvents.groupOnly && (item.movable == undefined || item.movable !== false);
+      return config.movable && !resourceEvents.groupOnly && (item.movable === undefined || item.movable !== false);
     },
   });
 

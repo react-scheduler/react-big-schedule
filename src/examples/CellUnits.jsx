@@ -65,7 +65,7 @@ class CellUnitComponent extends Component {
   getCustomDate = (schedulerData, num, date = undefined) => {
     const { viewType } = schedulerData;
     let selectDate = schedulerData.startDate;
-    if (date != undefined) selectDate = date;
+    if (date !== undefined) selectDate = date;
 
     let startDate = num === 0
           ? selectDate

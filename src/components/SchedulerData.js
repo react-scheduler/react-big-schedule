@@ -27,9 +27,9 @@ export default class SchedulerData {
     dayjs.extend(weekday);
     dayjs.extend(utc);
     this.localeDayjs = dayjs;
-    this.config = newConfig == undefined ? config : { ...config, ...newConfig };
+    this.config = newConfig === undefined ? config : { ...config, ...newConfig };
     this._validateMinuteStep(this.config.minuteStep);
-    this.behaviors = newBehaviors == undefined ? behaviors : { ...behaviors, ...newBehaviors };
+    this.behaviors = newBehaviors === undefined ? behaviors : { ...behaviors, ...newBehaviors };
     this._resolveDate(0, date);
     this._createHeaders();
     this._createRenderData();
@@ -379,7 +379,7 @@ export default class SchedulerData {
     const end = this.localeDayjs(new Date(this.endDate));
     let dateLabel = start.format('LL');
 
-    if (start != end) dateLabel = `${start.format('LL')}-${end.format('LL')}`;
+    if (start !== end) dateLabel = `${start.format('LL')}-${end.format('LL')}`;
 
     if (this.behaviors.getDateLabelFunc) dateLabel = this.behaviors.getDateLabelFunc(this, this.viewType, this.startDate, this.endDate);
 
@@ -603,25 +603,25 @@ export default class SchedulerData {
   }
 
   _resolveDate(num, date = undefined) {
-    if (date != undefined) this.selectDate = this.localeDayjs(date);
+    if (date !== undefined) this.selectDate = this.localeDayjs(date);
 
     if (this.viewType === ViewType.Week) {
-      this.startDate = date != undefined ? this.localeDayjs(date).startOf('week') : this.localeDayjs(this.startDate).add(num, 'weeks');
+      this.startDate = date !== undefined ? this.localeDayjs(date).startOf('week') : this.localeDayjs(this.startDate).add(num, 'weeks');
       this.endDate = this.localeDayjs(this.startDate).endOf('week');
     } else if (this.viewType === ViewType.Day) {
-      this.startDate = date != undefined ? this.selectDate : this.localeDayjs(this.startDate).add(num, 'days');
+      this.startDate = date !== undefined ? this.selectDate : this.localeDayjs(this.startDate).add(num, 'days');
       this.endDate = this.startDate;
     } else if (this.viewType === ViewType.Month) {
-      this.startDate = date != undefined ? this.localeDayjs(date).startOf('month') : this.localeDayjs(this.startDate).add(num, 'months');
+      this.startDate = date !== undefined ? this.localeDayjs(date).startOf('month') : this.localeDayjs(this.startDate).add(num, 'months');
       this.endDate = this.localeDayjs(this.startDate).endOf('month');
     } else if (this.viewType === ViewType.Quarter) {
-      this.startDate = date != undefined ? this.localeDayjs(date).startOf('quarter') : this.localeDayjs(this.startDate).add(num, 'quarters');
+      this.startDate = date !== undefined ? this.localeDayjs(date).startOf('quarter') : this.localeDayjs(this.startDate).add(num, 'quarters');
       this.endDate = this.localeDayjs(this.startDate).endOf('quarter');
     } else if (this.viewType === ViewType.Year) {
-      this.startDate = date != undefined ? this.localeDayjs(date).startOf('year') : this.localeDayjs(this.startDate).add(num, 'years');
+      this.startDate = date !== undefined ? this.localeDayjs(date).startOf('year') : this.localeDayjs(this.startDate).add(num, 'years');
       this.endDate = this.localeDayjs(this.startDate).endOf('year');
     } else if (this.viewType === ViewType.Custom || this.viewType === ViewType.Custom1 || this.viewType === ViewType.Custom2) {
-      if (this.behaviors.getCustomDateFunc != undefined) {
+      if (this.behaviors.getCustomDateFunc !== undefined) {
         const customDate = this.behaviors.getCustomDateFunc(this, num, date);
         this.startDate = this.localeDayjs(customDate.startDate);
         this.endDate = this.localeDayjs(customDate.endDate);
@@ -641,10 +641,10 @@ export default class SchedulerData {
     if (this.showAgenda) {
       headers.push({ time: header.format(DATETIME_FORMAT), nonWorkingTime: false });
     } else if (this.cellUnit === CellUnit.Hour) {
-      if (start.hour() == 0) {
+      if (start.hour() === 0) {
         start = start.add(this.config.dayStartFrom, 'hours');
       }
-      if (end.hour() == 0) {
+      if (end.hour() === 0) {
         end = end.add(this.config.dayStopTo, 'hours');
       }
       header = start;
@@ -652,7 +652,7 @@ export default class SchedulerData {
       let prevHour = -1;
       while (header >= start && header <= end) {
         // prevent doubled hours on time change
-        if (header.hour() == prevHour) {
+        if (header.hour() === prevHour) {
           header = header.add(1, 'hours');
           continue;
         }
@@ -952,11 +952,11 @@ export default class SchedulerData {
     }
 
     resources.forEach((item, index) => {
-      if (item == undefined) {
+      if (item === undefined) {
         console.error(`Resource undefined: ${index}`);
         throw new Error(`Resource undefined: ${index}`);
       }
-      if (item.id == undefined || item.name == undefined) {
+      if (item.id === undefined || item.name === undefined) {
         console.error('Resource property missed', index, item);
         throw new Error(`Resource property undefined: ${index}`);
       }
@@ -969,11 +969,11 @@ export default class SchedulerData {
     }
 
     eventGroups.forEach((item, index) => {
-      if (item == undefined) {
+      if (item === undefined) {
         console.error(`Event group undefined: ${index}`);
         throw new Error(`Event group undefined: ${index}`);
       }
-      if (item.id == undefined || item.name == undefined) {
+      if (item.id === undefined || item.name === undefined) {
         console.error('Event group property missed', index, item);
         throw new Error(`Event group property undefined: ${index}`);
       }
@@ -986,11 +986,11 @@ export default class SchedulerData {
     }
 
     events.forEach((e, index) => {
-      if (e == undefined) {
+      if (e === undefined) {
         console.error(`Event undefined: ${index}`);
         throw new Error(`Event undefined: ${index}`);
       }
-      if (e.id == undefined || e.resourceId == undefined || e.title == undefined || e.start == undefined || e.end == undefined) {
+      if (e.id === undefined || e.resourceId === undefined || e.title === undefined || e.start === undefined || e.end === undefined) {
         console.error('Event property missed', index, e);
         throw new Error(`Event property undefined: ${index}`);
       }
@@ -1099,7 +1099,7 @@ export default class SchedulerData {
             });
 
             headerItem.summary = this.behaviors.getSummaryFunc(this, events, resourceEvents.slotId, resourceEvents.slotName, headerItem.start, headerItem.end);
-            if (!!headerItem.summary && headerItem.summary.text != undefined) hasSummary = true;
+            if (!!headerItem.summary && headerItem.summary.text !== undefined) hasSummary = true;
           }
         });
 

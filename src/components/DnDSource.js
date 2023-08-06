@@ -70,7 +70,7 @@ export default class DnDSource {
 
       if (hasConflict) {
         const { conflictOccurred } = props;
-        if (conflictOccurred != undefined) {
+        if (conflictOccurred !== undefined) {
           conflictOccurred(schedulerData, action, item, type, slotId, slotName, newStart, newEnd);
         } else {
           console.log('Conflict occurred, set conflictOccurred func in Scheduler to handle it');
@@ -87,7 +87,7 @@ export default class DnDSource {
       const item = this.resolveDragObjFunc(props);
       if (schedulerData._isResizing()) return false;
       const { config } = schedulerData;
-      return config.movable && (resourceEvents == undefined || !resourceEvents.groupOnly) && (item.movable == undefined || item.movable !== false);
+      return config.movable && (resourceEvents === undefined || !resourceEvents.groupOnly) && (item.movable === undefined || item.movable !== false);
     },
   });
 
