@@ -911,7 +911,7 @@ export default class SchedulerData {
 
     const slotStack = [];
     let i;
-    for (i = slotTree.length - 1; i >= 0; i--) {
+    for (i = slotTree.length - 1; i >= 0; i -= 1) {
       slotStack.push(slotTree[i]);
     }
     const initRenderData = [];
