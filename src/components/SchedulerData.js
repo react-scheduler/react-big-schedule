@@ -1,3 +1,5 @@
+/* eslint-disable no-param-reassign */
+/* eslint-disable no-underscore-dangle */
 import dayjs from 'dayjs';
 import quarterOfYear from 'dayjs/plugin/quarterOfYear';
 import utc from 'dayjs/plugin/utc';
@@ -5,7 +7,7 @@ import weekday from 'dayjs/plugin/weekday';
 import { RRuleSet, rrulestr } from 'rrule';
 import config from '../config/scheduler';
 import behaviors from '../helper/behaviors';
-import { ViewType, CellUnit, DATE_FORMAT, DATETIME_FORMAT } from './index';
+import { ViewType, CellUnit, DATE_FORMAT, DATETIME_FORMAT } from '../config/default';
 
 export default class SchedulerData {
   constructor(date = dayjs(), viewType = ViewType.Week, showAgenda = false, isEventPerspective = false, newConfig = undefined, newBehaviors = undefined) {
@@ -278,13 +280,13 @@ export default class SchedulerData {
 
   getSchedulerWidth() {
     const baseWidth = this.documentWidth - this.config.besidesWidth > 0 ? this.documentWidth - this.config.besidesWidth : 0;
-    return this.isSchedulerResponsive() ? parseInt((baseWidth * Number(this.config.schedulerWidth.slice(0, -1))) / 100) : this.config.schedulerWidth;
+    return this.isSchedulerResponsive() ? parseInt((baseWidth * Number(this.config.schedulerWidth.slice(0, -1))) / 100, 10) : this.config.schedulerWidth;
   }
 
   getResourceTableWidth() {
     const resourceTableConfigWidth = this.getResourceTableConfigWidth();
     const schedulerWidth = this.getSchedulerWidth();
-    let resourceTableWidth = this.isResourceViewResponsive() ? parseInt((schedulerWidth * Number(resourceTableConfigWidth.slice(0, -1))) / 100) : resourceTableConfigWidth;
+    let resourceTableWidth = this.isResourceViewResponsive() ? parseInt((schedulerWidth * Number(resourceTableConfigWidth.slice(0, -1))) / 100, 10) : resourceTableConfigWidth;
     if (this.isSchedulerResponsive() && this.getContentTableWidth() + resourceTableWidth < schedulerWidth) resourceTableWidth = schedulerWidth - this.getContentTableWidth();
     return resourceTableWidth;
   }
@@ -292,7 +294,7 @@ export default class SchedulerData {
   getContentCellWidth() {
     const contentCellConfigWidth = this.getContentCellConfigWidth();
     const schedulerWidth = this.getSchedulerWidth();
-    return this.isContentViewResponsive() ? parseInt((schedulerWidth * Number(contentCellConfigWidth.slice(0, -1))) / 100) : contentCellConfigWidth;
+    return this.isContentViewResponsive() ? parseInt((schedulerWidth * Number(contentCellConfigWidth.slice(0, -1))) / 100, 10) : contentCellConfigWidth;
   }
 
   getContentTableWidth() {
@@ -338,17 +340,17 @@ export default class SchedulerData {
   }
 
   getCellMaxEvents() {
-    return this.viewType === ViewType.Week
-      ? this.config.weekMaxEvents
-      : this.viewType === ViewType.Day
-        ? this.config.dayMaxEvents
-        : this.viewType === ViewType.Month
-          ? this.config.monthMaxEvents
-          : this.viewType === ViewType.Year
-            ? this.config.yearMaxEvents
-            : this.viewType === ViewType.Quarter
-              ? this.config.quarterMaxEvents
-              : this.config.customMaxEvents;
+    const viewConfigMap = {
+      [ViewType.Week]: 'weekMaxEvents',
+      [ViewType.Day]: 'dayMaxEvents',
+      [ViewType.Month]: 'monthMaxEvents',
+      [ViewType.Year]: 'yearMaxEvents',
+      [ViewType.Quarter]: 'quarterMaxEvents',
+    };
+
+    const configProperty = viewConfigMap[this.viewType] || 'customMaxEvents';
+
+    return this.config[configProperty];
   }
 
   getCalendarPopoverLocale() {
@@ -484,33 +486,35 @@ export default class SchedulerData {
   }
 
   getResourceTableConfigWidth() {
-    if (this.showAgenda) return this.config.agendaResourceTableWidth;
+    if (this.showAgenda) {
+      return this.config.agendaResourceTableWidth;
+    }
 
-    return this.viewType === ViewType.Week
-      ? this.config.weekResourceTableWidth
-      : this.viewType === ViewType.Day
-        ? this.config.dayResourceTableWidth
-        : this.viewType === ViewType.Month
-          ? this.config.monthResourceTableWidth
-          : this.viewType === ViewType.Year
-            ? this.config.yearResourceTableWidth
-            : this.viewType === ViewType.Quarter
-              ? this.config.quarterResourceTableWidth
-              : this.config.customResourceTableWidth;
+    const viewConfigMap = {
+      [ViewType.Week]: 'weekResourceTableWidth',
+      [ViewType.Day]: 'dayResourceTableWidth',
+      [ViewType.Month]: 'monthResourceTableWidth',
+      [ViewType.Year]: 'yearResourceTableWidth',
+      [ViewType.Quarter]: 'quarterResourceTableWidth',
+    };
+
+    const configProperty = viewConfigMap[this.viewType] || 'customResourceTableWidth';
+
+    return this.config[configProperty];
   }
 
   getContentCellConfigWidth() {
-    return this.viewType === ViewType.Week
-      ? this.config.weekCellWidth
-      : this.viewType === ViewType.Day
-        ? this.config.dayCellWidth
-        : this.viewType === ViewType.Month
-          ? this.config.monthCellWidth
-          : this.viewType === ViewType.Year
-            ? this.config.yearCellWidth
-            : this.viewType === ViewType.Quarter
-              ? this.config.quarterCellWidth
-              : this.config.customCellWidth;
+    const viewConfigMap = {
+      [ViewType.Week]: 'weekCellWidth',
+      [ViewType.Day]: 'dayCellWidth',
+      [ViewType.Month]: 'monthCellWidth',
+      [ViewType.Year]: 'yearCellWidth',
+      [ViewType.Quarter]: 'quarterCellWidth',
+    };
+
+    const configProperty = viewConfigMap[this.viewType] || 'customCellWidth';
+
+    return this.config[configProperty];
   }
 
   _setDocumentWidth(documentWidth) {
@@ -603,101 +607,171 @@ export default class SchedulerData {
   }
 
   _resolveDate(num, date = undefined) {
-    if (date !== undefined) this.selectDate = this.localeDayjs(date);
+    if (date !== undefined) {
+      this.selectDate = this.localeDayjs(date);
+    }
 
-    if (this.viewType === ViewType.Week) {
-      this.startDate = date !== undefined ? this.localeDayjs(date).startOf('week') : this.localeDayjs(this.startDate).add(num, 'weeks');
-      this.endDate = this.localeDayjs(this.startDate).endOf('week');
-    } else if (this.viewType === ViewType.Day) {
-      this.startDate = date !== undefined ? this.selectDate : this.localeDayjs(this.startDate).add(num, 'days');
-      this.endDate = this.startDate;
-    } else if (this.viewType === ViewType.Month) {
-      this.startDate = date !== undefined ? this.localeDayjs(date).startOf('month') : this.localeDayjs(this.startDate).add(num, 'months');
-      this.endDate = this.localeDayjs(this.startDate).endOf('month');
-    } else if (this.viewType === ViewType.Quarter) {
-      this.startDate = date !== undefined ? this.localeDayjs(date).startOf('quarter') : this.localeDayjs(this.startDate).add(num, 'quarters');
-      this.endDate = this.localeDayjs(this.startDate).endOf('quarter');
-    } else if (this.viewType === ViewType.Year) {
-      this.startDate = date !== undefined ? this.localeDayjs(date).startOf('year') : this.localeDayjs(this.startDate).add(num, 'years');
-      this.endDate = this.localeDayjs(this.startDate).endOf('year');
-    } else if (this.viewType === ViewType.Custom || this.viewType === ViewType.Custom1 || this.viewType === ViewType.Custom2) {
-      if (this.behaviors.getCustomDateFunc !== undefined) {
-        const customDate = this.behaviors.getCustomDateFunc(this, num, date);
-        this.startDate = this.localeDayjs(customDate.startDate);
-        this.endDate = this.localeDayjs(customDate.endDate);
-        if (customDate.cellUnit) this.cellUnit = customDate.cellUnit;
-      } else {
-        throw new Error('This is custom view type, set behaviors.getCustomDateFunc func to resolve the time window(startDate and endDate) yourself');
-      }
+    const setStartAndEndDates = unit => {
+      this.startDate = date !== undefined ? this.selectDate.startOf(unit) : this.startDate.add(num, `${unit}s`);
+      this.endDate = this.startDate.endOf(unit);
+    };
+
+    switch (this.viewType) {
+      case ViewType.Week:
+        setStartAndEndDates('week');
+        break;
+
+      case ViewType.Day:
+        this.startDate = date !== undefined ? this.selectDate : this.startDate.add(num, 'days');
+        this.endDate = this.startDate;
+        break;
+
+      case ViewType.Month:
+        setStartAndEndDates('month');
+        break;
+
+      case ViewType.Quarter:
+        setStartAndEndDates('quarter');
+        break;
+
+      case ViewType.Year:
+        setStartAndEndDates('year');
+        break;
+
+      case ViewType.Custom:
+      case ViewType.Custom1:
+      case ViewType.Custom2:
+        if (this.behaviors.getCustomDateFunc !== undefined) {
+          const customDate = this.behaviors.getCustomDateFunc(this, num, date);
+          this.startDate = this.localeDayjs(customDate.startDate);
+          this.endDate = this.localeDayjs(customDate.endDate);
+          if (customDate.cellUnit) {
+            this.cellUnit = customDate.cellUnit;
+          }
+        } else {
+          throw new Error('This is a custom view type, set behaviors.getCustomDateFunc func to resolve the time window (startDate and endDate) yourself');
+        }
+        break;
+
+      default:
+        break;
     }
   }
 
+  // Previous Code
+  // _createHeaders() {
+  //   const headers = [];
+  //   let start = this.localeDayjs(new Date(this.startDate));
+  //   let end = this.localeDayjs(new Date(this.endDate));
+  //   let header = start;
+
+  //   if (this.showAgenda) {
+  //     headers.push({ time: header.format(DATETIME_FORMAT), nonWorkingTime: false });
+  //   } else if (this.cellUnit === CellUnit.Hour) {
+  //     if (start.hour() === 0) {
+  //       start = start.add(this.config.dayStartFrom, 'hours');
+  //     }
+  //     if (end.hour() === 0) {
+  //       end = end.add(this.config.dayStopTo, 'hours');
+  //     }
+  //     header = start;
+
+  //     let prevHour = -1;
+  //     while (header >= start && header <= end) {
+  //       // prevent doubled hours on time change
+  //       if (header.hour() === prevHour) {
+  //         header = header.add(1, 'hours');
+  //         continue;
+  //       }
+  //       prevHour = header.hour();
+  //       const minuteSteps = this.getMinuteStepsInHour();
+  //       for (let i = 0; i < minuteSteps; i++) {
+  //         const hour = header.hour();
+  //         if (hour >= this.config.dayStartFrom && hour <= this.config.dayStopTo) {
+  //           const time = header.format(DATETIME_FORMAT);
+  //           const nonWorkingTime = this.behaviors.isNonWorkingTimeFunc(this, time);
+  //           headers.push({ time, nonWorkingTime });
+  //         }
+
+  //         header = header.add(this.config.minuteStep, 'minutes');
+  //       }
+  //     }
+  //   } else if (this.cellUnit === CellUnit.Day) {
+  //     while (header >= start && header <= end) {
+  //       const time = header.format(DATETIME_FORMAT);
+  //       const dayOfWeek = header.weekday();
+  //       if (this.config.displayWeekend || (dayOfWeek !== 0 && dayOfWeek !== 6)) {
+  //         const nonWorkingTime = this.behaviors.isNonWorkingTimeFunc(this, time);
+  //         headers.push({ time, nonWorkingTime });
+  //       }
+
+  //       header = header.add(1, 'days');
+  //     }
+  //   } else if (this.cellUnit === CellUnit.Week) {
+  //     while (header >= start && header <= end) {
+  //       const time = header.format(DATE_FORMAT);
+  //       headers.push({ time });
+  //       header = header.add(1, 'weeks').startOf('week');
+  //     }
+  //   } else if (this.cellUnit === CellUnit.Month) {
+  //     while (header >= start && header <= end) {
+  //       const time = header.format(DATE_FORMAT);
+  //       headers.push({ time });
+  //       header = header.add(1, 'months').startOf('month');
+  //     }
+  //   } else if (this.cellUnit === CellUnit.Year) {
+  //     while (header >= start && header <= end) {
+  //       const time = header.format(DATE_FORMAT);
+  //       headers.push({ time });
+  //       header = header.add(1, 'years').startOf('year');
+  //     }
+  //   }
+
+  //   this.headers = headers;
+  // }
+
   _createHeaders() {
     const headers = [];
-    let start = this.localeDayjs(new Date(this.startDate));
-    let end = this.localeDayjs(new Date(this.endDate));
-    let header = start;
+    const start = this.localeDayjs(new Date(this.startDate));
+    const end = this.localeDayjs(new Date(this.endDate));
 
-    if (this.showAgenda) {
-      headers.push({ time: header.format(DATETIME_FORMAT), nonWorkingTime: false });
-    } else if (this.cellUnit === CellUnit.Hour) {
-      if (start.hour() === 0) {
-        start = start.add(this.config.dayStartFrom, 'hours');
-      }
-      if (end.hour() === 0) {
-        end = end.add(this.config.dayStopTo, 'hours');
-      }
-      header = start;
-
-      let prevHour = -1;
-      while (header >= start && header <= end) {
-        // prevent doubled hours on time change
-        if (header.hour() === prevHour) {
-          header = header.add(1, 'hours');
-          continue;
-        }
-        prevHour = header.hour();
-        const minuteSteps = this.getMinuteStepsInHour();
-        for (let i = 0; i < minuteSteps; i++) {
-          const hour = header.hour();
-          if (hour >= this.config.dayStartFrom && hour <= this.config.dayStopTo) {
-            const time = header.format(DATETIME_FORMAT);
+    const processHeader = (header, format, unit, incrementFn) => {
+      let head = header;
+      while (head >= start && head <= end) {
+        const time = head.format(format);
+        if (unit === CellUnit.Day) {
+          const dayOfWeek = head.weekday();
+          if (this.config.displayWeekend || (dayOfWeek !== 0 && dayOfWeek !== 6)) {
             const nonWorkingTime = this.behaviors.isNonWorkingTimeFunc(this, time);
             headers.push({ time, nonWorkingTime });
           }
-
-          header = header.add(this.config.minuteStep, 'minutes');
+        } else {
+          headers.push({ time });
         }
+        head = head.add(1, incrementFn);
       }
-    } else if (this.cellUnit === CellUnit.Day) {
-      while (header >= start && header <= end) {
-        const time = header.format(DATETIME_FORMAT);
-        const dayOfWeek = header.weekday();
-        if (this.config.displayWeekend || (dayOfWeek !== 0 && dayOfWeek !== 6)) {
+    };
+
+    if (this.showAgenda) {
+      headers.push({ time: start.format(DATETIME_FORMAT), nonWorkingTime: false });
+    } else if (this.cellUnit === CellUnit.Hour) {
+      const hourIncrement = this.config.minuteStep < 60 ? 'minutes' : 'hours';
+      const minuteSteps = this.getMinuteStepsInHour();
+      let header = start.hour() === 0 ? start.add(this.config.dayStartFrom, 'hours') : start;
+      while (header <= end) {
+        const hour = header.hour();
+        if (hour >= this.config.dayStartFrom && hour <= this.config.dayStopTo) {
+          const time = header.format(DATETIME_FORMAT);
           const nonWorkingTime = this.behaviors.isNonWorkingTimeFunc(this, time);
           headers.push({ time, nonWorkingTime });
         }
-
-        header = header.add(1, 'days');
+        header = header.add(minuteSteps, hourIncrement);
       }
-    } else if (this.cellUnit === CellUnit.Week) {
-      while (header >= start && header <= end) {
-        const time = header.format(DATE_FORMAT);
-        headers.push({ time });
-        header = header.add(1, 'weeks').startOf('week');
-      }
-    } else if (this.cellUnit === CellUnit.Month) {
-      while (header >= start && header <= end) {
-        const time = header.format(DATE_FORMAT);
-        headers.push({ time });
-        header = header.add(1, 'months').startOf('month');
-      }
-    } else if (this.cellUnit === CellUnit.Year) {
-      while (header >= start && header <= end) {
-        const time = header.format(DATE_FORMAT);
-        headers.push({ time });
-        header = header.add(1, 'years').startOf('year');
-      }
+    } else {
+      const header = start;
+      const format = this.cellUnit === CellUnit.Day ? DATETIME_FORMAT : DATE_FORMAT;
+      const incrementFn = this.cellUnit === CellUnit.Day ? 'days' : `${this.cellUnit}s`;
+      processHeader(header, format, this.cellUnit, incrementFn);
     }
 
     this.headers = headers;
@@ -706,27 +780,34 @@ export default class SchedulerData {
   _createInitHeaderEvents(header) {
     const start = this.localeDayjs(new Date(header.time));
     const startValue = start.format(DATETIME_FORMAT);
-    const endValue = this.showAgenda
-      ? this.viewType === ViewType.Week
-        ? start.add(1, 'weeks').format(DATETIME_FORMAT)
-        : this.viewType === ViewType.Day
-          ? start.add(1, 'days').format(DATETIME_FORMAT)
-          : this.viewType === ViewType.Month
-            ? start.add(1, 'months').format(DATETIME_FORMAT)
-            : this.viewType === ViewType.Year
-              ? start.add(1, 'years').format(DATETIME_FORMAT)
-              : this.viewType === ViewType.Quarter
-                ? start.add(1, 'quarters').format(DATETIME_FORMAT)
-                : this.localeDayjs(new Date(this.endDate)).add(1, 'days').format(DATETIME_FORMAT)
-      : this.cellUnit === CellUnit.Hour
-        ? start.add(this.config.minuteStep, 'minutes').format(DATETIME_FORMAT)
-        : this.cellUnit === CellUnit.Year
-          ? start.add(1, 'years').format(DATE_FORMAT)
-          : this.cellUnit === CellUnit.Month
-            ? start.add(1, 'months').format(DATE_FORMAT)
-            : this.cellUnit === CellUnit.Week
-              ? start.add(1, 'weeks').format(DATE_FORMAT)
-              : start.add(1, 'days').format(DATETIME_FORMAT);
+
+    let endValue;
+    if (this.showAgenda) {
+      const incrementUnit = {
+        [ViewType.Day]: 'days',
+        [ViewType.Week]: 'weeks',
+        [ViewType.Month]: 'months',
+        [ViewType.Year]: 'years',
+        [ViewType.Quarter]: 'quarters',
+      }[this.viewType] || 'days';
+
+      if (incrementUnit === 'days') {
+        endValue = this.localeDayjs(new Date(this.endDate)).add(1, 'days').format(DATETIME_FORMAT);
+      } else {
+        endValue = start.add(1, incrementUnit).format(DATETIME_FORMAT);
+      }
+    } else {
+      const incrementUnit = {
+        [CellUnit.Hour]: 'minutes',
+        [CellUnit.Week]: 'weeks',
+        [CellUnit.Month]: 'months',
+        [CellUnit.Year]: 'years',
+      }[this.cellUnit] || 'days';
+
+      endValue = start
+        .add(incrementUnit === 'minutes' ? this.config.minuteStep : 1, incrementUnit)
+        .format(this.cellUnit === CellUnit.Year || this.cellUnit === CellUnit.Month || this.cellUnit === CellUnit.Week ? DATE_FORMAT : DATETIME_FORMAT);
+    }
 
     return {
       time: header.time,
@@ -736,16 +817,12 @@ export default class SchedulerData {
       count: 0,
       addMore: 0,
       addMoreIndex: 0,
-      events: [, , ,],
+      events: Array(3),
     };
   }
 
   _createHeaderEvent(render, span, eventItem) {
-    return {
-      render,
-      span,
-      eventItem,
-    };
+    return { render, span, eventItem };
   }
 
   _getEventSlotId(event) {
@@ -889,10 +966,10 @@ export default class SchedulerData {
           return 0;
       }
 
-      const date1_ms = date1.getTime();
-      const date2_ms = date2.getTime();
+      const date1Ms = date1.getTime();
+      const date2Ms = date2.getTime();
 
-      const diff = (date2_ms - date1_ms) / one;
+      const diff = (date2Ms - date1Ms) / one;
       return diff < 0 ? 0 : diff;
     };
 
@@ -1045,7 +1122,7 @@ export default class SchedulerData {
 
             if (pos === -1) {
               let tmp = 0;
-              while (header.events[tmp] !== undefined) tmp++;
+              while (header.events[tmp] !== undefined) tmp += 1;
 
               pos = tmp;
             }
@@ -1074,11 +1151,11 @@ export default class SchedulerData {
             let index = 0;
             while (index < cellMaxEventsCount - 1) {
               if (headerItem.events[index] !== undefined) {
-                renderItemsCount++;
+                renderItemsCount += 1;
                 addMoreIndex = index + 1;
               }
 
-              index++;
+              index += 1;
             }
 
             if (headerItem.events[index] !== undefined) {
