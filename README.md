@@ -1,5 +1,5 @@
 # React Big Schedule (react-big-schedule) 
- [![NPM version][npm-image]][npm-url] [![MIT License][mit-image]][mit-url]  [![CodeQL][codeql-image]][codeql-url]
+ [![NPM version][npm-image]][npm-url] [![MIT License][mit-image]][mit-url]  [![CodeQL][codeql-image]][codeql-url] [![CodeFactor][codeFactor-badge]][codeFactor-link]
  
  [npm-image]: http://img.shields.io/npm/v/react-big-schedule.svg
  [npm-url]: http://npmjs.org/package/react-big-schedule
@@ -7,6 +7,8 @@
  [mit-url]: https://github.com/react-scheduler/react-big-schedule/blob/master/LICENSE
  [codeql-image]: https://github.com/react-scheduler/react-big-schedule/actions/workflows/github-code-scanning/codeql/badge.svg?branch=master
  [codeql-url]: https://github.com/react-scheduler/react-big-schedule/actions/workflows/github-code-scanning/codeql
+ [codeFactor-badge]: https://www.codefactor.io/repository/github/react-scheduler/react-big-schedule/badge
+ [codeFactor-link]: https://www.codefactor.io/repository/github/react-scheduler/react-big-schedule
 
 
 React Big Schedule is a powerful and intuitive scheduler and resource planning solution built with React. Seamlessly integrate this modern, browser-compatible component into your applications to effectively manage time, appointments, and resources. With drag-and-drop functionality, interactive UI, and granular views, react-big-schedule empowers users to effortlessly schedule and allocate resources with precision.
