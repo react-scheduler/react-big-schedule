@@ -1,16 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const AddMore = ({ schedulerData, number, left, width, top, clickAction, headerItem }) => {
+function AddMore({ schedulerData, number, left, width, top, clickAction, headerItem }) {
   const { config } = schedulerData;
   const content = `+${number} more`;
 
   return (
-    <a className='timeline-event' style={{ left, width, top }} onClick={() => clickAction(headerItem)}>
+    <button type="button" className="timeline-event" style={{ left, width, top }} onClick={() => clickAction(headerItem)}>
       <div style={{ height: config.eventItemHeight, color: '#999', textAlign: 'center' }}>{content}</div>
-    </a>
+    </button>
   );
-};
+}
 
 AddMore.propTypes = {
   schedulerData: PropTypes.object.isRequired,

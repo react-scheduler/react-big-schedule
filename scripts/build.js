@@ -1,5 +1,3 @@
-'use strict';
-
 // Do this as the first thing so that any code reading it knows the right env.
 process.env.BABEL_ENV = 'production';
 process.env.NODE_ENV = 'production';
@@ -14,6 +12,7 @@ process.on('unhandledRejection', err => {
 const util = require('util');
 const path = require('path');
 const exec = util.promisify(require('child_process').exec);
+// eslint-disable-next-line import/no-extraneous-dependencies
 const fs = require('fs-extra');
 
 async function build() {
@@ -27,11 +26,11 @@ async function build() {
   try {
     // clean
     process.stdout.write('Cleaning... \n');
-    const cleanResult = await exec('npm run clean');
+    await exec('npm run clean');
 
     // transpiling and copy js
     process.stdout.write('Transpiling js with babel... \n');
-    const jsResult = await exec(`babel ${sourceDir} --out-dir ${jsTarget} --ignore "${excludedFolders.map(folder => path.join(sourceDir, folder)).join(',')}"`);
+    await exec(`babel ${sourceDir} --out-dir ${jsTarget} --ignore "${excludedFolders.map(folder => path.join(sourceDir, folder)).join(',')}"`);
 
     process.stdout.write('Copying CSS Files... \n');
     await fs.copy(`${sourceDir}/css/`, cssTarget);

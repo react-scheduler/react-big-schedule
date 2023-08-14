@@ -50,9 +50,9 @@ function AddMorePopover(props) {
           <span className="base-text">{header}</span>
         </Col>
         <Col span={2}>
-          <span onClick={() => closeAction(undefined)}>
+          <button type="button" onClick={() => closeAction(undefined)}>
             <CloseOutlined />
-          </span>
+          </button>
         </Col>
       </Row>
       {eventList?.filter(Boolean)}

@@ -1,4 +1,4 @@
-import { ViewType, CellUnit } from '../components';
+import { ViewType, CellUnit } from '../config/default';
 
 // getSummary func example
 // export const getSummary = (schedulerData, headerEvents, slotId, slotName, headerStart, headerEnd) => ({ text: 'Summary', color: 'red', fontSize: '1.2rem' });

@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { SummaryPos } from '../config/default';
 
-const Summary = ({ schedulerData, summary, left, width, top }) => {
+function Summary({ schedulerData, summary, left, width, top }) {
   const { config } = schedulerData;
   const color = summary.color !== undefined ? summary.color : config.summaryColor;
   let textAlign = 'center';
@@ -15,19 +15,19 @@ const Summary = ({ schedulerData, summary, left, width, top }) => {
 
   const style = {
     height: config.eventItemHeight,
-    color: color,
-    textAlign: textAlign,
+    color,
+    textAlign,
     marginLeft: '6px',
     marginRight: '6px',
     ...(summary.fontSize !== undefined ? { fontSize: summary.fontSize } : {}),
   };
 
   return (
-    <a className='timeline-event header2-text' style={{ left, width, top, cursor: 'default' }}>
+    <a className="timeline-event header2-text" style={{ left, width, top, cursor: 'default' }}>
       <div style={style}>{summary.text}</div>
     </a>
   );
-};
+}
 
 Summary.propTypes = {
   schedulerData: PropTypes.object.isRequired,

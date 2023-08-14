@@ -4,12 +4,11 @@ import * as antdLocale from 'antd/locale/pt_BR';
 
 import { Scheduler, SchedulerData, ViewType, DemoData, wrapperFun } from '../index';
 
-
 class Basic extends Component {
   constructor(props) {
     super(props);
 
-    let schedulerData = new SchedulerData('2022-12-02', ViewType.Month, false, false, {
+    const schedulerData = new SchedulerData('2022-12-02', ViewType.Month, false, false, {
       dayMaxEvents: 99,
       weekMaxEvents: 9669,
       monthMaxEvents: 9669,
@@ -40,8 +39,8 @@ class Basic extends Component {
         onViewChange={this.onViewChange}
         // eventItemClick={this.eventClicked}
         viewEventClick={this.ops1}
-        viewEventText='Ops 1'
-        viewEvent2Text='Ops 2'
+        viewEventText="Ops 1"
+        viewEvent2Text="Ops 2"
         viewEvent2Click={this.ops2}
         updateEventStart={this.updateEventStart}
         updateEventEnd={this.updateEventEnd}
@@ -74,11 +73,11 @@ class Basic extends Component {
     schedulerData.setEvents(DemoData.events);
     this.setState({ viewModel: schedulerData });
     function secondsBetween(date1, date2) {
-      var diff = Math.abs(date1.getTime() - date2.getTime());
+      const diff = Math.abs(date1.getTime() - date2.getTime());
       return diff / 1000;
     }
 
-    console.log('Elapsed seconds: ' + secondsBetween(start, new Date()));
+    console.log(`Elapsed seconds: ${secondsBetween(start, new Date())}`);
   };
 
   onSelectDate = (schedulerData, date) => {
@@ -108,11 +107,11 @@ class Basic extends Component {
         if (item.id >= newFreshId) newFreshId = item.id + 1;
       });
 
-      let newEvent = {
+      const newEvent = {
         id: newFreshId,
         title: 'New event you just created',
-        start: start,
-        end: end,
+        start,
+        end,
         resourceId: slotId,
         bgColor: 'purple',
       };

@@ -6,8 +6,8 @@ import AddResourceForm from './AddResourceForm';
 class AddResource extends Component {
   constructor(props) {
     super(props);
-    let today = dayjs().format(DATE_FORMAT);
-    let schedulerData = new SchedulerData(today, ViewType.Week);
+    const today = dayjs().format(DATE_FORMAT);
+    const schedulerData = new SchedulerData(today, ViewType.Week);
     schedulerData.localeDayjs.locale('en');
     schedulerData.setResources(DemoData.resources);
     schedulerData.setEvents(DemoData.events);
@@ -18,11 +18,13 @@ class AddResource extends Component {
   }
 
   showModal = () => this.setState({ visible: true });
+
   handleCancel = () => this.setState({ visible: false });
+
   saveFormRef = form => (this.form = form);
 
   handleCreate = () => {
-    const form = this.form;
+    const { form } = this;
     form.validateFields().then(values => {
       this.addResource(values.name);
       form.resetFields();
@@ -33,7 +35,7 @@ class AddResource extends Component {
   render() {
     const { viewModel } = this.state;
 
-    let leftCustomHeader = (
+    const leftCustomHeader = (
       <div>
         <span style={{ fontWeight: 'bold' }}>
           <a onClick={this.showModal}>Add a resource</a>
@@ -54,8 +56,8 @@ class AddResource extends Component {
             onViewChange={this.onViewChange}
             eventItemClick={this.eventClicked}
             viewEventClick={this.ops1}
-            viewEventText='Ops 1'
-            viewEvent2Text='Ops 2'
+            viewEventText="Ops 1"
+            viewEvent2Text="Ops 2"
             viewEvent2Click={this.ops2}
             updateEventStart={this.updateEventStart}
             updateEventEnd={this.updateEventEnd}
@@ -112,7 +114,7 @@ class AddResource extends Component {
         if (item.id >= newFreshId) newFreshId = item.id + 1;
       });
 
-      let newEvent = { id: newFreshId, title: 'New event you just created', start: start, end: end, resourceId: slotId, bgColor: 'purple' };
+      const newEvent = { id: newFreshId, title: 'New event you just created', start, end, resourceId: slotId, bgColor: 'purple' };
       schedulerData.addEvent(newEvent);
       this.setState({ viewModel: schedulerData });
     }
@@ -144,9 +146,9 @@ class AddResource extends Component {
   };
 
   addResource = resourceName => {
-    let schedulerData = this.state.viewModel;
-    let newFreshId = schedulerData.resources.length + 1;
-    let newFreshName = resourceName;
+    const schedulerData = this.state.viewModel;
+    const newFreshId = schedulerData.resources.length + 1;
+    const newFreshName = resourceName;
     schedulerData.addResource({ id: newFreshId, name: newFreshName });
     this.setState({ viewModel: schedulerData });
   };

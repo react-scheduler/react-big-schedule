@@ -2,8 +2,7 @@ import React, { Component } from 'react';
 import { PropTypes } from 'prop-types';
 import { Popover } from 'antd';
 import EventItemPopover from './EventItemPopover';
-import { CellUnit, DATETIME_FORMAT } from './index';
-import { DnDTypes } from '../config/default';
+import { DnDTypes, CellUnit, DATETIME_FORMAT } from '../config/default';
 
 class EventItem extends Component {
   constructor(props) {
@@ -11,15 +10,15 @@ class EventItem extends Component {
 
     const { left, top, width } = props;
     this.state = {
-      left: left,
-      top: top,
-      width: width,
+      left,
+      top,
+      width,
       contentMousePosX: 0,
       eventItemLeftRect: 0,
       eventItemRightRect: 0,
     };
-    this.startResizer = null;
-    this.endResizer = null;
+    this.startResizer = undefined;
+    this.endResizer = undefined;
 
     this.supportTouch = false; // 'ontouchstart' in window;
 
@@ -27,40 +26,13 @@ class EventItem extends Component {
     this._isMounted = false;
   }
 
-  static propTypes = {
-    schedulerData: PropTypes.object.isRequired,
-    eventItem: PropTypes.object.isRequired,
-    isStart: PropTypes.bool.isRequired,
-    isEnd: PropTypes.bool.isRequired,
-    left: PropTypes.number.isRequired,
-    width: PropTypes.number.isRequired,
-    top: PropTypes.number.isRequired,
-    isInPopover: PropTypes.bool.isRequired,
-    leftIndex: PropTypes.number.isRequired,
-    rightIndex: PropTypes.number.isRequired,
-    isDragging: PropTypes.bool,
-    connectDragSource: PropTypes.func,
-    connectDragPreview: PropTypes.func,
-    updateEventStart: PropTypes.func,
-    updateEventEnd: PropTypes.func,
-    moveEvent: PropTypes.func,
-    subtitleGetter: PropTypes.func,
-    eventItemClick: PropTypes.func,
-    viewEventClick: PropTypes.func,
-    viewEventText: PropTypes.string,
-    viewEvent2Click: PropTypes.func,
-    viewEvent2Text: PropTypes.string,
-    conflictOccurred: PropTypes.func,
-    eventItemTemplateResolver: PropTypes.func,
-  };
-
   componentDidUpdate(prevProps, nextProps) {
     if (prevProps !== this.props) {
       const { left, top, width } = this.props;
       this.setState({
-        left: left,
-        top: top,
-        width: width,
+        left,
+        top,
+        width,
       });
 
       this.subscribeResizeEvent(this.props);
@@ -75,15 +47,15 @@ class EventItem extends Component {
 
   initStartDrag = ev => {
     const { schedulerData, eventItem } = this.props;
-    let slotId = schedulerData._getEventSlotId(eventItem);
-    let slot = schedulerData.getSlotById(slotId);
+    const slotId = schedulerData._getEventSlotId(eventItem);
+    const slot = schedulerData.getSlotById(slotId);
     if (!!slot && !!slot.groupOnly) return;
     if (schedulerData._isResizing()) return;
 
     ev.stopPropagation();
     let clientX = 0;
     if (this.supportTouch) {
-      if (ev.changedTouches.length == 0) return;
+      if (ev.changedTouches.length === 0) return;
       const touch = ev.changedTouches[0];
       clientX = touch.pageX;
     } else {
@@ -115,17 +87,17 @@ class EventItem extends Component {
 
     let clientX = 0;
     if (this.supportTouch) {
-      if (ev.changedTouches.length == 0) return;
+      if (ev.changedTouches.length === 0) return;
       const touch = ev.changedTouches[0];
       clientX = touch.pageX;
     } else {
       clientX = ev.clientX;
     }
     const { left, width, leftIndex, rightIndex, schedulerData } = this.props;
-    let cellWidth = schedulerData.getContentCellWidth();
-    let offset = leftIndex > 0 ? 5 : 6;
-    let minWidth = cellWidth - offset;
-    let maxWidth = rightIndex * cellWidth - offset;
+    const cellWidth = schedulerData.getContentCellWidth();
+    const offset = leftIndex > 0 ? 5 : 6;
+    const minWidth = cellWidth - offset;
+    const maxWidth = rightIndex * cellWidth - offset;
     const { startX } = this.state;
     let newLeft = left + clientX - startX;
     let newWidth = width + startX - clientX;
@@ -158,11 +130,11 @@ class EventItem extends Component {
 
     let clientX = 0;
     if (this.supportTouch) {
-      if (ev.changedTouches.length == 0) {
+      if (ev.changedTouches.length === 0) {
         this.setState({
-          left: left,
-          top: top,
-          width: width,
+          left,
+          top,
+          width,
         });
         return;
       }
@@ -172,14 +144,14 @@ class EventItem extends Component {
       clientX = ev.clientX;
     }
     const { cellUnit, events, config, localeDayjs } = schedulerData;
-    let cellWidth = schedulerData.getContentCellWidth();
-    let offset = leftIndex > 0 ? 5 : 6;
-    let minWidth = cellWidth - offset;
-    let maxWidth = rightIndex * cellWidth - offset;
+    const cellWidth = schedulerData.getContentCellWidth();
+    const offset = leftIndex > 0 ? 5 : 6;
+    const minWidth = cellWidth - offset;
+    const maxWidth = rightIndex * cellWidth - offset;
     const { startX } = this.state;
-    let newWidth = width + startX - clientX;
-    let deltaX = clientX - startX;
-    let sign = deltaX < 0 ? -1 : deltaX === 0 ? 0 : 1;
+    const newWidth = width + startX - clientX;
+    const deltaX = clientX - startX;
+    const sign = deltaX < 0 ? -1 : deltaX === 0 ? 0 : 1;
     let count = (sign > 0 ? Math.floor(Math.abs(deltaX) / cellWidth) : Math.ceil(Math.abs(deltaX) / cellWidth)) * sign;
     if (newWidth < minWidth) count = rightIndex - leftIndex - 1;
     else if (newWidth > maxWidth) count = -leftIndex;
@@ -188,14 +160,14 @@ class EventItem extends Component {
       .format(DATETIME_FORMAT);
     if (count !== 0 && cellUnit !== CellUnit.Hour && config.displayWeekend === false) {
       if (count > 0) {
-        let tempCount = 0,
-          i = 0;
+        let tempCount = 0;
+        let i = 0;
         while (true) {
-          i++;
-          let tempStart = localeDayjs(new Date(eventItem.start)).add(i, 'days');
-          let dayOfWeek = tempStart.weekday();
+          i += 1;
+          const tempStart = localeDayjs(new Date(eventItem.start)).add(i, 'days');
+          const dayOfWeek = tempStart.weekday();
           if (dayOfWeek !== 0 && dayOfWeek !== 6) {
-            tempCount++;
+            tempCount += 1;
             if (tempCount === count) {
               newStart = tempStart.format(DATETIME_FORMAT);
               break;
@@ -203,14 +175,14 @@ class EventItem extends Component {
           }
         }
       } else {
-        let tempCount = 0,
-          i = 0;
+        let tempCount = 0;
+        let i = 0;
         while (true) {
-          i--;
-          let tempStart = localeDayjs(new Date(eventItem.start)).add(i, 'days');
-          let dayOfWeek = tempStart.weekday();
+          i -= 1;
+          const tempStart = localeDayjs(new Date(eventItem.start)).add(i, 'days');
+          const dayOfWeek = tempStart.weekday();
           if (dayOfWeek !== 0 && dayOfWeek !== 6) {
-            tempCount--;
+            tempCount -= 1;
             if (tempCount === count) {
               newStart = tempStart.format(DATETIME_FORMAT);
               break;
@@ -221,18 +193,18 @@ class EventItem extends Component {
     }
 
     let hasConflict = false;
-    let slotId = schedulerData._getEventSlotId(eventItem);
-    let slotName = undefined;
-    let slot = schedulerData.getSlotById(slotId);
-    if (!!slot) slotName = slot.name;
+    const slotId = schedulerData._getEventSlotId(eventItem);
+    let slotName;
+    const slot = schedulerData.getSlotById(slotId);
+    if (slot) slotName = slot.name;
     if (config.checkConflict) {
-      let start = localeDayjs(new Date(newStart)),
-        end = localeDayjs(new Date(eventItem.end));
+      const start = localeDayjs(new Date(newStart));
+      const end = localeDayjs(new Date(eventItem.end));
 
       events.forEach(e => {
         if (schedulerData._getEventSlotId(e) === slotId && e.id !== eventItem.id) {
-          let eStart = localeDayjs(new Date(e.start)),
-            eEnd = localeDayjs(new Date(e.end));
+          const eStart = localeDayjs(new Date(e.start));
+          const eEnd = localeDayjs(new Date(e.end));
           if ((start >= eStart && start < eEnd) || (end > eStart && end <= eEnd) || (eStart >= start && eStart < end) || (eEnd > start && eEnd <= end)) hasConflict = true;
         }
       });
@@ -240,20 +212,18 @@ class EventItem extends Component {
 
     if (hasConflict) {
       this.setState({
-        left: left,
-        top: top,
-        width: width,
+        left,
+        top,
+        width,
       });
 
-      if (conflictOccurred != undefined) {
+      if (conflictOccurred !== undefined) {
         conflictOccurred(schedulerData, 'StartResize', eventItem, DnDTypes.EVENT, slotId, slotName, newStart, eventItem.end);
       } else {
         console.log('Conflict occurred, set conflictOccurred func in Scheduler to handle it');
       }
       this.subscribeResizeEvent(this.props);
-    } else {
-      if (updateEventStart != undefined) updateEventStart(schedulerData, eventItem, newStart);
-    }
+    } else if (updateEventStart !== undefined) updateEventStart(schedulerData, eventItem, newStart);
   };
 
   cancelStartDrag = ev => {
@@ -267,23 +237,23 @@ class EventItem extends Component {
     const { schedulerData, left, top, width } = this.props;
     schedulerData._stopResizing();
     this.setState({
-      left: left,
-      top: top,
-      width: width,
+      left,
+      top,
+      width,
     });
   };
 
   initEndDrag = ev => {
     const { schedulerData, eventItem } = this.props;
-    let slotId = schedulerData._getEventSlotId(eventItem);
-    let slot = schedulerData.getSlotById(slotId);
+    const slotId = schedulerData._getEventSlotId(eventItem);
+    const slot = schedulerData.getSlotById(slotId);
     if (!!slot && !!slot.groupOnly) return;
     if (schedulerData._isResizing()) return;
 
     ev.stopPropagation();
     let clientX = 0;
     if (this.supportTouch) {
-      if (ev.changedTouches.length == 0) return;
+      if (ev.changedTouches.length === 0) return;
       const touch = ev.changedTouches[0];
       clientX = touch.pageX;
     } else {
@@ -315,7 +285,7 @@ class EventItem extends Component {
     ev.stopPropagation();
     let clientX = 0;
     if (this.supportTouch) {
-      if (ev.changedTouches.length == 0) return;
+      if (ev.changedTouches.length === 0) return;
       const touch = ev.changedTouches[0];
       clientX = touch.pageX;
     } else {
@@ -323,10 +293,10 @@ class EventItem extends Component {
     }
     const { width, leftIndex, schedulerData } = this.props;
     const { headers } = schedulerData;
-    let cellWidth = schedulerData.getContentCellWidth();
-    let offset = leftIndex > 0 ? 5 : 6;
-    let minWidth = cellWidth - offset;
-    let maxWidth = (headers.length - leftIndex) * cellWidth - offset;
+    const cellWidth = schedulerData.getContentCellWidth();
+    const offset = leftIndex > 0 ? 5 : 6;
+    const minWidth = cellWidth - offset;
+    const maxWidth = (headers.length - leftIndex) * cellWidth - offset;
     const { endX } = this.state;
 
     let newWidth = width + clientX - endX;
@@ -355,11 +325,11 @@ class EventItem extends Component {
 
     let clientX = 0;
     if (this.supportTouch) {
-      if (ev.changedTouches.length == 0) {
+      if (ev.changedTouches.length === 0) {
         this.setState({
-          left: left,
-          top: top,
-          width: width,
+          left,
+          top,
+          width,
         });
         return;
       }
@@ -369,15 +339,15 @@ class EventItem extends Component {
       clientX = ev.clientX;
     }
     const { headers, cellUnit, events, config, localeDayjs } = schedulerData;
-    let cellWidth = schedulerData.getContentCellWidth();
-    let offset = leftIndex > 0 ? 5 : 6;
-    let minWidth = cellWidth - offset;
-    let maxWidth = (headers.length - leftIndex) * cellWidth - offset;
+    const cellWidth = schedulerData.getContentCellWidth();
+    const offset = leftIndex > 0 ? 5 : 6;
+    const minWidth = cellWidth - offset;
+    const maxWidth = (headers.length - leftIndex) * cellWidth - offset;
     const { endX } = this.state;
 
-    let newWidth = width + clientX - endX;
-    let deltaX = newWidth - width;
-    let sign = deltaX < 0 ? -1 : deltaX === 0 ? 0 : 1;
+    const newWidth = width + clientX - endX;
+    const deltaX = newWidth - width;
+    const sign = deltaX < 0 ? -1 : deltaX === 0 ? 0 : 1;
     let count = (sign < 0 ? Math.floor(Math.abs(deltaX) / cellWidth) : Math.ceil(Math.abs(deltaX) / cellWidth)) * sign;
     if (newWidth < minWidth) count = leftIndex - rightIndex + 1;
     else if (newWidth > maxWidth) count = headers.length - rightIndex;
@@ -386,12 +356,12 @@ class EventItem extends Component {
       .format(DATETIME_FORMAT);
     if (count !== 0 && cellUnit !== CellUnit.Hour && config.displayWeekend === false) {
       if (count > 0) {
-        let tempCount = 0,
-          i = 0;
+        let tempCount = 0;
+        let i = 0;
         while (true) {
           i++;
-          let tempEnd = localeDayjs(new Date(eventItem.end)).add(i, 'days');
-          let dayOfWeek = tempEnd.weekday();
+          const tempEnd = localeDayjs(new Date(eventItem.end)).add(i, 'days');
+          const dayOfWeek = tempEnd.weekday();
           if (dayOfWeek !== 0 && dayOfWeek !== 6) {
             tempCount++;
             if (tempCount === count) {
@@ -401,12 +371,12 @@ class EventItem extends Component {
           }
         }
       } else {
-        let tempCount = 0,
-          i = 0;
+        let tempCount = 0;
+        let i = 0;
         while (true) {
           i--;
-          let tempEnd = localeDayjs(new Date(eventItem.end)).add(i, 'days');
-          let dayOfWeek = tempEnd.weekday();
+          const tempEnd = localeDayjs(new Date(eventItem.end)).add(i, 'days');
+          const dayOfWeek = tempEnd.weekday();
           if (dayOfWeek !== 0 && dayOfWeek !== 6) {
             tempCount--;
             if (tempCount === count) {
@@ -419,18 +389,18 @@ class EventItem extends Component {
     }
 
     let hasConflict = false;
-    let slotId = schedulerData._getEventSlotId(eventItem);
-    let slotName = undefined;
-    let slot = schedulerData.getSlotById(slotId);
-    if (!!slot) slotName = slot.name;
+    const slotId = schedulerData._getEventSlotId(eventItem);
+    let slotName;
+    const slot = schedulerData.getSlotById(slotId);
+    if (slot) slotName = slot.name;
     if (config.checkConflict) {
-      let start = localeDayjs(new Date(eventItem.start)),
-        end = localeDayjs(new Date(newEnd));
+      const start = localeDayjs(new Date(eventItem.start));
+      const end = localeDayjs(new Date(newEnd));
 
       events.forEach(e => {
         if (schedulerData._getEventSlotId(e) === slotId && e.id !== eventItem.id) {
-          let eStart = localeDayjs(new Date(e.start)),
-            eEnd = localeDayjs(new Date(e.end));
+          const eStart = localeDayjs(new Date(e.start));
+          const eEnd = localeDayjs(new Date(e.end));
           if ((start >= eStart && start < eEnd) || (end > eStart && end <= eEnd) || (eStart >= start && eStart < end) || (eEnd > start && eEnd <= end)) hasConflict = true;
         }
       });
@@ -438,20 +408,18 @@ class EventItem extends Component {
 
     if (hasConflict) {
       this.setState({
-        left: left,
-        top: top,
-        width: width,
+        left,
+        top,
+        width,
       });
 
-      if (conflictOccurred != undefined) {
+      if (conflictOccurred !== undefined) {
         conflictOccurred(schedulerData, 'EndResize', eventItem, DnDTypes.EVENT, slotId, slotName, eventItem.start, newEnd);
       } else {
         console.log('Conflict occurred, set conflictOccurred func in Scheduler to handle it');
       }
       this.subscribeResizeEvent(this.props);
-    } else {
-      if (updateEventEnd != undefined) updateEventEnd(schedulerData, eventItem, newEnd);
-    }
+    } else if (updateEventEnd !== undefined) updateEventEnd(schedulerData, eventItem, newEnd);
   };
 
   cancelEndDrag = ev => {
@@ -465,9 +433,9 @@ class EventItem extends Component {
     const { schedulerData, left, top, width } = this.props;
     schedulerData._stopResizing();
     this.setState({
-      left: left,
-      top: top,
-      width: width,
+      left,
+      top,
+      width,
     });
   };
 
@@ -475,40 +443,40 @@ class EventItem extends Component {
     const { eventItem, isStart, isEnd, isInPopover, eventItemClick, schedulerData, isDragging, connectDragSource, connectDragPreview, eventItemTemplateResolver } = this.props;
     const { config, localeDayjs } = schedulerData;
     const { left, width, top } = this.state;
-    let roundCls = isStart ? (isEnd ? 'round-all' : 'round-head') : isEnd ? 'round-tail' : 'round-none';
+    const roundCls = isStart ? (isEnd ? 'round-all' : 'round-head') : isEnd ? 'round-tail' : 'round-none';
     let bgColor = config.defaultEventBgColor;
     const popoverPlacement = config.eventItemPopoverPlacement;
     const isPopoverPlacementMousePosition = /(top|bottom)(Right|Left)MousePosition/.test(popoverPlacement);
 
-    if (!!eventItem.bgColor) bgColor = eventItem.bgColor;
+    if (eventItem.bgColor) bgColor = eventItem.bgColor;
 
-    let titleText = schedulerData.behaviors.getEventTextFunc(schedulerData, eventItem);
-    let content = <EventItemPopover {...this.props} eventItem={eventItem} title={eventItem.title} startTime={eventItem.start} endTime={eventItem.end} statusColor={bgColor} />;
+    const titleText = schedulerData.behaviors.getEventTextFunc(schedulerData, eventItem);
+    const content = <EventItemPopover {...this.props} eventItem={eventItem} title={eventItem.title} startTime={eventItem.start} endTime={eventItem.end} statusColor={bgColor} />;
 
-    let start = localeDayjs(new Date(eventItem.start));
-    let eventTitle = isInPopover ? `${start.format('HH:mm')} ${titleText}` : titleText;
+    const start = localeDayjs(new Date(eventItem.start));
+    const eventTitle = isInPopover ? `${start.format('HH:mm')} ${titleText}` : titleText;
     let startResizeDiv = <div />;
-    if (this.startResizable(this.props)) startResizeDiv = <div className="event-resizer event-start-resizer" ref={ref => (this.startResizer = ref)}></div>;
+    if (this.startResizable(this.props)) startResizeDiv = <div className="event-resizer event-start-resizer" ref={ref => (this.startResizer = ref)} />;
     let endResizeDiv = <div />;
-    if (this.endResizable(this.props)) endResizeDiv = <div className="event-resizer event-end-resizer" ref={ref => (this.endResizer = ref)}></div>;
+    if (this.endResizable(this.props)) endResizeDiv = <div className="event-resizer event-end-resizer" ref={ref => (this.endResizer = ref)} />;
 
     let eventItemTemplate = (
-      <div className={roundCls + ' event-item'} key={eventItem.id} style={{ height: config.eventItemHeight, backgroundColor: bgColor }}>
+      <div className={`${roundCls} event-item`} key={eventItem.id} style={{ height: config.eventItemHeight, backgroundColor: bgColor }}>
         <span style={{ marginLeft: '10px', lineHeight: `${config.eventItemHeight}px` }}>{eventTitle}</span>
       </div>
     );
-    if (eventItemTemplateResolver != undefined)
-      eventItemTemplate = eventItemTemplateResolver(schedulerData, eventItem, bgColor, isStart, isEnd, 'event-item', config.eventItemHeight, undefined);
+    if (eventItemTemplateResolver !== undefined) eventItemTemplate = eventItemTemplateResolver(schedulerData, eventItem, bgColor, isStart, isEnd, 'event-item', config.eventItemHeight, undefined);
 
-    let a = (
+    const a = (
       <a
         className="timeline-event"
         ref={this.eventItemRef}
         onMouseMove={isPopoverPlacementMousePosition ? this.handleMouseMove : undefined}
-        style={{ left: left, width: width, top: top }}
+        style={{ left, width, top }}
         onClick={() => {
-          if (!!eventItemClick) eventItemClick(schedulerData, eventItem);
-        }}>
+          if (eventItemClick) eventItemClick(schedulerData, eventItem);
+        }}
+      >
         {eventItemTemplate}
         {startResizeDiv}
         {endResizeDiv}
@@ -523,8 +491,8 @@ class EventItem extends Component {
         const isMousePositionPlacementLeft = popoverPlacement.includes('Left');
         const mousePosX = this.state.contentMousePosX;
         const popoverWidth = config.eventItemPopoverWidth;
-        const eventItemLeftRect = this.state.eventItemLeftRect;
-        const eventItemRightRect = this.state.eventItemRightRect;
+        const { eventItemLeftRect } = this.state;
+        const { eventItemRightRect } = this.state;
         let eventItemMousePosX = isMousePositionPlacementLeft ? eventItemLeftRect : eventItemRightRect;
         let posAdjustControl = isMousePositionPlacementLeft ? 1 : -1;
 
@@ -538,20 +506,18 @@ class EventItem extends Component {
             eventItemMousePosX = eventItemRightRect;
             posAdjustControl = -1;
           }
-        } else {
-          if (mousePosX - popoverWidth - distance < 0) {
-            mousePositionPlacement = `${popoverPlacement.replace(/(Right|Left).*/, '')}Left`;
-            eventItemMousePosX = eventItemLeftRect;
-            posAdjustControl = 1;
-          }
+        } else if (mousePosX - popoverWidth - distance < 0) {
+          mousePositionPlacement = `${popoverPlacement.replace(/(Right|Left).*/, '')}Left`;
+          eventItemMousePosX = eventItemLeftRect;
+          posAdjustControl = 1;
         }
 
         popoverOffsetX = mousePosX - eventItemMousePosX - 20 * posAdjustControl;
       }
 
       return {
-        popoverOffsetX: popoverOffsetX,
-        mousePositionPlacement: mousePositionPlacement,
+        popoverOffsetX,
+        mousePositionPlacement,
       };
     };
 
@@ -559,7 +525,7 @@ class EventItem extends Component {
 
     const aItem = config.dragAndDropEnabled ? connectDragPreview(connectDragSource(a)) : a;
 
-    return isDragging ? null : schedulerData._isResizing() || config.eventItemPopoverEnabled == false || eventItem.showPopover == false ? (
+    return isDragging ? null : schedulerData._isResizing() || config.eventItemPopoverEnabled === false || eventItem.showPopover === false ? (
       <div>{aItem}</div>
     ) : (
       <Popover
@@ -578,7 +544,8 @@ class EventItem extends Component {
         placement={isPopoverPlacementMousePosition ? mousePositionPlacement : popoverPlacement}
         content={content}
         trigger={config.eventItemPopoverTrigger}
-        overlayClassName="scheduler-event-item-popover">
+        overlayClassName="scheduler-event-item-popover"
+      >
         {aItem}
       </Popover>
     );
@@ -597,10 +564,10 @@ class EventItem extends Component {
     const { eventItem, isInPopover, schedulerData } = props;
     const { config } = schedulerData;
     return (
-      config.startResizable === true &&
-      isInPopover === false &&
-      (eventItem.resizable == undefined || eventItem.resizable !== false) &&
-      (eventItem.startResizable == undefined || eventItem.startResizable !== false)
+      config.startResizable === true
+      && isInPopover === false
+      && (eventItem.resizable === undefined || eventItem.resizable !== false)
+      && (eventItem.startResizable === undefined || eventItem.startResizable !== false)
     );
   };
 
@@ -608,15 +575,15 @@ class EventItem extends Component {
     const { eventItem, isInPopover, schedulerData } = props;
     const { config } = schedulerData;
     return (
-      config.endResizable === true &&
-      isInPopover === false &&
-      (eventItem.resizable == undefined || eventItem.resizable !== false) &&
-      (eventItem.endResizable == undefined || eventItem.endResizable !== false)
+      config.endResizable === true
+      && isInPopover === false
+      && (eventItem.resizable === undefined || eventItem.resizable !== false)
+      && (eventItem.endResizable === undefined || eventItem.endResizable !== false)
     );
   };
 
   subscribeResizeEvent = props => {
-    if (this.startResizer != undefined) {
+    if (this.startResizer !== undefined && this.startResizer !== null) {
       if (this.supportTouch) {
         // this.startResizer.removeEventListener('touchstart', this.initStartDrag, false);
         // if (this.startResizable(props))
@@ -626,7 +593,7 @@ class EventItem extends Component {
         if (this.startResizable(props)) this.startResizer.addEventListener('mousedown', this.initStartDrag, false);
       }
     }
-    if (this.endResizer != undefined) {
+    if (this.endResizer !== undefined && this.endResizer !== null) {
       if (this.supportTouch) {
         // this.endResizer.removeEventListener('touchstart', this.initEndDrag, false);
         // if (this.endResizable(props))
@@ -639,4 +606,47 @@ class EventItem extends Component {
   };
 }
 
+EventItem.propTypes = {
+  schedulerData: PropTypes.object.isRequired,
+  eventItem: PropTypes.object.isRequired,
+  isStart: PropTypes.bool.isRequired,
+  isEnd: PropTypes.bool.isRequired,
+  left: PropTypes.number.isRequired,
+  width: PropTypes.number.isRequired,
+  top: PropTypes.number.isRequired,
+  isInPopover: PropTypes.bool.isRequired,
+  leftIndex: PropTypes.number.isRequired,
+  rightIndex: PropTypes.number.isRequired,
+  isDragging: PropTypes.bool,
+  connectDragSource: PropTypes.func,
+  connectDragPreview: PropTypes.func,
+  updateEventStart: PropTypes.func,
+  updateEventEnd: PropTypes.func,
+  moveEvent: PropTypes.func,
+  subtitleGetter: PropTypes.func,
+  eventItemClick: PropTypes.func,
+  viewEventClick: PropTypes.func,
+  viewEventText: PropTypes.string,
+  viewEvent2Click: PropTypes.func,
+  viewEvent2Text: PropTypes.string,
+  conflictOccurred: PropTypes.func,
+  eventItemTemplateResolver: PropTypes.func,
+};
+
+EventItem.defaultProps = {
+  isDragging: undefined,
+  connectDragSource: undefined,
+  connectDragPreview: undefined,
+  updateEventStart: undefined,
+  updateEventEnd: undefined,
+  moveEvent: undefined,
+  subtitleGetter: undefined,
+  eventItemClick: undefined,
+  viewEventClick: undefined,
+  viewEventText: undefined,
+  viewEvent2Click: undefined,
+  viewEvent2Text: undefined,
+  conflictOccurred: undefined,
+  eventItemTemplateResolver: undefined,
+};
 export default EventItem;

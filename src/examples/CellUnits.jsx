@@ -5,7 +5,7 @@ class CellUnitComponent extends Component {
   constructor(props) {
     super(props);
 
-    let schedulerData = new SchedulerData(
+    const schedulerData = new SchedulerData(
       '2022-12-10',
       ViewType.Custom,
       false,
@@ -65,21 +65,19 @@ class CellUnitComponent extends Component {
   getCustomDate = (schedulerData, num, date = undefined) => {
     const { viewType } = schedulerData;
     let selectDate = schedulerData.startDate;
-    if (date != undefined) selectDate = date;
+    if (date !== undefined) selectDate = date;
 
-    let startDate =
-        num === 0
+    let startDate = num === 0
           ? selectDate
           : schedulerData
               .localeDayjs(selectDate)
               .add(2 * num, 'days')
-              .format(DATE_FORMAT),
-      endDate = schedulerData.localeDayjs(startDate).add(1, 'week').format(DATE_FORMAT),
-      cellUnit = CellUnit.Day;
+              .format(DATE_FORMAT);
+      let endDate = schedulerData.localeDayjs(startDate).add(1, 'week').format(DATE_FORMAT);
+      let cellUnit = CellUnit.Day;
     if (viewType === ViewType.Custom) {
-      let monday = schedulerData.localeDayjs(selectDate).startOf('week').format(DATE_FORMAT);
-      startDate =
-        num === 0
+      const monday = schedulerData.localeDayjs(selectDate).startOf('week').format(DATE_FORMAT);
+      startDate = num === 0
           ? monday
           : schedulerData
               .localeDayjs(monday)
@@ -88,9 +86,8 @@ class CellUnitComponent extends Component {
       endDate = schedulerData.localeDayjs(startDate).add(12, 'months').endOf('week').format(DATE_FORMAT);
       cellUnit = CellUnit.Week;
     } else if (viewType === ViewType.Custom1) {
-      let firstDayOfMonth = schedulerData.localeDayjs(selectDate).startOf('month').format(DATE_FORMAT);
-      startDate =
-        num === 0
+      const firstDayOfMonth = schedulerData.localeDayjs(selectDate).startOf('month').format(DATE_FORMAT);
+      startDate = num === 0
           ? firstDayOfMonth
           : schedulerData
               .local2eMoment(firstDayOfMonth)
@@ -99,9 +96,8 @@ class CellUnitComponent extends Component {
       endDate = schedulerData.localeDayjs(startDate).add(16, 'months').endOf('month').format(DATE_FORMAT);
       cellUnit = CellUnit.Month;
     } else if (viewType === ViewType.Custom2) {
-      let firstDayOfMonth = schedulerData.localeDayjs(selectDate).startOf('month').format(DATE_FORMAT);
-      startDate =
-        num === 0
+      const firstDayOfMonth = schedulerData.localeDayjs(selectDate).startOf('month').format(DATE_FORMAT);
+      startDate = num === 0
           ? firstDayOfMonth
           : schedulerData
               .localeDayjs(firstDayOfMonth)
