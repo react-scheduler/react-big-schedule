@@ -35,7 +35,7 @@ function Scheduler(props) {
 
   let ulObserver;
 
-  const onWindowResize = (e) => {
+  const onWindowResize = e => {
     schedulerData._setDocumentWidth(document.documentElement.clientWidth);
     setDocumentWidth(document.documentElement.clientWidth);
     setDocumentHeight(document.documentElement.clientHeight);
@@ -43,7 +43,7 @@ function Scheduler(props) {
 
   useEffect(() => {
     const sources = [];
-    sources.push(new DnDSource((dndProps) => dndProps.eventItem, EventItem, schedulerData.config.dragAndDropEnabled));
+    sources.push(new DnDSource(dndProps => dndProps.eventItem, EventItem, schedulerData.config.dragAndDropEnabled));
     if (dndSources !== undefined && dndSources.length > 0) {
       sources.push(...dndSources);
     }
@@ -192,8 +192,8 @@ function Scheduler(props) {
     const DndResourceEvents = dndContext.getDropTarget(config.dragAndDropEnabled);
     const eventDndSource = dndContext.getDndSource();
 
-    const displayRenderData = renderData.filter((o) => o.render);
-    const resourceEventsList = displayRenderData.map((item) => (
+    const displayRenderData = renderData.filter(o => o.render);
+    const resourceEventsList = displayRenderData.map(item => (
       <DndResourceEvents {...props} key={item.slotId} resourceEvents={item} dndSource={eventDndSource} />
     ));
 
@@ -251,7 +251,8 @@ function Scheduler(props) {
               ref={schedulerResourceRef}
               onMouseOver={onSchedulerResourceMouseOver}
               onMouseOut={onSchedulerResourceMouseOut}
-              onScroll={onSchedulerResourceScroll}>
+              onScroll={onSchedulerResourceScroll}
+            >
               <ResourceView {...props} contentScrollbarHeight={resourcePaddingBottom} />
             </div>
           </div>
@@ -264,7 +265,8 @@ function Scheduler(props) {
                 ref={schedulerHeadRef}
                 onMouseOver={onSchedulerHeadMouseOver}
                 onMouseOut={onSchedulerHeadMouseOut}
-                onScroll={onSchedulerHeadScroll}>
+                onScroll={onSchedulerHeadScroll}
+              >
                 <div style={{ paddingRight: `${contentScrollbarWidth}px`, width: schedulerWidth + contentScrollbarWidth }}>
                   <table className="scheduler-bg-table">
                     <HeaderView {...props} />
@@ -277,7 +279,8 @@ function Scheduler(props) {
               ref={schedulerContentRef}
               onMouseOver={onSchedulerContentMouseOver}
               onMouseOut={onSchedulerContentMouseOut}
-              onScroll={onSchedulerContentScroll}>
+              onScroll={onSchedulerContentScroll}
+            >
               <div style={{ width: schedulerWidth }}>
                 <div className="scheduler-content">
                   <table className="scheduler-content-table">
