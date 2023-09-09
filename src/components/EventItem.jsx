@@ -46,7 +46,7 @@ class EventItem extends Component {
     }
   }
 
-  initStartDrag = ev => {
+  initDragHelper = (ev, dragtype) => {
     const { schedulerData, eventItem } = this.props;
     const slotId = schedulerData._getEventSlotId(eventItem);
     const slot = schedulerData.getSlotById(slotId);
@@ -63,20 +63,28 @@ class EventItem extends Component {
       if (ev.buttons !== undefined && ev.buttons !== 1) return;
       clientX = ev.clientX;
     }
-    this.setState({
-      startX: clientX,
-    });
+    this.setState({ startX: clientX });
+
     schedulerData._startResizing();
+    const resizer = dragtype === 'start' ? this.startResizer : this.endResizer;
+    const doDrag = dragtype === 'start' ? this.doStartDrag : this.doEndDrag;
+    const stopDrag = dragtype === 'start' ? this.stopStartDrag : this.stopEndDrag;
+    const cancelDrag = dragtype === 'start' ? this.cancelStartDrag : this.cancelEndDrag;
+
     if (this.supportTouch) {
-      this.startResizer.addEventListener('touchmove', this.doStartDrag, false);
-      this.startResizer.addEventListener('touchend', this.stopStartDrag, false);
-      this.startResizer.addEventListener('touchcancel', this.cancelStartDrag, false);
+      resizer.addEventListener('touchmove', doDrag, false);
+      resizer.addEventListener('touchend', stopDrag, false);
+      resizer.addEventListener('touchcancel', cancelDrag, false);
     } else {
-      document.documentElement.addEventListener('mousemove', this.doStartDrag, false);
-      document.documentElement.addEventListener('mouseup', this.stopStartDrag, false);
+      document.documentElement.addEventListener('mousemove', doDrag, false);
+      document.documentElement.addEventListener('mouseup', stopDrag, false);
     }
     document.onselectstart = () => false;
     document.ondragstart = () => false;
+  };
+
+  initStartDrag = ev => {
+    this.initDragHelper(ev, 'start');
   };
 
   doStartDrag = ev => {
@@ -249,37 +257,7 @@ class EventItem extends Component {
   };
 
   initEndDrag = ev => {
-    const { schedulerData, eventItem } = this.props;
-    const slotId = schedulerData._getEventSlotId(eventItem);
-    const slot = schedulerData.getSlotById(slotId);
-    if (!!slot && !!slot.groupOnly) return;
-    if (schedulerData._isResizing()) return;
-
-    ev.stopPropagation();
-    let clientX = 0;
-    if (this.supportTouch) {
-      if (ev.changedTouches.length === 0) return;
-      const touch = ev.changedTouches[0];
-      clientX = touch.pageX;
-    } else {
-      if (ev.buttons !== undefined && ev.buttons !== 1) return;
-      clientX = ev.clientX;
-    }
-    this.setState({
-      endX: clientX,
-    });
-
-    schedulerData._startResizing();
-    if (this.supportTouch) {
-      this.endResizer.addEventListener('touchmove', this.doEndDrag, false);
-      this.endResizer.addEventListener('touchend', this.stopEndDrag, false);
-      this.endResizer.addEventListener('touchcancel', this.cancelEndDrag, false);
-    } else {
-      document.documentElement.addEventListener('mousemove', this.doEndDrag, false);
-      document.documentElement.addEventListener('mouseup', this.stopEndDrag, false);
-    }
-    document.onselectstart = () => false;
-    document.ondragstart = () => false;
+    this.initDragHelper(ev, 'end');
   };
 
   doEndDrag = ev => {
@@ -481,8 +459,7 @@ class EventItem extends Component {
         style={{ left, width, top }}
         onClick={() => {
           if (eventItemClick) eventItemClick(schedulerData, eventItem);
-        }}
-      >
+        }}>
         {eventItemTemplate}
         {startResizeDiv}
         {endResizeDiv}
@@ -539,19 +516,18 @@ class EventItem extends Component {
         align={
           isPopoverPlacementMousePosition
             ? {
-              offset: [popoverOffsetX, popoverPlacement.includes('top') ? -10 : 10],
-              overflow: {
-                // shiftX: true,
-                // shiftY: true,
-              },
-            }
+                offset: [popoverOffsetX, popoverPlacement.includes('top') ? -10 : 10],
+                overflow: {
+                  // shiftX: true,
+                  // shiftY: true,
+                },
+              }
             : undefined
         }
         placement={isPopoverPlacementMousePosition ? mousePositionPlacement : popoverPlacement}
         content={content}
         trigger={config.eventItemPopoverTrigger}
-        overlayClassName="scheduler-event-item-popover"
-      >
+        overlayClassName="scheduler-event-item-popover">
         {aItem}
       </Popover>
     );
@@ -570,10 +546,10 @@ class EventItem extends Component {
     const { eventItem, isInPopover, schedulerData } = props;
     const { config } = schedulerData;
     return (
-      config.startResizable === true
-      && isInPopover === false
-      && (eventItem.resizable === undefined || eventItem.resizable !== false)
-      && (eventItem.startResizable === undefined || eventItem.startResizable !== false)
+      config.startResizable === true &&
+      isInPopover === false &&
+      (eventItem.resizable === undefined || eventItem.resizable !== false) &&
+      (eventItem.startResizable === undefined || eventItem.startResizable !== false)
     );
   };
 
@@ -581,10 +557,10 @@ class EventItem extends Component {
     const { eventItem, isInPopover, schedulerData } = props;
     const { config } = schedulerData;
     return (
-      config.endResizable === true
-      && isInPopover === false
-      && (eventItem.resizable === undefined || eventItem.resizable !== false)
-      && (eventItem.endResizable === undefined || eventItem.endResizable !== false)
+      config.endResizable === true &&
+      isInPopover === false &&
+      (eventItem.resizable === undefined || eventItem.resizable !== false) &&
+      (eventItem.endResizable === undefined || eventItem.endResizable !== false)
     );
   };
 
