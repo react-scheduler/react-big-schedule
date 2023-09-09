@@ -9,14 +9,7 @@ class EventItem extends Component {
     super(props);
 
     const { left, top, width } = props;
-    this.state = {
-      left,
-      top,
-      width,
-      contentMousePosX: 0,
-      eventItemLeftRect: 0,
-      eventItemRightRect: 0,
-    };
+    this.state = { left, top, width, contentMousePosX: 0, eventItemLeftRect: 0, eventItemRightRect: 0 };
     this.startResizer = undefined;
     this.endResizer = undefined;
 
@@ -32,15 +25,10 @@ class EventItem extends Component {
     this.subscribeResizeEvent(this.props);
   }
 
-  // componentDidUpdate(prevProps, nextProps) {
   componentDidUpdate(prevProps) {
     if (prevProps !== this.props) {
       const { left, top, width } = this.props;
-      this.setState({
-        left,
-        top,
-        width,
-      });
+      this.setState({ left, top, width });
 
       this.subscribeResizeEvent(this.props);
     }
@@ -78,7 +66,7 @@ class EventItem extends Component {
       if (ev.buttons !== undefined && ev.buttons !== 1) return;
       clientX = ev.clientX;
     }
-    this.setState({ startX: clientX });
+    this.setState({ [dragtype === 'start' ? 'startX' : 'endX']: clientX });
 
     schedulerData._startResizing();
     this.resizerHelper(dragtype, 'addEventListener');
@@ -133,11 +121,7 @@ class EventItem extends Component {
     let clientX = 0;
     if (this.supportTouch) {
       if (ev.changedTouches.length === 0) {
-        this.setState({
-          left,
-          top,
-          width,
-        });
+        this.setState({ left, top, width });
         return;
       }
       const touch = ev.changedTouches[0];
@@ -220,11 +204,7 @@ class EventItem extends Component {
     }
 
     if (hasConflict) {
-      this.setState({
-        left,
-        top,
-        width,
-      });
+      this.setState({ left, top, width });
 
       if (conflictOccurred !== undefined) {
         conflictOccurred(schedulerData, 'StartResize', eventItem, DnDTypes.EVENT, slotId, slotName, newStart, eventItem.end);
@@ -245,11 +225,7 @@ class EventItem extends Component {
     document.ondragstart = null;
     const { schedulerData, left, top, width } = this.props;
     schedulerData._stopResizing();
-    this.setState({
-      left,
-      top,
-      width,
-    });
+    this.setState({ left, top, width });
   };
 
   initEndDrag = ev => {
@@ -283,7 +259,8 @@ class EventItem extends Component {
 
   stopEndDrag = ev => {
     ev.stopPropagation();
-    this.resizerHelper('start', 'removeEventListener');
+    this.resizerHelper('end', 'removeEventListener');
+
     document.onselectstart = null;
     document.ondragstart = null;
     const { width, left, top, leftIndex, rightIndex, schedulerData, eventItem, updateEventEnd, conflictOccurred } = this.props;
@@ -294,11 +271,7 @@ class EventItem extends Component {
     let clientX = 0;
     if (this.supportTouch) {
       if (ev.changedTouches.length === 0) {
-        this.setState({
-          left,
-          top,
-          width,
-        });
+        this.setState({ left, top, width });
         return;
       }
       const touch = ev.changedTouches[0];
@@ -381,11 +354,7 @@ class EventItem extends Component {
     }
 
     if (hasConflict) {
-      this.setState({
-        left,
-        top,
-        width,
-      });
+      this.setState({ left, top, width });
 
       if (conflictOccurred !== undefined) {
         conflictOccurred(schedulerData, 'EndResize', eventItem, DnDTypes.EVENT, slotId, slotName, eventItem.start, newEnd);
@@ -497,22 +466,14 @@ class EventItem extends Component {
 
     const aItem = config.dragAndDropEnabled ? connectDragPreview(connectDragSource(a)) : a;
 
-    return isDragging ? null : schedulerData._isResizing() || config.eventItemPopoverEnabled === false || eventItem.showPopover === false ? (
-      <div>{aItem}</div>
-    ) : (
+    if (isDragging ? null : schedulerData._isResizing() || config.eventItemPopoverEnabled === false || eventItem.showPopover === false) {
+      return <div>{aItem}</div>;
+    }
+
+    return (
       <Popover
         motion={isPopoverPlacementMousePosition ? '' : undefined}
-        align={
-          isPopoverPlacementMousePosition
-            ? {
-                offset: [popoverOffsetX, popoverPlacement.includes('top') ? -10 : 10],
-                overflow: {
-                  // shiftX: true,
-                  // shiftY: true,
-                },
-              }
-            : undefined
-        }
+        align={isPopoverPlacementMousePosition ? { offset: [popoverOffsetX, popoverPlacement.includes('top') ? -10 : 10], overflow: {} } : undefined}
         placement={isPopoverPlacementMousePosition ? mousePositionPlacement : popoverPlacement}
         content={content}
         trigger={config.eventItemPopoverTrigger}
