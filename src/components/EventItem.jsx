@@ -447,7 +447,8 @@ class EventItem extends Component {
         style={{ left, width, top }}
         onClick={() => {
           if (eventItemClick) eventItemClick(schedulerData, eventItem);
-        }}>
+        }}
+      >
         {eventItemTemplate}
         {startResizeDiv}
         {endResizeDiv}
@@ -515,7 +516,8 @@ class EventItem extends Component {
         placement={isPopoverPlacementMousePosition ? mousePositionPlacement : popoverPlacement}
         content={content}
         trigger={config.eventItemPopoverTrigger}
-        overlayClassName="scheduler-event-item-popover">
+        overlayClassName="scheduler-event-item-popover"
+      >
         {aItem}
       </Popover>
     );
@@ -534,10 +536,10 @@ class EventItem extends Component {
     const { eventItem, isInPopover, schedulerData } = props;
     const { config } = schedulerData;
     return (
-      config.startResizable === true &&
-      isInPopover === false &&
-      (eventItem.resizable === undefined || eventItem.resizable !== false) &&
-      (eventItem.startResizable === undefined || eventItem.startResizable !== false)
+      config.startResizable === true
+      && isInPopover === false
+      && (eventItem.resizable === undefined || eventItem.resizable !== false)
+      && (eventItem.startResizable === undefined || eventItem.startResizable !== false)
     );
   };
 
@@ -545,10 +547,10 @@ class EventItem extends Component {
     const { eventItem, isInPopover, schedulerData } = props;
     const { config } = schedulerData;
     return (
-      config.endResizable === true &&
-      isInPopover === false &&
-      (eventItem.resizable === undefined || eventItem.resizable !== false) &&
-      (eventItem.endResizable === undefined || eventItem.endResizable !== false)
+      config.endResizable === true
+      && isInPopover === false
+      && (eventItem.resizable === undefined || eventItem.resizable !== false)
+      && (eventItem.endResizable === undefined || eventItem.endResizable !== false)
     );
   };
 
