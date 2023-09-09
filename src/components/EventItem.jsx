@@ -46,6 +46,21 @@ class EventItem extends Component {
     }
   }
 
+  resizerHelper = (dragtype, eventType = 'addEventListener') => {
+    const resizer = dragtype === 'start' ? this.startResizer : this.endResizer;
+    const doDrag = dragtype === 'start' ? this.doStartDrag : this.doEndDrag;
+    const stopDrag = dragtype === 'start' ? this.stopStartDrag : this.stopEndDrag;
+    const cancelDrag = dragtype === 'start' ? this.cancelStartDrag : this.cancelEndDrag;
+    if (this.supportTouch) {
+      resizer[eventType]('touchmove', doDrag, false);
+      resizer[eventType]('touchend', stopDrag, false);
+      resizer[eventType]('touchcancel', cancelDrag, false);
+    } else {
+      document.documentElement[eventType]('mousemove', doDrag, false);
+      document.documentElement[eventType]('mouseup', stopDrag, false);
+    }
+  };
+
   initDragHelper = (ev, dragtype) => {
     const { schedulerData, eventItem } = this.props;
     const slotId = schedulerData._getEventSlotId(eventItem);
@@ -66,19 +81,7 @@ class EventItem extends Component {
     this.setState({ startX: clientX });
 
     schedulerData._startResizing();
-    const resizer = dragtype === 'start' ? this.startResizer : this.endResizer;
-    const doDrag = dragtype === 'start' ? this.doStartDrag : this.doEndDrag;
-    const stopDrag = dragtype === 'start' ? this.stopStartDrag : this.stopEndDrag;
-    const cancelDrag = dragtype === 'start' ? this.cancelStartDrag : this.cancelEndDrag;
-
-    if (this.supportTouch) {
-      resizer.addEventListener('touchmove', doDrag, false);
-      resizer.addEventListener('touchend', stopDrag, false);
-      resizer.addEventListener('touchcancel', cancelDrag, false);
-    } else {
-      document.documentElement.addEventListener('mousemove', doDrag, false);
-      document.documentElement.addEventListener('mouseup', stopDrag, false);
-    }
+    this.resizerHelper(dragtype, 'addEventListener');
     document.onselectstart = () => false;
     document.ondragstart = () => false;
   };
@@ -119,14 +122,7 @@ class EventItem extends Component {
 
   stopStartDrag = ev => {
     ev.stopPropagation();
-    if (this.supportTouch) {
-      this.startResizer.removeEventListener('touchmove', this.doStartDrag, false);
-      this.startResizer.removeEventListener('touchend', this.stopStartDrag, false);
-      this.startResizer.removeEventListener('touchcancel', this.cancelStartDrag, false);
-    } else {
-      document.documentElement.removeEventListener('mousemove', this.doStartDrag, false);
-      document.documentElement.removeEventListener('mouseup', this.stopStartDrag, false);
-    }
+    this.resizerHelper('start', 'removeEventListener');
     document.onselectstart = null;
     document.ondragstart = null;
     const { width, left, top, leftIndex, rightIndex, schedulerData, eventItem, updateEventStart, conflictOccurred } = this.props;
@@ -287,15 +283,7 @@ class EventItem extends Component {
 
   stopEndDrag = ev => {
     ev.stopPropagation();
-
-    if (this.supportTouch) {
-      this.endResizer.removeEventListener('touchmove', this.doEndDrag, false);
-      this.endResizer.removeEventListener('touchend', this.stopEndDrag, false);
-      this.endResizer.removeEventListener('touchcancel', this.cancelEndDrag, false);
-    } else {
-      document.documentElement.removeEventListener('mousemove', this.doEndDrag, false);
-      document.documentElement.removeEventListener('mouseup', this.stopEndDrag, false);
-    }
+    this.resizerHelper('start', 'removeEventListener');
     document.onselectstart = null;
     document.ondragstart = null;
     const { width, left, top, leftIndex, rightIndex, schedulerData, eventItem, updateEventEnd, conflictOccurred } = this.props;

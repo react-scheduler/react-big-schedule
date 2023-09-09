@@ -44,30 +44,27 @@ class ResourceEvents extends Component {
     this.supportTouch = 'ontouchstart' in window;
 
     if (config.creatable === true) {
-      if (this.supportTouch) {
-        // this.eventContainer.addEventListener('touchstart', this.initDrag, false);
-      } else {
-        this.eventContainer.addEventListener('mousedown', this.initDrag, false);
+      this.supportTouchHelper();
+    }
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps !== this.props) {
+      this.supportTouchHelper('remove');
+      if (this.props.schedulerData.config.creatable) {
+        this.supportTouchHelper();
       }
     }
   }
 
-  componentDidUpdate(prevProps, nextProps) {
-    if (prevProps !== this.props) {
-      if (this.supportTouch) {
-        // this.eventContainer.removeEventListener('touchstart', this.initDrag, false);
-      } else {
-        this.eventContainer.removeEventListener('mousedown', this.initDrag, false);
-      }
-      if (this.props.schedulerData.config.creatable) {
-        if (this.supportTouch) {
-          // this.eventContainer.addEventListener('touchstart', this.initDrag, false);
-        } else {
-          this.eventContainer.addEventListener('mousedown', this.initDrag, false);
-        }
-      }
+  supportTouchHelper = (evType = 'add') => {
+    const ev = evType === 'add' ? this.eventContainer.addEventListener : this.eventContainer.removeEventListener;
+    if (this.supportTouch) {
+      // ev('touchstart', this.initDrag, false);
+    } else {
+      ev('mousedown', this.initDrag, false);
     }
-  }
+  };
 
   initDrag = ev => {
     const { isSelecting } = this.state;
