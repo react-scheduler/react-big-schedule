@@ -17,12 +17,9 @@ function ResourceView({ schedulerData, contentScrollbarHeight, slotClickedFunc, 
   const renderSlotItem = (item, indents) => {
     let indent = <span key={`es${item.indent}`} className="expander-space" />;
 
+    const iconProps = { key: `es${item.indent}`, onClick: () => handleToggleExpand(item) };
     if (item.hasChildren) {
-      indent = item.expanded ? (
-        <MinusSquareOutlined key={`es${item.indent}`} className="" onClick={() => handleToggleExpand(item)} />
-      ) : (
-        <PlusSquareOutlined key={`es${item.indent}`} className="" onClick={() => handleToggleExpand(item)} />
-      );
+      indent = item.expanded ? <MinusSquareOutlined {...iconProps} /> : <PlusSquareOutlined {...iconProps} />;
     }
 
     indents.push(indent);
