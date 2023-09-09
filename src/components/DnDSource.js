@@ -10,8 +10,10 @@ export default class DnDSource {
   }
 
   getDragSpec = () => ({
-    beginDrag: (props, monitor, component) => this.resolveDragObjFunc(props),
-    endDrag: (props, monitor, component) => {
+    // beginDrag: (props, monitor, component) => this.resolveDragObjFunc(props),
+    beginDrag: props => this.resolveDragObjFunc(props),
+    // endDrag: (props, monitor, component) => {
+    endDrag: (props, monitor) => {
       if (!monitor.didDrop()) return;
 
       const { moveEvent, newEvent, schedulerData } = props;
@@ -24,7 +26,7 @@ export default class DnDSource {
       let newStart = dropResult.start;
       let newEnd = dropResult.end;
       const { initialStart } = dropResult;
-      const { initialEnd } = dropResult;
+      // const { initialEnd } = dropResult;
       let action = 'New';
 
       const isEvent = type === DnDTypes.EVENT;

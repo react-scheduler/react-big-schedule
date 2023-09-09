@@ -26,9 +26,7 @@ module.exports = {
   },
   plugins: [
     new HtmlWebpackPlugin({ template: './src/index.html', title: 'React Big Schedule' }),
-    new ESLintWebpackPlugin({
-      emitError: true, emitWarning: false, failOnError: true, extensions: ['js', 'jsx'],
-    }),
+    new ESLintWebpackPlugin({ emitError: true, emitWarning: false, failOnError: true, extensions: ['js', 'jsx'] }),
   ],
   devServer: {
     static: { directory: path.join(__dirname, '..', 'dist') },

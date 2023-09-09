@@ -7,29 +7,30 @@ function AgendaResourceEvents(props) {
   const { startDate, endDate, config, localeDayjs } = schedulerData;
   const width = schedulerData.getResourceTableWidth() - 2;
 
-  const events = [];
-  for (const item of resourceEvents.headerItems) {
+  const events = resourceEvents.headerItems.flatMap(item => {
     const start = localeDayjs(new Date(startDate));
     const end = localeDayjs(endDate).add(1, 'days');
     const headerStart = localeDayjs(new Date(item.start));
     const headerEnd = localeDayjs(new Date(item.end));
 
     if (start === headerStart && end === headerEnd) {
-      for (const evt of item.events) {
+      return item.events.map(evt => {
         const durationStart = localeDayjs(new Date(startDate));
         const durationEnd = localeDayjs(endDate).add(1, 'days');
         const eventStart = localeDayjs(evt.eventItem.start);
         const eventEnd = localeDayjs(evt.eventItem.end);
         const isStart = eventStart >= durationStart;
         const isEnd = eventEnd < durationEnd;
-        const eventItem = <AgendaEventItem {...props} key={evt.eventItem.id} eventItem={evt.eventItem} isStart={isStart} isEnd={isEnd} />;
-        events.push(eventItem);
-      }
+        return <AgendaEventItem {...props} key={evt.eventItem.id} eventItem={evt.eventItem} isStart={isStart} isEnd={isEnd} />;
+      });
     }
-  }
+    return [];
+  });
 
   const slotItemContent = slotClickedFunc ? (
-    <a onClick={() => slotClickedFunc(schedulerData, resourceEvents)}>{resourceEvents.slotName}</a>
+    <button className="txt-btn-dis" type="button" onClick={() => slotClickedFunc(schedulerData, resourceEvents)}>
+      {resourceEvents.slotName}
+    </button>
   ) : (
     <span>{resourceEvents.slotName}</span>
   );

@@ -26,7 +26,14 @@ class EventItem extends Component {
     this._isMounted = false;
   }
 
-  componentDidUpdate(prevProps, nextProps) {
+  componentDidMount() {
+    this._isMounted = true;
+    this.supportTouch = 'ontouchstart' in window;
+    this.subscribeResizeEvent(this.props);
+  }
+
+  // componentDidUpdate(prevProps, nextProps) {
+  componentDidUpdate(prevProps) {
     if (prevProps !== this.props) {
       const { left, top, width } = this.props;
       this.setState({
@@ -37,12 +44,6 @@ class EventItem extends Component {
 
       this.subscribeResizeEvent(this.props);
     }
-  }
-
-  componentDidMount() {
-    this._isMounted = true;
-    this.supportTouch = 'ontouchstart' in window;
-    this.subscribeResizeEvent(this.props);
   }
 
   initStartDrag = ev => {
@@ -74,12 +75,8 @@ class EventItem extends Component {
       document.documentElement.addEventListener('mousemove', this.doStartDrag, false);
       document.documentElement.addEventListener('mouseup', this.stopStartDrag, false);
     }
-    document.onselectstart = function () {
-      return false;
-    };
-    document.ondragstart = function () {
-      return false;
-    };
+    document.onselectstart = () => false;
+    document.ondragstart = () => false;
   };
 
   doStartDrag = ev => {
@@ -126,7 +123,8 @@ class EventItem extends Component {
     document.ondragstart = null;
     const { width, left, top, leftIndex, rightIndex, schedulerData, eventItem, updateEventStart, conflictOccurred } = this.props;
     schedulerData._stopResizing();
-    if (this.state.width === width) return;
+    const { width: stateWidth } = this.state;
+    if (stateWidth === width) return;
 
     let clientX = 0;
     if (this.supportTouch) {
@@ -151,7 +149,12 @@ class EventItem extends Component {
     const { startX } = this.state;
     const newWidth = width + startX - clientX;
     const deltaX = clientX - startX;
-    const sign = deltaX < 0 ? -1 : deltaX === 0 ? 0 : 1;
+    let sign = 1;
+    if (deltaX < 0) {
+      sign = -1;
+    } else if (deltaX === 0) {
+      sign = 0;
+    }
     let count = (sign > 0 ? Math.floor(Math.abs(deltaX) / cellWidth) : Math.ceil(Math.abs(deltaX) / cellWidth)) * sign;
     if (newWidth < minWidth) count = rightIndex - leftIndex - 1;
     else if (newWidth > maxWidth) count = -leftIndex;
@@ -159,10 +162,12 @@ class EventItem extends Component {
       .add(cellUnit === CellUnit.Hour ? count * config.minuteStep : count, cellUnit === CellUnit.Hour ? 'minutes' : 'days')
       .format(DATETIME_FORMAT);
     if (count !== 0 && cellUnit !== CellUnit.Hour && config.displayWeekend === false) {
+      const whileCondition = true;
       if (count > 0) {
         let tempCount = 0;
         let i = 0;
-        while (true) {
+
+        while (whileCondition) {
           i += 1;
           const tempStart = localeDayjs(new Date(eventItem.start)).add(i, 'days');
           const dayOfWeek = tempStart.weekday();
@@ -177,7 +182,7 @@ class EventItem extends Component {
       } else {
         let tempCount = 0;
         let i = 0;
-        while (true) {
+        while (whileCondition) {
           i -= 1;
           const tempStart = localeDayjs(new Date(eventItem.start)).add(i, 'days');
           const dayOfWeek = tempStart.weekday();
@@ -273,12 +278,8 @@ class EventItem extends Component {
       document.documentElement.addEventListener('mousemove', this.doEndDrag, false);
       document.documentElement.addEventListener('mouseup', this.stopEndDrag, false);
     }
-    document.onselectstart = function () {
-      return false;
-    };
-    document.ondragstart = function () {
-      return false;
-    };
+    document.onselectstart = () => false;
+    document.ondragstart = () => false;
   };
 
   doEndDrag = ev => {
@@ -321,7 +322,8 @@ class EventItem extends Component {
     document.ondragstart = null;
     const { width, left, top, leftIndex, rightIndex, schedulerData, eventItem, updateEventEnd, conflictOccurred } = this.props;
     schedulerData._stopResizing();
-    if (this.state.width === width) return;
+    const { width: stateWidth } = this.state;
+    if (stateWidth === width) return;
 
     let clientX = 0;
     if (this.supportTouch) {
@@ -347,7 +349,12 @@ class EventItem extends Component {
 
     const newWidth = width + clientX - endX;
     const deltaX = newWidth - width;
-    const sign = deltaX < 0 ? -1 : deltaX === 0 ? 0 : 1;
+    let sign = 1;
+    if (deltaX < 0) {
+      sign = -1;
+    } else if (deltaX === 0) {
+      sign = 0;
+    }
     let count = (sign < 0 ? Math.floor(Math.abs(deltaX) / cellWidth) : Math.ceil(Math.abs(deltaX) / cellWidth)) * sign;
     if (newWidth < minWidth) count = leftIndex - rightIndex + 1;
     else if (newWidth > maxWidth) count = headers.length - rightIndex;
@@ -355,15 +362,16 @@ class EventItem extends Component {
       .add(cellUnit === CellUnit.Hour ? count * config.minuteStep : count, cellUnit === CellUnit.Hour ? 'minutes' : 'days')
       .format(DATETIME_FORMAT);
     if (count !== 0 && cellUnit !== CellUnit.Hour && config.displayWeekend === false) {
+      const whileTrue = true;
       if (count > 0) {
         let tempCount = 0;
         let i = 0;
-        while (true) {
-          i++;
+        while (whileTrue) {
+          i += 1;
           const tempEnd = localeDayjs(new Date(eventItem.end)).add(i, 'days');
           const dayOfWeek = tempEnd.weekday();
           if (dayOfWeek !== 0 && dayOfWeek !== 6) {
-            tempCount++;
+            tempCount += 1;
             if (tempCount === count) {
               newEnd = tempEnd.format(DATETIME_FORMAT);
               break;
@@ -373,12 +381,12 @@ class EventItem extends Component {
       } else {
         let tempCount = 0;
         let i = 0;
-        while (true) {
-          i--;
+        while (whileTrue) {
+          i -= 1;
           const tempEnd = localeDayjs(new Date(eventItem.end)).add(i, 'days');
           const dayOfWeek = tempEnd.weekday();
           if (dayOfWeek !== 0 && dayOfWeek !== 6) {
-            tempCount--;
+            tempCount -= 1;
             if (tempCount === count) {
               newEnd = tempEnd.format(DATETIME_FORMAT);
               break;
@@ -432,11 +440,7 @@ class EventItem extends Component {
     document.ondragstart = null;
     const { schedulerData, left, top, width } = this.props;
     schedulerData._stopResizing();
-    this.setState({
-      left,
-      top,
-      width,
-    });
+    this.setState({ left, top, width });
   };
 
   render() {
@@ -465,7 +469,9 @@ class EventItem extends Component {
         <span style={{ marginLeft: '10px', lineHeight: `${config.eventItemHeight}px` }}>{eventTitle}</span>
       </div>
     );
-    if (eventItemTemplateResolver !== undefined) eventItemTemplate = eventItemTemplateResolver(schedulerData, eventItem, bgColor, isStart, isEnd, 'event-item', config.eventItemHeight, undefined);
+    if (eventItemTemplateResolver !== undefined) {
+      eventItemTemplate = eventItemTemplateResolver(schedulerData, eventItem, bgColor, isStart, isEnd, 'event-item', config.eventItemHeight, undefined);
+    }
 
     const a = (
       <a
@@ -533,12 +539,12 @@ class EventItem extends Component {
         align={
           isPopoverPlacementMousePosition
             ? {
-                offset: [popoverOffsetX, popoverPlacement.includes('top') ? -10 : 10],
-                overflow: {
-                  // shiftX: true,
-                  // shiftY: true,
-                },
-              }
+              offset: [popoverOffsetX, popoverPlacement.includes('top') ? -10 : 10],
+              overflow: {
+                // shiftX: true,
+                // shiftY: true,
+              },
+            }
             : undefined
         }
         placement={isPopoverPlacementMousePosition ? mousePositionPlacement : popoverPlacement}
