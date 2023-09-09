@@ -34,7 +34,7 @@ function ResourceView({ schedulerData, contentScrollbarHeight, slotClickedFunc, 
     ) : (
       <span className="slot-cell">
         {indents}
-        <button type="button" className="slot-text" style={{ cursor: slotClickedFunc === undefined ? undefined : 'pointer' }}>
+        <button type="button" className="slot-text txt-btn-dis" style={{ cursor: slotClickedFunc === undefined ? undefined : 'pointer' }}>
           {item.slotName}
         </button>
       </span>
