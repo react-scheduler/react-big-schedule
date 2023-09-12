@@ -175,7 +175,15 @@ class EventItem extends Component {
       .add(cellUnit === CellUnit.Hour ? count * config.minuteStep : count, cellUnit === CellUnit.Hour ? 'minutes' : 'days')
       .format(DATETIME_FORMAT);
 
-    newStart = await stopDragHelper({ count, cellUnit, config, eventItem, localeDayjs, dragtype: 'start', value: newStart });
+    newStart = await stopDragHelper({
+      count,
+      cellUnit,
+      config,
+      eventItem,
+      localeDayjs,
+      dragtype: 'start',
+      value: newStart,
+    });
 
     let hasConflict = false;
     const slotId = schedulerData._getEventSlotId(eventItem);
@@ -292,7 +300,15 @@ class EventItem extends Component {
     let newEnd = localeDayjs(new Date(eventItem.end))
       .add(cellUnit === CellUnit.Hour ? count * config.minuteStep : count, cellUnit === CellUnit.Hour ? 'minutes' : 'days')
       .format(DATETIME_FORMAT);
-    newEnd = await stopDragHelper({ count, cellUnit, config, eventItem, localeDayjs, dragtype: 'end', value: newEnd });
+    newEnd = await stopDragHelper({
+      dragtype: 'start',
+      cellUnit,
+      config,
+      count,
+      value: newEnd,
+      eventItem,
+      localeDayjs,
+    });
 
     let hasConflict = false;
     const slotId = schedulerData._getEventSlotId(eventItem);
