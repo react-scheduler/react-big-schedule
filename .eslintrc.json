@@ -16,6 +16,8 @@
     "react/forbid-prop-types": "off",
     "react/require-default-props": "off",
     "react/jsx-props-no-spreading": "off",
-    "no-underscore-dangle": "off"
+    "no-underscore-dangle": "off",
+    "no-param-reassign": "off",
+    "no-console": "off"
   }
 }

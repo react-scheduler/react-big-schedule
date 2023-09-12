@@ -274,9 +274,12 @@ class EventItem extends Component {
 
     document.onselectstart = null;
     document.ondragstart = null;
-    const { width, left, top, leftIndex, rightIndex, schedulerData, eventItem, updateEventEnd, conflictOccurred } = this.props;
+
+    const { left, top, width, leftIndex, rightIndex, schedulerData, eventItem, updateEventEnd, conflictOccurred } = this.props;
+
     schedulerData._stopResizing();
     const { width: stateWidth } = this.state;
+
     if (stateWidth === width) return;
 
     let clientX = 0;
@@ -291,6 +294,7 @@ class EventItem extends Component {
       clientX = ev.clientX;
     }
     const { headers, cellUnit, events, config, localeDayjs } = schedulerData;
+
     const cellWidth = schedulerData.getContentCellWidth();
     const offset = leftIndex > 0 ? 5 : 6;
     const minWidth = cellWidth - offset;
@@ -305,6 +309,7 @@ class EventItem extends Component {
     } else if (deltaX === 0) {
       sign = 0;
     }
+
     let count = (sign < 0 ? Math.floor(Math.abs(deltaX) / cellWidth) : Math.ceil(Math.abs(deltaX) / cellWidth)) * sign;
     if (newWidth < minWidth) count = leftIndex - rightIndex + 1;
     else if (newWidth > maxWidth) count = headers.length - rightIndex;
@@ -323,9 +328,8 @@ class EventItem extends Component {
 
     let hasConflict = false;
     const slotId = schedulerData._getEventSlotId(eventItem);
-    let slotName;
     const slot = schedulerData.getSlotById(slotId);
-    if (slot) slotName = slot.name;
+
     if (config.checkConflict) {
       const start = localeDayjs(new Date(eventItem.start));
       const end = localeDayjs(new Date(newEnd));
@@ -334,7 +338,9 @@ class EventItem extends Component {
         if (schedulerData._getEventSlotId(e) === slotId && e.id !== eventItem.id) {
           const eStart = localeDayjs(new Date(e.start));
           const eEnd = localeDayjs(new Date(e.end));
-          if ((start >= eStart && start < eEnd) || (end > eStart && end <= eEnd) || (eStart >= start && eStart < end) || (eEnd > start && eEnd <= end)) hasConflict = true;
+          if ((start >= eStart && start < eEnd) || (end > eStart && end <= eEnd) || (eStart >= start && eStart < end) || (eEnd > start && eEnd <= end)) {
+            hasConflict = true;
+          }
         }
       });
     }
@@ -343,12 +349,14 @@ class EventItem extends Component {
       this.setState({ left, top, width });
 
       if (conflictOccurred !== undefined) {
-        conflictOccurred(schedulerData, 'EndResize', eventItem, DnDTypes.EVENT, slotId, slotName, eventItem.start, newEnd);
+        conflictOccurred(schedulerData, 'EndResize', eventItem, DnDTypes.EVENT, slotId, slot ? slot.name : null, eventItem.start, newEnd);
       } else {
         console.log('Conflict occurred, set conflictOccurred func in Scheduler to handle it');
       }
       this.subscribeResizeEvent(this.props);
-    } else if (updateEventEnd !== undefined) updateEventEnd(schedulerData, eventItem, newEnd);
+    } else if (updateEventEnd !== undefined) {
+      updateEventEnd(schedulerData, eventItem, newEnd);
+    }
   };
 
   cancelEndDrag = ev => {

@@ -65,11 +65,12 @@ export default class DnDContext {
       const pos = getPos(component.eventContainer);
       const cellWidth = schedulerData.getContentCellWidth();
       let initialStart = null;
-      let initialEnd = null;
+      // let initialEnd = null;
       if (type === DnDTypes.EVENT) {
-        const { initialStart: iStart, initialEnd: iEnd } = this.extractInitialTimes(monitor, pos, cellWidth, resourceEvents, cellUnit, localeDayjs);
+        // const { initialStart: iStart, initialEnd: iEnd } = this.extractInitialTimes(monitor, pos, cellWidth, resourceEvents, cellUnit, localeDayjs);
+        const { initialStart: iStart } = this.extractInitialTimes(monitor, pos, cellWidth, resourceEvents, cellUnit, localeDayjs);
         initialStart = iStart;
-        initialEnd = iEnd;
+        // initialEnd = iEnd;
       }
 
       const point = monitor.getClientOffset();
