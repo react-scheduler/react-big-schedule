@@ -226,7 +226,8 @@ class Scheduler extends Component {
                 ref={this.schedulerResourceRef}
                 onMouseOver={this.onSchedulerResourceMouseOver}
                 onMouseOut={this.onSchedulerResourceMouseOut}
-                onScroll={this.onSchedulerResourceScroll}>
+                onScroll={this.onSchedulerResourceScroll}
+              >
                 <ResourceView {...this.props} contentScrollbarHeight={resourcePaddingBottom} />
               </div>
             </div>
@@ -239,7 +240,8 @@ class Scheduler extends Component {
                   ref={this.schedulerHeadRef}
                   onMouseOver={this.onSchedulerHeadMouseOver}
                   onMouseOut={this.onSchedulerHeadMouseOut}
-                  onScroll={this.onSchedulerHeadScroll}>
+                  onScroll={this.onSchedulerHeadScroll}
+                >
                   <div style={{ paddingRight: `${contentScrollbarWidth}px`, width: schedulerWidth + contentScrollbarWidth }}>
                     <table className="scheduler-bg-table">
                       <HeaderView {...this.props} />
@@ -252,7 +254,8 @@ class Scheduler extends Component {
                 ref={this.schedulerContentRef}
                 onMouseOver={this.onSchedulerContentMouseOver}
                 onMouseOut={this.onSchedulerContentMouseOut}
-                onScroll={this.onSchedulerContentScroll}>
+                onScroll={this.onSchedulerContentScroll}
+              >
                 <div style={{ width: schedulerWidth }}>
                   <div className="scheduler-content">
                     <table className="scheduler-content-table">
