@@ -1,3 +1,4 @@
+/* eslint-disable no-return-assign */
 import React, { Component } from 'react';
 import { PropTypes } from 'prop-types';
 import { Popover } from 'antd';
@@ -28,6 +29,16 @@ const stopDragHelper = ({ count, cellUnit, config, dragtype, eventItem, localeDa
     resolve(result);
   });
 };
+
+const startResizable = ({ eventItem, isInPopover, schedulerData }) => schedulerData.config.startResizable === true
+  && isInPopover === false
+  && (eventItem.resizable === undefined || eventItem.resizable !== false)
+  && (eventItem.startResizable === undefined || eventItem.startResizable !== false);
+
+const endResizable = ({ eventItem, isInPopover, schedulerData }) => schedulerData.config.endResizable === true
+  && isInPopover === false
+  && (eventItem.resizable === undefined || eventItem.resizable !== false)
+  && (eventItem.endResizable === undefined || eventItem.endResizable !== false);
 
 class EventItem extends Component {
   constructor(props) {
@@ -353,14 +364,52 @@ class EventItem extends Component {
     this.setState({ left, top, width });
   };
 
+  handleMouseMove = event => {
+    const rect = this.eventItemRef.current.getBoundingClientRect();
+    this.setState({
+      contentMousePosX: event.clientX,
+      eventItemLeftRect: rect.left,
+      eventItemRightRect: rect.right,
+    });
+  };
+
+  subscribeResizeEvent = props => {
+    if (this.startResizer !== undefined && this.startResizer !== null) {
+      if (this.supportTouch) {
+        // this.startResizer.removeEventListener('touchstart', this.initStartDrag, false);
+        // if (startResizable(props))
+        //     this.startResizer.addEventListener('touchstart', this.initStartDrag, false);
+      } else {
+        this.startResizer.removeEventListener('mousedown', this.initStartDrag, false);
+        if (startResizable(props)) this.startResizer.addEventListener('mousedown', this.initStartDrag, false);
+      }
+    }
+    if (this.endResizer !== undefined && this.endResizer !== null) {
+      if (this.supportTouch) {
+        // this.endResizer.removeEventListener('touchstart', this.initEndDrag, false);
+        // if (endResizable(props))
+        //     this.endResizer.addEventListener('touchstart', this.initEndDrag, false);
+      } else {
+        this.endResizer.removeEventListener('mousedown', this.initEndDrag, false);
+        if (endResizable(props)) this.endResizer.addEventListener('mousedown', this.initEndDrag, false);
+      }
+    }
+  };
+
   render() {
     const { eventItem, isStart, isEnd, isInPopover, eventItemClick, schedulerData, isDragging, connectDragSource, connectDragPreview, eventItemTemplateResolver } = this.props;
     const { config, localeDayjs } = schedulerData;
     const { left, width, top } = this.state;
-    const roundCls = isStart ? (isEnd ? 'round-all' : 'round-head') : isEnd ? 'round-tail' : 'round-none';
-    let bgColor = config.defaultEventBgColor;
+    let roundCls;
     const popoverPlacement = config.eventItemPopoverPlacement;
     const isPopoverPlacementMousePosition = /(top|bottom)(Right|Left)MousePosition/.test(popoverPlacement);
+
+    if (isStart) {
+      roundCls = isEnd ? 'round-all' : 'round-head';
+    } else {
+      roundCls = isEnd ? 'round-tail' : 'round-none';
+    }
+    let bgColor = config.defaultEventBgColor;
 
     if (eventItem.bgColor) bgColor = eventItem.bgColor;
 
@@ -370,9 +419,9 @@ class EventItem extends Component {
     const start = localeDayjs(new Date(eventItem.start));
     const eventTitle = isInPopover ? `${start.format('HH:mm')} ${titleText}` : titleText;
     let startResizeDiv = <div />;
-    if (this.startResizable(this.props)) startResizeDiv = <div className="event-resizer event-start-resizer" ref={ref => (this.startResizer = ref)} />;
+    if (startResizable(this.props)) startResizeDiv = <div className="event-resizer event-start-resizer" ref={ref => (this.startResizer = ref)} />;
     let endResizeDiv = <div />;
-    if (this.endResizable(this.props)) endResizeDiv = <div className="event-resizer event-end-resizer" ref={ref => (this.endResizer = ref)} />;
+    if (endResizable(this.props)) endResizeDiv = <div className="event-resizer event-end-resizer" ref={ref => (this.endResizer = ref)} />;
 
     let eventItemTemplate = (
       <div className={`${roundCls} event-item`} key={eventItem.id} style={{ height: config.eventItemHeight, backgroundColor: bgColor }}>
@@ -431,10 +480,7 @@ class EventItem extends Component {
         popoverOffsetX = contentMousePosX - eventItemMousePosX - 20 * posAdjustControl;
       }
 
-      return {
-        popoverOffsetX,
-        mousePositionPlacement,
-      };
+      return { popoverOffsetX, mousePositionPlacement };
     };
 
     const { popoverOffsetX, mousePositionPlacement } = getMousePositionOptionsData();
@@ -458,62 +504,9 @@ class EventItem extends Component {
       </Popover>
     );
   }
-
-  handleMouseMove = event => {
-    const rect = this.eventItemRef.current.getBoundingClientRect();
-    this.setState({
-      contentMousePosX: event.clientX,
-      eventItemLeftRect: rect.left,
-      eventItemRightRect: rect.right,
-    });
-  };
-
-  startResizable = props => {
-    const { eventItem, isInPopover, schedulerData } = props;
-    const { config } = schedulerData;
-    return (
-      config.startResizable === true
-      && isInPopover === false
-      && (eventItem.resizable === undefined || eventItem.resizable !== false)
-      && (eventItem.startResizable === undefined || eventItem.startResizable !== false)
-    );
-  };
-
-  endResizable = props => {
-    const { eventItem, isInPopover, schedulerData } = props;
-    const { config } = schedulerData;
-    return (
-      config.endResizable === true
-      && isInPopover === false
-      && (eventItem.resizable === undefined || eventItem.resizable !== false)
-      && (eventItem.endResizable === undefined || eventItem.endResizable !== false)
-    );
-  };
-
-  subscribeResizeEvent = props => {
-    if (this.startResizer !== undefined && this.startResizer !== null) {
-      if (this.supportTouch) {
-        // this.startResizer.removeEventListener('touchstart', this.initStartDrag, false);
-        // if (this.startResizable(props))
-        //     this.startResizer.addEventListener('touchstart', this.initStartDrag, false);
-      } else {
-        this.startResizer.removeEventListener('mousedown', this.initStartDrag, false);
-        if (this.startResizable(props)) this.startResizer.addEventListener('mousedown', this.initStartDrag, false);
-      }
-    }
-    if (this.endResizer !== undefined && this.endResizer !== null) {
-      if (this.supportTouch) {
-        // this.endResizer.removeEventListener('touchstart', this.initEndDrag, false);
-        // if (this.endResizable(props))
-        //     this.endResizer.addEventListener('touchstart', this.initEndDrag, false);
-      } else {
-        this.endResizer.removeEventListener('mousedown', this.initEndDrag, false);
-        if (this.endResizable(props)) this.endResizer.addEventListener('mousedown', this.initEndDrag, false);
-      }
-    }
-  };
 }
 
+export default EventItem;
 EventItem.propTypes = {
   schedulerData: PropTypes.object.isRequired,
   eventItem: PropTypes.object.isRequired,
@@ -557,4 +550,3 @@ EventItem.defaultProps = {
   conflictOccurred: undefined,
   eventItemTemplateResolver: undefined,
 };
-export default EventItem;
