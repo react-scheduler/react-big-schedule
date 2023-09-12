@@ -4,6 +4,31 @@ import { Popover } from 'antd';
 import EventItemPopover from './EventItemPopover';
 import { DnDTypes, CellUnit, DATETIME_FORMAT } from '../config/default';
 
+const stopDragHelper = ({ count, cellUnit, config, dragtype, eventItem, localeDayjs, value }) => {
+  const whileTrue = true;
+  let tCount = 0;
+  let i = 0;
+  let result = value;
+  return new Promise(resolve => {
+    if (count !== 0 && cellUnit !== CellUnit.Hour && config.displayWeekend === false) {
+      while (whileTrue) {
+        i = count > 0 ? i + 1 : i - 1;
+        const date = localeDayjs(new Date(eventItem[dragtype])).add(i, 'days');
+        const dayOfWeek = date.weekday();
+
+        if (dayOfWeek !== 0 && dayOfWeek !== 6) {
+          tCount = count > 0 ? tCount + 1 : tCount - 1;
+          if (tCount === count) {
+            result = date.format(DATETIME_FORMAT);
+            break;
+          }
+        }
+      }
+    }
+    resolve(result);
+  });
+};
+
 class EventItem extends Component {
   constructor(props) {
     super(props);
@@ -108,7 +133,7 @@ class EventItem extends Component {
     this.setState({ left: newLeft, width: newWidth });
   };
 
-  stopStartDrag = ev => {
+  stopStartDrag = async ev => {
     ev.stopPropagation();
     this.resizerHelper('start', 'removeEventListener');
     document.onselectstart = null;
@@ -149,41 +174,8 @@ class EventItem extends Component {
     let newStart = localeDayjs(new Date(eventItem.start))
       .add(cellUnit === CellUnit.Hour ? count * config.minuteStep : count, cellUnit === CellUnit.Hour ? 'minutes' : 'days')
       .format(DATETIME_FORMAT);
-    if (count !== 0 && cellUnit !== CellUnit.Hour && config.displayWeekend === false) {
-      const whileCondition = true;
-      if (count > 0) {
-        let tempCount = 0;
-        let i = 0;
 
-        while (whileCondition) {
-          i += 1;
-          const tempStart = localeDayjs(new Date(eventItem.start)).add(i, 'days');
-          const dayOfWeek = tempStart.weekday();
-          if (dayOfWeek !== 0 && dayOfWeek !== 6) {
-            tempCount += 1;
-            if (tempCount === count) {
-              newStart = tempStart.format(DATETIME_FORMAT);
-              break;
-            }
-          }
-        }
-      } else {
-        let tempCount = 0;
-        let i = 0;
-        while (whileCondition) {
-          i -= 1;
-          const tempStart = localeDayjs(new Date(eventItem.start)).add(i, 'days');
-          const dayOfWeek = tempStart.weekday();
-          if (dayOfWeek !== 0 && dayOfWeek !== 6) {
-            tempCount -= 1;
-            if (tempCount === count) {
-              newStart = tempStart.format(DATETIME_FORMAT);
-              break;
-            }
-          }
-        }
-      }
-    }
+    newStart = await stopDragHelper({ count, cellUnit, config, eventItem, localeDayjs, dragtype: 'start', value: newStart });
 
     let hasConflict = false;
     const slotId = schedulerData._getEventSlotId(eventItem);
@@ -257,7 +249,7 @@ class EventItem extends Component {
     this.setState({ width: newWidth });
   };
 
-  stopEndDrag = ev => {
+  stopEndDrag = async ev => {
     ev.stopPropagation();
     this.resizerHelper('end', 'removeEventListener');
 
@@ -300,40 +292,7 @@ class EventItem extends Component {
     let newEnd = localeDayjs(new Date(eventItem.end))
       .add(cellUnit === CellUnit.Hour ? count * config.minuteStep : count, cellUnit === CellUnit.Hour ? 'minutes' : 'days')
       .format(DATETIME_FORMAT);
-    if (count !== 0 && cellUnit !== CellUnit.Hour && config.displayWeekend === false) {
-      const whileTrue = true;
-      if (count > 0) {
-        let tempCount = 0;
-        let i = 0;
-        while (whileTrue) {
-          i += 1;
-          const tempEnd = localeDayjs(new Date(eventItem.end)).add(i, 'days');
-          const dayOfWeek = tempEnd.weekday();
-          if (dayOfWeek !== 0 && dayOfWeek !== 6) {
-            tempCount += 1;
-            if (tempCount === count) {
-              newEnd = tempEnd.format(DATETIME_FORMAT);
-              break;
-            }
-          }
-        }
-      } else {
-        let tempCount = 0;
-        let i = 0;
-        while (whileTrue) {
-          i -= 1;
-          const tempEnd = localeDayjs(new Date(eventItem.end)).add(i, 'days');
-          const dayOfWeek = tempEnd.weekday();
-          if (dayOfWeek !== 0 && dayOfWeek !== 6) {
-            tempCount -= 1;
-            if (tempCount === count) {
-              newEnd = tempEnd.format(DATETIME_FORMAT);
-              break;
-            }
-          }
-        }
-      }
-    }
+    newEnd = await stopDragHelper({ count, cellUnit, config, eventItem, localeDayjs, dragtype: 'end', value: newEnd });
 
     let hasConflict = false;
     const slotId = schedulerData._getEventSlotId(eventItem);
@@ -430,7 +389,7 @@ class EventItem extends Component {
 
       if (isPopoverPlacementMousePosition) {
         const isMousePositionPlacementLeft = popoverPlacement.includes('Left');
-        const mousePosX = this.state.contentMousePosX;
+        const { contentMousePosX } = this.state;
         const popoverWidth = config.eventItemPopoverWidth;
         const { eventItemLeftRect } = this.state;
         const { eventItemRightRect } = this.state;
@@ -442,18 +401,18 @@ class EventItem extends Component {
         const distance = 10;
 
         if (isMousePositionPlacementLeft && this._isMounted) {
-          if (mousePosX + popoverWidth + distance > window.innerWidth) {
+          if (contentMousePosX + popoverWidth + distance > window.innerWidth) {
             mousePositionPlacement = `${popoverPlacement.replace(/(Right|Left).*/, '')}Right`;
             eventItemMousePosX = eventItemRightRect;
             posAdjustControl = -1;
           }
-        } else if (mousePosX - popoverWidth - distance < 0) {
+        } else if (contentMousePosX - popoverWidth - distance < 0) {
           mousePositionPlacement = `${popoverPlacement.replace(/(Right|Left).*/, '')}Left`;
           eventItemMousePosX = eventItemLeftRect;
           posAdjustControl = 1;
         }
 
-        popoverOffsetX = mousePosX - eventItemMousePosX - 20 * posAdjustControl;
+        popoverOffsetX = contentMousePosX - eventItemMousePosX - 20 * posAdjustControl;
       }
 
       return {
