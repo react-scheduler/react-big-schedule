@@ -1,5 +1,3 @@
-/* eslint-disable no-param-reassign */
-/* eslint-disable no-underscore-dangle */
 import dayjs from 'dayjs';
 import quarterOfYear from 'dayjs/plugin/quarterOfYear';
 import utc from 'dayjs/plugin/utc';
@@ -927,7 +925,7 @@ export default class SchedulerData {
       }
       initRenderData.push(currentNode.data);
 
-      for (i = currentNode.children.length - 1; i >= 0; i--) {
+      for (i = currentNode.children.length - 1; i >= 0; i -= 1) {
         currentNode.children[i].data.indent = currentNode.data.indent + 1;
         slotStack.push(currentNode.children[i]);
       }

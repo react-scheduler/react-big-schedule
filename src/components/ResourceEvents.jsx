@@ -44,30 +44,27 @@ class ResourceEvents extends Component {
     this.supportTouch = 'ontouchstart' in window;
 
     if (config.creatable === true) {
-      if (this.supportTouch) {
-        // this.eventContainer.addEventListener('touchstart', this.initDrag, false);
-      } else {
-        this.eventContainer.addEventListener('mousedown', this.initDrag, false);
+      this.supportTouchHelper();
+    }
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps !== this.props) {
+      this.supportTouchHelper('remove');
+      if (this.props.schedulerData.config.creatable) {
+        this.supportTouchHelper();
       }
     }
   }
 
-  componentDidUpdate(prevProps, nextProps) {
-    if (prevProps !== this.props) {
-      if (this.supportTouch) {
-        // this.eventContainer.removeEventListener('touchstart', this.initDrag, false);
-      } else {
-        this.eventContainer.removeEventListener('mousedown', this.initDrag, false);
-      }
-      if (this.props.schedulerData.config.creatable) {
-        if (this.supportTouch) {
-          // this.eventContainer.addEventListener('touchstart', this.initDrag, false);
-        } else {
-          this.eventContainer.addEventListener('mousedown', this.initDrag, false);
-        }
-      }
+  supportTouchHelper = (evType = 'add') => {
+    const ev = evType === 'add' ? this.eventContainer.addEventListener : this.eventContainer.removeEventListener;
+    if (this.supportTouch) {
+      // ev('touchstart', this.initDrag, false);
+    } else {
+      ev('mousedown', this.initDrag, false);
     }
-  }
+  };
 
   initDrag = ev => {
     const { isSelecting } = this.state;
@@ -78,14 +75,10 @@ class ResourceEvents extends Component {
 
     const { resourceEvents } = this.props;
     if (resourceEvents.groupOnly) return;
-    let clientX = 0;
-    if (this.supportTouch) {
-      if (ev.changedTouches.length === 0) return;
-      const touch = ev.changedTouches[0];
-      clientX = touch.pageX;
-    } else {
-      if (ev.buttons !== undefined && ev.buttons !== 1) return;
-      clientX = ev.clientX;
+    const [clientX, toReturn] = this.dragHelper(ev, 'init');
+
+    if (toReturn) {
+      return;
     }
 
     const { schedulerData } = this.props;
@@ -97,14 +90,7 @@ class ResourceEvents extends Component {
     const rightIndex = Math.ceil(startX / cellWidth);
     const width = (rightIndex - leftIndex) * cellWidth;
 
-    this.setState({
-      startX,
-      left,
-      leftIndex,
-      width,
-      rightIndex,
-      isSelecting: true,
-    });
+    this.setState({ startX, left, leftIndex, width, rightIndex, isSelecting: true });
 
     if (this.supportTouch) {
       document.documentElement.addEventListener('touchmove', this.doDrag, false);
@@ -114,24 +100,17 @@ class ResourceEvents extends Component {
       document.documentElement.addEventListener('mousemove', this.doDrag, false);
       document.documentElement.addEventListener('mouseup', this.stopDrag, false);
     }
-    document.onselectstart = function () {
-      return false;
-    };
-    document.ondragstart = function () {
-      return false;
-    };
+    document.onselectstart = () => false;
+    document.ondragstart = () => false;
   };
 
   doDrag = ev => {
     ev.stopPropagation();
 
-    let clientX = 0;
-    if (this.supportTouch) {
-      if (ev.changedTouches.length === 0) return;
-      const touch = ev.changedTouches[0];
-      clientX = touch.pageX;
-    } else {
-      clientX = ev.clientX;
+    const [clientX, toReturn] = this.dragHelper(ev, 'do');
+
+    if (toReturn) {
+      return;
     }
     const { startX } = this.state;
     const { schedulerData } = this.props;
@@ -146,13 +125,22 @@ class ResourceEvents extends Component {
     rightIndex = rightIndex > headers.length ? headers.length : rightIndex;
     const width = (rightIndex - leftIndex) * cellWidth;
 
-    this.setState({
-      leftIndex,
-      left,
-      rightIndex,
-      width,
-      isSelecting: true,
-    });
+    this.setState({ leftIndex, left, rightIndex, width, isSelecting: true });
+  };
+
+  dragHelper = (ev, dragType) => {
+    let clientX = 0;
+    if (this.supportTouch) {
+      if (ev.changedTouches.length === 0) return [clientX, true];
+      const touch = ev.changedTouches[0];
+      clientX = touch.pageX;
+    } else if (dragType === 'init') {
+      if (ev.buttons !== undefined && ev.buttons !== 1) return [clientX, true];
+      clientX = ev.clientX;
+    } else {
+      clientX = ev.clientX;
+    }
+    return [clientX, false];
   };
 
   stopDrag = ev => {
@@ -254,6 +242,33 @@ class ResourceEvents extends Component {
     }
   };
 
+  onAddMoreClick = headerItem => {
+    const { onSetAddMoreState, resourceEvents, schedulerData } = this.props;
+    if (onSetAddMoreState) {
+      const { config } = schedulerData;
+      const cellWidth = schedulerData.getContentCellWidth();
+      const index = resourceEvents.headerItems.indexOf(headerItem);
+      if (index !== -1) {
+        let left = index * (cellWidth - 1);
+        const pos = getPos(this.eventContainer);
+        left += pos.x;
+        const top = pos.y;
+        const height = (headerItem.count + 1) * config.eventItemLineHeight + 20;
+
+        onSetAddMoreState({
+          headerItem,
+          left,
+          top,
+          height,
+        });
+      }
+    }
+  };
+
+  eventContainerRef = element => {
+    this.eventContainer = element;
+  };
+
   render() {
     const { resourceEvents, schedulerData, connectDropTarget, dndSource } = this.props;
     const { cellUnit, startDate, endDate, config, localeDayjs } = schedulerData;
@@ -348,33 +363,6 @@ class ResourceEvents extends Component {
       </tr>
     );
   }
-
-  onAddMoreClick = headerItem => {
-    const { onSetAddMoreState, resourceEvents, schedulerData } = this.props;
-    if (onSetAddMoreState) {
-      const { config } = schedulerData;
-      const cellWidth = schedulerData.getContentCellWidth();
-      const index = resourceEvents.headerItems.indexOf(headerItem);
-      if (index !== -1) {
-        let left = index * (cellWidth - 1);
-        const pos = getPos(this.eventContainer);
-        left += pos.x;
-        const top = pos.y;
-        const height = (headerItem.count + 1) * config.eventItemLineHeight + 20;
-
-        onSetAddMoreState({
-          headerItem,
-          left,
-          top,
-          height,
-        });
-      }
-    }
-  };
-
-  eventContainerRef = element => {
-    this.eventContainer = element;
-  };
 }
 
 export default ResourceEvents;

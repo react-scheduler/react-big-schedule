@@ -250,3 +250,8 @@ table.scheduler-table tr:last-child td {
   padding-left: 4px;
   padding-right: 4px;
 }
+
+.txt-btn-dis {
+  border: none;
+  background-color: transparent;
+}
