@@ -17,12 +17,9 @@ function ResourceView({ schedulerData, contentScrollbarHeight, slotClickedFunc, 
   const renderSlotItem = (item, indents) => {
     let indent = <span key={`es${item.indent}`} className="expander-space" />;
 
+    const iconProps = { key: `es${item.indent}`, onClick: () => handleToggleExpand(item) };
     if (item.hasChildren) {
-      indent = item.expanded ? (
-        <MinusSquareOutlined key={`es${item.indent}`} style={{}} className="" onClick={() => handleToggleExpand(item)} />
-      ) : (
-        <PlusSquareOutlined key={`es${item.indent}`} style={{}} className="" onClick={() => handleToggleExpand(item)} />
-      );
+      indent = item.expanded ? <MinusSquareOutlined {...iconProps} /> : <PlusSquareOutlined {...iconProps} />;
     }
 
     indents.push(indent);
@@ -30,14 +27,16 @@ function ResourceView({ schedulerData, contentScrollbarHeight, slotClickedFunc, 
     const slotCell = slotClickedFunc ? (
       <span className="slot-cell">
         {indents}
-        <a style={{ cursor: 'pointer' }} className="slot-text" onClick={() => slotClickedFunc(schedulerData, item)}>
+        <button type="button" style={{ cursor: 'pointer' }} className="slot-text txt-btn-dis" onClick={() => slotClickedFunc(schedulerData, item)}>
           {item.slotName}
-        </a>
+        </button>
       </span>
     ) : (
       <span className="slot-cell">
         {indents}
-        <span className="slot-text" style={{ cursor: slotClickedFunc === undefined ? undefined : 'pointer' }}>{item.slotName}</span>
+        <button type="button" className="slot-text txt-btn-dis" style={{ cursor: slotClickedFunc === undefined ? undefined : 'pointer' }}>
+          {item.slotName}
+        </button>
       </span>
     );
 
@@ -48,9 +47,9 @@ function ResourceView({ schedulerData, contentScrollbarHeight, slotClickedFunc, 
     );
 
     if (slotItemTemplateResolver) {
-      const temp = slotItemTemplateResolver(schedulerData, item, slotClickedFunc, width, 'overflow-text header2-text');
-      if (temp) {
-        slotItem = temp;
+      const resolvedTemplate = slotItemTemplateResolver(schedulerData, item, slotClickedFunc, width, 'overflow-text header2-text');
+      if (resolvedTemplate) {
+        slotItem = resolvedTemplate;
       }
     }
 
@@ -70,7 +69,7 @@ function ResourceView({ schedulerData, contentScrollbarHeight, slotClickedFunc, 
 
   const resourceList = displayRenderData.map(item => {
     const indents = [];
-    for (let i = 0; i < item.indent; i++) {
+    for (let i = 0; i < item.indent; i += 1) {
       indents.push(<span key={`es${i}`} className="expander-space" />);
     }
 

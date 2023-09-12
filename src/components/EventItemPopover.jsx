@@ -29,9 +29,14 @@ function EventItemPopover({
   const showViewEvent2 = viewEvent2Text && viewEvent2Click && (eventItem.clickable2 === undefined || eventItem.clickable2);
 
   const renderViewEvent = (text, clickHandler, marginLeft = 0) => (
-    <span className="header2-text" style={{ color: '#108EE9', cursor: 'pointer', marginLeft: `${marginLeft}px` }} onClick={() => clickHandler(schedulerData, eventItem)}>
+    <button
+      className="header2-text txt-btn-dis"
+      type="button"
+      style={{ color: '#108EE9', cursor: 'pointer', marginLeft: `${marginLeft}px` }}
+      onClick={() => clickHandler(schedulerData, eventItem)}
+    >
       {text}
-    </span>
+    </button>
   );
 
   return (
