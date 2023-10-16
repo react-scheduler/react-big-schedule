@@ -1,3 +1,31 @@
+## [4.2.5](https://github.com/react-scheduler/react-big-schedule/compare/4.2.5...4.2.6)
+
+`2023-10-16`
+
+- Chore(deps): Bump antd from 5.7.0 to 5.7.1 by [@dependabot](https://github.com/dependabot) in [#81](https://github.com/react-scheduler/react-big-schedule/pull/81).
+- Chore(deps): Bump antd from 5.7.1 to 5.7.2 by [@dependabot](https://github.com/dependabot) in [#82](https://github.com/react-scheduler/react-big-schedule/pull/82).
+- Create CONTRIBUTING.md by [@ansulagrawal](https://github.com/ansulagrawal) in [#83](https://github.com/react-scheduler/react-big-schedule/pull/83).
+- Chore(deps): Bump antd from 5.7.2 to 5.7.3 by [@dependabot](https://github.com/dependabot) in [#84](https://github.com/react-scheduler/react-big-schedule/pull/84).
+- Refactor headerview and fix the error by [@DamyanBG](https://github.com/DamyanBG) in [#88](https://github.com/react-scheduler/react-big-schedule/pull/88).
+- Remove Files by [@ansulagrawal](https://github.com/ansulagrawal) in [#90](https://github.com/react-scheduler/react-big-schedule/pull/90).
+- Apply fixes from CodeFactor by [@ansulagrawal](https://github.com/ansulagrawal) in [#89](https://github.com/react-scheduler/react-big-schedule/pull/89).
+- Apply fixes from CodeFactor by [@ansulagrawal](https://github.com/ansulagrawal) in [#91](https://github.com/react-scheduler/react-big-schedule/pull/91).
+- Added CodeFactor Code Quality Badge by [@ansulagrawal](https://github.com/ansulagrawal) in [#100](https://github.com/react-scheduler/react-big-schedule/pull/100).
+- Added Typing File For typescript user by [@ansulagrawal](https://github.com/ansulagrawal) in [#99](https://github.com/react-scheduler/react-big-schedule/pull/99).
+- ESLint Configration by [@ansulagrawal](https://github.com/ansulagrawal) in [#93](https://github.com/react-scheduler/react-big-schedule/pull/93).
+- Fix some eslint issues and update some package versions by [@ansulagrawal](https://github.com/ansulagrawal) in [#104](https://github.com/react-scheduler/react-big-schedule/pull/104).
+- Apply fixes from CodeFactor by [@ansulagrawal](https://github.com/ansulagrawal) in [#105](https://github.com/react-scheduler/react-big-schedule/pull/105).
+- Fix Eslint Errors by [@ansulagrawal](https://github.com/ansulagrawal) in [#106](https://github.com/react-scheduler/react-big-schedule/pull/108).
+- Updated ChangeLog by [@ansulagrawal](https://github.com/ansulagrawal) in [#105](https://github.com/react-scheduler/react-big-schedule/pull/109).
+
+## [4.2.5](https://github.com/react-scheduler/react-big-schedule/compare/4.2.4...4.2.5)
+
+`2023-07-30`
+
+<!-- HotFix -->
+
+- Reveted HeaderView Component from functional based to class based by [@JitendraSoni1234 ](https://github.com/JitendraSoni1234).
+
 ## [4.2.4](https://github.com/react-scheduler/react-big-schedule/compare/4.2.3...4.2.4)
 
 `2023-07-13`
