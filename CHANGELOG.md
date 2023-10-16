@@ -1,3 +1,9 @@
+## [4.3.1](https://github.com/react-scheduler/react-big-schedule/compare/4.3.0...4.3.1)
+
+`2023-10-16`
+
+- Updated Build Code by adding typing file `index.d.ts` by [@ansulagrawal](https://github.com/ansulagrawal) in [#110](https://github.com/react-scheduler/react-big-schedule/pull/110).
+
 ## [4.3.0](https://github.com/react-scheduler/react-big-schedule/compare/4.2.5...4.3.0)
 
 `2023-10-16`
@@ -15,8 +21,8 @@
 - ESLint Configration by [@ansulagrawal](https://github.com/ansulagrawal) in [#93](https://github.com/react-scheduler/react-big-schedule/pull/93).
 - Fix some eslint issues and update some package versions by [@ansulagrawal](https://github.com/ansulagrawal) in [#104](https://github.com/react-scheduler/react-big-schedule/pull/104).
 - Apply fixes from CodeFactor by [@ansulagrawal](https://github.com/ansulagrawal) in [#105](https://github.com/react-scheduler/react-big-schedule/pull/105).
-- Fix Eslint Errors by [@ansulagrawal](https://github.com/ansulagrawal) in [#106](https://github.com/react-scheduler/react-big-schedule/pull/108).
-- Updated ChangeLog by [@ansulagrawal](https://github.com/ansulagrawal) in [#105](https://github.com/react-scheduler/react-big-schedule/pull/109).
+- Fix Eslint Errors by [@ansulagrawal](https://github.com/ansulagrawal) in [#108](https://github.com/react-scheduler/react-big-schedule/pull/108).
+- Updated ChangeLog by [@ansulagrawal](https://github.com/ansulagrawal) in [#109](https://github.com/react-scheduler/react-big-schedule/pull/109).
 
 ## [4.2.5](https://github.com/react-scheduler/react-big-schedule/compare/4.2.4...4.2.5)
 
