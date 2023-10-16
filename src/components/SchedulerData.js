@@ -937,11 +937,11 @@ export default class SchedulerData {
   _getSpan(startTime, endTime, headers) {
     if (this.showAgenda) return 1;
 
-    function startOfWeek(date) {
-      const day = date.getDay();
-      const diff = date.getDate() - day;
-      return new Date(date.getFullYear(), date.getMonth(), diff);
-    }
+    // function startOfWeek(date) {
+    //   const day = date.getDay();
+    //   const diff = date.getDate() - day;
+    //   return new Date(date.getFullYear(), date.getMonth(), diff);
+    // }
 
     const timeBetween = (date1, date2, timeIn) => {
       if (timeIn === 'days' || timeIn === 'day') {

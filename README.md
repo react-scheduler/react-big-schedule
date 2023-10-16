@@ -1,53 +1,56 @@
-# React Big Schedule (react-big-schedule) 
- [![NPM version][npm-image]][npm-url] [![MIT License][mit-image]][mit-url]  [![CodeQL][codeql-image]][codeql-url] [![CodeFactor][codeFactor-badge]][codeFactor-link]
- 
- [npm-image]: http://img.shields.io/npm/v/react-big-schedule.svg
- [npm-url]: http://npmjs.org/package/react-big-schedule
- [mit-image]: https://img.shields.io/badge/License-MIT-green.svg
- [mit-url]: https://github.com/react-scheduler/react-big-schedule/blob/master/LICENSE
- [codeql-image]: https://github.com/react-scheduler/react-big-schedule/actions/workflows/github-code-scanning/codeql/badge.svg?branch=master
- [codeql-url]: https://github.com/react-scheduler/react-big-schedule/actions/workflows/github-code-scanning/codeql
- [codeFactor-badge]: https://www.codefactor.io/repository/github/react-scheduler/react-big-schedule/badge
- [codeFactor-link]: https://www.codefactor.io/repository/github/react-scheduler/react-big-schedule
+# React Big Schedule (react-big-schedule)
 
+[![NPM version][npm-image]][npm-url] [![MIT License][mit-image]][mit-url] [![CodeQL][codeql-image]][codeql-url] [![CodeFactor][codeFactor-badge]][codeFactor-link]
+
+[npm-image]: http://img.shields.io/npm/v/react-big-schedule.svg
+[npm-url]: http://npmjs.org/package/react-big-schedule
+[mit-image]: https://img.shields.io/badge/License-MIT-green.svg
+[mit-url]: https://github.com/react-scheduler/react-big-schedule/blob/master/LICENSE
+[codeql-image]: https://github.com/react-scheduler/react-big-schedule/actions/workflows/github-code-scanning/codeql/badge.svg?branch=master
+[codeql-url]: https://github.com/react-scheduler/react-big-schedule/actions/workflows/github-code-scanning/codeql
+[codeFactor-badge]: https://www.codefactor.io/repository/github/react-scheduler/react-big-schedule/badge
+[codeFactor-link]: https://www.codefactor.io/repository/github/react-scheduler/react-big-schedule
 
 React Big Schedule is a powerful and intuitive scheduler and resource planning solution built with React. Seamlessly integrate this modern, browser-compatible component into your applications to effectively manage time, appointments, and resources. With drag-and-drop functionality, interactive UI, and granular views, react-big-schedule empowers users to effortlessly schedule and allocate resources with precision.
 
-Enhance productivity and streamline your workflow with this React-based solution, designed to optimize time management and simplify calendar-based operations. Perfect for applications requiring advanced scheduling capabilities, react-big-schedule offers a seamless and intuitive experience for managing appointments, resource allocation, and time slots. 
+Enhance productivity and streamline your workflow with this React-based solution, designed to optimize time management and simplify calendar-based operations. Perfect for applications requiring advanced scheduling capabilities, react-big-schedule offers a seamless and intuitive experience for managing appointments, resource allocation, and time slots.
 
 Unlock the potential of your React projects with react-big-schedule and revolutionize the way you handle scheduling and resource planning.
 
 ### This project code is forked from:
-* [react-big-scheduler](https://stephenchou1017.github.io/scheduler/#/).
-* [react-big-scheduler-stch](https://github.com/hbatalhaStch/react-big-scheduler).
+
+- [react-big-scheduler](https://stephenchou1017.github.io/scheduler/#/).
+- [react-big-scheduler-stch](https://github.com/hbatalhaStch/react-big-scheduler).
 
 ## Installation
 
 To install react-big-schedule, use npm:
+
 ```bash
   npm install react-big-schedule
 ```
 
-## Tech Stack  
+## Tech Stack
 
-* React
-* Ant Design
-* react-dnd
-* react-dnd-html5-backend
-* webpack
-* dayjs
+- React
+- Ant Design
+- react-dnd
+- react-dnd-html5-backend
+- webpack
+- dayjs
 
 ## Features
 
-* Modern and intuitive scheduler component for React applications.
-* Seamless integration with React projects.
-* Drag-and-drop functionality for effortless scheduling.
-* Interactive user interface for a smooth user experience
-* Granular views to manage time, appointments, and resources effectively.
-* Optimized for time management and calendar-based operations.
-* Perfect for applications requiring advanced scheduling capabilities.
+- Modern and intuitive scheduler component for React applications.
+- Seamless integration with React projects.
+- Drag-and-drop functionality for effortless scheduling.
+- Interactive user interface for a smooth user experience
+- Granular views to manage time, appointments, and resources effectively.
+- Optimized for time management and calendar-based operations.
+- Perfect for applications requiring advanced scheduling capabilities.
 
 ## Contributions
+
 Contributions to react-big-schedule are welcome! If you find a bug or want to contribute to the project, please follow these steps:
 
 1. Fork the repository on GitHub.
@@ -59,41 +62,48 @@ Contributions to react-big-schedule are welcome! If you find a bug or want to co
 Please ensure that your code adheres to the project's coding conventions and includes appropriate tests.
 
 ## License
+
 React Big Schedule is released under the MIT License. See the [LICENSE](https://github.com/react-scheduler/react-big-schedule/blob/master/LICENSE) file for more details.
 
 ## Support
+
 If you have any questions or need support, please create an issue in the [GitHub repository](https://github.com/react-scheduler/react-big-schedule/issues).
 
 ## Credits
+
 React Big Schedule is developed and maintained by the React Big Schedule team. We would like to thank the open-source community for their valuable contributions and feedback.
 
 Special thanks to the following contributors:
-* Ansul Agrawal ([@ansulagrawal](https://github.com/ansulagrawal))
-* Jitendra Soni ([@JitendraSoni1234](https://github.com/JitendraSoni1234))
-* hbatalhaStch  [[@hbatalhaStch](https://github.com/hbatalhaStch))
-* DamyanBG ([@DamyanBG](https://github.com/DamyanBG))
+
+- Ansul Agrawal ([@ansulagrawal](https://github.com/ansulagrawal))
+- Jitendra Soni ([@JitendraSoni1234](https://github.com/JitendraSoni1234))
+- hbatalhaStch [[@hbatalhaStch](https://github.com/hbatalhaStch))
+- DamyanBG ([@DamyanBG](https://github.com/DamyanBG))
 
 ## Acknowledgments
+
 We would like to acknowledge the following projects for their inspiration and contributions:
-* [react-big-scheduler](https://stephenchou1017.github.io/scheduler/#/).
-* [react-big-scheduler-stch](https://github.com/hbatalhaStch/react-big-scheduler).
+
+- [react-big-scheduler](https://stephenchou1017.github.io/scheduler/#/).
+- [react-big-scheduler-stch](https://github.com/hbatalhaStch/react-big-scheduler).
 
 ## Roadmap
-* Additional view options for different scheduling needs.
-* Support for recurring appointments.
-* Integration with popular calendar services.
-* Improved accessibility and localization support.
-* Performance optimizations for handling large data sets.
+
+- Additional view options for different scheduling needs.
+- Support for recurring appointments.
+- Integration with popular calendar services.
+- Improved accessibility and localization support.
+- Performance optimizations for handling large data sets.
 
 We are continuously working on enhancing react-big-schedule and welcome your feedback and suggestions for future improvements.
 
 ## Changelog
-Please refer to the [CHANGELOG.md](https://github.com/react-scheduler/react-big-schedule/blob/master/CHANGELOG.md) file.
 
+Please refer to the [CHANGELOG.md](https://github.com/react-scheduler/react-big-schedule/blob/master/CHANGELOG.md) file.
 
 ## Use and Setup
 
-1.) Installation 
+1.) Installation
 
 ```
   npm i react-big-schedule
@@ -114,19 +124,20 @@ import "react-big-schedule/dist/css/style.css";
 ```
 
 3.) Basic Usage
+
 ```js
-const schedulerData = new SchedulerData( new dayjs().format(DATE_FORMAT), ViewType.Week );
+const schedulerData = new SchedulerData(new dayjs().format(DATE_FORMAT), ViewType.Week);
 
 //set locale dayjs to the schedulerData, if your locale isn't English. By default, Scheduler comes with English(en, United States).
-schedulerData.setSchedulerLocale("pt-br"); // this uses dayjs, but it doesn't require dayjs to be installed as its called dynamically
-schedulerData.setCalendarPopoverLocale("pt_BR"); // this uses antd [List of supported locales](https://ant.design/docs/react/i18n#supported-languages)
+schedulerData.setSchedulerLocale('pt-br'); // this uses dayjs, but it doesn't require dayjs to be installed as its called dynamically
+schedulerData.setCalendarPopoverLocale('pt_BR'); // this uses antd [List of supported locales](https://ant.design/docs/react/i18n#supported-languages)
 
 schedulerData.setResources([
-  { id: "r0", name: "Resource0", groupOnly: true},
-  { id: "r1", name: "Resource1" },
-  { id: "r2", name: "Resource2", parentId: "r0" },
-  { id: "r3", name: "Resource3", parentId: "r4" },
-  { id: "r4", name: "Resource4", parentId: "r2" },
+  { id: 'r0', name: 'Resource0', groupOnly: true },
+  { id: 'r1', name: 'Resource1' },
+  { id: 'r2', name: 'Resource2', parentId: 'r0' },
+  { id: 'r3', name: 'Resource3', parentId: 'r4' },
+  { id: 'r4', name: 'Resource4', parentId: 'r2' },
 ]);
 
 // the event array should be sorted in ascending order by event.start property
@@ -134,44 +145,44 @@ schedulerData.setResources([
 schedulerData.setEvents([
   {
     id: 1,
-    start: "2022-12-18 09:30:00",
-    end: "2022-12-19 23:30:00",
-    resourceId: "r1",
-    title: "I am finished",
-    bgColor: "#D9D9D9",
+    start: '2022-12-18 09:30:00',
+    end: '2022-12-19 23:30:00',
+    resourceId: 'r1',
+    title: 'I am finished',
+    bgColor: '#D9D9D9',
   },
   {
     id: 2,
-    start: "2022-12-18 12:30:00",
-    end: "2022-12-26 23:30:00",
-    resourceId: "r2",
-    title: "I am not resizable",
+    start: '2022-12-18 12:30:00',
+    end: '2022-12-26 23:30:00',
+    resourceId: 'r2',
+    title: 'I am not resizable',
     resizable: false,
   },
   {
     id: 3,
-    start: "2022-12-19 12:30:00",
-    end: "2022-12-20 23:30:00",
-    resourceId: "r3",
-    title: "I am not movable",
+    start: '2022-12-19 12:30:00',
+    end: '2022-12-20 23:30:00',
+    resourceId: 'r3',
+    title: 'I am not movable',
     movable: false,
   },
   {
     id: 4,
-    start: "2022-12-19 14:30:00",
-    end: "2022-12-20 23:30:00",
-    resourceId: "r1",
-    title: "I am not start-resizable",
+    start: '2022-12-19 14:30:00',
+    end: '2022-12-20 23:30:00',
+    resourceId: 'r1',
+    title: 'I am not start-resizable',
     startResizable: false,
   },
   {
     id: 5,
-    start: "2022-12-19 15:30:00",
-    end: "2022-12-20 23:30:00",
-    resourceId: "r2",
-    title: "R2 has recurring tasks every week on Tuesday, Friday",
-    rrule: "FREQ=WEEKLY;DTSTART=20221219T013000Z;BYDAY=TU,FR",
-    bgColor: "#f759ab",
+    start: '2022-12-19 15:30:00',
+    end: '2022-12-20 23:30:00',
+    resourceId: 'r2',
+    title: 'R2 has recurring tasks every week on Tuesday, Friday',
+    rrule: 'FREQ=WEEKLY;DTSTART=20221219T013000Z;BYDAY=TU,FR',
+    bgColor: '#f759ab',
   },
 ]);
 
@@ -189,9 +200,7 @@ schedulerData.setEvents([
 />;
 ```
 
-
 ### Run examples locally
-
 
 - Clone this repository
 - Retrieve dependencies: `npm install` or `npm i`
@@ -201,7 +210,6 @@ schedulerData.setEvents([
 If you fail to execute the `npm install` command, remove the package-lock.json file and try again.
 
 # API
-
 
 ### SchedulerData
 
@@ -252,6 +260,7 @@ Used to set locale to the scheduler, it uses dayjs locales ([List of supported l
 `preset` will be locale imported from dayjs.
 
 #### example:
+
 ```js
 import * as dayjsLocale from 'dayjs/locale/pt-br';
 
@@ -269,6 +278,7 @@ setCalendarPopoverLocale(lang);
 Used to set locale to the calendar popover. it uses antd locales ([List of supported locales](https://ant.design/docs/react/i18n#supported-languages)). By default, it comes with English(en, United States)
 
 #### example:
+
 ```js
 import * as antdLocale from 'antd/locale/pt_BR';
 
@@ -307,7 +317,6 @@ Let the time window scroll to the left once. When `SchedulerData,viewType` is `V
 scroll a month, when `SchedulerData,viewType` is `ViewType.Week`, the time window will scroll a week. `SchedulerData.events`
 will be clear after calling this method.
 
-
 #### next
 
 ```js
@@ -327,11 +336,7 @@ Let the time window jump to the provided `date` directly. `SchedulerData.events`
 #### setViewType
 
 ```js
-setViewType(
-  (viewType = ViewType.Week),
-  (showAgenda = false),
-  (isEventPerspective = false)
-);
+setViewType((viewType = ViewType.Week), (showAgenda = false), (isEventPerspective = false));
 ```
 
 Tell SchedulerData to change current view, the `viewType`, `showAgenda` and `isEventPerspective` group should be
@@ -757,14 +762,7 @@ Method that defines non-working time.
 #### getSummaryFunc
 
 ```js
-getSummary(
-  schedulerData,
-  headerEvents,
-  slotId,
-  slotName,
-  headerStart,
-  headerEnd
-);
+getSummary(schedulerData, headerEvents, slotId, slotName, headerStart, headerEnd);
 ```
 
 Method that defines the summary text displayed in the Scheduler cells.Refer
@@ -914,16 +912,7 @@ to [this example](https://stephenchou1017.github.io/scheduler/#/customheader).
 
 ```js
 conflictOccurred: PropTypes.func;
-conflictOccurred(
-  schedulerData,
-  action,
-  event,
-  type,
-  slotId,
-  slotName,
-  start,
-  end
-);
+conflictOccurred(schedulerData, action, event, type, slotId, slotName, start, end);
 ```
 
 Callback function fired when there is a conflict. This could happen when creating, resizing or moving an event, and when  
@@ -933,16 +922,7 @@ Callback function fired when there is a conflict. This could happen when creatin
 
 ```js
 eventItemTemplateResolver: PropTypes.func;
-eventItemTemplateResolver(
-  schedulerData,
-  event,
-  bgColor,
-  isStart,
-  isEnd,
-  mustAddCssClass,
-  mustBeHeight,
-  agendaMaxEventWidth
-);
+eventItemTemplateResolver(schedulerData, event, bgColor, isStart, isEnd, mustAddCssClass, mustBeHeight, agendaMaxEventWidth);
 ```
 
 Use this function, you can customize the event style. Refer to [this example](https://stephenchou1017.github.io/scheduler/#/customeventstyle).
@@ -951,14 +931,7 @@ Use this function, you can customize the event style. Refer to [this example](ht
 
 ```js
 eventItemPopoverTemplateResolver: PropTypes.func;
-eventItemPopoverTemplateResolver(
-  schedulerData,
-  eventItem,
-  title,
-  start,
-  end,
-  statusColor
-);
+eventItemPopoverTemplateResolver(schedulerData, eventItem, title, start, end, statusColor);
 ```
 
 Use this function, you can customize the event's popover style. Refer to [this example](https://stephenchou1017.github.io/scheduler/#/custompopover).
@@ -976,12 +949,7 @@ Use this function, you can customize the left slot style.
 
 ```js
 nonAgendaCellHeaderTemplateResolver: PropTypes.func;
-nonAgendaCellHeaderTemplateResolver(
-  schedulerData,
-  item,
-  formattedDateItems,
-  style
-);
+nonAgendaCellHeaderTemplateResolver(schedulerData, item, formattedDateItems, style);
 ```
 
 Use this function, you can customize the table header cell style. Refer to [this example](https://stephenchou1017.github.io/scheduler/#/customtableheaders).
