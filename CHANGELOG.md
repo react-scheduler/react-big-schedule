@@ -1,3 +1,9 @@
+## [4.3.2](https://github.com/react-scheduler/react-big-schedule/compare/4.3.1...4.3.2)
+
+`2023-11-06`
+
+- Updated `node_modules` version by [@ansulagrawal](https://github.com/ansulagrawal) in [#111](https://github.com/react-scheduler/react-big-schedule/pull/111).
+
 ## [4.3.1](https://github.com/react-scheduler/react-big-schedule/compare/4.3.0...4.3.1)
 
 `2023-10-16`
