@@ -7,7 +7,7 @@ body:
     attributes:
       label: Checklist
       options:
-        - label: "I've verified that I'm running react-big-schedule version **4.2.0** or higher"
+        - label: "I've verified that I'm running react-big-schedule latest version."
           required: true
   - type: textarea
     id: description

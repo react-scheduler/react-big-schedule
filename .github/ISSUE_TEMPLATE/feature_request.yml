@@ -9,7 +9,7 @@ body:
       options:
         - label: I've looked through the [README](https://github.com/react-scheduler/react-big-schedule#readme)
           required: true
-        - label: I've verified that I'm running react-big-schedule version **4.2.0**
+        - label: I've verified that I'm running react-big-schedule latest version.
           required: true
         - label: I've searched existing feature requests and confirmed that this request is not a duplicate
           required: true
