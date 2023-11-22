@@ -1,7 +1,7 @@
 const DemoData = {
   resources: [
-    { id: 'r0', name: 'Resource0', groupOnly: true },
-    { id: 'r1', name: 'Resource1', parentId: 'r0' },
+    { id: 'r0', name: 'Resource0', title: 'Resource 0', groupOnly: true },
+    { id: 'r1', name: 'Resource1', title: 'Resource 1', parentId: 'r0' },
     { id: 'r2', name: 'Resource2', parentId: 'r3' },
     { id: 'r3', name: 'Resource3', parentId: 'r1' },
     { id: 'r4', name: 'Resource4' },
