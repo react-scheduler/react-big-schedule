@@ -35,7 +35,7 @@ function AgendaResourceEvents(props) {
   );
 
   let slotItem = (
-    <div style={{ width }} title={resourceEvents.slotTitle} className="overflow-text header2-text">
+    <div style={{ width }} title={resourceEvents.slotTitle || resourceEvents.slotName} className="overflow-text header2-text">
       {slotItemContent}
     </div>
   );
