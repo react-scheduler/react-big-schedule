@@ -10,7 +10,7 @@ Before you start contributing, please take a moment to read our Code of Conduct.
 
 If you're new to the project, it's a good idea to familiarize yourself with the [README.md](https://github.com/react-scheduler/react-big-schedule/blob/master/README.md) file, which provides an overview of the project and its features. Also, explore existing issues and pull requests to understand the ongoing work and discussions.
 
-#### Important Note: The `main` branch is for beta releases, and the `master` branch is for stable releases. When changes are pushed to the `main` branch, a beta version will be released, whereas pushing changes to the `master` branch will trigger a release for the next stable version.
+#### Important Note: The `master` branch is for beta releases, and the `main` branch is for stable releases. When changes are pushed to the `master` branch, a beta version will be released, whereas pushing changes to the `main` branch will trigger a release for the next stable version.
 
 ### How to Contribute
 
