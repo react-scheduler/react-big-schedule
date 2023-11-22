@@ -9,7 +9,7 @@ body:
       options:
         - label: I've looked through the [README](https://github.com/react-scheduler/react-big-schedule#readme)
           required: true
-        - label: I've verified that  I am running react-big-schedule version **4.2.0** or above.
+        - label: I've verified that  I am running react-big-schedule latest version.
           required: true
         - label: I've searched the existing issues and discussions for a similar question
         - label: I've provided relevant code snippets or error messages
