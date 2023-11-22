@@ -53,4 +53,3 @@ If you encounter a bug, have a feature request, or need assistance with the libr
 Thank you for taking the time to contribute to react-big-schedule! Your passion and effort are what make open-source communities thrive. We value your contributions and look forward to seeing you grow with the project.
 
 #### Happy coding!
-
