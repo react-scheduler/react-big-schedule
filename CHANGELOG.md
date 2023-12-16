@@ -3,7 +3,7 @@
 `2023-12-16`
 
 - Updated `node_modules` version by [@ansulagrawal](https://github.com/ansulagrawal).
-- Fix issue [#114](https://github.com/react-scheduler/react-big-schedule/issues/114) displaying `[object Object]` in the title of resources. 
+- Fix issue [#114](https://github.com/react-scheduler/react-big-schedule/issues/114) displaying `[object Object]` in the title of resources.
 
 ## [4.3.2](https://github.com/react-scheduler/react-big-schedule/compare/4.3.1...4.3.2)
 
