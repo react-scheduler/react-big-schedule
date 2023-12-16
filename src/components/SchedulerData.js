@@ -864,6 +864,7 @@ export default class SchedulerData {
       const slotRenderData = {
         slotId: slot.id,
         slotName: slot.name,
+        slotTitle: slot.title,
         parentId: slot.parentId,
         groupOnly: slot.groupOnly,
         hasSummary: false,

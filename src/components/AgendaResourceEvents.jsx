@@ -12,7 +12,6 @@ function AgendaResourceEvents(props) {
     const end = localeDayjs(endDate).add(1, 'days');
     const headerStart = localeDayjs(new Date(item.start));
     const headerEnd = localeDayjs(new Date(item.end));
-
     if (start === headerStart && end === headerEnd) {
       return item.events.map(evt => {
         const durationStart = localeDayjs(new Date(startDate));
@@ -36,7 +35,7 @@ function AgendaResourceEvents(props) {
   );
 
   let slotItem = (
-    <div style={{ width }} title={resourceEvents.slotName} className="overflow-text header2-text">
+    <div style={{ width }} title={resourceEvents.slotTitle || resourceEvents.slotName} className="overflow-text header2-text">
       {slotItemContent}
     </div>
   );

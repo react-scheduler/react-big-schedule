@@ -10,6 +10,8 @@ Before you start contributing, please take a moment to read our Code of Conduct.
 
 If you're new to the project, it's a good idea to familiarize yourself with the [README.md](https://github.com/react-scheduler/react-big-schedule/blob/master/README.md) file, which provides an overview of the project and its features. Also, explore existing issues and pull requests to understand the ongoing work and discussions.
 
+#### Important Note: The `master` branch is for beta releases, and the `main` branch is for stable releases. When changes are pushed to the `master` branch, a beta version will be released, whereas pushing changes to the `main` branch will trigger a release for the next stable version.
+
 ### How to Contribute
 
 We value contributions in various forms – from reporting issues and suggesting improvements to submitting feature requests and providing code changes. To get started with your contributions, follow these steps:
@@ -51,5 +53,3 @@ If you encounter a bug, have a feature request, or need assistance with the libr
 Thank you for taking the time to contribute to react-big-schedule! Your passion and effort are what make open-source communities thrive. We value your contributions and look forward to seeing you grow with the project.
 
 #### Happy coding!
-
-- The react-big-schedule Team
