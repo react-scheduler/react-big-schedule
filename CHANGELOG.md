@@ -1,4 +1,4 @@
-## [4.3.4](https://github.com/react-scheduler/react-big-schedule/compare/4.3.3...4.3.4)
+## [4.4.0](https://github.com/react-scheduler/react-big-schedule/compare/4.3.3...4.4.0)
 
 `2024-02-21`
 
