@@ -657,123 +657,125 @@ export default class SchedulerData {
   }
 
   // Previous Code
-  // _createHeaders() {
-  //   const headers = [];
-  //   let start = this.localeDayjs(new Date(this.startDate));
-  //   let end = this.localeDayjs(new Date(this.endDate));
-  //   let header = start;
-
-  //   if (this.showAgenda) {
-  //     headers.push({ time: header.format(DATETIME_FORMAT), nonWorkingTime: false });
-  //   } else if (this.cellUnit === CellUnit.Hour) {
-  //     if (start.hour() === 0) {
-  //       start = start.add(this.config.dayStartFrom, 'hours');
-  //     }
-  //     if (end.hour() === 0) {
-  //       end = end.add(this.config.dayStopTo, 'hours');
-  //     }
-  //     header = start;
-
-  //     let prevHour = -1;
-  //     while (header >= start && header <= end) {
-  //       // prevent doubled hours on time change
-  //       if (header.hour() === prevHour) {
-  //         header = header.add(1, 'hours');
-  //         continue;
-  //       }
-  //       prevHour = header.hour();
-  //       const minuteSteps = this.getMinuteStepsInHour();
-  //       for (let i = 0; i < minuteSteps; i++) {
-  //         const hour = header.hour();
-  //         if (hour >= this.config.dayStartFrom && hour <= this.config.dayStopTo) {
-  //           const time = header.format(DATETIME_FORMAT);
-  //           const nonWorkingTime = this.behaviors.isNonWorkingTimeFunc(this, time);
-  //           headers.push({ time, nonWorkingTime });
-  //         }
-
-  //         header = header.add(this.config.minuteStep, 'minutes');
-  //       }
-  //     }
-  //   } else if (this.cellUnit === CellUnit.Day) {
-  //     while (header >= start && header <= end) {
-  //       const time = header.format(DATETIME_FORMAT);
-  //       const dayOfWeek = header.weekday();
-  //       if (this.config.displayWeekend || (dayOfWeek !== 0 && dayOfWeek !== 6)) {
-  //         const nonWorkingTime = this.behaviors.isNonWorkingTimeFunc(this, time);
-  //         headers.push({ time, nonWorkingTime });
-  //       }
-
-  //       header = header.add(1, 'days');
-  //     }
-  //   } else if (this.cellUnit === CellUnit.Week) {
-  //     while (header >= start && header <= end) {
-  //       const time = header.format(DATE_FORMAT);
-  //       headers.push({ time });
-  //       header = header.add(1, 'weeks').startOf('week');
-  //     }
-  //   } else if (this.cellUnit === CellUnit.Month) {
-  //     while (header >= start && header <= end) {
-  //       const time = header.format(DATE_FORMAT);
-  //       headers.push({ time });
-  //       header = header.add(1, 'months').startOf('month');
-  //     }
-  //   } else if (this.cellUnit === CellUnit.Year) {
-  //     while (header >= start && header <= end) {
-  //       const time = header.format(DATE_FORMAT);
-  //       headers.push({ time });
-  //       header = header.add(1, 'years').startOf('year');
-  //     }
-  //   }
-
-  //   this.headers = headers;
-  // }
-
   _createHeaders() {
     const headers = [];
-    const start = this.localeDayjs(new Date(this.startDate));
-    const end = this.localeDayjs(new Date(this.endDate));
+    let start = this.localeDayjs(new Date(this.startDate));
+    let end = this.localeDayjs(new Date(this.endDate));
+    let header = start;
 
-    const processHeader = (header, format, unit, incrementFn) => {
-      let head = header;
-      while (head >= start && head <= end) {
-        const time = head.format(format);
-        if (unit === CellUnit.Day) {
-          const dayOfWeek = head.weekday();
-          if (this.config.displayWeekend || (dayOfWeek !== 0 && dayOfWeek !== 6)) {
+    if (this.showAgenda) {
+      headers.push({ time: header.format(DATETIME_FORMAT), nonWorkingTime: false });
+    } else if (this.cellUnit === CellUnit.Hour) {
+      if (start.hour() === 0) {
+        start = start.add(this.config.dayStartFrom, 'hours');
+      }
+      if (end.hour() === 0) {
+        end = end.add(this.config.dayStopTo, 'hours');
+      }
+      header = start;
+
+      let prevHour = -1;
+      while (header >= start && header <= end) {
+        // prevent doubled hours on time change
+        if (header.hour() === prevHour) {
+          header = header.add(1, 'hours');
+          // eslint-disable-next-line no-continue
+          continue;
+        }
+        prevHour = header.hour();
+        const minuteSteps = this.getMinuteStepsInHour();
+        for (let i = 0; i < minuteSteps; i += 1) {
+          const hour = header.hour();
+          if (hour >= this.config.dayStartFrom && hour <= this.config.dayStopTo) {
+            const time = header.format(DATETIME_FORMAT);
             const nonWorkingTime = this.behaviors.isNonWorkingTimeFunc(this, time);
             headers.push({ time, nonWorkingTime });
           }
-        } else {
-          headers.push({ time });
-        }
-        head = head.add(1, incrementFn);
-      }
-    };
 
-    if (this.showAgenda) {
-      headers.push({ time: start.format(DATETIME_FORMAT), nonWorkingTime: false });
-    } else if (this.cellUnit === CellUnit.Hour) {
-      const hourIncrement = this.config.minuteStep < 60 ? 'minutes' : 'hours';
-      const minuteSteps = this.getMinuteStepsInHour();
-      let header = start.hour() === 0 ? start.add(this.config.dayStartFrom, 'hours') : start;
-      while (header <= end) {
-        const hour = header.hour();
-        if (hour >= this.config.dayStartFrom && hour <= this.config.dayStopTo) {
-          const time = header.format(DATETIME_FORMAT);
+          header = header.add(this.config.minuteStep, 'minutes');
+        }
+      }
+    } else if (this.cellUnit === CellUnit.Day) {
+      while (header >= start && header <= end) {
+        const time = header.format(DATETIME_FORMAT);
+        const dayOfWeek = header.weekday();
+        if (this.config.displayWeekend || (dayOfWeek !== 0 && dayOfWeek !== 6)) {
           const nonWorkingTime = this.behaviors.isNonWorkingTimeFunc(this, time);
           headers.push({ time, nonWorkingTime });
         }
-        header = header.add(minuteSteps, hourIncrement);
+
+        header = header.add(1, 'days');
       }
-    } else {
-      const header = start;
-      const format = this.cellUnit === CellUnit.Day ? DATETIME_FORMAT : DATE_FORMAT;
-      const incrementFn = this.cellUnit === CellUnit.Day ? 'days' : `${this.cellUnit}s`;
-      processHeader(header, format, this.cellUnit, incrementFn);
+    } else if (this.cellUnit === CellUnit.Week) {
+      while (header >= start && header <= end) {
+        const time = header.format(DATE_FORMAT);
+        headers.push({ time });
+        header = header.add(1, 'weeks').startOf('week');
+      }
+    } else if (this.cellUnit === CellUnit.Month) {
+      while (header >= start && header <= end) {
+        const time = header.format(DATE_FORMAT);
+        headers.push({ time });
+        header = header.add(1, 'months').startOf('month');
+      }
+    } else if (this.cellUnit === CellUnit.Year) {
+      while (header >= start && header <= end) {
+        const time = header.format(DATE_FORMAT);
+        headers.push({ time });
+        header = header.add(1, 'years').startOf('year');
+      }
     }
 
     this.headers = headers;
   }
+
+  // Fix Optimited code
+  // _createHeaders() {
+  //   const headers = [];
+  //   const start = this.localeDayjs(new Date(this.startDate));
+  //   const end = this.localeDayjs(new Date(this.endDate));
+
+  //   const processHeader = (header, format, unit, incrementFn) => {
+  //     let head = header;
+  //     while (head >= start && head <= end) {
+  //       const time = head.format(format);
+  //       if (unit === CellUnit.Day) {
+  //         const dayOfWeek = head.weekday();
+  //         if (this.config.displayWeekend || (dayOfWeek !== 0 && dayOfWeek !== 6)) {
+  //           const nonWorkingTime = this.behaviors.isNonWorkingTimeFunc(this, time);
+  //           headers.push({ time, nonWorkingTime });
+  //         }
+  //       } else {
+  //         headers.push({ time });
+  //       }
+  //       head = head.add(1, incrementFn);
+  //     }
+  //   };
+
+  //   if (this.showAgenda) {
+  //     headers.push({ time: start.format(DATETIME_FORMAT), nonWorkingTime: false });
+  //   } else if (this.cellUnit === CellUnit.Hour) {
+  //     const hourIncrement = this.config.minuteStep < 60 ? 'minutes' : 'hours';
+  //     const minuteSteps = this.getMinuteStepsInHour();
+  //     let header = start.hour() === 0 ? start.add(this.config.dayStartFrom, 'hours') : start;
+  //     while (header <= end) {
+  //       const hour = header.hour();
+  //       if (hour >= this.config.dayStartFrom && hour <= this.config.dayStopTo) {
+  //         const time = header.format(DATETIME_FORMAT);
+  //         const nonWorkingTime = this.behaviors.isNonWorkingTimeFunc(this, time);
+  //         headers.push({ time, nonWorkingTime });
+  //       }
+  //       header = header.add(minuteSteps, hourIncrement);
+  //     }
+  //   } else {
+  //     const header = start;
+  //     const format = this.cellUnit === CellUnit.Day ? DATETIME_FORMAT : DATE_FORMAT;
+  //     const incrementFn = this.cellUnit === CellUnit.Day ? 'days' : `${this.cellUnit}s`;
+  //     processHeader(header, format, this.cellUnit, incrementFn);
+  //   }
+
+  //   this.headers = headers;
+  // }
 
   _createInitHeaderEvents(header) {
     const start = this.localeDayjs(new Date(header.time));

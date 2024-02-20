@@ -7,7 +7,7 @@ We take the security of react-big-schedule seriously. If you believe you have fo
 
 | Version |	Supported |
 | --------| --------- |
-| 4.3.1	| :white_check_mark: |
+| 4.3.2 or grater 	| :white_check_mark: |
 | 4.2.5	| :white_check_mark: |
 | rest all | :x: |
 
