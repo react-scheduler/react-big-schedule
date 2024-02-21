@@ -3,7 +3,7 @@
 `2024-02-21`
 
 - Updated `node_modules` version by [@ansulagrawal](https://github.com/ansulagrawal) in [#132](https://github.com/react-scheduler/react-big-schedule/pull/132).
-- Fix Issue of Displaying hour headers properly in ViewType.Da by [@ansulagrawal](https://github.com/ansulagrawal) in [#131](https://github.com/react-scheduler/react-big-schedule/pull/131).
+- Fix Issue of Displaying hour headers properly in ViewType.Data by [@ansulagrawal](https://github.com/ansulagrawal) in [#131](https://github.com/react-scheduler/react-big-schedule/pull/131).
 - Bump webpack-dev-server from 4.15.1 to 5.0.2 by [@dependabot](https://github.com/dependabot) in [#130](https://github.com/react-scheduler/react-big-schedule/pull/130).
 
 ## [4.3.3](https://github.com/react-scheduler/react-big-schedule/compare/4.3.2...4.3.3)
