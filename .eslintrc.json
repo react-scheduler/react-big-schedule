@@ -19,6 +19,7 @@
     "no-underscore-dangle": "off",
     "no-param-reassign": "off",
     "no-console": "off",
-    "class-methods-use-this": "off"
+    "class-methods-use-this": "off",
+    "quotes": ["off"]
   }
 }
