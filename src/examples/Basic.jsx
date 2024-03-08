@@ -3,9 +3,12 @@ import * as dayjsLocale from "dayjs/locale/es-mx";
 import * as antdLocale from "antd/locale/es_ES";
 import { Scheduler, SchedulerData, ViewType, wrapperFun, DemoData } from "../index";
 import { jezaApi } from "../api/jezaApi2";
+import { peinadosApi } from "../api/peinadosApi";
 import Modal from "../components/Modal";
 import { format } from "date-fns-tz";
-
+import { set } from "date-fns";
+import { DataGrid } from "@mui/x-data-grid";
+import Timer from "../components/Timer";
 let schedulerData;
 
 const initialState = {
@@ -54,8 +57,65 @@ function Basic() {
   const toggleModal = () => {
     setIsModalOpen(!isModalOpen);
   };
-  const fetchData = () => {
-    jezaApi
+  const getCitas = async (fecha) => {
+    try {
+      console.log(fecha + "GET CITAS");
+      const response = await jezaApi.get(`/Cita?cliente=%&f1=${format(fecha ? fecha : datosParametros.fecha, "yyyyMMdd")}&suc=21`);
+
+      setArregloCita(
+        response.data.map((item) => ({
+          ...item,
+          start: item.fechaCita,
+          end: item.horaFin,
+          resourceId: item.idEstilista,
+          title: item.ServicioDescripción,
+          type: 2,
+          bgColor: "red",
+        }))
+      );
+      return response.data.map((item) => ({
+        ...item,
+        start: item.fechaCita,
+        end: item.horaFin,
+        resourceId: item.idEstilista,
+        title: item.ServicioDescripción,
+        type: 2,
+        bgColor: "red",
+      }));
+    } catch (err) {
+      console.error(err);
+    }
+  };
+  const getCitas2 = async () => {
+    try {
+      const response = await jezaApi.get(`/Cita?cliente=%&f1=${format(datosParametros.fecha, "yyyyMMdd")}&suc=21`);
+
+      setArregloCita(
+        response.data.map((item) => ({
+          ...item,
+          start: item.fechaCita,
+          end: item.horaFin,
+          resourceId: item.idEstilista,
+          title: item.ServicioDescripción,
+          type: 2,
+          bgColor: "red",
+        }))
+      );
+      return response.data.map((item) => ({
+        ...item,
+        start: item.fechaCita,
+        end: item.horaFin,
+        resourceId: item.idEstilista,
+        title: item.ServicioDescripción,
+        type: 2,
+        bgColor: "red",
+      }));
+    } catch (err) {
+      console.error(err);
+    }
+  };
+  const fetchData = async () => {
+    await jezaApi
       .get(`/Estilistas?suc=21&fecha=${format(datosParametros.fecha, "yyyy-MM-dd")}`)
       .then((response) => {
         setArreglo(
@@ -72,35 +132,14 @@ function Basic() {
       .catch((err) => {
         console.log(err);
       });
-    jezaApi
-      .get(`/Cita?cliente=%&f1=${format(datosParametros.fecha, "yyyyMMdd")}&suc=21`)
-      .then((response) => {
-        setArregloCita(
-          response.data.map((item) => {
-            const newItem = {
-              ...item,
-              start: item.fechaCita,
-              end: item.horaFin,
-              resourceId: item.idEstilista,
-              title: item.ServicioDescripción,
-              type: 2,
-              bgColor: "red",
-            };
-            delete newItem.toggleExpandStatus;
-            return newItem;
-          })
-        );
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    getCitas();
   };
   useEffect(() => {
     fetchData();
   }, []);
 
   const [state, dispatch] = useReducer(reducer, initialState);
-
+  const [inicializarAgenda, setinicializarAgenda] = useState(false);
   useEffect(() => {
     schedulerData = new SchedulerData(datosParametros.fecha, ViewType.Day, false, false, {
       besidesWidth: window.innerWidth <= 1600 ? 100 : 350,
@@ -120,34 +159,53 @@ function Basic() {
     schedulerData.setEvents(arregloCita);
     if (arreglo.length > 0 && arregloCita.length > 0) {
       setTimeout(() => {
-        dispatch({ type: "INITIALIZE", payload: schedulerData });
+        if (inicializarAgenda == false) {
+          dispatch({ type: "INITIALIZE", payload: schedulerData });
+        }
+        setinicializarAgenda(true);
         return () => dispatch({ type: "REINITIALIZE" });
       }, 1500);
     }
   }, [arreglo, arregloCita]);
 
-  const prevClick = (schedulerData) => {
-    schedulerData.prev();
-    schedulerData.setEvents(DemoData.events);
+  const actualizarAgenda = (response, schedulerData) => {
+    schedulerData.setEvents(response);
     dispatch({ type: "UPDATE_SCHEDULER", payload: schedulerData });
+  };
+
+  const actualizarFechayCitas = (schedulerData, dias, fecha) => {
+    setDatosParametros((datosParametrosPrevios) => {
+      const tempFecha = new Date(fecha ? fecha : datosParametrosPrevios.fecha);
+      tempFecha.setDate(tempFecha.getDate() + dias);
+      if (dias == 0) tempFecha.setDate(tempFecha.getDate() + 1);
+      getCitas(tempFecha).then((response) => {
+        if (dias < 0) {
+          schedulerData.prev();
+        } else if (dias === 0) {
+          schedulerData.setDate(format(tempFecha, "yyyy-MM-dd"));
+        } else {
+          schedulerData.next();
+        }
+        actualizarAgenda(response, schedulerData);
+      });
+      return {
+        ...datosParametrosPrevios,
+        fecha: tempFecha,
+      };
+    });
+  };
+
+  const prevClick = (schedulerData) => {
+    actualizarFechayCitas(schedulerData, -1);
   };
 
   const nextClick = (schedulerData) => {
-    // schedulerData.next();
-    schedulerData.next();
-
-    setDatosParametros({
-      fecha: datosParametros.fecha.setDate(datosParametros.fecha.getDate() + 1),
-    });
-    fetchData();
-    schedulerData.setEvents(arregloCita);
-    // dispatch({ type: "REINITIALIZE", payload: schedulerData });
+    actualizarFechayCitas(schedulerData, +1);
   };
 
   const onSelectDate = (schedulerData, date) => {
-    schedulerData.setDate(date);
-    schedulerData.setEvents(DemoData.events);
-    dispatch({ type: "UPDATE_SCHEDULER", payload: schedulerData });
+    console.log(new Date(date));
+    actualizarFechayCitas(schedulerData, 0, date);
   };
 
   const onViewChange = (schedulerData, view) => {
@@ -165,6 +223,10 @@ function Basic() {
   };
 
   const ops1 = (schedulerData, event) => {
+    console.log({ event });
+    console.log({ schedulerData });
+
+    return;
     setDatosParametros({
       fecha: fecha.setDate(fecha.getDate() + 1),
     });
@@ -241,6 +303,7 @@ function Basic() {
   };
 
   const newEvent = (schedulerData, slotId, slotName, start, end, type, item) => {
+    console.log(schedulerData);
     if (
       confirm(
         `Do you want to create a new event? {slotId: ${slotId}, slotName: ${slotName}, start: ${start}, end: ${end}, type: ${type}, item: ${item}}`
@@ -332,9 +395,105 @@ function Basic() {
       });
     dispatch({ type: "UPDATE_SCHEDULER", payload: schedulerData });
   };
+  const columns = [
+    { field: "clave", headerName: "Clave", width: 70 },
+    { field: "estilista", headerName: "Modo", width: 130 },
+    { field: "hora", headerName: "Hora", width: 130 },
+    {
+      field: "horaFinal",
+      headerName: "HF",
+      type: "number",
+      width: 90,
+    },
+    {
+      field: "cliente",
+      headerName: "Cliente",
+      description: "This column has a value getter and is not sortable.",
+      sortable: false,
+      width: 160,
+      valueGetter: (params) => `${params.row.firstName || ""} ${params.row.lastName || ""}`,
+    },
+    { field: "servicio", headerName: "Servicio", width: 130 },
+    { field: "tiempo", headerName: "Tiempo", width: 130 },
+    { field: "total", headerName: "Total", width: 130 },
+  ];
 
+  const rows = [
+    {
+      id: 10,
+      clave: "180",
+      estilista: "susy",
+      hora: "10:00am",
+      horaFinal: "12:00pm",
+      cliente: "Maria Jors",
+      servicio: "Peinados",
+      tiempo: "30",
+      total: "$5000.00",
+    },
+    {
+      id: 11,
+      clave: "181",
+      estilista: "susy",
+      hora: "2:00pm",
+      horaFinal: "12:00pm",
+      cliente: "Mario",
+      servicio: "Corte",
+      tiempo: "10",
+      total: "$200.00",
+    },
+  ];
+  const ligaPruebas = "http://localhost:5173/";
+  const handleOpenNewWindow = () => {
+    const url = `${ligaPruebas}miliga/crearcita`; // Reemplaza esto con la URL que desees abrir
+    const width = 500;
+    const height = 1500;
+    const left = (window.screen.width - width) / 2;
+    const top = (window.screen.height - height) / 2;
+    const features = `width=${width},height=${height},left=${left},top=${top},toolbar=0,location=0,menubar=0,scrollbars=1,resizable=1`;
+    window.open(url, "_blank", features);
+  };
+  const handleOpenNewWindowListaEspera = () => {
+    const url = `${ligaPruebas}miliga/listaEspera`; // Reemplaza esto con la URL que desees abrir
+    const width = 500;
+    const height = 1500;
+    const left = (window.screen.width - width) / 2;
+    const top = (window.screen.height - height) / 2;
+    const features = `width=${width},height=${height},left=${left},top=${top},toolbar=0,location=0,menubar=0,scrollbars=1,resizable=1`;
+    window.open(url, "_blank", features);
+  };
   return (
     <>
+      <div>
+        <Timer />
+        <h2>{datosParametros.fecha.toLocaleDateString()}</h2>
+      </div>
+      <button
+        onClick={() => {
+          handleOpenNewWindow();
+        }}
+      >
+        Nueva cita
+      </button>
+      <button
+        onClick={() => {
+          handleOpenNewWindowListaEspera();
+        }}
+      >
+        Lista de espera
+      </button>
+      <div style={{ height: 400, width: "100%" }}>
+        <DataGrid
+          rows={rows}
+          columns={columns}
+          initialState={{
+            pagination: {
+              paginationModel: { page: 0, pageSize: 5 },
+            },
+          }}
+          pageSizeOptions={[5, 10]}
+          checkboxSelection
+        />
+      </div>
       {state.showScheduler && (
         <Scheduler
           schedulerData={state.viewModel}
@@ -357,70 +516,6 @@ function Basic() {
           toggleExpandFunc={toggleExpandFunc}
         />
       )}
-      <Modal isOpen={isModalOpen} close={toggleModal}>
-        <p>Fecha</p>
-        <input
-          onChange={(value) => {
-            setDatosParametros({
-              ...datosParametros,
-              fecha: value.target.value,
-            });
-          }}
-          type="datetime-local"
-        />
-        <p>Cliente</p>
-        <input
-          onChange={(value) => {
-            setDatosParametros({
-              ...datosParametros,
-              idCliente: value.target.value,
-            });
-          }}
-          type="number"
-        />
-        <button onClick={() => postCita()}>Guardar</button>
-        {verificador ? (
-          <div>
-            <p>Ingresar Cantidad</p>
-            <input
-              type="text"
-              onChange={(value) => {
-                setFormServicio({
-                  ...formServicio,
-                  cantidad: value.target.value,
-                });
-              }}
-            />
-            <p>Ingresar Servicio</p>
-            <input
-              type="text"
-              onChange={(value) => {
-                setFormServicio({
-                  ...formServicio,
-                  idServicio: value.target.value,
-                });
-              }}
-            />
-            <p>Ingresar Observación</p>
-            <input
-              type="text"
-              onChange={(value) => {
-                setFormServicio({
-                  ...formServicio,
-                  observaciones: value.target.value,
-                });
-              }}
-            />
-            <button
-              onClick={() => {
-                postServicio(schedulerData);
-              }}
-            >
-              Guardado
-            </button>
-          </div>
-        ) : null}
-      </Modal>
     </>
   );
 }

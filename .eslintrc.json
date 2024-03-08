@@ -6,20 +6,42 @@
   },
   "plugins": ["react"],
   "parser": "@babel/eslint-parser",
-  "extends": ["airbnb"],
+  "extends": "eslint:recommended", // O cualquier otra configuración que estés utilizando
   "parserOptions": { "ecmaVersion": "latest", "sourceType": "module" },
+
   "rules": {
-    "max-len": ["error", { "code": 200 }],
-    "arrow-parens": ["error", "as-needed"],
-    "linebreak-style": "off",
-    "object-curly-newline": "off",
-    "react/forbid-prop-types": "off",
-    "react/require-default-props": "off",
-    "react/jsx-props-no-spreading": "off",
-    "no-underscore-dangle": "off",
-    "no-param-reassign": "off",
-    "no-console": "off",
-    "class-methods-use-this": "off",
-    "quotes": ["off"]
+    // Desactivar todas las reglas
+    "off": "off",
+
+    // O desactivar reglas específicas
+    "prefer-default-export": "off",
+    "prefer-template": "off",
+    "no-unused-vars": "off",
+    // ... otras reglas ...
+
+    // Cambiar severidad (0: off, 1: warn, 2: error)
+    "jsx-a11y/control-has-associated-label": 0
+    // ... otras reglas ...
   }
+  // "rules": {
+  //   "max-len": ["error", { "code": 200 }],
+  //   "arrow-parens": ["error", "as-needed"],
+  //   "linebreak-style": "off",
+  //   "object-curly-newline": "off",
+  //   "react/forbid-prop-types": "off",
+  //   "react/require-default-props": "off",
+  //   "react/jsx-props-no-spreading": "off",
+  //   "no-underscore-dangle": "off",
+  //   "no-param-reassign": "off",
+  //   "no-console": "off",
+  //   "class-methods-use-this": "off",
+  //   "quotes": ["off"],
+  //   "jsx-a11y/control-has-associated-label": [
+  //     "warn",
+  //     {
+  //       "labelAttributes": ["label"],
+  //       "controlComponents": ["CustomComponent"]
+  //     }
+  //   ]
+  // }
 }

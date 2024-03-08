@@ -1,10 +1,20 @@
 import React from "react";
 import { createRoot } from "react-dom/client";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Example from "./Basic";
 import "../css/style.css";
 import { AuthProvider } from "../context/AuthContext";
+import CrearCita from "../screens/CrearCita";
+import ListaEspera from "../screens/ListaEspera";
 createRoot(document.getElementById("app")).render(
   <AuthProvider>
-    <Example />
+    {/* <Example /> */}
+    <Router>
+      <Routes>
+        <Route path="/" element={<Example />} />
+        <Route path="/miliga/crearcita" element={<CrearCita />} />
+        <Route path="/miliga/listaEspera" element={<ListaEspera />} />
+      </Routes>
+    </Router>
   </AuthProvider>
 );
