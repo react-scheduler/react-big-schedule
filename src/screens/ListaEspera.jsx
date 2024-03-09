@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { DataGrid } from "@mui/x-data-grid";
 import { Box, Button, Modal, TextField } from "@mui/material";
 function ListaEspera() {
-  const [openListaEspera, setOpenListaEspera] = useState(false);
+  const [openListaEspera, setOpenListaEspera] = useState(true);
   const columns = [
     { field: "clave", headerName: "Clave", width: 70 },
     { field: "descripcion", headerName: "Descripción", width: 130 },
@@ -33,12 +33,13 @@ function ListaEspera() {
       total: "$200.00",
     },
   ];
+
   const style = {
     position: "absolute",
     top: "50%",
     left: "50%",
     transform: "translate(-50%, -50%)",
-    width: "40%",
+    width: "90%",
     bgcolor: "background.paper",
     border: "2px solid #000",
     boxShadow: 24,
@@ -46,7 +47,7 @@ function ListaEspera() {
   };
   return (
     <div>
-      <Box m={2}>
+      <Box m={2} marginBottom={2}>
         <Button
           variant={"contained"}
           onClick={() => {
@@ -64,20 +65,21 @@ function ListaEspera() {
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
-          <TextField size={"small"} label={"Fecha"} type="time"></TextField>
-          <Box display="flex" alignItems={"center"} gap={2}>
+          <h2>Agregar listas de espera</h2>
+          <Box marginBottom={2} display="flex" alignItems={"center"} gap={2} justifyContent={"center"} justifyItems={"center"}>
+            <TextField InputLabelProps={{ shrink: true }} size={"small"} label={"Hora"} type="time"></TextField>
             <TextField size={"small"} label={"Cliente"} fullwidth></TextField>
             <Button variant={"contained"} fullwidth>
               Agrregar
             </Button>
-          </Box>
-          <Box fullwidth display="flex" alignItems={"center"} gap={2}>
             <TextField size={"small"} label={"Producto/servicio"}></TextField>
             <Button variant={"contained"}> Agrregar </Button>
           </Box>
-          <TextField size={"small"} label={"Servicio"}></TextField>
-          <TextField size={"small"} label={"Hora estimida"}></TextField>
-          <TextField size={"small"} label={"Estimida"}></TextField>
+          <Box marginBottom={2} display="flex" alignItems={"center"} gap={2} justifyContent={"center"} justifyItems={"center"}>
+            <TextField fullwidth size={"small"} label={"Tiempo de servicio"} disabled></TextField>
+            <TextField fullwidth size={"small"} label={"Hora estimida"} disabled></TextField>
+            <TextField fullwidth size={"small"} label={"Estimida"}></TextField>
+          </Box>
         </Box>
       </Modal>
     </div>
