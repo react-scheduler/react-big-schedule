@@ -6,6 +6,6 @@ export const peinadosApi = axios.create({
     "Content-Type": "text/plain; charset=UTF-8; application/json",
     // "Content-Type": "application/json",
     Accept: "*",
-    Authorization: localStorage.getItem("token") ? "Bearer " + localStorage.getItem("token") : "NADA",
+    Authorization: localStorage.getItem("tokenPeinados") ? "Bearer " + localStorage.getItem("tokenPeinados") : "NADA",
   },
 });

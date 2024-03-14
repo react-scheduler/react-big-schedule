@@ -445,8 +445,8 @@ function Basic() {
   const ligaPruebas = "http://localhost:5173/";
   const handleOpenNewWindow = () => {
     const url = `${ligaPruebas}miliga/crearcita`; // Reemplaza esto con la URL que desees abrir
-    const width = 500;
-    const height = 1500;
+    const width = 1200;
+    const height = 600;
     const left = (window.screen.width - width) / 2;
     const top = (window.screen.height - height) / 2;
     const features = `width=${width},height=${height},left=${left},top=${top},toolbar=0,location=0,menubar=0,scrollbars=1,resizable=1`;
@@ -454,8 +454,8 @@ function Basic() {
   };
   const handleOpenNewWindowListaEspera = () => {
     const url = `${ligaPruebas}miliga/listaEspera`; // Reemplaza esto con la URL que desees abrir
-    const width = 500;
-    const height = 1500;
+    const width = 1200;
+    const height = 600;
     const left = (window.screen.width - width) / 2;
     const top = (window.screen.height - height) / 2;
     const features = `width=${width},height=${height},left=${left},top=${top},toolbar=0,location=0,menubar=0,scrollbars=1,resizable=1`;
@@ -495,26 +495,29 @@ function Basic() {
         />
       </div>
       {state.showScheduler && (
-        <Scheduler
-          schedulerData={state.viewModel}
-          prevClick={prevClick}
-          nextClick={nextClick}
-          onSelectDate={onSelectDate}
-          onViewChange={onViewChange}
-          viewEventClick={ops1}
-          viewEventText="Ops 1"
-          viewEvent2Text="Ops 2"
-          viewEvent2Click={ops2}
-          updateEventStart={updateEventStart}
-          updateEventEnd={updateEventEnd}
-          moveEvent={moveEvent}
-          newEvent={newEvent}
-          onScrollLeft={onScrollLeft}
-          onScrollRight={onScrollRight}
-          onScrollTop={onScrollTop}
-          onScrollBottom={onScrollBottom}
-          toggleExpandFunc={toggleExpandFunc}
-        />
+        <div style={{ marginBottom: 15000 }}>
+          <Scheduler
+            key={1}
+            schedulerData={state.viewModel}
+            prevClick={prevClick}
+            nextClick={nextClick}
+            onSelectDate={onSelectDate}
+            onViewChange={onViewChange}
+            viewEventClick={ops1}
+            viewEventText="Ops 1"
+            viewEvent2Text="Ops 2"
+            viewEvent2Click={ops2}
+            updateEventStart={updateEventStart}
+            updateEventEnd={updateEventEnd}
+            moveEvent={moveEvent}
+            newEvent={newEvent}
+            onScrollLeft={onScrollLeft}
+            onScrollRight={onScrollRight}
+            onScrollTop={onScrollTop}
+            onScrollBottom={onScrollBottom}
+            toggleExpandFunc={toggleExpandFunc}
+          />
+        </div>
       )}
     </>
   );
