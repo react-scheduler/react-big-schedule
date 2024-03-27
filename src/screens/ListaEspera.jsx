@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { DataGrid } from "@mui/x-data-grid";
-import { Table, Button, Modal, ModalHeader, ModalBody, ModalFooter, Input, FormGroup, Label, Col, Row } from "reactstrap";
+import { Table, Button, Modal, ModalHeader, ModalBody, ModalFooter, Input, FormGroup, Label, Col, Row, InputGroup } from "reactstrap";
 import { peinadosApi } from "../api/peinadosApi";
+import { estilistas, productos } from "../data/Data";
+
 function ListaEspera() {
   const [openListaEspera, setOpenListaEspera] = useState(false);
   const columns = [
@@ -47,6 +49,8 @@ function ListaEspera() {
     p: 4,
   };
   const [clientesModal, setClientesModal] = useState(false);
+  const [productosModal, setProductosModal] = useState(false);
+  const [estilistasModal, setEstilistasModal] = useState(false);
 
   const [dataClientes, setDataClientes] = useState({});
   const [formClienteEspera, setformClienteEspera] = useState({
@@ -59,7 +63,7 @@ function ListaEspera() {
     descripcion_clave_prod: "",
     hora_estimada: 0,
     atendido: 0,
-    estilista: 0,
+    estilista: "",
     tiempo_servicio: 0,
     usuario_registra: 0,
     usuario_cita: 0,
@@ -95,6 +99,55 @@ function ListaEspera() {
       </div>
     );
   }
+  function renderButtonProduct(params) {
+    return (
+      <div>
+        <Button
+          variant={"contained"}
+          onClick={() => {
+            setformClienteEspera({ ...formClienteEspera, tiempo_servicio: params.row.tiempox, descripcion_clave_prod: params.row.descripcion });
+            console.log(params.row);
+            setProductosModal(false);
+          }}
+        >
+          Agregar
+        </Button>
+      </div>
+    );
+  }
+  function renderButtonEstilista(params) {
+    return (
+      <div>
+        <Button
+          variant={"contained"}
+          onClick={() => {
+            setformClienteEspera({ ...formClienteEspera, estilista: params.row.estilista });
+            console.log(params.row);
+            setEstilistasModal(false);
+          }}
+        >
+          Agregar
+        </Button>
+      </div>
+    );
+  }
+
+  const columnsProductos = [
+    { field: "id", headerName: "id", width: 250 },
+    { field: "clave_prod", headerName: "clave_prod", width: 130 },
+    { field: "descripcion", headerName: "descripcion", width: 130 },
+    { field: "precio", headerName: "precio", width: 130, renderCell: (params) => <p>{params.row.precio}</p> },
+    { field: "tiempox", headerName: "tiempox", width: 130, renderCell: (params) => <p>{params.row.tiempox}</p> },
+    { field: "x", headerName: "x", renderCell: renderButtonProduct, width: 130 },
+  ];
+  const columnsEstilistas = [
+    { field: "cia", headerName: "cia", width: 250 },
+    { field: "sucursal", headerName: "sucursal", width: 130 },
+    { field: "clave", headerName: "clave", width: 130 },
+    { field: "estilista", headerName: "estilista", width: 130, renderCell: (params) => <p>{params.row.estilista}</p> },
+    { field: "tc", headerName: "tc", width: 130, renderCell: (params) => <p>{params.row.tc}</p> },
+    { field: "pr", headerName: "pr", renderCell: renderButtonEstilista, width: 130 },
+  ];
   return (
     <div>
       <Button
@@ -131,41 +184,63 @@ function ListaEspera() {
         <ModalBody>
           <Row>
             <Col md={6}>
-              <FormGroup>
+              {/* <FormGroup>
                 <Label for="hora">Hora</Label>
                 <Input type="time" name="hora" id="hora" />
-              </FormGroup>
+              </FormGroup> */}
               <FormGroup>
                 <Label for="cliente">Cliente</Label>
-                <Input value={formClienteEspera.descripcion_no_cliente} type="text" name="cliente" id="cliente" disabled />
+                <InputGroup>
+                  <Input value={formClienteEspera.descripcion_no_cliente} type="text" name="cliente" id="cliente" disabled />
+                  <Button onClick={() => setClientesModal(true)}>Agregar</Button>
+                </InputGroup>
               </FormGroup>
-              <Button onClick={() => setClientesModal(true)} block>
-                Agregar
-              </Button>
               <FormGroup>
                 <Label for="productoServicio">Producto/Servicio</Label>
-                <Input type="text" name="productoServicio" id="productoServicio" disabled />
+                <InputGroup>
+                  <Input type="text" name="productoServicio" id="productoServicio" disabled value={formClienteEspera.descripcion_clave_prod} />
+                  <Button
+                    onClick={() => {
+                      setProductosModal(true);
+                    }}
+                  >
+                    Agregar
+                  </Button>
+                </InputGroup>
+              </FormGroup>{" "}
+              <FormGroup>
+                <Label for="cliente">Estilista</Label>
+                <InputGroup>
+                  <Button onClick={() => setEstilistasModal(true)}>Agregar</Button>
+                  <Input value={formClienteEspera.estilista} type="text" name="estilista" id="estilista" disabled />
+                </InputGroup>
               </FormGroup>
-                <Button block>Agregar</Button>
             </Col>
             <Col md={6}>
               <FormGroup>
                 <Label for="tiempoServicio">Tiempo de servicio</Label>
-                <Input type="text" name="tiempoServicio" id="tiempoServicio" disabled />
+                <Input type="text" name="tiempoServicio" id="tiempoServicio" disabled value={formClienteEspera.tiempo_servicio} />
               </FormGroup>
               <FormGroup>
                 <Label for="horaEstimada">Hora estimada</Label>
-                <Input type="text" name="horaEstimada" id="horaEstimada" disabled />
+                <Input type="time" name="horaEstimada" id="horaEstimada" />
               </FormGroup>
-              <FormGroup>
+
+              {/* <FormGroup>
                 <Label for="estimada">Estimada</Label>
                 <Input type="text" name="estimada" id="estimada" />
-              </FormGroup>
+              </FormGroup> */}
             </Col>
           </Row>
         </ModalBody>
         <ModalFooter>
-          <Button color="primary" onClick={() => setOpenListaEspera(!openListaEspera)}>
+          <Button
+            color="primary"
+            onClick={() => {
+              setOpenListaEspera(!openListaEspera);
+              setformClienteEspera([]);
+            }}
+          >
             Agregar
           </Button>
         </ModalFooter>
@@ -173,11 +248,32 @@ function ListaEspera() {
       <Modal isOpen={clientesModal} toggle={() => setClientesModal(!clientesModal)} size="xl">
         <ModalHeader toggle={() => setClientesModal(!clientesModal)}>Agregar cliente</ModalHeader>
         <ModalBody>
-          {" "}
           <DataGrid rows={dataClientes} columns={columnsClientes} />
         </ModalBody>
         <ModalFooter>
           <Button color="primary" onClick={() => setClientesModal(!clientesModal)}>
+            Agregar
+          </Button>
+        </ModalFooter>
+      </Modal>
+      <Modal isOpen={productosModal} toggle={() => setProductosModal(!productosModal)} size="xl">
+        <ModalHeader toggle={() => setProductosModal(!productosModal)}>Agregar producto</ModalHeader>
+        <ModalBody>
+          <DataGrid rows={productos} columns={columnsProductos} />
+        </ModalBody>
+        <ModalFooter>
+          <Button color="primary" onClick={() => setProductosModal(!productosModal)}>
+            Agregar
+          </Button>
+        </ModalFooter>
+      </Modal>
+      <Modal isOpen={estilistasModal} toggle={() => setEstilistasModal(!estilistasModal)} size="xl">
+        <ModalHeader toggle={() => setEstilistasModal(!estilistasModal)}>Agregar estilista</ModalHeader>
+        <ModalBody>
+          <DataGrid rows={estilistas} columns={columnsEstilistas} />
+        </ModalBody>
+        <ModalFooter>
+          <Button color="primary" onClick={() => setEstilistasModal(!estilistasModal)}>
             Agregar
           </Button>
         </ModalFooter>

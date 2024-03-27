@@ -9,6 +9,7 @@ import { format } from "date-fns-tz";
 import { set } from "date-fns";
 import { DataGrid } from "@mui/x-data-grid";
 import Timer from "../components/Timer";
+import { Container, Button } from "reactstrap";
 let schedulerData;
 
 const initialState = {
@@ -36,7 +37,7 @@ function Basic() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [datosParametros, setDatosParametros] = useState({
     idUser: 0,
-    fecha: new Date(),
+    fecha: new Date("2024/03/14"),
     idRec: 0,
     idSuc: 0,
     idCliente: 0,
@@ -57,28 +58,69 @@ function Basic() {
   const toggleModal = () => {
     setIsModalOpen(!isModalOpen);
   };
+  // const getCitas = async (fecha) => {
+  //   try {
+  //     console.log(fecha + "GET CITAS");
+  //     const response = await peinadosApi.get(`/DetalleAgendaSel?fecha=${format(fecha ? fecha : datosParametros.fecha, "yyyyMMdd")}&suc=1`);
+
+  //     setArregloCita(
+  //       response.data.map((item) => ({
+  //         ...item,
+  //         start: item.hora1,
+  //         end: item.hora2,
+  //         resourceId: item.nombreEstilista,
+  //         title: "ESTAMOS OPERANDO",
+  //         type: 2,
+  //         bgColor: "red",
+  //       }))
+  //     );
+  //     return response.data.map((item) => ({
+  //       ...item,
+  //       start: item.fechaCita,
+  //       end: item.horaFin,
+  //       resourceId: item.idEstilista,
+  //       title: item.ServicioDescripción,
+  //       type: 2,
+  //       bgColor: "red",
+  //     }));
+  //   } catch (err) {
+  //     console.error(err);
+  //   }
+  // };
   const getCitas = async (fecha) => {
     try {
       console.log(fecha + "GET CITAS");
-      const response = await jezaApi.get(`/Cita?cliente=%&f1=${format(fecha ? fecha : datosParametros.fecha, "yyyyMMdd")}&suc=21`);
-
+      const response = await peinadosApi.get(`/DetalleAgendaSel?fecha=${format(fecha ? fecha : datosParametros.fecha, "yyyyMMdd")}&suc=1`);
       setArregloCita(
-        response.data.map((item) => ({
-          ...item,
-          start: item.fechaCita,
-          end: item.horaFin,
-          resourceId: item.idEstilista,
-          title: item.ServicioDescripción,
-          type: 2,
-          bgColor: "red",
-        }))
+        response.data.map((item) => {
+          let hora1 = new Date(item.hora1);
+          let hora2 = new Date(item.hora2);
+
+          hora1.setFullYear(item.fecha.slice(0, 4));
+          hora1.setMonth(item.fecha.slice(5, 7) - 1); // los meses en JavaScript son de 0 a 11
+          hora1.setDate(item.fecha.slice(8, 10));
+
+          hora2.setFullYear(item.fecha.slice(0, 4));
+          hora2.setMonth(item.fecha.slice(5, 7) - 1); // los meses en JavaScript son de 0 a 11
+          hora2.setDate(item.fecha.slice(8, 10));
+
+          return {
+            ...item,
+            start: hora1.toISOString(),
+            end: hora2.toISOString(),
+            resourceId: item.no_estilista,
+            title: "ESTAMOS OPERANDO",
+            type: 2,
+            bgColor: "red",
+          };
+        })
       );
       return response.data.map((item) => ({
         ...item,
-        start: item.fechaCita,
-        end: item.horaFin,
-        resourceId: item.idEstilista,
-        title: item.ServicioDescripción,
+        start: hora1.toISOString(),
+        end: hora2.toISOString(),
+        resourceId: item.no_estilista,
+        title: "ESTAMOS OPERANDO",
         type: 2,
         bgColor: "red",
       }));
@@ -86,6 +128,7 @@ function Basic() {
       console.error(err);
     }
   };
+
   const getCitas2 = async () => {
     try {
       const response = await jezaApi.get(`/Cita?cliente=%&f1=${format(datosParametros.fecha, "yyyyMMdd")}&suc=21`);
@@ -115,14 +158,14 @@ function Basic() {
     }
   };
   const fetchData = async () => {
-    await jezaApi
-      .get(`/Estilistas?suc=21&fecha=${format(datosParametros.fecha, "yyyy-MM-dd")}`)
+    await peinadosApi
+      .get(`/Estilistas?id=0`)
       .then((response) => {
         setArreglo(
           response.data.map((item) => {
             const newItem = {
               ...item,
-              name: item.nombre,
+              name: item.estilista,
             };
             delete newItem.toggleExpandStatus;
             return newItem;
@@ -166,6 +209,7 @@ function Basic() {
         return () => dispatch({ type: "REINITIALIZE" });
       }, 1500);
     }
+    console.log(arregloCita);
   }, [arreglo, arregloCita]);
 
   const actualizarAgenda = (response, schedulerData) => {
@@ -462,25 +506,31 @@ function Basic() {
     window.open(url, "_blank", features);
   };
   return (
-    <>
-      <div>
-        <Timer />
+    <Container>
+      <div style={{ flex: 1, justifyContent: "right", alignContent: "right", alignItems: "right", display: "flex" }}>
         <h2>{datosParametros.fecha.toLocaleDateString()}</h2>
+        <h2>,</h2>
+        <Timer />
       </div>
-      <button
-        onClick={() => {
-          handleOpenNewWindow();
-        }}
-      >
-        Nueva cita
-      </button>
-      <button
-        onClick={() => {
-          handleOpenNewWindowListaEspera();
-        }}
-      >
-        Lista de espera
-      </button>
+      <div style={{ flex: 1, justifyContent: "right", alignContent: "right", alignItems: "right", display: "flex" }}>
+        <Button
+          size="sm"
+          onClick={() => {
+            handleOpenNewWindow();
+          }}
+        >
+          Nueva Cita
+        </Button>
+        <Button
+          size="sm"
+          color={"primary"}
+          onClick={() => {
+            handleOpenNewWindowListaEspera();
+          }}
+        >
+          Lista de espera
+        </Button>
+      </div>
       <div style={{ height: 400, width: "100%" }}>
         <DataGrid
           rows={rows}
@@ -519,7 +569,7 @@ function Basic() {
           />
         </div>
       )}
-    </>
+    </Container>
   );
 }
 
