@@ -87,7 +87,7 @@
     "eslint-webpack-plugin": "^4.0.1",
     "fs-extra": "^11.2.0",
     "html-webpack-plugin": "^5.6.0",
-    "style-loader": "^3.3.4",
+    "style-loader": "^4.0.0",
     "webpack": "^5.90.3",
     "webpack-cli": "^5.1.4",
     "webpack-dev-server": "^5.0.2"
