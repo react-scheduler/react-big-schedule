@@ -52,10 +52,11 @@
     "registry": "https://registry.npmjs.org/"
   },
   "scripts": {
-    "build": "node scripts/build.js",
+    "build": "webpack --mode production --config ./webpack/webpack.dev.config.js",
     "start": "webpack serve --mode development --config ./webpack/webpack.dev.config.js",
     "clean": "rimraf ./dist && mkdir dist",
     "lint": "eslint ./src",
+    "webpack": "webpack",
     "fix": "eslint ./"
   },
   "dependencies": {
@@ -75,9 +76,12 @@
     "react-dnd": "^14.0.5",
     "react-dnd-html5-backend": "^14.1.0",
     "react-dom": "^18.2.0",
+    "react-icons": "^5.0.1",
     "react-router-dom": "^6.22.3",
     "reactstrap": "^9.2.2",
-    "rrule": "^2.8.1"
+    "rrule": "^2.8.1",
+    "swal": "^0.1.0",
+    "sweetalert2": "^11.10.7"
   },
   "devDependencies": {
     "@babel/cli": "^7.23.9",

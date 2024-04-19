@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { DataGrid } from "@mui/x-data-grid";
-import { Table, Button, Modal, ModalHeader, ModalBody, ModalFooter, Input, FormGroup, Label, Col, Row, InputGroup } from "reactstrap";
+import { Table, Button, Modal, ModalHeader, ModalBody, ModalFooter, Input, FormGroup, Label, Col, Row, InputGroup, Container } from "reactstrap";
 import { peinadosApi } from "../api/peinadosApi";
 import { estilistas, productos } from "../data/Data";
+import { format } from "date-fns-tz";
+import { MdOutlineDelete, MdFolderOpen, MdCalendarMonth } from "react-icons/md";
+import Swal from "sweetalert2";
 
 function ListaEspera() {
   const [openListaEspera, setOpenListaEspera] = useState(false);
@@ -53,6 +56,10 @@ function ListaEspera() {
   const [estilistasModal, setEstilistasModal] = useState(false);
 
   const [dataClientes, setDataClientes] = useState({});
+  const [dataListaEspera, setDataListaEspera] = useState({});
+  const [dataEstilistas, setDataEstilistas] = useState({});
+  const [dataProductos, setDataProductos] = useState({});
+
   const [formClienteEspera, setformClienteEspera] = useState({
     id: "",
     sucursal: "",
@@ -71,15 +78,38 @@ function ListaEspera() {
     usuario_elimina: 0,
   });
   useEffect(() => {
+    getClientes();
+    getListaEspera();
+    getEstilistas();
+    getProductos();
+  }, []);
+  const getClientes = () => {
     peinadosApi.get("/clientes?id=0").then((response) => {
       setDataClientes(response.data);
     });
-  }, []);
+  };
+  const getListaEspera = () => {
+    peinadosApi.get("/ListaEspera?id=0").then((response) => {
+      setDataListaEspera(response.data);
+    });
+  };
+
+  const getEstilistas = () => {
+    peinadosApi.get("/estilistas?id=0").then((response) => {
+      setDataEstilistas(response.data);
+    });
+  };
+  const getProductos = () => {
+    peinadosApi.get("/productos2?id=0&descripcion=%&verInventariable=2&esServicio=2&esInsumo=2&obsoleto=2&marca=%").then((response) => {
+      setDataProductos(response.data);
+    });
+  };
+
   const columnsClientes = [
     { field: "nombre", headerName: "nombre", width: 250 },
     { field: "telefono", headerName: "telefono", width: 130 },
     { field: "celular", headerName: "celular", width: 130 },
-    { field: "cumpleaños", headerName: "cumpleaños", width: 130, renderCell: (params) => <p>{params.row.cumpleaños}</p> },
+    { field: "cumpleaños", headerName: "cumpleaños", width: 150, renderCell: (params) => <p>{params.row.cumpleaños}</p> },
     { field: "edit", headerName: "edit", renderCell: renderButtonClient, width: 130 },
   ];
 
@@ -90,7 +120,6 @@ function ListaEspera() {
           variant={"contained"}
           onClick={() => {
             setformClienteEspera({ ...formClienteEspera, no_cliente: params.row.id, descripcion_no_cliente: params.row.nombre });
-            console.log(params.row);
             setClientesModal(false);
           }}
         >
@@ -105,7 +134,12 @@ function ListaEspera() {
         <Button
           variant={"contained"}
           onClick={() => {
-            setformClienteEspera({ ...formClienteEspera, tiempo_servicio: params.row.tiempox, descripcion_clave_prod: params.row.descripcion });
+            setformClienteEspera({
+              ...formClienteEspera,
+              tiempo_servicio: params.row.tiempox,
+              descripcion_clave_prod: params.row.descripcion,
+              clave_prod: params.row.clave_prod,
+            });
             console.log(params.row);
             setProductosModal(false);
           }}
@@ -121,13 +155,52 @@ function ListaEspera() {
         <Button
           variant={"contained"}
           onClick={() => {
-            setformClienteEspera({ ...formClienteEspera, estilista: params.row.estilista });
+            setformClienteEspera({ ...formClienteEspera, estilista: params.row.id });
             console.log(params.row);
             setEstilistasModal(false);
           }}
         >
           Agregar
         </Button>
+      </div>
+    );
+  }
+  function renderDeleteListaEspera(params) {
+    return (
+      <div>
+        <MdOutlineDelete
+          size={25}
+          onClick={() => {
+            Swal.fire({
+              title: "ADVERTENCIA",
+              text: `¿Está seguro que desea eliminar esta lista de espera del cliente: ${params.row.nombreCompleto}?`,
+              icon: "warning",
+              showCancelButton: true,
+              confirmButtonColor: "#3085d6",
+              cancelButtonColor: "#d33",
+              confirmButtonText: "Sí, eliminar",
+            }).then((result) => {
+              if (result.isConfirmed) {
+                peinadosApi.delete(`/ListaEspera?id=${params.id}`).then(() => {
+                  Swal.fire({
+                    icon: "success",
+                    text: "Registro eliminado con éxito",
+                    confirmButtonColor: "#3085d6",
+                  });
+                  getListaEspera();
+                  // getDescuento();
+                });
+              }
+            });
+          }}
+        />
+        <MdFolderOpen
+          size={25}
+          onClick={() => {
+            console.log(params);
+          }}
+        />
+        <MdCalendarMonth size={25} />
       </div>
     );
   }
@@ -141,53 +214,135 @@ function ListaEspera() {
     { field: "x", headerName: "x", renderCell: renderButtonProduct, width: 130 },
   ];
   const columnsEstilistas = [
-    { field: "cia", headerName: "cia", width: 250 },
-    { field: "sucursal", headerName: "sucursal", width: 130 },
+    // { field: "cia", headerName: "cia", width: 250 },
+    // { field: "sucursal", headerName: "sucursal", width: 130 },
     { field: "clave", headerName: "clave", width: 130 },
     { field: "estilista", headerName: "estilista", width: 130, renderCell: (params) => <p>{params.row.estilista}</p> },
-    { field: "tc", headerName: "tc", width: 130, renderCell: (params) => <p>{params.row.tc}</p> },
+    { field: "tc", headerName: "tc", width: 130, renderCell: (params) => <input type="checkbox" value={params.row.tc} disabled /> },
     { field: "pr", headerName: "pr", renderCell: renderButtonEstilista, width: 130 },
   ];
+  const columnListaEspera = [
+    { field: "pr", headerName: "pr", renderCell: renderDeleteListaEspera, width: 130 },
+
+    {
+      field: "fecha",
+      headerName: "hora",
+      width: 130,
+      renderCell: (params) => <p>{format(new Date(params.row.fecha), "p")}</p>,
+    },
+    { field: "nombreCompleto", headerName: "nombre_completo", width: 250 },
+    { field: "claveEstukusta", headerName: "claveEstilista", width: 130 },
+    { field: "servicio", headerName: "servicio", width: 130, renderCell: (params) => <p>{params.row.estilista}</p> },
+    {
+      field: "hora_estimada",
+      headerName: "hora_estimada",
+      width: 130,
+      renderCell: (params) => <p>{format(new Date(params.row.hora_estimada), "p")}</p>,
+    },
+    { field: "nombreEstilsta", headerName: "nombreEstilsta", width: 200 },
+  ];
+
+  const postListaEspera = () => {
+    console.log({ formClienteEspera });
+
+    if (
+      formClienteEspera.no_cliente == null ||
+      formClienteEspera.clave_prod == null ||
+      formClienteEspera.hora_estimada == null ||
+      formClienteEspera.estilista == null
+    ) {
+      alert("Favor de ingresar todos los datos esperados");
+      return;
+    } else {
+      peinadosApi.post("/ListaEspera", null, {
+        params: {
+          sucursal: 1,
+          no_cliente: formClienteEspera.no_cliente,
+          fecha: new Date(),
+          clave_prod: formClienteEspera.clave_prod,
+          hora_estimada: formClienteEspera.hora_estimada,
+          atendido: 1,
+          estilista: formClienteEspera.estilista,
+          tiempo_servicio: 0,
+          usuario_registra: 1,
+          usuario_cita: formClienteEspera.no_cliente,
+          usuario_servicio: 0,
+          usuario_elimina: 0,
+        },
+      });
+    }
+    alert("Lista de espera creado con éxito");
+    getListaEspera();
+  };
+  const postCrearCita = async () => {
+    let fechaActual = new Date();
+    // Extrae el año, mes y día
+    let año = fechaActual.getFullYear();
+    let mes = fechaActual.getMonth(); // Nota: getMonth() devuelve un valor de 0 a 11, donde 0 es enero y 11 es diciembre
+    let día = fechaActual.getDate();
+    let fechaSinHora = new Date(año, mes, día);
+
+    if (formClienteEspera == "2") {
+      alert("Faltan por ingresar datos favor de verificar");
+    } else {
+      await peinadosApi
+        .post("/DetalleCitas", null, {
+          params: {
+            cia: 1,
+            sucursal: 1,
+            no_estilista: "formCita",
+            no_cliente: "formCita",
+            dia_cita: "formCita",
+            hora_cita: "formCita",
+            fecha: fechaSinHora,
+            tiempo: 50,
+            user: "formCita",
+            importe: 0,
+            cancelada: false,
+            stao_estilista: 1,
+            nota_canc: 0,
+            registrada: true,
+            observacion: 0,
+            user_uc: 0,
+            estatus: formClienteEspera == "2" ? 3 : formClienteEspera == "3" ? 2 : 4,
+          },
+        })
+        .then((response) => {
+          // setFormCitaServicio({ ...formCitaServicio, idCita: response.data.mensaje2 });
+          // setOpen(true);
+          // setAgregarServicios(true);
+          alert("Cita creada con éxito");
+        })
+        .catch((error) => {
+          alert(`Hubo un error, ${error}`);
+        });
+    }
+  };
   return (
     <div>
-      <Button
-        onClick={() => {
-          setOpenListaEspera(true);
-        }}
-      >
-        Agregar Lista de espera
-      </Button>
+      <Container>
+        <Button
+          onClick={() => {
+            setOpenListaEspera(true);
+          }}
+        >
+          Agregar Lista de espera
+        </Button>
 
-      <Table>
-        <thead>
-          <tr>
-            <th>Clave</th>
-            <th>Descripción</th>
-            <th>Precio</th>
-            <th>Tiempo</th>
-          </tr>
-        </thead>
-        <tbody>
-          {rows.map((row, index) => (
-            <tr key={index}>
-              <td>{row.clave}</td>
-              <td>{row.descripcion}</td>
-              <td>{row.precio}</td>
-              <td>{row.tiempo}</td>
-            </tr>
-          ))}
-        </tbody>
-      </Table>
+        <DataGrid rows={dataListaEspera} columns={columnListaEspera} />
+      </Container>
 
       <Modal isOpen={openListaEspera} toggle={() => setOpenListaEspera(false)} size="lg">
         <ModalHeader toggle={() => setOpenListaEspera(false)}>Agregar listas de espera</ModalHeader>
         <ModalBody>
           <Row>
             <Col md={6}>
-              {/* <FormGroup>
-                <Label for="hora">Hora</Label>
-                <Input type="time" name="hora" id="hora" />
-              </FormGroup> */}
+              <FormGroup>
+                <Label for="cliente">Hora</Label>
+                {/* <InputGroup>
+                  <Input defaultValue={format(formClienteEspera.fecha, "p")} type="text" name="fecha" id="fecha" disabled />
+                </InputGroup> */}
+              </FormGroup>
               <FormGroup>
                 <Label for="cliente">Cliente</Label>
                 <InputGroup>
@@ -208,13 +363,6 @@ function ListaEspera() {
                   </Button>
                 </InputGroup>
               </FormGroup>{" "}
-              <FormGroup>
-                <Label for="cliente">Estilista</Label>
-                <InputGroup>
-                  <Button onClick={() => setEstilistasModal(true)}>Agregar</Button>
-                  <Input value={formClienteEspera.estilista} type="text" name="estilista" id="estilista" disabled />
-                </InputGroup>
-              </FormGroup>
             </Col>
             <Col md={6}>
               <FormGroup>
@@ -223,13 +371,25 @@ function ListaEspera() {
               </FormGroup>
               <FormGroup>
                 <Label for="horaEstimada">Hora estimada</Label>
-                <Input type="time" name="horaEstimada" id="horaEstimada" />
+                <Input
+                  type="time"
+                  name="hora_estimada"
+                  id="hora_estimada"
+                  onChange={(param) => {
+                    const now = new Date();
+                    const [hours, minutes] = param.target.value.split(":").map(Number);
+                    now.setHours(hours, minutes, 0); // Asume que los segundos y milisegundos son 0
+                    setformClienteEspera({ ...formClienteEspera, hora_estimada: now });
+                  }}
+                />
               </FormGroup>
-
-              {/* <FormGroup>
-                <Label for="estimada">Estimada</Label>
-                <Input type="text" name="estimada" id="estimada" />
-              </FormGroup> */}
+              <FormGroup>
+                <Label for="cliente">Estilista</Label>
+                <InputGroup>
+                  <Input value={formClienteEspera.estilista} type="text" name="estilista" id="estilista" disabled />
+                  <Button onClick={() => setEstilistasModal(true)}>Agregar</Button>
+                </InputGroup>
+              </FormGroup>
             </Col>
           </Row>
         </ModalBody>
@@ -237,6 +397,8 @@ function ListaEspera() {
           <Button
             color="primary"
             onClick={() => {
+              postListaEspera();
+
               setOpenListaEspera(!openListaEspera);
               setformClienteEspera([]);
             }}
@@ -259,7 +421,7 @@ function ListaEspera() {
       <Modal isOpen={productosModal} toggle={() => setProductosModal(!productosModal)} size="xl">
         <ModalHeader toggle={() => setProductosModal(!productosModal)}>Agregar producto</ModalHeader>
         <ModalBody>
-          <DataGrid rows={productos} columns={columnsProductos} />
+          <DataGrid rows={dataProductos} columns={columnsProductos} />
         </ModalBody>
         <ModalFooter>
           <Button color="primary" onClick={() => setProductosModal(!productosModal)}>
@@ -267,10 +429,10 @@ function ListaEspera() {
           </Button>
         </ModalFooter>
       </Modal>
-      <Modal isOpen={estilistasModal} toggle={() => setEstilistasModal(!estilistasModal)} size="xl">
+      <Modal isOpen={estilistasModal} toggle={() => setEstilistasModal(!estilistasModal)} size="lg">
         <ModalHeader toggle={() => setEstilistasModal(!estilistasModal)}>Agregar estilista</ModalHeader>
         <ModalBody>
-          <DataGrid rows={estilistas} columns={columnsEstilistas} />
+          <DataGrid rows={dataEstilistas} columns={columnsEstilistas} />
         </ModalBody>
         <ModalFooter>
           <Button color="primary" onClick={() => setEstilistasModal(!estilistasModal)}>

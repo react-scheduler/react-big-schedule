@@ -7,6 +7,7 @@ import { FormGroup, Label, Input, Button, Container, Row, Col, InputGroup, Input
 import { styled } from "@mui/material/styles";
 
 import { estilistas, productos } from "../data/Data";
+import Swal from "sweetalert2";
 
 function CrearCita() {
   const style = {
@@ -21,12 +22,12 @@ function CrearCita() {
     p: 4,
     height: "70%",
   };
-  const styleProducts = {
+  const styleCantidad = {
     position: "absolute",
-    top: "20%",
+    top: "50%",
     left: "50%",
     transform: "translate(-50%, -50%)",
-    width: "90%",
+    width: "50%",
     height: "30%",
     bgcolor: "background.paper",
     border: "2px solid #000",
@@ -51,6 +52,8 @@ function CrearCita() {
     observacion: "OBSERVACIONES",
     user_uc: 1,
     estatus: 0,
+    estatusAsignado: false,
+    estatusRequerido: false,
   });
   const [formCitaDescripciones, setFormCitaDescripciones] = useState({
     descripcion_no_estilista: "",
@@ -61,34 +64,79 @@ function CrearCita() {
   const [formVentaTemporal, setFormVentaTemporal] = useState({
     tiempo: 0,
     precioTotal: 0,
+    otros: 0,
   });
   const [formCitaServicio, setFormCitaServicio] = useState({
+    idCita: 0,
     clave_prod: "",
     descripcion: "",
     precio: 0,
     tiempo: 0,
+    cantidad: 0,
   });
   const [abierto, setAbierto] = useState(false);
   const [clientesModal, setClientesModal] = useState(false);
+  const [ModalClientesPuntos, setModalClientesPuntos] = useState(false);
+  const [ModalCantidad, setModalCantidad] = useState(false);
   const [productosModal, setProductosModal] = useState(false);
   const [ventaTemporal, setVentaTemporal] = useState([]);
   const [dataClientes, setDataClientes] = useState({});
+  const [dataClientesPuntos, setDataClientesPuntos] = useState({});
+
+  const [dataProductos, setDataProductos] = useState({});
+  const [dataEstilistas, setDataEstilistas] = useState([]);
+
+  const idUser = new URLSearchParams(window.location.search).get("idUser");
+  const fecha = new URLSearchParams(window.location.search).get("fecha");
+  const idRec = new URLSearchParams(window.location.search).get("idRec");
+  const idSuc = new URLSearchParams(window.location.search).get("idSuc");
+
   useEffect(() => {
-    peinadosApi.get("/clientes?id=0").then((response) => {
-      setDataClientes(response.data);
-    });
-    peinadosApi.get("/clientes?id=0").then((response) => {
-      setDataClientes(response.data);
-    });
+    setFormCita({ ...formCita, fecha: fecha, no_estilista: idUser, sucursal: idSuc });
+  }, [idUser, fecha, idRec, idSuc]);
+
+  useEffect(() => {
+    getClientes();
+    getEstilistas();
+    getProductos();
   }, []);
+
+  useEffect(() => {
+    getClientesePuntos();
+  }, [formCita.no_cliente]);
+
+  const getEstilistas = () => {
+    peinadosApi.get("/estilistas?id=0").then((response) => {
+      setDataEstilistas(response.data);
+    });
+  };
+  const getClientes = () => {
+    peinadosApi.get("/clientes?id=0").then((response) => {
+      setDataClientes(response.data);
+    });
+  };
+
+  const getClientesePuntos = () => {
+    peinadosApi.get(`/DetallePuntosClien?cliente=${formCita.no_cliente}`).then((response) => {
+      setDataClientesPuntos(response.data);
+      console.log("<");
+    });
+  };
+
+  const getProductos = () => {
+    peinadosApi.get("/productos2?id=0&descripcion=%&verInventariable=2&esServicio=2&esInsumo=2&obsoleto=2&marca=%").then((response) => {
+      setDataProductos(response.data);
+    });
+  };
+
   useEffect(() => {
     const sumaPrecio = ventaTemporal.reduce((acumulado, objetoActual) => {
-      return acumulado + objetoActual.precio;
+      return acumulado + objetoActual.precio * objetoActual.cantidad;
     }, 0); // El 0 inicializa el valor de acumulado
 
     // Suma de tiempos
     const sumaTiempo = ventaTemporal.reduce((acumulado, objetoActual) => {
-      return acumulado + objetoActual.tiempo;
+      return Number(acumulado) + Number(objetoActual.tiempo) * Number(objetoActual.cantidad);
     }, 0); // El 0 inicializa el valor de acumulado
     setFormVentaTemporal({ precioTotal: sumaPrecio, tiempo: sumaTiempo });
   }, [ventaTemporal]);
@@ -98,6 +146,7 @@ function CrearCita() {
     { field: "descripcion", headerName: "Descripción", width: 130 },
     { field: "precio", headerName: "Precio", width: 130 },
     { field: "tiempo", headerName: "Tiempo", width: 130 },
+    { field: "cantidad", headerName: "Cantidad", width: 130 },
   ];
 
   const rows = [
@@ -123,12 +172,9 @@ function CrearCita() {
       total: "$200.00",
     },
   ];
-  // const [open, setOpen] = useState(false);
-  // const handleClose = () => setOpen(false);
   const [open, setOpen] = useState(false);
   const handleOpen = () => {
-    setOpen(true);
-    setAgregarServicios(true);
+    postCrearCita();
   };
   const handleClose = () => setOpen(false);
   function renderButtonClient(params) {
@@ -137,9 +183,8 @@ function CrearCita() {
         <Button
           variant={"contained"}
           onClick={() => {
-            setFormCita({ ...formCita, id_cliente: params.row.id });
+            setFormCita({ ...formCita, id_cliente: params.row.id, no_cliente: params.row.id });
             setFormCitaDescripciones({ ...formCita, descripcion_no_cliente: params.row.nombre });
-            console.log(params.row);
             setClientesModal(false);
           }}
         >
@@ -148,6 +193,100 @@ function CrearCita() {
       </div>
     );
   }
+
+  const postCitaServicios = async () => {
+    ventaTemporal.forEach((elemento) => {
+      peinadosApi
+        .post("DetalleCitasServicios", null, {
+          params: {
+            id_cita: formCitaServicio.idCita,
+            id_servicio: elemento.clave,
+            cantidad: elemento.cantidad,
+            tiempo: elemento.tiempo,
+            precio: elemento.precio,
+            observaciones: "0",
+            usuarioAlta: 0,
+            usuarioCambio: 0,
+            sucursal: 1,
+            fecha: new Date(),
+            idCliente: formCita.no_cliente,
+          },
+        })
+        .catch((error) => {
+          Swal.fire({
+            icon: "error",
+            title: "Error",
+            text: `Favor de contactase cons sistemas ${error}`,
+            confirmButtonColor: "#3085d6", // Cambiar el color del botón OK
+          });
+        });
+    });
+    Swal.fire({
+      icon: "success",
+      text: "Registro Realizado con éxito",
+      confirmButtonColor: "#3085d6",
+    });
+  };
+  const postCrearCita = async () => {
+    let fechaActual = new Date();
+    // Extrae el año, mes y día
+    let año = fechaActual.getFullYear();
+    let mes = fechaActual.getMonth(); // Nota: getMonth() devuelve un valor de 0 a 11, donde 0 es enero y 11 es diciembre
+    let día = fechaActual.getDate();
+    let fechaSinHora = new Date(año, mes, día);
+
+    if (
+      formCita.no_estilista == 0 ||
+      formCita.no_cliente == 0 ||
+      formCita.esServicioDomicilio == false ||
+      formCita.estatusAsignado == false ||
+      formCita.estatusRequerido == false
+    ) {
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: `Faltan por ingresar datos favor de verificar`,
+        confirmButtonColor: "#3085d6", // Cambiar el color del botón OK
+      });
+    } else {
+      await peinadosApi
+        .post("/DetalleCitas", null, {
+          params: {
+            cia: 1,
+            sucursal: 1,
+            no_estilista: formCita.no_estilista,
+            no_cliente: formCita.no_cliente,
+            dia_cita: formCita.fecha,
+            hora_cita: formCita.fecha,
+            fecha: fechaSinHora,
+            tiempo: 50,
+            user: formCita.no_estilista,
+            importe: 0,
+            cancelada: false,
+            stao_estilista: 1,
+            nota_canc: 0,
+            registrada: true,
+            observacion: 0,
+            user_uc: 0,
+            estatus: formCita.estatusAsignado ? 3 : formCita.estatusRequerido ? 2 : 4,
+          },
+        })
+        .then((response) => {
+          setFormCitaServicio({ ...formCitaServicio, idCita: response.data.mensaje2 });
+          setOpen(true);
+          setAgregarServicios(true);
+          Swal.fire({
+            icon: "success",
+            text: "Registro creada con éxito",
+            confirmButtonColor: "#3085d6",
+          });
+        })
+        .catch((error) => {
+          alert(`Hubo un error, ${error}`);
+        });
+    }
+  };
+
   const columnsClientes = [
     { field: "nombre", headerName: "nombre", width: 250 },
     { field: "telefono", headerName: "telefono", width: 130 },
@@ -170,13 +309,14 @@ function CrearCita() {
   ];
 
   const columnsProductos = [
-    { field: "id", headerName: "id", width: 250 },
-    { field: "clave_prod", headerName: "clave_prod", width: 130 },
-    { field: "descripcion", headerName: "descripcion", width: 130 },
-    { field: "precio", headerName: "precio", width: 130, renderCell: (params) => <p>{params.row.precio}</p> },
-    { field: "tiempox", headerName: "tiempox", width: 130, renderCell: (params) => <p>{params.row.tiempox}</p> },
-    { field: "x", headerName: "x", renderCell: renderButtonProduct, width: 130 },
+    { field: "x", headerName: "Seleccion", renderCell: renderButtonProduct, width: 130 },
+    { field: "id", headerName: "Id", width: 50 },
+    { field: "clave_prod", headerName: "Clave prod", width: 130 },
+    { field: "descripcion", headerName: "Descripción", width: 250 },
+    { field: "precio_lista", headerName: "Precio", width: 130, renderCell: (params) => <p>{params.row.precio_lista}</p> },
+    { field: "tiempox", headerName: "Tiempo", width: 130, renderCell: (params) => <p>{params.row.tiempox}</p> },
   ];
+  const [dataVentaTemporal, setDataVentaTemporal] = useState({});
   function renderButtonProduct(params) {
     return (
       <div>
@@ -184,22 +324,32 @@ function CrearCita() {
           variant={"contained"}
           onClick={() => {
             // setformClienteEspera({ ...formClienteEspera, tiempo_servicio: params.row.tiempox, descripcion_clave_prod: params.row.descripcion });
-            console.log(params.row);
-            setProductosModal(false);
-            setVentaTemporal((prevVentaTemporal) => {
-              const newId = prevVentaTemporal.length > 0 ? prevVentaTemporal[prevVentaTemporal.length - 1].id + 1 : 0;
-              const newVentaTemporal = [
-                ...prevVentaTemporal,
-                {
-                  id: newId,
-                  clave: params.row.clave_prod,
-                  descripcion: params.row.descripcion,
-                  precio: params.row.precio,
-                  tiempo: params.row.tiempox,
-                },
-              ];
-              return newVentaTemporal;
+            // return;
+            const newId = ventaTemporal.length > 0 ? ventaTemporal[ventaTemporal.length - 1].id + 1 : 0;
+
+            setDataVentaTemporal({
+              clave: params.row.id,
+              descripcion: params.row.descripcion,
+              precio: params.row.precio_lista,
+              tiempo: params.row.tiempox,
             });
+            setModalCantidad(true);
+
+            setProductosModal(false);
+            // setVentaTemporal((prevVentaTemporal) => {
+            //   const newId = prevVentaTemporal.length > 0 ? prevVentaTemporal[prevVentaTemporal.length - 1].id + 1 : 0;
+            //   const newVentaTemporal = [
+            //     ...prevVentaTemporal,
+            //     {
+            //       id: newId,
+            //       clave: params.row.clave_prod,
+            //       descripcion: params.row.descripcion,
+            //       precio: params.row.precio_lista,
+            //       tiempo: params.row.tiempox,
+            //     },
+            //   ];
+            //   return newVentaTemporal;
+            // });
           }}
         >
           Agregar
@@ -214,8 +364,27 @@ function CrearCita() {
       <Container>
         <h1>Creación de cita</h1>
         <div style={{ flex: 1, justifyContent: "right", alignContent: "right", alignItems: "right", display: "flex" }}>
-          <Button size="sm">Historial puntos</Button>
-          <Button size="sm" color={"primary"}>
+          <Button
+            size="sm"
+            disabled={!formCitaDescripciones.descripcion_no_cliente}
+            onClick={() => {
+              if (dataClientesPuntos.length == 0) {
+                alert("Este cliente todavia no cuenta con puntos");
+              }
+            }}
+          >
+            Historial puntos
+          </Button>
+          <Button
+            size="sm"
+            disabled={!formCitaDescripciones.descripcion_no_cliente}
+            color={"primary"}
+            onClick={() => {
+              if (dataClientesPuntos.length == 0) {
+                alert("Este cliente todavia no cuenta con puntos");
+              }
+            }}
+          >
             Historial ventas
           </Button>
         </div>
@@ -253,11 +422,14 @@ function CrearCita() {
                 type="select"
                 name="atiende"
                 id="atiende"
+                value={formCita.no_estilista}
                 onChange={(valor) => {
-                  setFormCita({ ...formCita, id_estilista: valor.target.value });
+                  setFormCita({ ...formCita, no_estilista: valor.target.value });
                 }}
               >
-                {estilistas.map((opcion, index) => {
+                <option value="0">Seleccione un estilista</option>
+
+                {dataEstilistas.map((opcion, index) => {
                   return (
                     <option value={opcion.id} key={index}>
                       {opcion.estilista}
@@ -279,96 +451,143 @@ function CrearCita() {
                 }}
               />
             </FormGroup>
+          </Col>
+
+          <Col>
+            <FormGroup>
+              <Label for="fecha">Fecha de la cita</Label>
+              <Input
+                type="datetime-local"
+                name="fecha"
+                id="fecha"
+                value={formCita.fecha}
+                onChange={(e) => {
+                  setFormCita({ ...formCita, fecha: e.target.value });
+                }}
+              />
+            </FormGroup>
+
+            <FormGroup check>
+              <Label check>
+                <Input
+                  name="estatus"
+                  type="checkbox"
+                  checked={formCita.estatusRequerido}
+                  onChange={(e) =>
+                    setFormCita({
+                      ...formCita,
+                      estatusRequerido: !formCita.estatusRequerido,
+                      estatusAsignado: formCita.estatusAsignado == true ? !formCita.estatusAsignado : null,
+                      esServicioDomicilio: formCita.esServicioDomicilio == true ? !formCita.esServicioDomicilio : null,
+                    })
+                  }
+                />{" "}
+                <strong>Requerido</strong>
+              </Label>
+            </FormGroup>
+            <FormGroup check>
+              <Label check>
+                <Input
+                  name="estatus"
+                  type="checkbox"
+                  checked={formCita.estatusAsignado}
+                  onChange={(e) =>
+                    setFormCita({
+                      ...formCita,
+                      estatusAsignado: !formCita.estatusAsignado,
+                      estatusRequerido: formCita.estatusRequerido == true ? !formCita.estatusRequerido : null,
+                      esServicioDomicilio: formCita.esServicioDomicilio == true ? !formCita.esServicioDomicilio : null,
+                    })
+                  }
+                />{" "}
+                <strong>Asignado</strong>
+              </Label>
+            </FormGroup>
             <FormGroup check>
               <Label check>
                 <Input
                   type="checkbox"
                   checked={formCita.esServicioDomicilio}
-                  onChange={(e) => setFormCita({ ...formCita, esServicioDomicilio: !formCita.esServicioDomicilio })}
+                  onChange={(e) =>
+                    setFormCita({
+                      ...formCita,
+                      esServicioDomicilio: !formCita.esServicioDomicilio,
+                      estatusAsignado: formCita.estatusAsignado == true ? !formCita.estatusAsignado : null,
+                      estatusRequerido: formCita.estatusRequerido == true ? !formCita.estatusRequerido : null,
+                    })
+                  }
                 />{" "}
-                <strong>servDomicilio</strong>
+                <strong>Servicio a domicillio</strong>
               </Label>
             </FormGroup>
-          </Col>
-
-          <Col>
-            <FormGroup>
-              <Label for="fecha">Fecha</Label>
-              <Input type="datetime-local" name="fecha" id="fecha" />
-            </FormGroup>
-
-            <FormGroup check>
-              <Label check>
-                <Input name="r" type="checkbox" checked={formCita.r} onChange={(e) => setFormCita({ ...formCita, r: !formCita.r, a: !formCita.a })} />{" "}
-                <strong>R</strong>
-              </Label>
-            </FormGroup>
-            <FormGroup check>
-              <Label check>
-                <Input name="a" type="checkbox" checked={formCita.a} onChange={(e) => setFormCita({ ...formCita, a: !formCita.a, r: !formCita.r })} />{" "}
-                <strong>A</strong>
-              </Label>
-            </FormGroup>
-            <Button onClick={handleOpen}>Guardar</Button>
+            <Button color={"success"} onClick={handleOpen}>
+              Guardar
+            </Button>
           </Col>
         </Row>
       </Container>
       <hr />
+      <Container>
+        {agregarServicios ? (
+          <Box marginLeft={6} marginRight={6} gap={2} alignItems={"center"} justifyContent={"center"}>
+            <Button color={"success"} onClick={() => setProductosModal(true)} variant="contained">
+              Ingresar servicios...
+            </Button>
+            <Box sx={{ width: "100%" }}>
+              <DataGrid
+                autoHeight
+                slots={{ noRowsOverlay: CustomNoRowsOverlay }}
+                sx={{ "--DataGrid-overlayHeight": "250px" }}
+                rows={ventaTemporal}
+                columns={columns}
+              />
+            </Box>
+            <Box marginLeft={6} marginRight={6} marginTop={1} gap={2} display="flex" justifyContent={"center"} alignItems={"center"}>
+              <Col>
+                <FormGroup>
+                  <Label for="total2">Total</Label>
+                  <Input type="text" name="total2" id="total2" disabled />
+                </FormGroup>
 
-      {agregarServicios ? (
-        <Box marginLeft={6} marginRight={6} gap={2} alignItems={"center"} justifyContent={"center"}>
-          <Button onClick={() => setProductosModal(true)} variant="contained">
-            Ingresar servicios...
-          </Button>
-          <Box sx={{ width: "100%" }}>
-            <DataGrid
-              autoHeight
-              slots={{ noRowsOverlay: CustomNoRowsOverlay }}
-              sx={{ "--DataGrid-overlayHeight": "250px" }}
-              rows={ventaTemporal}
-              columns={columns}
-            />
+                <FormGroup>
+                  <Label for="otros">Otros</Label>
+                  <Input type="text" name="otros" id="otros" disabled placeholder={formVentaTemporal.otros} />
+                </FormGroup>
+                <FormGroup>
+                  <Label for="total">Total</Label>
+                  <Input type="text" name="total" id="total" placeholder={formVentaTemporal.precioTotal} disabled />
+                </FormGroup>
+              </Col>
+              <Col>
+                <FormGroup>
+                  <Label for="minutos">Minutos</Label>
+                  <Input type="text" name="minutos" id="minutos" placeholder={formVentaTemporal.tiempo + " Min"} disabled />
+                </FormGroup>
+
+                <FormGroup>
+                  <Label for="horas">Horas</Label>
+                  <Input type="text" name="horas" id="horas" placeholder={(formVentaTemporal.tiempo / 60).toFixed(2) + " Hrs"} disabled />
+                </FormGroup>
+
+                <ButtonGroup>
+                  <Button
+                    color="primary"
+                    block
+                    onClick={() => {
+                      postCitaServicios();
+                    }}
+                  >
+                    Guardar
+                  </Button>
+                  <Button color="danger" block>
+                    Salir
+                  </Button>
+                </ButtonGroup>
+              </Col>
+            </Box>
           </Box>
-          <Box marginLeft={6} marginRight={6} marginTop={1} gap={2} display="flex" justifyContent={"center"} alignItems={"center"}>
-            <Col>
-              <FormGroup>
-                <Label for="total">Total</Label>
-                <Input type="text" name="total" id="total" placeholder={formVentaTemporal.precioTotal} disabled />
-              </FormGroup>
-
-              <FormGroup>
-                <Label for="otros">Otros</Label>
-                <Input type="text" name="otros" id="otros" disabled />
-              </FormGroup>
-            </Col>
-            <Col>
-            <FormGroup>
-              <Label for="total2">Total</Label>
-              <Input type="text" name="total2" id="total2" disabled />
-            </FormGroup>
-
-            <FormGroup>
-              <Label for="minutos">Minutos</Label>
-              <Input type="text" name="minutos" id="minutos" placeholder={formVentaTemporal.tiempo} disabled />
-            </FormGroup>
-
-            <FormGroup>
-              <Label for="horas">Horas</Label>
-              <Input type="text" name="horas" id="horas" placeholder={(formVentaTemporal.tiempo / 60).toFixed(2)} disabled />
-            </FormGroup>
-            </Col>
-
-            <ButtonGroup>
-              <Button color="primary" block>
-                Guardar
-              </Button>
-              <Button color="danger" block>
-                Salir
-              </Button>
-            </ButtonGroup>
-          </Box>
-        </Box>
-      ) : null}
+        ) : null}
+      </Container>
       <Modal open={clientesModal} onClose={() => setClientesModal(false)}>
         <Box sx={style}>
           <Typography variant="h4">Agregar cliente</Typography>
@@ -378,7 +597,67 @@ function CrearCita() {
       <Modal open={productosModal} onClose={() => setProductosModal(false)}>
         <Box sx={style}>
           <Typography variant="h4">Agregar productos</Typography>
-          <DataGrid rows={productos} columns={columnsProductos} />
+          <DataGrid rows={dataProductos} columns={columnsProductos} />
+        </Box>
+      </Modal>
+
+      <Modal open={ModalClientesPuntos} onClose={() => setModalClientesPuntos(false)}>
+        <Box sx={style}>
+          <Typography variant="h4">Agregar cliente</Typography>
+          <DataGrid rows={dataClientes} columns={columnsClientes} />
+        </Box>
+      </Modal>
+      <Modal open={productosModal} onClose={() => setProductosModal(false)}>
+        <Box sx={style}>
+          <Typography variant="h4">Agregar productos</Typography>
+          <DataGrid rows={dataProductos} columns={columnsProductos} />
+        </Box>
+      </Modal>
+      <Modal open={ModalCantidad} onClose={() => setModalCantidad(false)} size={"sm"}>
+        <Box sx={styleCantidad}>
+          <Typography variant="h5">Agregue la cantidad</Typography>
+          <Input
+            type="text"
+            name="minutos"
+            id="minutos"
+            placeholder={formCitaServicio.cantidad}
+            onChange={(v) => {
+              setFormCitaServicio({ ...formCitaServicio, cantidad: v.target.value });
+            }}
+          />
+          <Button
+            color="danger"
+            onClick={() => {
+              setModalCantidad(false);
+              setDataVentaTemporal({});
+            }}
+          >
+            Cancelar
+          </Button>
+          <Button
+            onClick={() => {
+              setModalCantidad(false);
+
+              setVentaTemporal((prevVentaTemporal) => {
+                const newId = prevVentaTemporal.length > 0 ? prevVentaTemporal[prevVentaTemporal.length - 1].id + 1 : 0;
+                const newVentaTemporal = [
+                  ...prevVentaTemporal,
+                  {
+                    id: newId,
+                    clave: dataVentaTemporal.clave,
+                    descripcion: dataVentaTemporal.descripcion,
+                    precio: dataVentaTemporal.precio,
+                    tiempo: dataVentaTemporal.tiempo,
+                    cantidad: formCitaServicio.cantidad ? formCitaServicio.cantidad : 1,
+                  },
+                ];
+                return newVentaTemporal;
+              });
+              setDataVentaTemporal({});
+            }}
+          >
+            Guardar
+          </Button>
         </Box>
       </Modal>
     </div>

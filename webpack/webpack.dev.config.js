@@ -4,6 +4,7 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 const ESLintWebpackPlugin = require("eslint-webpack-plugin");
 
 module.exports = {
+  mode: "development", // Puedes cambiar a 'production' para la versión final
   entry: "./src/examples/index.jsx",
   output: {
     path: path.resolve(__dirname, "..", "dist"),

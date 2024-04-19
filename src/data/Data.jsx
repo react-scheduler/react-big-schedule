@@ -1,6 +1,6 @@
 export const estilistas = [
   {
-    id: 0,
+    id: 1,
     cia: 1,
     sucursal: 1,
     clave: "AE005",
@@ -14,7 +14,7 @@ export const estilistas = [
     status: 4,
   },
   {
-    id: 1,
+    id: 2,
     cia: 1,
     sucursal: 4,
     clave: "AE18",
@@ -28,7 +28,7 @@ export const estilistas = [
     status: 1,
   },
   {
-    id: 2,
+    id: 3,
     cia: 1,
     sucursal: 4,
     clave: "CUA004",

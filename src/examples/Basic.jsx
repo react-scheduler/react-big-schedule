@@ -9,7 +9,8 @@ import { format } from "date-fns-tz";
 import { set } from "date-fns";
 import { DataGrid } from "@mui/x-data-grid";
 import Timer from "../components/Timer";
-import { Container, Button } from "reactstrap";
+import { Container, Button, Badge, Label, Input, Col } from "reactstrap";
+import Swal from "sweetalert2";
 let schedulerData;
 
 const initialState = {
@@ -32,16 +33,20 @@ function reducer(state, action) {
 
 function Basic() {
   const [arreglo, setArreglo] = useState([]);
+
+  const [arregloCitaDia, setArregloCitaDia] = useState([]);
   const [arregloCita, setArregloCita] = useState([]);
   const [verificador, setVerificador] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [datosParametros, setDatosParametros] = useState({
     idUser: 0,
-    fecha: new Date("2024/03/14"),
+    fecha: new Date(),
     idRec: 0,
     idSuc: 0,
     idCliente: 0,
   });
+  const [datosParametrosCitaTemp, setDatosParametrosCitaTemp] = useState({});
+  const [datosParametrosFechaCitaTemp, setDatosParametrosFechaCitaTemp] = useState({});
 
   const [formServicio, setFormServicio] = useState({
     id_Cita: 0,
@@ -55,55 +60,27 @@ function Basic() {
     tiempo: 0,
   });
 
+  useEffect(() => {
+    if (datosParametrosCitaTemp.no_cliente) {
+      putEditarCita();
+      console.log({ datosParametrosCitaTemp });
+    }
+  }, [datosParametrosCitaTemp]);
+
   const toggleModal = () => {
     setIsModalOpen(!isModalOpen);
   };
-  // const getCitas = async (fecha) => {
-  //   try {
-  //     console.log(fecha + "GET CITAS");
-  //     const response = await peinadosApi.get(`/DetalleAgendaSel?fecha=${format(fecha ? fecha : datosParametros.fecha, "yyyyMMdd")}&suc=1`);
 
-  //     setArregloCita(
-  //       response.data.map((item) => ({
-  //         ...item,
-  //         start: item.hora1,
-  //         end: item.hora2,
-  //         resourceId: item.nombreEstilista,
-  //         title: "ESTAMOS OPERANDO",
-  //         type: 2,
-  //         bgColor: "red",
-  //       }))
-  //     );
-  //     return response.data.map((item) => ({
-  //       ...item,
-  //       start: item.fechaCita,
-  //       end: item.horaFin,
-  //       resourceId: item.idEstilista,
-  //       title: item.ServicioDescripción,
-  //       type: 2,
-  //       bgColor: "red",
-  //     }));
-  //   } catch (err) {
-  //     console.error(err);
-  //   }
-  // };
   const getCitas = async (fecha) => {
     try {
-      console.log(fecha + "GET CITAS");
-      const response = await peinadosApi.get(`/DetalleAgendaSel?fecha=${format(fecha ? fecha : datosParametros.fecha, "yyyyMMdd")}&suc=1`);
+      const response = await peinadosApi.get(`/DetalleAgendaSelv7?fecha=${format(fecha ? fecha : datosParametros.fecha, "yyyyMMdd")}&suc=1`);
       setArregloCita(
         response.data.map((item) => {
           let hora1 = new Date(item.hora1);
           let hora2 = new Date(item.hora2);
-
-          hora1.setFullYear(item.fecha.slice(0, 4));
-          hora1.setMonth(item.fecha.slice(5, 7) - 1); // los meses en JavaScript son de 0 a 11
-          hora1.setDate(item.fecha.slice(8, 10));
-
-          hora2.setFullYear(item.fecha.slice(0, 4));
-          hora2.setMonth(item.fecha.slice(5, 7) - 1); // los meses en JavaScript son de 0 a 11
-          hora2.setDate(item.fecha.slice(8, 10));
-
+          let fechaBase = new Date(item.fecha);
+          hora1.setFullYear(fechaBase.getFullYear(), fechaBase.getMonth(), fechaBase.getDate());
+          hora2.setFullYear(fechaBase.getFullYear(), fechaBase.getMonth(), fechaBase.getDate());
           return {
             ...item,
             start: hora1.toISOString(),
@@ -111,52 +88,56 @@ function Basic() {
             resourceId: item.no_estilista,
             title: "ESTAMOS OPERANDO",
             type: 2,
-            bgColor: "red",
+            // bgColor: "red",
+            bgColor:
+              item.estadoCita == 1
+                ? "#FFA500"
+                : item.estadoCita == 2
+                ? "#00FFFF"
+                : item.estadoCita == 3
+                ? "#FFFF00"
+                : item.estadoCita == 4
+                ? "#008000"
+                : item.estadoCita == 5
+                ? "#800080"
+                : "#000000",
           };
         })
       );
-      return response.data.map((item) => ({
-        ...item,
-        start: hora1.toISOString(),
-        end: hora2.toISOString(),
-        resourceId: item.no_estilista,
-        title: "ESTAMOS OPERANDO",
-        type: 2,
-        bgColor: "red",
-      }));
-    } catch (err) {
-      console.error(err);
-    }
-  };
 
-  const getCitas2 = async () => {
-    try {
-      const response = await jezaApi.get(`/Cita?cliente=%&f1=${format(datosParametros.fecha, "yyyyMMdd")}&suc=21`);
-
-      setArregloCita(
-        response.data.map((item) => ({
+      return response.data.map((item) => {
+        let hora1 = new Date(item.hora1);
+        let hora2 = new Date(item.hora2);
+        let fechaBase = new Date(item.fecha);
+        hora1.setFullYear(fechaBase.getFullYear(), fechaBase.getMonth(), fechaBase.getDate());
+        hora2.setFullYear(fechaBase.getFullYear(), fechaBase.getMonth(), fechaBase.getDate());
+        return {
           ...item,
-          start: item.fechaCita,
-          end: item.horaFin,
-          resourceId: item.idEstilista,
-          title: item.ServicioDescripción,
+          start: hora1.toISOString(),
+          end: hora2.toISOString(),
+          resourceId: item.no_estilista,
+          title: "ESTAMOS OPERANDO",
           type: 2,
-          bgColor: "red",
-        }))
-      );
-      return response.data.map((item) => ({
-        ...item,
-        start: item.fechaCita,
-        end: item.horaFin,
-        resourceId: item.idEstilista,
-        title: item.ServicioDescripción,
-        type: 2,
-        bgColor: "red",
-      }));
+          // bgColor: "red",
+          bgColor:
+            item.estadoCita == 1
+              ? "#FFA500"
+              : item.estadoCita == 2
+              ? "#00FFFF"
+              : item.estadoCita == 3
+              ? "#FFFF00"
+              : item.estadoCita == 4
+              ? "#008000"
+              : item.estadoCita == 5
+              ? "#800080"
+              : "#000000",
+        };
+      });
     } catch (err) {
       console.error(err);
     }
   };
+
   const fetchData = async () => {
     await peinadosApi
       .get(`/Estilistas?id=0`)
@@ -166,6 +147,7 @@ function Basic() {
             const newItem = {
               ...item,
               name: item.estilista,
+              id: item.clave,
             };
             delete newItem.toggleExpandStatus;
             return newItem;
@@ -176,9 +158,16 @@ function Basic() {
         console.log(err);
       });
     getCitas();
+    console.log(getCitas());
+  };
+  const getCitasDia = () => {
+    peinadosApi.get(`/ClientesCitasDia3?suc=1&cliente=0&fecha=${format(datosParametros.fecha, "yyyyMMdd")}`).then((response) => {
+      setArregloCitaDia(response.data);
+    });
   };
   useEffect(() => {
     fetchData();
+    getCitasDia();
   }, []);
 
   const [state, dispatch] = useReducer(reducer, initialState);
@@ -213,6 +202,8 @@ function Basic() {
   }, [arreglo, arregloCita]);
 
   const actualizarAgenda = (response, schedulerData) => {
+    console.log({ response });
+    console.log("AQUI ANDAMOS");
     schedulerData.setEvents(response);
     dispatch({ type: "UPDATE_SCHEDULER", payload: schedulerData });
   };
@@ -223,6 +214,7 @@ function Basic() {
       tempFecha.setDate(tempFecha.getDate() + dias);
       if (dias == 0) tempFecha.setDate(tempFecha.getDate() + 1);
       getCitas(tempFecha).then((response) => {
+        console.log(response);
         if (dias < 0) {
           schedulerData.prev();
         } else if (dias === 0) {
@@ -323,7 +315,6 @@ function Basic() {
 
   const updateEventStart = (schedulerData, event, newStart) => {
     if (confirm(`Do you want to adjust the start of the event? {eventId: ${event.id}, eventTitle: ${event.title}, newStart: ${newStart}}`)) {
-      schedulerData.updateEventStart(event, newStart);
     }
     dispatch({ type: "UPDATE_SCHEDULER", payload: schedulerData });
   };
@@ -336,18 +327,39 @@ function Basic() {
   };
 
   const moveEvent = (schedulerData, event, slotId, slotName, start, end) => {
-    if (
-      confirm(
-        `Do you want to move the event? {eventId: ${event.id}, eventTitle: ${event.title}, newSlotId: ${slotId}, newSlotName: ${slotName}, newStart: ${start}, newEnd: ${end}`
-      )
-    ) {
-      schedulerData.moveEvent(event, slotId, slotName, start, end);
-      dispatch({ type: "UPDATE_SCHEDULER", payload: schedulerData });
-    }
+    console.log(start);
+    console.log(slotId);
+    const start2 = new Date();
+
+    Swal.fire({
+      title: `Esta segur de hacer este cambio a la estilista: ${slotName} a las ${start}?`,
+      showCancelButton: true,
+      confirmButtonText: "Save",
+    }).then((result) => {
+      /* Read more about isConfirmed, isDenied below */
+      if (result.isConfirmed) {
+        setDatosParametrosFechaCitaTemp({
+          fecha: start,
+          usuarioEstilista: slotId,
+        });
+        setDatosParametrosCitaTemp(event);
+        // schedulerData.moveEvent(event, slotId, slotName, start, end);
+        // actualizarFechayCitas(schedulerData, 0.01);
+        window.location.reload();
+      }
+    });
   };
 
   const newEvent = (schedulerData, slotId, slotName, start, end, type, item) => {
     console.log(schedulerData);
+
+    handleOpenNewWindow({
+      idCita: 0,
+      idUser: slotId,
+      idCliente: 0,
+      fecha: start,
+      flag: 0,
+    });
     if (
       confirm(
         `Do you want to create a new event? {slotId: ${slotId}, slotName: ${slotName}, start: ${start}, end: ${end}, type: ${type}, item: ${item}}`
@@ -394,101 +406,79 @@ function Basic() {
 
   const toggleExpandFunc = (schedulerData, slotId) => {
     schedulerData.toggleExpandStatus(slotId);
+    console.log({ schedulerData });
+    console.log({ slotId });
+    alert("PEPE");
     dispatch({ type: "UPDATE_SCHEDULER", payload: schedulerData });
   };
 
-  const postCita = async () => {
-    try {
-      const response = await jezaApi.post(
-        `/Cita?cia=26&sucursal=${21}&fechaCita=${datosParametros.fecha ? datosParametros.fecha : "2024-02-29"}&idCliente=${
-          datosParametros.idCliente
-        }&tiempo=0&idEstilista=${2135}&idUsuario=${2135}&estatus=1`
-      );
-      setFormServicio({
-        ...formServicio,
-        id_Cita: Number(response.data[0].mensaje2),
-        cantidad: 1,
-      });
-      setVerificador(true);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const postServicio = async (schedulerData) => {
-    await jezaApi
-      .post(
-        `/CitaServicio?id_Cita=${formServicio.id_Cita ? formServicio.id_Cita : formServicio.id_Cita}&idServicio=${formServicio.idServicio}&cantidad=${
-          formServicio.cantidad
-        }&precio=${250}&observaciones=${formServicio.observaciones ? formServicio.observaciones : "."}&usuario=${2135}`
-      )
-      .then(() => {
-        setTextSuccessInfo("Se agendó la cita correctamente...");
-        setTimeout(() => {
-          setSuccessInfo(true);
-        }, 1000);
-        getCitaServicios(formServicio.id_Cita);
-        setFormServicio({
-          ...formServicio,
-          d_servicio: "",
-          cantidad: 1,
-          observaciones: "",
-          idServicio: 0,
-          id_Cita: 0,
-        });
-      });
-    dispatch({ type: "UPDATE_SCHEDULER", payload: schedulerData });
-  };
   const columns = [
-    { field: "clave", headerName: "Clave", width: 70 },
-    { field: "estilista", headerName: "Modo", width: 130 },
-    { field: "hora", headerName: "Hora", width: 130 },
+    { field: "id", headerName: "Clave", width: 70 },
     {
-      field: "horaFinal",
-      headerName: "HF",
-      type: "number",
-      width: 90,
+      field: "stao_estilista",
+      headerName: "Modo",
+      width: 130,
+      renderCell: (params) => (
+        <p>
+          {params.row.stao_estilista == 1
+            ? "No disponible"
+            : params.row.stao_estilista == 2
+            ? "Requerido"
+            : params.row.stao_estilista == 3
+            ? "Asignado"
+            : params.row.stao_estilista == 4
+            ? "En servicio"
+            : params.row.stao_estilista == 5
+            ? "A domicilio"
+            : ""}
+        </p>
+      ),
     },
     {
-      field: "cliente",
+      field: "hora_cita",
+      headerName: "Hora2",
+      width: 50,
+      renderCell: (params) => <p>{format(new Date(params.row.hora_cita), "HH:mm")}</p>,
+      cellClassName: "centered-cell", // Agrega esta línea para aplicar la clase CSS
+    },
+    {
+      field: "horafinal",
+      headerName: "HF",
+      type: "number",
+      width: 50,
+      renderCell: (params) => <p>{format(new Date(params.row.horafinal), "HH:mm")}</p>,
+      cellClassName: "centered-cell", // Agrega esta línea para aplicar la clase CSS
+    },
+    {
+      field: "d_cliente",
       headerName: "Cliente",
       description: "This column has a value getter and is not sortable.",
       sortable: false,
-      width: 160,
-      valueGetter: (params) => `${params.row.firstName || ""} ${params.row.lastName || ""}`,
+      width: 250,
     },
-    { field: "servicio", headerName: "Servicio", width: 130 },
-    { field: "tiempo", headerName: "Tiempo", width: 130 },
-    { field: "total", headerName: "Total", width: 130 },
+    { field: "descripcion", headerName: "Servicio", width: 250 },
+    { field: "tiempo", headerName: "Tiempo", width: 130, renderCell: (params) => <p>{params.row.tiempo + " min"}</p> },
+    {
+      field: "importe",
+      headerName: "Total",
+      width: 130,
+      renderCell: (params) => <p>{Number(params.row.importe).toLocaleString("es-MX", { style: "currency", currency: "MXN" })}</p>,
+    },
   ];
 
-  const rows = [
-    {
-      id: 10,
-      clave: "180",
-      estilista: "susy",
-      hora: "10:00am",
-      horaFinal: "12:00pm",
-      cliente: "Maria Jors",
-      servicio: "Peinados",
-      tiempo: "30",
-      total: "$5000.00",
-    },
-    {
-      id: 11,
-      clave: "181",
-      estilista: "susy",
-      hora: "2:00pm",
-      horaFinal: "12:00pm",
-      cliente: "Mario",
-      servicio: "Corte",
-      tiempo: "10",
-      total: "$200.00",
-    },
-  ];
   const ligaPruebas = "http://localhost:5173/";
-  const handleOpenNewWindow = () => {
-    const url = `${ligaPruebas}miliga/crearcita`; // Reemplaza esto con la URL que desees abrir
+  //const ligaPruebas = "http://cbinfo.no-ip.info:9019/";
+  const handleOpenNewWindow = ({ idCita, idUser, idCliente, fecha, flag }) => {
+    const url = `${ligaPruebas}miliga/crearcita?idCita=${idCita}&idUser=${idUser}&idCliente=${idCliente}&fecha=${fecha}&idSuc=${1}&idRec=${1}&flag=${flag}`; // Reemplaza esto con la URL que desees abrir
+    const width = 1200;
+    const height = 600;
+    const left = (window.screen.width - width) / 2;
+    const top = (window.screen.height - height) / 2;
+    const features = `width=${width},height=${height},left=${left},top=${top},toolbar=0,location=0,menubar=0,scrollbars=1,resizable=1`;
+    window.open(url, "_blank", features);
+  };
+  const handleOpenNewWindowNewSchedule = () => {
+    const url = `${ligaPruebas}miliga/crearcita?idCita`; // Reemplaza esto con la URL que desees abrir
     const width = 1200;
     const height = 600;
     const left = (window.screen.width - width) / 2;
@@ -498,6 +488,10 @@ function Basic() {
   };
   const handleOpenNewWindowListaEspera = () => {
     const url = `${ligaPruebas}miliga/listaEspera`; // Reemplaza esto con la URL que desees abrir
+
+    // confirm(
+    //   `Do you want to create a new event? {slotId: ${slotId}, slotName: ${slotName}, start: ${start}, end: ${end}, type: ${type}, item: ${item}}`
+    // )
     const width = 1200;
     const height = 600;
     const left = (window.screen.width - width) / 2;
@@ -505,18 +499,104 @@ function Basic() {
     const features = `width=${width},height=${height},left=${left},top=${top},toolbar=0,location=0,menubar=0,scrollbars=1,resizable=1`;
     window.open(url, "_blank", features);
   };
+
+  const putEditarCita = async () => {
+    let fechaActual = new Date();
+    // Extrae el año, mes y día
+    let año = fechaActual.getFullYear();
+    let mes = fechaActual.getMonth(); // Nota: getMonth() devuelve un valor de 0 a 11, donde 0 es enero y 11 es diciembre
+    let día = fechaActual.getDate();
+    let fechaSinHora = new Date(año, mes, día);
+    peinadosApi
+      .put("/DetalleCitas", null, {
+        params: {
+          id: datosParametrosCitaTemp.idCita,
+          cia: datosParametrosCitaTemp.cia,
+          sucursal: datosParametrosCitaTemp.sucursal,
+          clave_cita: "000",
+          no_cita: 1,
+          no_estilista: datosParametrosFechaCitaTemp.usuarioEstilista,
+          no_cliente: datosParametrosCitaTemp.no_cliente,
+          dia_cita: datosParametrosCitaTemp.fecha,
+          hora_cita: datosParametrosFechaCitaTemp.fecha,
+          fecha: fechaSinHora,
+          tiempo: datosParametrosCitaTemp.tiempo,
+          user: datosParametrosFechaCitaTemp.usuarioEstilista,
+          tipo_servicio: "1",
+          serv: "1",
+          importe: 100,
+          cancelada: false,
+          stao_estilista: datosParametrosCitaTemp.modoCita,
+          nota_canc: 0,
+          registrada: true,
+          observacion: 0,
+          user_uc: 0,
+          estatus: datosParametrosCitaTemp.estadoCita,
+        },
+      })
+      .then((response) => {
+        Swal.fire("Saved!", "", "success");
+      });
+  };
+
+  const statusBoxStyle = {
+    display: "flex",
+    gap: "10px",
+  };
+
+  const boxStyles = {
+    noDisponible: {
+      backgroundColor: "#FFA500",
+      padding: "10px",
+      color: "black",
+    },
+    requerido: {
+      backgroundColor: "#00FFFF",
+      padding: "10px",
+      color: "black",
+    },
+    asignado: {
+      backgroundColor: "#FFFF00",
+      padding: "10px",
+      color: "black",
+    },
+    enServicio: {
+      backgroundColor: "#008000",
+      padding: "10px",
+      color: "white",
+    },
+    domicilio: {
+      backgroundColor: "#800080",
+      padding: "10px",
+      color: "white",
+    },
+    conflicto: {
+      backgroundColor: "#000000",
+      padding: "10px",
+      color: "white",
+    },
+  };
+
   return (
     <Container>
       <div style={{ flex: 1, justifyContent: "right", alignContent: "right", alignItems: "right", display: "flex" }}>
         <h2>{datosParametros.fecha.toLocaleDateString()}</h2>
-        <h2>,</h2>
+        <h2>, </h2>
         <Timer />
       </div>
+      <Col xs={2}>
+        <Label>Tipo de cita:</Label>
+        <Input type="select" size={"sm"}>
+          <option value={1}>Cita</option>
+          <option value={2}>Servicio</option>
+          <option value={3}>Pagado</option>
+        </Input>
+      </Col>
       <div style={{ flex: 1, justifyContent: "right", alignContent: "right", alignItems: "right", display: "flex" }}>
         <Button
           size="sm"
           onClick={() => {
-            handleOpenNewWindow();
+            handleOpenNewWindowNewSchedule();
           }}
         >
           Nueva Cita
@@ -530,10 +610,19 @@ function Basic() {
         >
           Lista de espera
         </Button>
+        <Button
+          size="sm"
+          color={"success"}
+          onClick={() => {
+            window.location.reload();
+          }}
+        >
+          Actualizar sitio
+        </Button>
       </div>
-      <div style={{ height: 400, width: "100%" }}>
+      <div style={{ height: 250, width: "100%" }}>
         <DataGrid
-          rows={rows}
+          rows={arregloCitaDia}
           columns={columns}
           initialState={{
             pagination: {
@@ -544,8 +633,8 @@ function Basic() {
           checkboxSelection
         />
       </div>
-      {state.showScheduler && (
-        <div style={{ marginBottom: 15000 }}>
+      <div>
+        {state.showScheduler && (
           <Scheduler
             key={1}
             schedulerData={state.viewModel}
@@ -567,8 +656,16 @@ function Basic() {
             onScrollBottom={onScrollBottom}
             toggleExpandFunc={toggleExpandFunc}
           />
-        </div>
-      )}
+        )}
+      </div>
+      <div style={statusBoxStyle}>
+        <div style={boxStyles.noDisponible}>NO DISPONIBLE</div>
+        <div style={boxStyles.requerido}>REQUERIDO</div>
+        <div style={boxStyles.asignado}>ASIGNADO</div>
+        <div style={boxStyles.enServicio}>EN SERVICIO</div>
+        <div style={boxStyles.domicilio}>DOMICILIO</div>
+        <div style={boxStyles.conflicto}>CONFLICTO</div>
+      </div>
     </Container>
   );
 }

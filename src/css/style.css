@@ -255,3 +255,9 @@ table.scheduler-table tr:last-child td {
   border: none;
   background-color: transparent;
 }
+.centered-cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  justify-items: center;
+}
