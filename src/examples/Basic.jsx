@@ -36,6 +36,7 @@ function Basic() {
 
   const [arregloCitaDia, setArregloCitaDia] = useState([]);
   const [arregloCita, setArregloCita] = useState([]);
+  const [tipoCita, setTipoCita] = useState("");
   const [verificador, setVerificador] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [datosParametros, setDatosParametros] = useState({
@@ -86,7 +87,7 @@ function Basic() {
             start: hora1.toISOString(),
             end: hora2.toISOString(),
             resourceId: item.no_estilista,
-            title: "ESTAMOS OPERANDO",
+            title: "",
             type: 2,
             // bgColor: "red",
             bgColor:
@@ -116,7 +117,7 @@ function Basic() {
           start: hora1.toISOString(),
           end: hora2.toISOString(),
           resourceId: item.no_estilista,
-          title: "ESTAMOS OPERANDO",
+          title: "",
           type: 2,
           // bgColor: "red",
           bgColor:
@@ -161,14 +162,19 @@ function Basic() {
     console.log(getCitas());
   };
   const getCitasDia = () => {
-    peinadosApi.get(`/ClientesCitasDia3?suc=1&cliente=0&fecha=${format(datosParametros.fecha, "yyyyMMdd")}`).then((response) => {
-      setArregloCitaDia(response.data);
-    });
+    peinadosApi
+      .get(`/ClientesCitasDia4?suc=1&cliente=0&fecha=${format(datosParametros.fecha, "yyyyMMdd")}&tipoCita=${tipoCita ? tipoCita : "%"}`)
+      .then((response) => {
+        setArregloCitaDia(response.data);
+      });
   };
   useEffect(() => {
     fetchData();
     getCitasDia();
   }, []);
+  useEffect(() => {
+    getCitasDia();
+  }, [tipoCita]);
 
   const [state, dispatch] = useReducer(reducer, initialState);
   const [inicializarAgenda, setinicializarAgenda] = useState(false);
@@ -467,7 +473,7 @@ function Basic() {
   ];
 
   const ligaPruebas = "http://localhost:5173/";
-  //const ligaPruebas = "http://cbinfo.no-ip.info:9019/";
+  // const ligaPruebas = "http://cbinfo.no-ip.info:9019/";
   const handleOpenNewWindow = ({ idCita, idUser, idCliente, fecha, flag }) => {
     const url = `${ligaPruebas}miliga/crearcita?idCita=${idCita}&idUser=${idUser}&idCliente=${idCliente}&fecha=${fecha}&idSuc=${1}&idRec=${1}&flag=${flag}`; // Reemplaza esto con la URL que desees abrir
     const width = 1200;
@@ -578,62 +584,65 @@ function Basic() {
   };
 
   return (
-    <Container>
-      <div style={{ flex: 1, justifyContent: "right", alignContent: "right", alignItems: "right", display: "flex" }}>
-        <h2>{datosParametros.fecha.toLocaleDateString()}</h2>
-        <h2>, </h2>
-        <Timer />
-      </div>
-      <Col xs={2}>
-        <Label>Tipo de cita:</Label>
-        <Input type="select" size={"sm"}>
-          <option value={1}>Cita</option>
-          <option value={2}>Servicio</option>
-          <option value={3}>Pagado</option>
-        </Input>
-      </Col>
-      <div style={{ flex: 1, justifyContent: "right", alignContent: "right", alignItems: "right", display: "flex" }}>
-        <Button
-          size="sm"
-          onClick={() => {
-            handleOpenNewWindowNewSchedule();
-          }}
-        >
-          Nueva Cita
-        </Button>
-        <Button
-          size="sm"
-          color={"primary"}
-          onClick={() => {
-            handleOpenNewWindowListaEspera();
-          }}
-        >
-          Lista de espera
-        </Button>
-        <Button
-          size="sm"
-          color={"success"}
-          onClick={() => {
-            window.location.reload();
-          }}
-        >
-          Actualizar sitio
-        </Button>
-      </div>
-      <div style={{ height: 250, width: "100%" }}>
-        <DataGrid
-          rows={arregloCitaDia}
-          columns={columns}
-          initialState={{
-            pagination: {
-              paginationModel: { page: 0, pageSize: 5 },
-            },
-          }}
-          pageSizeOptions={[5, 10]}
-          checkboxSelection
-        />
-      </div>
-      <div>
+    <>
+      <Container>
+        <div style={{ flex: 1, justifyContent: "right", alignContent: "right", alignItems: "right", display: "flex" }}>
+          <h2>{datosParametros.fecha.toLocaleDateString()}</h2>
+          <h2>, </h2>
+          <Timer />
+        </div>
+        <Col xs={2}>
+          <Label>Tipo de cita:</Label>
+          <Input type="select" size={"sm"} value={tipoCita} onChange={(e) => setTipoCita(e.target.value)}>
+            <option value={"%"}>Todos</option>
+            <option value={"1"}>Cita</option>
+            <option value={"2"}>Servicio</option>
+            <option value={"3"}>Pagado</option>
+          </Input>
+        </Col>
+        <div style={{ flex: 1, justifyContent: "right", alignContent: "right", alignItems: "right", display: "flex" }}>
+          <Button
+            size="sm"
+            onClick={() => {
+              handleOpenNewWindowNewSchedule();
+            }}
+          >
+            Nueva Cita
+          </Button>
+          <Button
+            size="sm"
+            color={"primary"}
+            onClick={() => {
+              handleOpenNewWindowListaEspera();
+            }}
+          >
+            Lista de espera
+          </Button>
+          <Button
+            size="sm"
+            color={"success"}
+            onClick={() => {
+              window.location.reload();
+            }}
+          >
+            Actualizar sitio
+          </Button>
+        </div>
+        <div style={{ height: 250, width: "100%" }}>
+          <DataGrid
+            rows={arregloCitaDia}
+            columns={columns}
+            initialState={{
+              pagination: {
+                paginationModel: { page: 0, pageSize: 5 },
+              },
+            }}
+            pageSizeOptions={[5, 10]}
+            checkboxSelection
+          />
+        </div>
+      </Container>
+      <div style={{ marginLeft: "5%" }}>
         {state.showScheduler && (
           <Scheduler
             key={1}
@@ -658,15 +667,19 @@ function Basic() {
           />
         )}
       </div>
-      <div style={statusBoxStyle}>
-        <div style={boxStyles.noDisponible}>NO DISPONIBLE</div>
-        <div style={boxStyles.requerido}>REQUERIDO</div>
-        <div style={boxStyles.asignado}>ASIGNADO</div>
-        <div style={boxStyles.enServicio}>EN SERVICIO</div>
-        <div style={boxStyles.domicilio}>DOMICILIO</div>
-        <div style={boxStyles.conflicto}>CONFLICTO</div>
-      </div>
-    </Container>
+      <Container
+        style={{ marginBottom: "10%", marginTop: "2%", display: "flex", justifyItems: "center", alignItems: "center", flexDirection: "column" }}
+      >
+        <div style={statusBoxStyle}>
+          <div style={boxStyles.noDisponible}>NO DISPONIBLE</div>
+          <div style={boxStyles.requerido}>REQUERIDO</div>
+          <div style={boxStyles.asignado}>ASIGNADO</div>
+          <div style={boxStyles.enServicio}>EN SERVICIO</div>
+          <div style={boxStyles.domicilio}>DOMICILIO</div>
+          <div style={boxStyles.conflicto}>CONFLICTO</div>
+        </div>
+      </Container>
+    </>
   );
 }
 

@@ -12,14 +12,14 @@ export default {
   agendaResourceTableWidth: 160,
   agendaMaxEventWidth: 100,
 
-  dayResourceTableWidth: 160,
+  dayResourceTableWidth: 100,
   weekResourceTableWidth: "16%",
   monthResourceTableWidth: 160,
   quarterResourceTableWidth: 160,
   yearResourceTableWidth: 160,
   customResourceTableWidth: 160,
 
-  dayCellWidth: 30,
+  dayCellWidth: 20,
   weekCellWidth: "12%",
   monthCellWidth: 80,
   quarterCellWidth: 80,
@@ -38,7 +38,7 @@ export default {
   eventItemPopoverWidth: 300,
 
   eventItemHeight: 22,
-  eventItemLineHeight: 24,
+  eventItemLineHeight: 6,
   nonAgendaSlotMinHeight: 0,
   dayStartFrom: 0,
   dayStopTo: 23,
@@ -73,7 +73,7 @@ export default {
 
   schedulerHeaderEventsFuncsTimeoutMs: 100,
 
-  resourceName: "Resource Name",
+  resourceName: "Estilistas",
   taskName: "Task Name",
   agendaViewHeader: "Agenda",
   addMorePopoverHeaderFormat: "MMM D, YYYY dddd",
@@ -88,9 +88,9 @@ export default {
 
   views: [
     { viewName: "Day", viewType: ViewType.Day, showAgenda: false, isEventPerspective: false },
-    { viewName: "Week", viewType: ViewType.Week, showAgenda: false, isEventPerspective: false },
-    { viewName: "Month", viewType: ViewType.Month, showAgenda: false, isEventPerspective: false },
-    { viewName: "Quarter", viewType: ViewType.Quarter, showAgenda: false, isEventPerspective: false },
-    { viewName: "Year", viewType: ViewType.Year, showAgenda: false, isEventPerspective: false },
+    // { viewName: "Week", viewType: ViewType.Week, showAgenda: false, isEventPerspective: false },
+    // { viewName: "Month", viewType: ViewType.Month, showAgenda: false, isEventPerspective: false },
+    // { viewName: "Quarter", viewType: ViewType.Quarter, showAgenda: false, isEventPerspective: false },
+    // { viewName: "Year", viewType: ViewType.Year, showAgenda: false, isEventPerspective: false },
   ],
 };

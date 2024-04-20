@@ -1,14 +1,14 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { MinusSquareOutlined, PlusSquareOutlined } from '@ant-design/icons';
+import React from "react";
+import PropTypes from "prop-types";
+import { MinusSquareOutlined, PlusSquareOutlined } from "@ant-design/icons";
 
 function ResourceView({ schedulerData, contentScrollbarHeight, slotClickedFunc, slotItemTemplateResolver, toggleExpandFunc }) {
   const { renderData } = schedulerData;
   const width = schedulerData.getResourceTableWidth() - 2;
   const paddingBottom = contentScrollbarHeight;
-  const displayRenderData = renderData.filter(o => o.render);
+  const displayRenderData = renderData.filter((o) => o.render);
 
-  const handleToggleExpand = item => {
+  const handleToggleExpand = (item) => {
     if (toggleExpandFunc) {
       toggleExpandFunc(schedulerData, item.slotId);
     }
@@ -27,27 +27,27 @@ function ResourceView({ schedulerData, contentScrollbarHeight, slotClickedFunc, 
     const slotCell = slotClickedFunc ? (
       <span className="slot-cell">
         {indents}
-        <button type="button" style={{ cursor: 'pointer' }} className="slot-text txt-btn-dis" onClick={() => slotClickedFunc(schedulerData, item)}>
+        <button type="button" style={{ cursor: "pointer" }} className="slot-text txt-btn-dis" onClick={() => slotClickedFunc(schedulerData, item)}>
           {item.slotName}
         </button>
       </span>
     ) : (
       <span className="slot-cell">
         {indents}
-        <button type="button" className="slot-text txt-btn-dis" style={{ cursor: slotClickedFunc === undefined ? undefined : 'pointer' }}>
+        <button type="button" className="slot-text txt-btn-dis" style={{ cursor: slotClickedFunc === undefined ? undefined : "pointer" }}>
           {item.slotName}
         </button>
       </span>
     );
 
     let slotItem = (
-      <div title={item.slotTitle || item.slotName} className="overflow-text header2-text" style={{ textAlign: 'left' }}>
+      <div title={item.slotTitle || item.slotName} className="overflow-text header2-text" style={{ textAlign: "left" }}>
         {slotCell}
       </div>
     );
 
     if (slotItemTemplateResolver) {
-      const resolvedTemplate = slotItemTemplateResolver(schedulerData, item, slotClickedFunc, width, 'overflow-text header2-text');
+      const resolvedTemplate = slotItemTemplateResolver(schedulerData, item, slotClickedFunc, width, "overflow-text header2-text");
       if (resolvedTemplate) {
         slotItem = resolvedTemplate;
       }
@@ -67,7 +67,7 @@ function ResourceView({ schedulerData, contentScrollbarHeight, slotClickedFunc, 
     );
   };
 
-  const resourceList = displayRenderData.map(item => {
+  const resourceList = displayRenderData.map((item) => {
     const indents = [];
     for (let i = 0; i < item.indent; i += 1) {
       indents.push(<span key={`es${i}`} className="expander-space" />);

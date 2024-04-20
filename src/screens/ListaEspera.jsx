@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { DataGrid } from "@mui/x-data-grid";
 import { Table, Button, Modal, ModalHeader, ModalBody, ModalFooter, Input, FormGroup, Label, Col, Row, InputGroup, Container } from "reactstrap";
 import { peinadosApi } from "../api/peinadosApi";
@@ -6,6 +6,7 @@ import { estilistas, productos } from "../data/Data";
 import { format } from "date-fns-tz";
 import { MdOutlineDelete, MdFolderOpen, MdCalendarMonth } from "react-icons/md";
 import Swal from "sweetalert2";
+import { MaterialReactTable } from "material-react-table";
 
 function ListaEspera() {
   const [openListaEspera, setOpenListaEspera] = useState(false);
@@ -105,6 +106,47 @@ function ListaEspera() {
     });
   };
 
+  const columnsClientes2 = useMemo(() => [
+    {
+      accessorKey: "acciones",
+      header: "Acción",
+      size: 100,
+      Cell: ({ cell }) => (
+        <div>
+          <Button
+            variant={"contained"}
+            onClick={() => {
+              setformClienteEspera({ ...formClienteEspera, no_cliente: cell.row.original.id, descripcion_no_cliente: cell.row.original.nombre });
+              setClientesModal(false);
+            }}
+          >
+            Agregar
+          </Button>
+        </div>
+      ),
+    },
+    {
+      accessorKey: "nombre",
+      header: "Nombre",
+      size: 100,
+    },
+    {
+      accessorKey: "telefono",
+      header: "Telefono",
+      size: 100,
+    },
+    {
+      accessorKey: "celular",
+      header: "Celular",
+      size: 100,
+    },
+    {
+      accessorKey: "cumpleaños",
+      header: "Cumpleaños",
+      size: 100,
+    },
+  ]);
+
   const columnsClientes = [
     { field: "nombre", headerName: "nombre", width: 250 },
     { field: "telefono", headerName: "telefono", width: 130 },
@@ -169,6 +211,7 @@ function ListaEspera() {
     return (
       <div>
         <MdOutlineDelete
+          title="Eliminar lista de espera"
           size={25}
           onClick={() => {
             Swal.fire({
@@ -195,12 +238,13 @@ function ListaEspera() {
           }}
         />
         <MdFolderOpen
+          title="Eliminar lista de espera"
           size={25}
           onClick={() => {
             console.log(params);
           }}
         />
-        <MdCalendarMonth size={25} />
+        <MdCalendarMonth title="Eliminar lista de espera" size={25} />
       </div>
     );
   }
@@ -222,7 +266,7 @@ function ListaEspera() {
     { field: "pr", headerName: "pr", renderCell: renderButtonEstilista, width: 130 },
   ];
   const columnListaEspera = [
-    { field: "pr", headerName: "pr", renderCell: renderDeleteListaEspera, width: 130 },
+    { field: "Accion", headerName: "Accion", renderCell: renderDeleteListaEspera, width: 130 },
 
     {
       field: "fecha",
@@ -230,16 +274,16 @@ function ListaEspera() {
       width: 130,
       renderCell: (params) => <p>{format(new Date(params.row.fecha), "p")}</p>,
     },
-    { field: "nombreCompleto", headerName: "nombre_completo", width: 250 },
-    { field: "claveEstukusta", headerName: "claveEstilista", width: 130 },
-    { field: "servicio", headerName: "servicio", width: 130, renderCell: (params) => <p>{params.row.estilista}</p> },
+    { field: "nombreCompleto", headerName: "Nombre completo", width: 250 },
+    { field: "claveEstilista", headerName: "Clave estilista", width: 130 },
+    { field: "descripcion", headerName: "Servicio", width: 130, renderCell: (params) => <p>{params.row.descripcion}</p> },
     {
       field: "hora_estimada",
-      headerName: "hora_estimada",
+      headerName: "Hora estimada",
       width: 130,
       renderCell: (params) => <p>{format(new Date(params.row.hora_estimada), "p")}</p>,
     },
-    { field: "nombreEstilsta", headerName: "nombreEstilsta", width: 200 },
+    { field: "nombreEstilsta", headerName: "Nombre estilista", width: 200 },
   ];
 
   const postListaEspera = () => {
@@ -321,13 +365,18 @@ function ListaEspera() {
   return (
     <div>
       <Container>
-        <Button
-          onClick={() => {
-            setOpenListaEspera(true);
-          }}
-        >
-          Agregar Lista de espera
-        </Button>
+        <h1>Lista de espera</h1>
+        <div style={{ display: "flex", justifyContent: "flex-end", alignItems: "end" }}>
+          <Button
+            style={{ marginBottom: "10px" }}
+            color="success"
+            onClick={() => {
+              setOpenListaEspera(true);
+            }}
+          >
+            Agregar Lista de espera
+          </Button>
+        </div>
 
         <DataGrid rows={dataListaEspera} columns={columnListaEspera} />
       </Container>
@@ -410,7 +459,14 @@ function ListaEspera() {
       <Modal isOpen={clientesModal} toggle={() => setClientesModal(!clientesModal)} size="xl">
         <ModalHeader toggle={() => setClientesModal(!clientesModal)}>Agregar cliente</ModalHeader>
         <ModalBody>
-          <DataGrid rows={dataClientes} columns={columnsClientes} />
+          {/* <DataGrid rows={dataClientes} columns={columnsClientes} /> */}
+
+          <MaterialReactTable
+            columns={columnsClientes2}
+            data={dataClientes}
+            initialState={{ density: "compact" }}
+            muiTableContainerProps={{ sx: { maxHeight: "350px" } }}
+          />
         </ModalBody>
         <ModalFooter>
           <Button color="primary" onClick={() => setClientesModal(!clientesModal)}>

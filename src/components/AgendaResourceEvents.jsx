@@ -1,21 +1,21 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import AgendaEventItem from './AgendaEventItem';
+import React from "react";
+import PropTypes from "prop-types";
+import AgendaEventItem from "./AgendaEventItem";
 
 function AgendaResourceEvents(props) {
   const { schedulerData, resourceEvents, slotClickedFunc, slotItemTemplateResolver } = props;
   const { startDate, endDate, config, localeDayjs } = schedulerData;
   const width = schedulerData.getResourceTableWidth() - 2;
 
-  const events = resourceEvents.headerItems.flatMap(item => {
+  const events = resourceEvents.headerItems.flatMap((item) => {
     const start = localeDayjs(new Date(startDate));
-    const end = localeDayjs(endDate).add(1, 'days');
+    const end = localeDayjs(endDate).add(1, "days");
     const headerStart = localeDayjs(new Date(item.start));
     const headerEnd = localeDayjs(new Date(item.end));
     if (start === headerStart && end === headerEnd) {
-      return item.events.map(evt => {
+      return item.events.map((evt) => {
         const durationStart = localeDayjs(new Date(startDate));
-        const durationEnd = localeDayjs(endDate).add(1, 'days');
+        const durationEnd = localeDayjs(endDate).add(1, "days");
         const eventStart = localeDayjs(evt.eventItem.start);
         const eventEnd = localeDayjs(evt.eventItem.end);
         const isStart = eventStart >= durationStart;
@@ -31,7 +31,7 @@ function AgendaResourceEvents(props) {
       {resourceEvents.slotName}
     </button>
   ) : (
-    <span>{resourceEvents.slotName}</span>
+    <h1 style={{ color: "black" }}>{resourceEvents.slotName}</h1>
   );
 
   let slotItem = (
@@ -41,7 +41,7 @@ function AgendaResourceEvents(props) {
   );
 
   if (slotItemTemplateResolver) {
-    const temp = slotItemTemplateResolver(schedulerData, resourceEvents, slotClickedFunc, width, 'overflow-text header2-text');
+    const temp = slotItemTemplateResolver(schedulerData, resourceEvents, slotClickedFunc, width, "overflow-text header2-text");
 
     if (temp) {
       slotItem = temp;
@@ -49,7 +49,7 @@ function AgendaResourceEvents(props) {
   }
 
   return (
-    <tr style={{ minHeight: config.eventItemLineHeight + 2 }}>
+    <tr style={{ minHeight: config.eventItemLineHeight + 5 }}>
       <td data-resource-id={resourceEvents.slotId}>{slotItem}</td>
       <td>
         <div className="day-event-container">{events}</div>

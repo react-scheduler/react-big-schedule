@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 // import Modal from "../components/Modal";
 import { DataGrid } from "@mui/x-data-grid";
 import { peinadosApi } from "../api/peinadosApi";
@@ -6,8 +6,10 @@ import { FormControl, TextField, FormControlLabel, Checkbox, Box, ButtonGroup, M
 import { FormGroup, Label, Input, Button, Container, Row, Col, InputGroup, InputGroupText, Collapse } from "reactstrap";
 import { styled } from "@mui/material/styles";
 
-import { estilistas, productos } from "../data/Data";
 import Swal from "sweetalert2";
+import { format } from "date-fns-tz";
+import { MdOutlineFolder } from "react-icons/md";
+import { MaterialReactTable } from "material-react-table";
 
 function CrearCita() {
   const style = {
@@ -20,7 +22,7 @@ function CrearCita() {
     border: "2px solid #000",
     boxShadow: 24,
     p: 4,
-    height: "70%",
+    height: "90%",
   };
   const styleCantidad = {
     position: "absolute",
@@ -77,13 +79,16 @@ function CrearCita() {
   const [abierto, setAbierto] = useState(false);
   const [clientesModal, setClientesModal] = useState(false);
   const [ModalClientesPuntos, setModalClientesPuntos] = useState(false);
+  const [ModalOperacionesPuntos, setModalOperacionesPuntos] = useState(false);
   const [ModalCantidad, setModalCantidad] = useState(false);
   const [productosModal, setProductosModal] = useState(false);
+  const [puntosModal, setPuntosModal] = useState(false);
   const [ventaTemporal, setVentaTemporal] = useState([]);
   const [dataClientes, setDataClientes] = useState({});
   const [dataClientesPuntos, setDataClientesPuntos] = useState({});
 
   const [dataProductos, setDataProductos] = useState({});
+  const [dataOperaciones, setDataOperaciones] = useState({});
   const [dataEstilistas, setDataEstilistas] = useState([]);
 
   const idUser = new URLSearchParams(window.location.search).get("idUser");
@@ -103,6 +108,7 @@ function CrearCita() {
 
   useEffect(() => {
     getClientesePuntos();
+    getOperaciones();
   }, [formCita.no_cliente]);
 
   const getEstilistas = () => {
@@ -117,7 +123,7 @@ function CrearCita() {
   };
 
   const getClientesePuntos = () => {
-    peinadosApi.get(`/DetallePuntosClien?cliente=${formCita.no_cliente}`).then((response) => {
+    peinadosApi.get(`/sp_detallePuntosSel2?id=1&noCliente=${formCita.no_cliente}`).then((response) => {
       setDataClientesPuntos(response.data);
       console.log("<");
     });
@@ -126,6 +132,11 @@ function CrearCita() {
   const getProductos = () => {
     peinadosApi.get("/productos2?id=0&descripcion=%&verInventariable=2&esServicio=2&esInsumo=2&obsoleto=2&marca=%").then((response) => {
       setDataProductos(response.data);
+    });
+  };
+  const getOperaciones = () => {
+    peinadosApi.get(`/sp_detalleOperaciones6?noCliente=${formCita.no_cliente}`).then((response) => {
+      setDataOperaciones(response.data);
     });
   };
 
@@ -259,7 +270,7 @@ function CrearCita() {
             dia_cita: formCita.fecha,
             hora_cita: formCita.fecha,
             fecha: fechaSinHora,
-            tiempo: 50,
+            tiempo: 0,
             user: formCita.no_estilista,
             importe: 0,
             cancelada: false,
@@ -288,25 +299,97 @@ function CrearCita() {
   };
 
   const columnsClientes = [
-    { field: "nombre", headerName: "nombre", width: 250 },
-    { field: "telefono", headerName: "telefono", width: 130 },
-    { field: "celular", headerName: "celular", width: 130 },
-    { field: "cumpleaños", headerName: "cumpleaños", width: 130, renderCell: (params) => <p>{params.row.cumpleaños}</p> },
-    { field: "edit", headerName: "edit", renderCell: renderButtonClient, width: 130 },
+    { field: "nombre", headerName: "Nombre", width: 250 },
+    { field: "telefono", headerName: "Telefono", width: 130 },
+    { field: "celular", headerName: "Celular", width: 130 },
+    { field: "cumpleaños", headerName: "Cumpleaños", width: 130, renderCell: (params) => <p>{params.row.cumpleaños}</p> },
+    { field: "edit", headerName: "Seleccionar", renderCell: renderButtonClient, width: 130 },
   ];
 
-  const rowsClientes = [
+  const columnsClientes2 = useMemo(() => [
     {
-      id: 10,
-      nombre: "180",
-      telefono: "susy",
-      celular: "10:00am",
-      cumpleaños: "12:00pm",
-      servicio: "Peinados",
-      tiempo: "30",
-      total: "$5000.00",
+      accessorKey: "acciones",
+      header: "Acción",
+      size: 100,
+      Cell: ({ cell }) => (
+        <div>
+          <Button
+            variant={"contained"}
+            onClick={() => {
+              setFormCita({ ...formCita, id_cliente: cell.row.original.id, no_cliente: cell.row.original.id });
+              setFormCitaDescripciones({ ...formCita, descripcion_no_cliente: cell.row.original.nombre });
+              setClientesModal(false);
+            }}
+          >
+            Agregar
+          </Button>
+        </div>
+      ),
     },
-  ];
+    {
+      accessorKey: "nombre",
+      header: "Nombre",
+      size: 100,
+    },
+    {
+      accessorKey: "telefono",
+      header: "Telefono",
+      size: 100,
+    },
+    {
+      accessorKey: "celular",
+      header: "Celular",
+      size: 100,
+    },
+    {
+      accessorKey: "cumpleaños",
+      header: "Cumpleaños",
+      size: 100,
+    },
+  ]);
+
+  const columnsPuntos2 = useMemo(() => [
+    {
+      accessorKey: "acciones",
+      header: "Acciones",
+      size: 100,
+      Cell: ({ cell }) => (
+        <div>
+          <MdOutlineFolder size={20} onClick={() => setModalOperacionesPuntos(true)} />
+        </div>
+      ),
+    },
+    {
+      accessorKey: "sucursal",
+      header: "Sucursal",
+      size: 100,
+    },
+    {
+      accessorKey: "fecha_movto",
+      header: "Fecha",
+      size: 100,
+      Cell: ({ cell }) => {
+        const fecha = cell.row.original.fecha_movto;
+        const fechaConvertida = fecha ? format(fecha, "dd/MM/yyyy") : "";
+        return <p>{fechaConvertida}</p>;
+      },
+    },
+    {
+      accessorKey: "id",
+      header: "Folio",
+      size: 100,
+    },
+    {
+      accessorKey: "puntos",
+      header: "Puntos",
+      size: 100,
+    },
+    {
+      accessorKey: "observaciones",
+      header: "Observaciones",
+      size: 100,
+    },
+  ]);
 
   const columnsProductos = [
     { field: "x", headerName: "Seleccion", renderCell: renderButtonProduct, width: 130 },
@@ -316,6 +399,28 @@ function CrearCita() {
     { field: "precio_lista", headerName: "Precio", width: 130, renderCell: (params) => <p>{params.row.precio_lista}</p> },
     { field: "tiempox", headerName: "Tiempo", width: 130, renderCell: (params) => <p>{params.row.tiempox}</p> },
   ];
+  const columnsPuntos = [
+    { field: "x", headerName: "Seleccion", renderCell: () => <MdOutlineFolder size={20} onClick={() => setModalOperacionesPuntos(true)} /> },
+    { field: "sucursal", headerName: "Sucursal", width: 90 },
+    {
+      field: "fecha_movto",
+      headerName: "Fecha",
+      width: 130,
+      renderCell: (params) => <p>{format(new Date(params.row.fecha_movto), "dd/MM/yyyy")}</p>,
+    },
+    { field: "id", headerName: "folio", width: 90 },
+    { field: "puntos", headerName: "Puntos", width: 90 },
+    { field: "observaciones", headerName: "Observaciones", width: 270 },
+  ];
+  const columnsConultaPuntos = [
+    { field: "estilista", headerName: "Estilista", width: 90 },
+
+    { field: "descripcion", headerName: "Producto", width: 90 },
+    { field: "cantidad", headerName: "Cantidad", width: 90 },
+    { field: "precio", headerName: "Precio", width: 270 },
+    { field: "importe", headerName: "Importe", width: 270 },
+  ];
+
   const [dataVentaTemporal, setDataVentaTemporal] = useState({});
   function renderButtonProduct(params) {
     return (
@@ -369,7 +474,14 @@ function CrearCita() {
             disabled={!formCitaDescripciones.descripcion_no_cliente}
             onClick={() => {
               if (dataClientesPuntos.length == 0) {
-                alert("Este cliente todavia no cuenta con puntos");
+                Swal.fire({
+                  icon: "error",
+                  title: "Sin puntos",
+                  text: `Este cliente todavia no cuenta con puntos`,
+                  confirmButtonColor: "#3085d6", // Cambiar el color del botón OK
+                });
+              } else {
+                setModalClientesPuntos(true);
               }
             }}
           >
@@ -590,8 +702,15 @@ function CrearCita() {
       </Container>
       <Modal open={clientesModal} onClose={() => setClientesModal(false)}>
         <Box sx={style}>
-          <Typography variant="h4">Agregar cliente</Typography>
-          <DataGrid rows={dataClientes} columns={columnsClientes} />
+          <Typography variant="h4">Seleccionar cliente</Typography>
+          {/* <DataGrid rows={dataClientes} columns={columnsClientes} />
+           */}
+          <MaterialReactTable
+            columns={columnsClientes2}
+            data={dataClientes}
+            initialState={{ density: "compact" }}
+            muiTableContainerProps={{ sx: { maxHeight: "350px" } }}
+          />
         </Box>
       </Modal>
       <Modal open={productosModal} onClose={() => setProductosModal(false)}>
@@ -603,16 +722,42 @@ function CrearCita() {
 
       <Modal open={ModalClientesPuntos} onClose={() => setModalClientesPuntos(false)}>
         <Box sx={style}>
-          <Typography variant="h4">Agregar cliente</Typography>
-          <DataGrid rows={dataClientes} columns={columnsClientes} />
+          <Typography variant="h4">Historial de puntos</Typography>
+          <DataGrid rows={dataClientesPuntos} columns={columnsPuntos} />
         </Box>
       </Modal>
+
+      <Modal open={ModalOperacionesPuntos} onClose={() => setModalOperacionesPuntos(false)}>
+        <Box sx={style}>
+          <Typography variant="h4">Consulta de operaciones</Typography>
+          <Label>Cliente:</Label>
+          <Input disabled value={formCitaDescripciones.descripcion_no_cliente}></Input>
+          <Label>Suc:</Label>
+          <Label>Fecha:</Label>
+          <Label>Hora:</Label>
+          <DataGrid rows={dataOperaciones} columns={columnsConultaPuntos} />
+
+          <hr />
+          <Button>Salir</Button>
+          <Label>Total:</Label>
+          <Input></Input>
+        </Box>
+      </Modal>
+
       <Modal open={productosModal} onClose={() => setProductosModal(false)}>
         <Box sx={style}>
           <Typography variant="h4">Agregar productos</Typography>
           <DataGrid rows={dataProductos} columns={columnsProductos} />
         </Box>
       </Modal>
+
+      <Modal open={puntosModal} onClose={() => setPuntosModal(false)}>
+        <Box sx={style}>
+          <Typography variant="h4">Agregar productos</Typography>
+          <DataGrid rows={dataClientesPuntos} columns={columnsProductos} />
+        </Box>
+      </Modal>
+
       <Modal open={ModalCantidad} onClose={() => setModalCantidad(false)} size={"sm"}>
         <Box sx={styleCantidad}>
           <Typography variant="h5">Agregue la cantidad</Typography>
