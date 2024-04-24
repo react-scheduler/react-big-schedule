@@ -1,6 +1,7 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { Col, Row } from 'antd';
+import React, { useEffect, useState } from "react";
+import PropTypes from "prop-types";
+import { Col, Row } from "antd";
+import { peinadosApi } from "../api/peinadosApi";
 
 function EventItemPopover({
   schedulerData,
@@ -32,12 +33,24 @@ function EventItemPopover({
     <button
       className="header2-text txt-btn-dis"
       type="button"
-      style={{ color: '#108EE9', cursor: 'pointer', marginLeft: `${marginLeft}px` }}
+      style={{ color: "#108EE9", cursor: "pointer", marginLeft: `${marginLeft}px` }}
       onClick={() => clickHandler(schedulerData, eventItem)}
     >
       {text}
     </button>
   );
+  const [dataPuntosporCliente, setDataPuntosPorCliente] = useState({});
+
+  // http://cbinfo.no-ip.info:9018/sp_detalleCitasServiciosResumen_Result?idCita=2087
+  const getEstilistas = () => {
+    peinadosApi.get(`/sp_detalleCitasServiciosResumen_Result?idCita=${eventItem.idCita}`).then((response) => {
+      setDataPuntosPorCliente(response.data[0]);
+    });
+  };
+  useEffect(() => {
+    getEstilistas();
+    console.log(eventItem);
+  }, []);
 
   return (
     <div style={{ width: config.eventItemPopoverWidth }}>
@@ -70,20 +83,20 @@ function EventItemPopover({
           <div />
         </Col>
         <Col span={22}>
-          <span className="header1-text">{start.format('HH:mm')}</span>
+          <span className="header1-text">{start.format("HH:mm")}</span>
           {config.eventItemPopoverDateFormat && (
-            <span className="help-text" style={{ marginLeft: '8px' }}>
+            <span className="help-text" style={{ marginLeft: "8px" }}>
               {start.format(config.eventItemPopoverDateFormat)}
             </span>
           )}
-          <span className="header2-text" style={{ marginLeft: '8px' }}>
+          <span className="header2-text" style={{ marginLeft: "8px" }}>
             -
           </span>
-          <span className="header1-text" style={{ marginLeft: '8px' }}>
-            {end.format('HH:mm')}
+          <span className="header1-text" style={{ marginLeft: "8px" }}>
+            {end.format("HH:mm")}
           </span>
           {config.eventItemPopoverDateFormat && (
-            <span className="help-text" style={{ marginLeft: '8px' }}>
+            <span className="help-text" style={{ marginLeft: "8px" }}>
               {end.format(config.eventItemPopoverDateFormat)}
             </span>
           )}
@@ -93,6 +106,10 @@ function EventItemPopover({
         <Row type="flex" align="middle">
           <Col span={2}>
             <div />
+          </Col>
+          <Col>
+            <p className="header2-text">Cliente: {dataPuntosporCliente?.nombre}</p>
+            <p className="header2-text">Servicios: {dataPuntosporCliente?.descripcion}</p>
           </Col>
           <Col span={22}>
             {showViewEvent && renderViewEvent(viewEventText, viewEventClick)}

@@ -9,8 +9,9 @@ import { format } from "date-fns-tz";
 import { set } from "date-fns";
 import { DataGrid } from "@mui/x-data-grid";
 import Timer from "../components/Timer";
-import { Container, Button, Badge, Label, Input, Col } from "reactstrap";
+import { Container, Button, Badge, Label, Input, Col, Row } from "reactstrap";
 import Swal from "sweetalert2";
+import "../css/style.css";
 let schedulerData;
 
 const initialState = {
@@ -174,7 +175,7 @@ function Basic() {
   }, []);
   useEffect(() => {
     getCitasDia();
-  }, [tipoCita]);
+  }, [tipoCita, datosParametros.fecha]);
 
   const [state, dispatch] = useReducer(reducer, initialState);
   const [inicializarAgenda, setinicializarAgenda] = useState(false);
@@ -268,6 +269,13 @@ function Basic() {
     console.log({ event });
     console.log({ schedulerData });
 
+    handleOpenNewWindowEdit({
+      idCita: event.idCita,
+      idUser: event.no_estilista,
+      idCliente: event.no_cliente,
+      fecha: event.hora1,
+      flag: 0,
+    });
     return;
     setDatosParametros({
       fecha: fecha.setDate(fecha.getDate() + 1),
@@ -316,7 +324,10 @@ function Basic() {
   };
 
   const ops2 = (schedulerData, event) => {
-    setIsModalOpen(true);
+    // setIsModalOpen(true);
+    console.log(event);
+    // return;
+    editCita2(event);
   };
 
   const updateEventStart = (schedulerData, event, newStart) => {
@@ -419,11 +430,17 @@ function Basic() {
   };
 
   const columns = [
-    { field: "id", headerName: "Clave", width: 70 },
+    { field: "id", headerName: "Clave", width: 70, align: "center" },
     {
       field: "stao_estilista",
       headerName: "Modo",
       width: 130,
+      align: "center",
+      flex: 1,
+
+      options: {
+        setCellProps: () => ({ align: "center", justifyContent: "center" }),
+      },
       renderCell: (params) => (
         <p>
           {params.row.stao_estilista == 1
@@ -476,6 +493,15 @@ function Basic() {
   // const ligaPruebas = "http://cbinfo.no-ip.info:9019/";
   const handleOpenNewWindow = ({ idCita, idUser, idCliente, fecha, flag }) => {
     const url = `${ligaPruebas}miliga/crearcita?idCita=${idCita}&idUser=${idUser}&idCliente=${idCliente}&fecha=${fecha}&idSuc=${1}&idRec=${1}&flag=${flag}`; // Reemplaza esto con la URL que desees abrir
+    const width = 1200;
+    const height = 600;
+    const left = (window.screen.width - width) / 2;
+    const top = (window.screen.height - height) / 2;
+    const features = `width=${width},height=${height},left=${left},top=${top},toolbar=0,location=0,menubar=0,scrollbars=1,resizable=1`;
+    window.open(url, "_blank", features);
+  };
+  const handleOpenNewWindowEdit = ({ idCita, idUser, idCliente, fecha, flag }) => {
+    const url = `${ligaPruebas}miliga/editarcita?idCita=${idCita}&idUser=${idUser}&idCliente=${idCliente}&fecha=${fecha}&idSuc=${1}&idRec=${1}&flag=${flag}`; // Reemplaza esto con la URL que desees abrir
     const width = 1200;
     const height = 600;
     const left = (window.screen.width - width) / 2;
@@ -582,25 +608,67 @@ function Basic() {
       color: "white",
     },
   };
-
+  const editCita2 = (eventItem) => {
+    let fechaActual = new Date(eventItem.hora1);
+    // Extrae el año, mes y día
+    let año = fechaActual.getFullYear();
+    let mes = fechaActual.getMonth(); // Nota: getMonth() devuelve un valor de 0 a 11, donde 0 es enero y 11 es diciembre
+    let día = fechaActual.getDate();
+    let fechaSinHora = new Date(año, mes, día);
+    peinadosApi
+      .put("/DetalleCitasReducido", null, {
+        params: {
+          id: eventItem.idCita,
+          no_estilista: eventItem.no_estilista,
+          no_cliente: eventItem.no_cliente,
+          dia_cita: eventItem.hora1,
+          hora_cita: eventItem.hora1,
+          fecha: fechaSinHora,
+          user: eventItem.no_estilista,
+          cancelada: true,
+          stao_estilista: 1,
+          nota_canc: 0,
+          registrada: false,
+          observacion: 1,
+          user_uc: 0,
+          estatus: 0,
+        },
+      })
+      .then((response) => {
+        console.log(response);
+        Swal.fire({
+          title: "Cita cancelada",
+          icon: "success",
+          confirmButtonText: "Ok",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            window.location.reload();
+          }
+        });
+      });
+  };
   return (
     <>
-      <Container>
-        <div style={{ flex: 1, justifyContent: "right", alignContent: "right", alignItems: "right", display: "flex" }}>
-          <h2>{datosParametros.fecha.toLocaleDateString()}</h2>
-          <h2>, </h2>
+      <div style={{ flex: 1, justifyContent: "space-between", alignContent: "space-between", alignItems: "start", display: "flex" }}>
+        <div style={{ display: "flex" }}>
+          <h4>Fecha: {datosParametros.fecha.toLocaleDateString()}</h4>
+          <h4>´ y Hora: </h4>
           <Timer />
         </div>
-        <Col xs={2}>
-          <Label>Tipo de cita:</Label>
-          <Input type="select" size={"sm"} value={tipoCita} onChange={(e) => setTipoCita(e.target.value)}>
-            <option value={"%"}>Todos</option>
-            <option value={"1"}>Cita</option>
-            <option value={"2"}>Servicio</option>
-            <option value={"3"}>Pagado</option>
-          </Input>
-        </Col>
-        <div style={{ flex: 1, justifyContent: "right", alignContent: "right", alignItems: "right", display: "flex" }}>
+        <Row>
+          <Col>
+            <Label>Tipo de cita:</Label>
+          </Col>
+          <Col>
+            <Input type="select" size={"sm"} value={tipoCita} onChange={(e) => setTipoCita(e.target.value)}>
+              <option value={"%"}>Todos</option>
+              <option value={"1"}>Cita</option>
+              <option value={"2"}>Servicio</option>
+              <option value={"3"}>Pagado</option>
+            </Input>
+          </Col>
+        </Row>
+        <div>
           <Button
             size="sm"
             onClick={() => {
@@ -628,21 +696,25 @@ function Basic() {
             Actualizar sitio
           </Button>
         </div>
-        <div style={{ height: 250, width: "100%" }}>
-          <DataGrid
-            rows={arregloCitaDia}
-            columns={columns}
-            initialState={{
-              pagination: {
-                paginationModel: { page: 0, pageSize: 5 },
-              },
-            }}
-            pageSizeOptions={[5, 10]}
-            checkboxSelection
-          />
-        </div>
-      </Container>
-      <div style={{ marginLeft: "5%" }}>
+      </div>
+
+      <div style={{ flex: 1, justifyContent: "right", alignContent: "right", alignItems: "right", display: "flex" }}></div>
+      <div style={{ height: 170, width: "100%" }}>
+        <DataGrid
+          rows={arregloCitaDia}
+          columns={columns}
+          rowHeight={28}
+          columnHeaderHeight={28}
+          hideFooterPagination
+          hideFooter
+          sx={{
+            "& .MuiDataGrid-pagination": {
+              display: "none",
+            },
+          }}
+        />
+      </div>
+      <div style={{ marginLeft: "1%" }}>
         {state.showScheduler && (
           <Scheduler
             key={1}
@@ -652,8 +724,8 @@ function Basic() {
             onSelectDate={onSelectDate}
             onViewChange={onViewChange}
             viewEventClick={ops1}
-            viewEventText="Ops 1"
-            viewEvent2Text="Ops 2"
+            viewEventText="Editar cita:"
+            viewEvent2Text="Cancelar cita"
             viewEvent2Click={ops2}
             updateEventStart={updateEventStart}
             updateEventEnd={updateEventEnd}
@@ -667,9 +739,7 @@ function Basic() {
           />
         )}
       </div>
-      <Container
-        style={{ marginBottom: "10%", marginTop: "2%", display: "flex", justifyItems: "center", alignItems: "center", flexDirection: "column" }}
-      >
+      <div style={{ marginBottom: "10%", marginTop: "2%", display: "flex", justifyItems: "center", alignItems: "center", flexDirection: "column" }}>
         <div style={statusBoxStyle}>
           <div style={boxStyles.noDisponible}>NO DISPONIBLE</div>
           <div style={boxStyles.requerido}>REQUERIDO</div>
@@ -678,7 +748,7 @@ function Basic() {
           <div style={boxStyles.domicilio}>DOMICILIO</div>
           <div style={boxStyles.conflicto}>CONFLICTO</div>
         </div>
-      </Container>
+      </div>
     </>
   );
 }

@@ -65,6 +65,7 @@
     "@emotion/styled": "^11.11.0",
     "@mui/material": "^5.15.12",
     "@mui/x-data-grid": "^6.19.11",
+    "@mui/x-date-pickers": "^7.2.0",
     "antd": "^5.14.1",
     "axios": "^1.6.7",
     "bootstrap": "^5.3.3",

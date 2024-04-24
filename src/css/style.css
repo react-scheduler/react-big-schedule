@@ -261,3 +261,7 @@ table.scheduler-table tr:last-child td {
   justify-content: center;
   justify-items: center;
 }
+/* archivoDeEstilos.css */
+.hidePagination {
+  display: none;
+}

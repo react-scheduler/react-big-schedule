@@ -210,6 +210,14 @@ function ListaEspera() {
   function renderDeleteListaEspera(params) {
     return (
       <div>
+        <MdCalendarMonth title="C" size={25} />
+        <MdFolderOpen
+          title="S"
+          size={25}
+          onClick={() => {
+            console.log(params);
+          }}
+        />
         <MdOutlineDelete
           title="Eliminar lista de espera"
           size={25}
@@ -237,14 +245,6 @@ function ListaEspera() {
             });
           }}
         />
-        <MdFolderOpen
-          title="Eliminar lista de espera"
-          size={25}
-          onClick={() => {
-            console.log(params);
-          }}
-        />
-        <MdCalendarMonth title="Eliminar lista de espera" size={25} />
       </div>
     );
   }

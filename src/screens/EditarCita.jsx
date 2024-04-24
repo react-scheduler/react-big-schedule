@@ -3,18 +3,18 @@ import React, { useState, useEffect, useMemo } from "react";
 import { DataGrid } from "@mui/x-data-grid";
 import { peinadosApi } from "../api/peinadosApi";
 import { FormControl, TextField, FormControlLabel, Checkbox, Box, ButtonGroup, Modal, Typography } from "@mui/material";
-import { FormGroup, Label, Input, Button, Container, Row, Col, InputGroup, InputGroupText, Collapse } from "reactstrap";
+import { FormGroup, Label, Input, Button, Container, Row, Col, InputGroup, InputGroupText, Collapse, Spinner } from "reactstrap";
 import { styled } from "@mui/material/styles";
-
-import Swal from "sweetalert2";
-import { format } from "date-fns-tz";
-import { MdOutlineFolder } from "react-icons/md";
-import { MaterialReactTable } from "material-react-table";
 import { LocalizationProvider, DateTimePicker } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import Swal from "sweetalert2";
+import { format } from "date-fns-tz";
 import { startOfToday, setHours, parse } from "date-fns";
 
-function CrearCita() {
+import { MdOutlineFolder } from "react-icons/md";
+import { MaterialReactTable } from "material-react-table";
+
+function EditarCita() {
   const style = {
     position: "absolute",
     top: "50%",
@@ -40,6 +40,7 @@ function CrearCita() {
     p: 4,
   };
   const [formCita, setFormCita] = useState({
+    id: 0,
     cia: 1,
     sucursal: 1,
     no_estilista: 0,
@@ -54,7 +55,7 @@ function CrearCita() {
     stao_estilista: 0,
     nota_canc: "nota cancelacion",
     registrada: false,
-    observacion: "OBSERVACIONES",
+    observacion: ".",
     user_uc: 1,
     estatus: 0,
     estatusAsignado: false,
@@ -85,98 +86,51 @@ function CrearCita() {
   const [ModalOperacionesPuntos, setModalOperacionesPuntos] = useState(false);
   const [ModalCantidad, setModalCantidad] = useState(false);
   const [productosModal, setProductosModal] = useState(false);
-  const [verificarContraModal, setVerificarContraModal] = useState(false);
-
   const [puntosModal, setPuntosModal] = useState(false);
+  const [loadingModal, setLoadingModal] = useState(false);
   const [ventaTemporal, setVentaTemporal] = useState([]);
-  const [dataClientes, setDataClientes] = useState({});
+  const [dataClientes, setDataClientes] = useState([]);
   const [dataClientesPuntos, setDataClientesPuntos] = useState({});
 
   const [dataProductos, setDataProductos] = useState({});
   const [dataOperaciones, setDataOperaciones] = useState({});
-  const [dataPuntosporCliente, setDataPuntosPorCliente] = useState({});
-  const [dataEstilistaDisponibilidadHorario, setdataEstilistaDisponibilidadHorario] = useState({});
   const [dataEstilistas, setDataEstilistas] = useState([]);
-  const [contraseña, setContraseña] = useState("");
-  const contraseñaEstática = "1234";
-  const [valido, setValido] = useState(false);
-  const handleChange = (event) => {
-    setContraseña(event.target.value);
-  };
-  useEffect(() => {
-    console.log(formCita.fecha);
-  }, [formCita.fecha]);
-
-  function validarContraseña() {
-    return new Promise((resolve, reject) => {
-      Swal.fire({
-        title: "Ingrese su contraseña",
-        input: "password",
-        inputAttributes: {
-          autocapitalize: "off",
-        },
-        showCancelButton: true,
-        confirmButtonText: "Confirmar",
-        showLoaderOnConfirm: true,
-        preConfirm: (contraseña) => {
-          // Aquí puedes agregar tu lógica de validación de contraseña
-          // Por ejemplo, podrías comparar la contraseña ingresada con una contraseña almacenada o realizar una llamada a una API para verificar la contraseña
-          return new Promise((resolve) => {
-            setTimeout(() => {
-              // Supongamos que la contraseña es "password"
-              if (contraseña === "1234") {
-                resolve();
-              } else {
-                Swal.fire({
-                  icon: "error",
-                  title: "Contraseña incorrecta",
-                  text: "Por favor, ingrese una contraseña correcta.",
-                  confirmButtonText: "Entendido",
-                }).then((isConfirmed) => {
-                  if (isConfirmed.isConfirmed) Swal.close();
-                });
-              }
-            }, 2000);
-          });
-        },
-        allowOutsideClick: () => !Swal.isLoading(),
-      })
-        .then((result) => {
-          if (result.isConfirmed) {
-            resolve(true); // Resuelve la promesa con valor true si la contraseña es correcta
-          } else {
-            resolve(false); // Resuelve la promesa con valor false si el usuario cancela la entrada de contraseña
-          }
-        })
-        .catch((error) => {
-          console.error(error);
-          resolve(false); // Resuelve la promesa con valor false si ocurre algún error durante la validación de la contraseña
-        });
-    });
-  }
 
   const idUser = new URLSearchParams(window.location.search).get("idUser");
   const fecha = new URLSearchParams(window.location.search).get("fecha");
   const idRec = new URLSearchParams(window.location.search).get("idRec");
   const idSuc = new URLSearchParams(window.location.search).get("idSuc");
+  const idCita = new URLSearchParams(window.location.search).get("idCita");
+  const idCliente = new URLSearchParams(window.location.search).get("idCliente");
   const minDateTime = setHours(startOfToday(), 8);
 
   const maxDateTime = setHours(startOfToday(), 20);
+
   useEffect(() => {
-    setFormCita({ ...formCita, fecha: fecha, no_estilista: idUser, sucursal: idSuc });
-  }, [idUser, fecha, idRec, idSuc]);
+    setFormCita({ ...formCita, fecha: fecha, no_estilista: idUser, sucursal: idSuc, no_cliente: idCliente, id: idCita });
+  }, [idUser, fecha, idRec, idSuc, idCliente, idCita]);
+
+  useEffect(() => {
+    if (dataClientes.length > 0) {
+      const seleccionarNombre = dataClientes.find((cliente) => cliente.id == idCliente);
+      setFormCitaDescripciones({ ...formCitaDescripciones, descripcion_no_cliente: seleccionarNombre?.nombre });
+      setLoadingModal(false);
+    }
+  }, [dataClientes, idCliente]);
+
+  useEffect(() => {
+    setLoadingModal(true);
+  }, []);
 
   useEffect(() => {
     getClientes();
     getEstilistas();
     getProductos();
-    getEstilistasDisponibilidadHorario();
   }, []);
 
   useEffect(() => {
     getClientesePuntos();
     getOperaciones();
-    getPuntos();
   }, [formCita.no_cliente]);
 
   const getEstilistas = () => {
@@ -207,16 +161,41 @@ function CrearCita() {
       setDataOperaciones(response.data);
     });
   };
-  const getPuntos = () => {
-    peinadosApi.get(`/DetallePuntosCliente?noCliente=${formCita.no_cliente}`).then((response) => {
-      setDataPuntosPorCliente(response.data);
-    });
-  };
 
-  const getEstilistasDisponibilidadHorario = () => {
-    peinadosApi.get("/CatEstilistasDisponiblidad?sucursal=1").then((response) => {
-      setdataEstilistaDisponibilidadHorario(response.data);
-    });
+  const updateCita = () => {
+    let fechaActual = new Date(formCita.fecha);
+    // Extrae el año, mes y día
+    let año = fechaActual.getFullYear();
+    let mes = fechaActual.getMonth(); // Nota: getMonth() devuelve un valor de 0 a 11, donde 0 es enero y 11 es diciembre
+    let día = fechaActual.getDate();
+    let fechaSinHora = new Date(año, mes, día);
+    peinadosApi
+      .put("/DetalleCitasReducido", null, {
+        params: {
+          id: formCita.id,
+          no_estilista: formCita.no_estilista,
+          no_cliente: formCita.no_cliente,
+          dia_cita: formCita.fecha,
+          hora_cita: formCita.fecha,
+          fecha: fechaSinHora,
+          user: formCita.no_estilista,
+          cancelada: false,
+          stao_estilista: 1,
+          nota_canc: 0,
+          registrada: false,
+          observacion: 1,
+          user_uc: 0,
+          estatus: formCita.estatusAsignado ? 3 : formCita.estatusRequerido ? 2 : 4,
+        },
+      })
+      .then((response) => {
+        console.log(response);
+        Swal.fire({
+          title: "Cita actualizada",
+          icon: "success",
+          confirmButtonText: "Ok",
+        });
+      });
   };
 
   useEffect(() => {
@@ -264,7 +243,7 @@ function CrearCita() {
   ];
   const [open, setOpen] = useState(false);
   const handleOpen = () => {
-    postCrearCita();
+    updateCita();
   };
   const handleClose = () => setOpen(false);
   function renderButtonClient(params) {
@@ -324,24 +303,7 @@ function CrearCita() {
     let mes = fechaActual.getMonth(); // Nota: getMonth() devuelve un valor de 0 a 11, donde 0 es enero y 11 es diciembre
     let día = fechaActual.getDate();
     let fechaSinHora = new Date(año, mes, día);
-    let entradaSucursal = dataEstilistaDisponibilidadHorario[0].hora_entrada;
-    let salidaSucursal = dataEstilistaDisponibilidadHorario[0].hora_salida;
 
-    let horaEntrada = new Date(entradaSucursal).getHours();
-    let minutoEntrada = new Date(entradaSucursal).getMinutes();
-    let horaSalida = new Date(salidaSucursal).getHours();
-    let minutoSalida = new Date(salidaSucursal).getMinutes();
-
-    // Obtener la hora y minutos de la cita a verificar
-    let horaCita = new Date(formCita.fecha).getHours();
-    let minutoCita = new Date(formCita.fecha).getMinutes();
-
-    // Convertir todo a minutos desde medianoche para facilitar la comparación
-    let minutosDesdeMedianocheEntrada = horaEntrada * 60 + minutoEntrada;
-    let minutosDesdeMedianocheSalida = horaSalida * 60 + minutoSalida;
-    let minutosDesdeMedianocheCita = horaCita * 60 + minutoCita;
-
-    let esValida = minutosDesdeMedianocheCita >= minutosDesdeMedianocheEntrada && minutosDesdeMedianocheCita <= minutosDesdeMedianocheSalida;
     if (
       formCita.no_estilista == 0 ||
       formCita.no_cliente == 0 ||
@@ -356,108 +318,42 @@ function CrearCita() {
         confirmButtonColor: "#3085d6", // Cambiar el color del botón OK
       });
     } else {
-      if (esValida === false) {
-        Swal.fire({
-          icon: "error",
-          title: "Error",
-          text: "La hora de la cita está fuera del horario de esta sucursal, ¿desea asignar la cita?",
-          confirmButtonColor: "#3085d6", // Cambiar el color del botón OK
-          showCancelButton: true,
-        }).then(async (result) => {
-          if (result.isConfirmed) {
-            // Si el usuario confirma, mostrar el modal de verificación de contraseña
-            validarContraseña().then(async (contraseñaValidada) => {
-              if (contraseñaValidada) {
-                // Continuar con el código después de la confirmación de la contraseña
-                // Aquí puedes colocar el código que deseas ejecutar después de validar la contraseña
-                {
-                  await peinadosApi
-                    .post("/DetalleCitas", null, {
-                      params: {
-                        cia: 1,
-                        sucursal: 1,
-                        no_estilista: formCita.no_estilista,
-                        no_cliente: formCita.no_cliente,
-                        dia_cita: formCita.fecha,
-                        hora_cita: formCita.fecha,
-                        fecha: fechaSinHora,
-                        tiempo: 0,
-                        user: formCita.no_estilista,
-                        importe: 0,
-                        cancelada: false,
-                        stao_estilista: 1,
-                        nota_canc: 0,
-                        registrada: true,
-                        observacion: 0,
-                        user_uc: 0,
-                        estatus: formCita.estatusAsignado ? 3 : formCita.estatusRequerido ? 2 : 4,
-                      },
-                    })
-                    .then((response) => {
-                      setFormCitaServicio({ ...formCitaServicio, idCita: response.data.mensaje2 });
-                      setOpen(true);
-                      setAgregarServicios(true);
-                      Swal.fire({
-                        icon: "success",
-                        text: "Registro creada con éxito",
-                        confirmButtonColor: "#3085d6",
-                      });
-                    })
-                    .catch((error) => {
-                      alert(`Hubo un error, ${error}`);
-                    });
-                }
-              } else {
-                // La contraseña no es válida, puedes mostrar un mensaje o realizar alguna otra acción
-              }
-            });
-
-            // validarContraseña();
-          } else {
-            // Si el usuario cancela, no hacer nada adicional
-            return;
-          }
-        });
-      } else {
-        await peinadosApi
-          .post("/DetalleCitas", null, {
-            params: {
-              cia: 1,
-              sucursal: 1,
-              no_estilista: formCita.no_estilista,
-              no_cliente: formCita.no_cliente,
-              dia_cita: formCita.fecha,
-              hora_cita: formCita.fecha,
-              fecha: fechaSinHora,
-              tiempo: 0,
-              user: formCita.no_estilista,
-              importe: 0,
-              cancelada: false,
-              stao_estilista: 1,
-              nota_canc: 0,
-              registrada: true,
-              observacion: 0,
-              user_uc: 0,
-              estatus: formCita.estatusAsignado ? 3 : formCita.estatusRequerido ? 2 : 4,
-            },
-          })
-          .then((response) => {
-            setFormCitaServicio({ ...formCitaServicio, idCita: response.data.mensaje2 });
-            setOpen(true);
-            setAgregarServicios(true);
-            Swal.fire({
-              icon: "success",
-              text: "Registro creada con éxito",
-              confirmButtonColor: "#3085d6",
-            });
-          })
-          .catch((error) => {
-            alert(`Hubo un error, ${error}`);
+      await peinadosApi
+        .post("/DetalleCitas", null, {
+          params: {
+            cia: 1,
+            sucursal: 1,
+            no_estilista: formCita.no_estilista,
+            no_cliente: formCita.no_cliente,
+            dia_cita: formCita.fecha,
+            hora_cita: formCita.fecha,
+            fecha: fechaSinHora,
+            tiempo: 0,
+            user: formCita.no_estilista,
+            importe: 0,
+            cancelada: false,
+            stao_estilista: 1,
+            nota_canc: 0,
+            registrada: true,
+            observacion: 0,
+            user_uc: 0,
+            estatus: formCita.estatusAsignado ? 3 : formCita.estatusRequerido ? 2 : 4,
+          },
+        })
+        .then((response) => {
+          setFormCitaServicio({ ...formCitaServicio, idCita: response.data.mensaje2 });
+          setOpen(true);
+          setAgregarServicios(true);
+          Swal.fire({
+            icon: "success",
+            text: "Registro creada con éxito",
+            confirmButtonColor: "#3085d6",
           });
-      }
+        })
+        .catch((error) => {
+          alert(`Hubo un error, ${error}`);
+        });
     }
-
-    return;
   };
 
   const columnsClientes = [
@@ -494,13 +390,13 @@ function CrearCita() {
       size: 100,
     },
     {
-      accessorKey: "celular",
-      header: "Celular",
+      accessorKey: "telefono",
+      header: "Telefono",
       size: 100,
     },
     {
-      accessorKey: "telefono",
-      header: "Telefono",
+      accessorKey: "celular",
+      header: "Celular",
       size: 100,
     },
     {
@@ -628,41 +524,147 @@ function CrearCita() {
   return (
     <div>
       <Container>
-        <h1>Creación de cita</h1>
-        <div style={{ flex: 1, justifyContent: "right", alignContent: "right", alignItems: "right", display: "flex" }}>
-          <Button
-            size="sm"
-            disabled={!formCitaDescripciones.descripcion_no_cliente}
-            onClick={() => {
-              if (dataClientesPuntos.length == 0) {
-                Swal.fire({
-                  icon: "error",
-                  title: "Sin puntos",
-                  text: `Este cliente todavia no cuenta con puntos`,
-                  confirmButtonColor: "#3085d6", // Cambiar el color del botón OK
-                });
-              } else {
-                setModalClientesPuntos(true);
-              }
-            }}
-          >
-            Historial puntos
-          </Button>
-          <Button
-            size="sm"
-            disabled={!formCitaDescripciones.descripcion_no_cliente}
-            color={"primary"}
-            onClick={() => {
-              if (dataClientesPuntos.length == 0) {
-                alert("Este cliente todavia no cuenta con puntos");
-              }
-            }}
-          >
-            Historial ventas
-          </Button>
-        </div>
+        <h1>Cambio de cita</h1>
+        <br />
+        <br />
       </Container>
+
       <Container>
+        <h3>Cita original</h3>
+        <Row>
+          <Col>
+            <FormGroup>
+              <Label for="cliente">Cliente</Label>
+              <InputGroup addonType="append">
+                <Input
+                  bsSize="sm"
+                  disabled
+                  value={formCitaDescripciones.descripcion_no_cliente}
+                  type="text"
+                  name="cliente"
+                  id="cliente"
+                  size={"small"}
+                />
+              </InputGroup>
+            </FormGroup>
+            <FormGroup>
+              <Label for="observaciones">Observaciones</Label>
+              <Input
+                disabled
+                type="text"
+                name="observaciones"
+                id="observaciones"
+                value={formCita.observacion}
+                onChange={(valor) => {
+                  setFormCita({ ...formCita, observacion: valor.target.value });
+                }}
+              />
+            </FormGroup>
+          </Col>
+
+          <Col>
+            <FormGroup>
+              <Label for="atiende">Atiende</Label>
+              <Input
+                disabled
+                type="select"
+                name="atiende"
+                id="atiende"
+                value={idUser}
+                onChange={(valor) => {
+                  setFormCita({ ...formCita, no_estilista: valor.target.value });
+                }}
+              >
+                <option value="0">Seleccione un estilista</option>
+
+                {dataEstilistas.map((opcion, index) => {
+                  return (
+                    <option value={opcion.id} key={index}>
+                      {opcion.estilista}
+                    </option>
+                  );
+                })}
+              </Input>
+            </FormGroup>
+          </Col>
+
+          <Col>
+            <FormGroup>
+              <Label for="fecha">Fecha de la cita</Label>
+              <Input
+                disabled
+                type="datetime-local"
+                name="fecha"
+                id="fecha"
+                value={fecha}
+                onChange={(e) => {
+                  setFormCita({ ...formCita, fecha: e.target.value });
+                }}
+              />
+            </FormGroup>
+
+            <FormGroup check>
+              <Label check>
+                <Input
+                  disabled
+                  name="estatus"
+                  type="checkbox"
+                  checked={formCita.estatusRequerido}
+                  onChange={(e) =>
+                    setFormCita({
+                      ...formCita,
+                      estatusRequerido: !formCita.estatusRequerido,
+                      estatusAsignado: formCita.estatusAsignado == true ? !formCita.estatusAsignado : null,
+                      esServicioDomicilio: formCita.esServicioDomicilio == true ? !formCita.esServicioDomicilio : null,
+                    })
+                  }
+                />{" "}
+                <strong>Requerido</strong>
+              </Label>
+            </FormGroup>
+            <FormGroup check>
+              <Label check>
+                <Input
+                  disabled
+                  name="estatus"
+                  type="checkbox"
+                  checked={formCita.estatusAsignado}
+                  onChange={(e) =>
+                    setFormCita({
+                      ...formCita,
+                      estatusAsignado: !formCita.estatusAsignado,
+                      estatusRequerido: formCita.estatusRequerido == true ? !formCita.estatusRequerido : null,
+                      esServicioDomicilio: formCita.esServicioDomicilio == true ? !formCita.esServicioDomicilio : null,
+                    })
+                  }
+                />{" "}
+                <strong>Asignado</strong>
+              </Label>
+            </FormGroup>
+            <FormGroup check>
+              <Label check>
+                <Input
+                  disabled
+                  type="checkbox"
+                  checked={formCita.esServicioDomicilio}
+                  onChange={(e) =>
+                    setFormCita({
+                      ...formCita,
+                      esServicioDomicilio: !formCita.esServicioDomicilio,
+                      estatusAsignado: formCita.estatusAsignado == true ? !formCita.estatusAsignado : null,
+                      estatusRequerido: formCita.estatusRequerido == true ? !formCita.estatusRequerido : null,
+                    })
+                  }
+                />{" "}
+                <strong>Servicio a domicillio</strong>
+              </Label>
+            </FormGroup>
+          </Col>
+        </Row>
+      </Container>
+      <hr />
+      <Container>
+        <h3>Cita modificada</h3>
         <Row>
           <Col>
             <FormGroup>
@@ -683,13 +685,15 @@ function CrearCita() {
               </InputGroup>
             </FormGroup>
             <FormGroup>
-              <Label for="puntos">Puntos</Label>
+              <Label for="observaciones">Observaciones</Label>
               <Input
-                disabled
-                value={dataPuntosporCliente[0]?.puntosTotal ? dataPuntosporCliente[0]?.puntosTotal : 0}
                 type="text"
-                name="puntos"
-                id="puntos"
+                name="observaciones"
+                id="observaciones"
+                value={formCita.observacion}
+                onChange={(valor) => {
+                  setFormCita({ ...formCita, observacion: valor.target.value });
+                }}
               />
             </FormGroup>
           </Col>
@@ -717,29 +721,25 @@ function CrearCita() {
                 })}
               </Input>
             </FormGroup>
-
-            <FormGroup>
-              <Label for="observaciones">Observaciones</Label>
-              <Input
-                type="text"
-                name="observaciones"
-                id="observaciones"
-                value={formCita.observacion}
-                onChange={(valor) => {
-                  setFormCita({ ...formCita, observacion: valor.target.value });
-                }}
-              />
-            </FormGroup>
           </Col>
 
           <Col>
+            {/* <FormGroup>
+              <Input
+              type="datetime-local"
+              name="fecha"
+                id="fecha"
+                value={formCita.fecha}
+                onChange={(e) => {
+                  setFormCita({ ...formCita, fecha: e.target.value });
+                }}
+                />
+              </FormGroup> */}
             <FormGroup>
               <Label for="fecha">Fecha de la cita</Label>
-
               <LocalizationProvider dateAdapter={AdapterDateFns}>
                 <DateTimePicker
-                  value={formCita.fecha ? new Date(formCita.fecha) : null}
-                  // value={format(new Date(formCita.fecha), "yyyy/MM/dd HH:mm")}
+                  value={new Date(formCita.fecha)}
                   timeSteps={{ minutes: 15 }}
                   minTime={minDateTime}
                   maxTime={maxDateTime}
@@ -820,64 +820,65 @@ function CrearCita() {
       </Container>
       <hr />
       <Container>
-        <Box marginLeft={6} marginRight={6} gap={2} alignItems={"center"} justifyContent={"center"}>
-          <Button color={"success"} onClick={() => setProductosModal(true)} variant="contained" disabled={!agregarServicios}>
-            Ingresar servicios...
-          </Button>
-          <Box sx={{ width: "100%" }}>
-            <DataGrid
-              autoHeight
-              slots={{ noRowsOverlay: CustomNoRowsOverlay }}
-              sx={{ "--DataGrid-overlayHeight": "250px" }}
-              rows={ventaTemporal}
-              columns={columns}
-            />
+        {agregarServicios ? (
+          <Box marginLeft={6} marginRight={6} gap={2} alignItems={"center"} justifyContent={"center"}>
+            <Button color={"success"} onClick={() => setProductosModal(true)} variant="contained">
+              Ingresar servicios...
+            </Button>
+            <Box sx={{ width: "100%" }}>
+              <DataGrid
+                autoHeight
+                slots={{ noRowsOverlay: CustomNoRowsOverlay }}
+                sx={{ "--DataGrid-overlayHeight": "250px" }}
+                rows={ventaTemporal}
+                columns={columns}
+              />
+            </Box>
+            <Box marginLeft={6} marginRight={6} marginTop={1} gap={2} display="flex" justifyContent={"center"} alignItems={"center"}>
+              <Col>
+                <FormGroup>
+                  <Label for="total2">Total</Label>
+                  <Input type="text" name="total2" id="total2" disabled />
+                </FormGroup>
+
+                <FormGroup>
+                  <Label for="otros">Otros</Label>
+                  <Input type="text" name="otros" id="otros" disabled placeholder={formVentaTemporal.otros} />
+                </FormGroup>
+                <FormGroup>
+                  <Label for="total">Total</Label>
+                  <Input type="text" name="total" id="total" placeholder={formVentaTemporal.precioTotal} disabled />
+                </FormGroup>
+              </Col>
+              <Col>
+                <FormGroup>
+                  <Label for="minutos">Minutos</Label>
+                  <Input type="text" name="minutos" id="minutos" placeholder={formVentaTemporal.tiempo + " Min"} disabled />
+                </FormGroup>
+
+                <FormGroup>
+                  <Label for="horas">Horas</Label>
+                  <Input type="text" name="horas" id="horas" placeholder={(formVentaTemporal.tiempo / 60).toFixed(2) + " Hrs"} disabled />
+                </FormGroup>
+
+                <ButtonGroup style={{ marginBottom: "10%" }}>
+                  <Button
+                    color="primary"
+                    block
+                    onClick={() => {
+                      postCitaServicios();
+                    }}
+                  >
+                    Guardar
+                  </Button>
+                  <Button color="danger" block>
+                    Salir
+                  </Button>
+                </ButtonGroup>
+              </Col>
+            </Box>
           </Box>
-          <Box marginLeft={6} marginRight={6} marginTop={1} gap={2} display="flex" justifyContent={"center"} alignItems={"center"}>
-            <Col>
-              <FormGroup>
-                <Label for="total2">Total</Label>
-                <Input type="text" name="total2" id="total2" disabled />
-              </FormGroup>
-
-              <FormGroup>
-                <Label for="otros">Otros</Label>
-                <Input type="text" name="otros" id="otros" disabled placeholder={formVentaTemporal.otros} />
-              </FormGroup>
-              <FormGroup>
-                <Label for="total">Total</Label>
-                <Input type="text" name="total" id="total" placeholder={"$" + formVentaTemporal.precioTotal.toFixed(2)} disabled />
-              </FormGroup>
-            </Col>
-            <Col>
-              <FormGroup>
-                <Label for="minutos">Minutos</Label>
-                <Input type="text" name="minutos" id="minutos" placeholder={formVentaTemporal.tiempo + " Min"} disabled />
-              </FormGroup>
-
-              <FormGroup>
-                <Label for="horas">Horas</Label>
-                <Input type="text" name="horas" id="horas" placeholder={(formVentaTemporal.tiempo / 60).toFixed(2) + " Hrs"} disabled />
-              </FormGroup>
-
-              <ButtonGroup style={{ marginBottom: "10%" }}>
-                <Button
-                  color="primary"
-                  block
-                  onClick={() => {
-                    postCitaServicios();
-                  }}
-                  disabled={!agregarServicios}
-                >
-                  Guardar
-                </Button>
-                <Button color="danger" block disabled={agregarServicios} onClick={() => window.close()}>
-                  Salir
-                </Button>
-              </ButtonGroup>
-            </Col>
-          </Box>
-        </Box>
+        ) : null}
       </Container>
       <Modal open={clientesModal} onClose={() => setClientesModal(false)}>
         <Box sx={style}>
@@ -888,7 +889,7 @@ function CrearCita() {
             columns={columnsClientes2}
             data={dataClientes}
             initialState={{ density: "compact" }}
-            muiTableContainerProps={{ sx: { maxHeight: "330px" } }}
+            muiTableContainerProps={{ sx: { maxHeight: "350px" } }}
           />
         </Box>
       </Modal>
@@ -930,19 +931,17 @@ function CrearCita() {
         </Box>
       </Modal>
 
-      <Modal open={verificarContraModal} onClose={() => setVerificarContraModal(false)}>
-        <Box sx={style}>
-          <Label>Ingrese su contraseña</Label>
-          <Input onChange={handleChange} type="password"></Input>
-          <Button onClick={validarContraseña}>Guardar</Button>
-        </Box>
-      </Modal>
-
       <Modal open={puntosModal} onClose={() => setPuntosModal(false)}>
         <Box sx={style}>
           <Typography variant="h4">Agregar productos</Typography>
           <DataGrid rows={dataClientesPuntos} columns={columnsProductos} />
         </Box>
+      </Modal>
+
+      <Modal open={loadingModal} onClose={() => setLoadingModal(false)}>
+        <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }}>
+          <Spinner></Spinner>
+        </div>
       </Modal>
 
       <Modal open={ModalCantidad} onClose={() => setModalCantidad(false)} size={"sm"}>
@@ -1050,4 +1049,4 @@ function CustomNoRowsOverlay() {
     </StyledGridOverlay>
   );
 }
-export default CrearCita;
+export default EditarCita;
