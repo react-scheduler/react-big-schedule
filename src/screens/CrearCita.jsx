@@ -97,6 +97,7 @@ function CrearCita() {
 
   const [puntosModal, setPuntosModal] = useState(false);
   const [ModalVentasHistorial, setModalVentasHistorial] = useState(true);
+  const [ModalVentasOperaciones, setModalVentasOperaciones] = useState(true);
   const [ventaTemporal, setVentaTemporal] = useState([]);
   const [dataClientes, setDataClientes] = useState({});
   const [dataClientesPuntos, setDataClientesPuntos] = useState({});
@@ -730,6 +731,14 @@ function CrearCita() {
     { field: "no_venta2", headerName: "No_venta2", width: 130 },
     { field: "no_venta", headerName: "No_venta", width: 130 },
   ];
+  const columnsDataVentasOperaciones = [
+    // { field: "x", headerName: "Seleccion", renderCell: renderButtonProduct, width: 130 },
+    { field: "nombre", headerName: "Nombre estilista", width: 130 },
+    { field: "descripcion", headerName: "Producto", width: 250 },
+    { field: "cant_producto", headerName: "Cantidad", width: 250 },
+    { field: "precio", headerName: "Precio", width: 130 },
+    { field: "precio", headerName: "Importe", width: 130 },
+  ];
 
   const columnsPuntos = [
     { field: "x", headerName: "Seleccion", renderCell: () => <MdOutlineFolder size={20} onClick={() => setModalOperacionesPuntos(true)} /> },
@@ -1147,6 +1156,55 @@ function CrearCita() {
             </Col>
             <Col md={4}>
               <Input placeholder="Estilista"></Input>
+            </Col>
+            <Col md={2}>
+              <Button> Consultar</Button>
+            </Col>
+          </Row>
+          <DataGrid
+            rows={dataVentasHistoriales}
+            columns={columnsDataVentasHistoriales}
+            getRowId={(row) => Number(row.sucursal) + Number(row.no_venta)}
+          />
+        </Box>
+      </Modal>
+
+      <Modal open={ModalVentasOperaciones} onClose={() => setModalVentasOperaciones(false)}>
+        <Box sx={style}>
+          <Typography variant="h4">Consulta de operaciones</Typography>
+          <Row>
+            <Col md={1}>
+              <Label>Cliente:</Label>
+            </Col>
+            <Col md={5}>
+              <Input disabled placeholder="cveCliente" value={formCita.no_cliente ? formCita.no_cliente : ""}></Input>
+            </Col>
+            <Col md={6}>
+              <Input
+                disabled
+                placeholder="nombreCliente"
+                value={formCitaDescripciones.descripcion_no_cliente ? formCitaDescripciones.descripcion_no_cliente : ""}
+              ></Input>
+            </Col>
+          </Row>
+          <Row style={{ marginTop: "18px", marginBottom: "18px" }}>
+            <Col md={1}>
+              <Label>Sucursal:</Label>
+            </Col>
+            <Col md={4}>
+              <Input placeholder="Sucursal"></Input>
+            </Col>
+            <Col md={1}>
+              <Label>Fecha:</Label>
+            </Col>
+            <Col md={4}>
+              <Input placeholder="Fecha"></Input>
+            </Col>
+            <Col md={1}>
+              <Label>Folio:</Label>
+            </Col>
+            <Col md={4}>
+              <Input placeholder="No_venta"></Input>
             </Col>
             <Col md={2}>
               <Button> Consultar</Button>
