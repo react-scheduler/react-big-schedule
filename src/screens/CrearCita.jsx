@@ -13,7 +13,13 @@ import { MaterialReactTable } from "material-react-table";
 import { LocalizationProvider, DateTimePicker } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { startOfToday, setHours, parse } from "date-fns";
-
+import "../css/style.css";
+import { useDetalleCuentaPendietes } from "../functions/crearCita/useDetalleCuentaPendietes";
+import { useDetalleSaldosPendientes } from "../functions/crearCita/useDetalleSaldosPendientes";
+import { useVentasHistoriales } from "../functions/crearCita/useVentasHistoriales";
+import { usesp_ClasificacionSel } from "../functions/crearCita/useDetalleSaldosPendientes copy";
+import { useCitaEmpalme } from "../functions/crearCita/useCitaEmpalme4";
+import { useHorarioDisponibleEstilistas6 } from "../functions/crearCita/useHorarioDisponibleEstilistas6";
 function CrearCita() {
   const style = {
     position: "absolute",
@@ -39,6 +45,7 @@ function CrearCita() {
     boxShadow: 24,
     p: 4,
   };
+
   const [formCita, setFormCita] = useState({
     cia: 1,
     sucursal: 1,
@@ -54,11 +61,12 @@ function CrearCita() {
     stao_estilista: 0,
     nota_canc: "nota cancelacion",
     registrada: false,
-    observacion: "OBSERVACIONES",
+    observacion: "",
     user_uc: 1,
     estatus: 0,
     estatusAsignado: false,
     estatusRequerido: false,
+    cumpleaños: null,
   });
   const [formCitaDescripciones, setFormCitaDescripciones] = useState({
     descripcion_no_estilista: "",
@@ -77,7 +85,7 @@ function CrearCita() {
     descripcion: "",
     precio: 0,
     tiempo: 0,
-    cantidad: 0,
+    cantidad: 1,
   });
   const [abierto, setAbierto] = useState(false);
   const [clientesModal, setClientesModal] = useState(false);
@@ -88,11 +96,12 @@ function CrearCita() {
   const [verificarContraModal, setVerificarContraModal] = useState(false);
 
   const [puntosModal, setPuntosModal] = useState(false);
+  const [ModalVentasHistorial, setModalVentasHistorial] = useState(true);
   const [ventaTemporal, setVentaTemporal] = useState([]);
   const [dataClientes, setDataClientes] = useState({});
   const [dataClientesPuntos, setDataClientesPuntos] = useState({});
 
-  const [dataProductos, setDataProductos] = useState({});
+  const [dataProductos, setDataProductos] = useState([]);
   const [dataOperaciones, setDataOperaciones] = useState({});
   const [dataPuntosporCliente, setDataPuntosPorCliente] = useState({});
   const [dataEstilistaDisponibilidadHorario, setdataEstilistaDisponibilidadHorario] = useState({});
@@ -161,6 +170,10 @@ function CrearCita() {
   const idSuc = new URLSearchParams(window.location.search).get("idSuc");
   const minDateTime = setHours(startOfToday(), 8);
 
+  useEffect(() => {
+    // if (dataProductos.length > 0) setProductosModal(true);
+  }, [dataProductos]);
+
   const maxDateTime = setHours(startOfToday(), 20);
   useEffect(() => {
     setFormCita({ ...formCita, fecha: fecha, no_estilista: idUser, sucursal: idSuc });
@@ -218,6 +231,67 @@ function CrearCita() {
       setdataEstilistaDisponibilidadHorario(response.data);
     });
   };
+  const { dataCuentasPendientes } = useDetalleCuentaPendietes({ no_cliente: formCita.no_cliente });
+  const { dataClientesSaldosPendientes } = useDetalleSaldosPendientes({ no_cliente: formCita.no_cliente });
+  const { dataClasificacion } = usesp_ClasificacionSel({ idCliente: formCita.no_cliente });
+  const { dataVentasHistoriales } = useVentasHistoriales({
+    claveProd: "",
+    fechaFin: "",
+    fechaInicio: "",
+    idCliente: formCita.no_cliente,
+    sucursal: "",
+    userID: "",
+  });
+  const { dataCitaEmpalme, fetchCitaEmpalme } = useCitaEmpalme({
+    fechacita: formCita.fecha,
+    no_estilista: formCita.no_estilista,
+    tiempoCita: formVentaTemporal.tiempo,
+  });
+  const { dataHorarioDisponibleEstilistas, fetchHorarioDisponibleEstilistas } = useHorarioDisponibleEstilistas6({
+    fecha: formCita.fecha,
+    cveEmpleado: formCita.no_estilista,
+    tiempo: formVentaTemporal.tiempo,
+  });
+
+  const comparaFecha = (fecha3, rango) => {
+    var fecha1 = new Date();
+    var fecha2 = new Date();
+    fecha2.setDate(fecha1.getDate() + rango);
+    if (fecha3) fecha3.setFullYear(fecha1.getFullYear());
+    if (rango == 0) fecha1.setHours(0, 0, 0, 0);
+    return fecha3 >= fecha1 && fecha3 <= fecha2;
+  };
+
+  useEffect(() => {
+    if (dataCuentasPendientes.length > 0) {
+      setFormVentaTemporal({ ...formVentaTemporal, otros: dataCuentasPendientes[0].mensaje });
+    }
+    if (isNaN(formCita.cumpleaños) == false) {
+      if (comparaFecha(formCita.cumpleaños, 15)) {
+        Swal.fire({
+          title: "Cumpleanio cerca",
+          text: `Cumpleanios dentro de un intervalo de 15 dias`,
+          confirmButtonText: "Entendido",
+        });
+      }
+      if (comparaFecha(formCita.cumpleaños, 0))
+        Swal.fire({
+          title: "Cumpleanio es hoy",
+          text: `Cumpleanios dentro de un intervalo de 0 dias, felicidades`,
+          confirmButtonText: "Entendido",
+        });
+    }
+  }, [dataCuentasPendientes]);
+
+  useEffect(() => {
+    if (dataClientesSaldosPendientes.length > 0 && dataClientesSaldosPendientes[0].saldo > 0) {
+      Swal.fire({
+        title: "Cuenta pendiente",
+        text: `Cuenta pendiente por ${dataClientesSaldosPendientes[0].saldo}`,
+        confirmButtonText: "Entendido",
+      });
+    }
+  }, [dataClientesSaldosPendientes]);
 
   useEffect(() => {
     const sumaPrecio = ventaTemporal.reduce((acumulado, objetoActual) => {
@@ -234,8 +308,20 @@ function CrearCita() {
   const columns = [
     { field: "clave", headerName: "Clave", width: 70 },
     { field: "descripcion", headerName: "Descripción", width: 130 },
-    { field: "precio", headerName: "Precio", width: 130, renderCell: (cell) => <p>{cell.row.precio.toFixed(2)}</p> },
-    { field: "tiempo", headerName: "Tiempo", width: 130, renderCell: (cell) => <p>{cell.row.tiempo + " Min"}</p> },
+    {
+      field: "precio",
+      headerName: "Precio",
+      width: 130,
+      renderCell: (cell) => <p>{cell.row.precio.toFixed(2)}</p>,
+      cellClassName: "centered-cell", // Agrega esta línea para aplicar la clase CSS
+    },
+    {
+      field: "tiempo",
+      headerName: "Tiempo",
+      width: 130,
+      renderCell: (cell) => <p>{cell.row.tiempo + " Min"}</p>,
+      cellClassName: "centered-cell", // Agrega esta línea para aplicar la clase CSS
+    },
     { field: "cantidad", headerName: "Cantidad", width: 130 },
   ];
 
@@ -285,6 +371,23 @@ function CrearCita() {
   }
 
   const postCitaServicios = async () => {
+    await fetchCitaEmpalme().then((res) => {
+      if (res && res.data[0].id) {
+        alert("Hay empalme");
+        return;
+      }
+    });
+    await fetchHorarioDisponibleEstilistas().then((res) => {
+      if (res) {
+        alert(res.data[0].clave_empleado);
+        if (res.data[0].clave_empleado == "Cita sin restricciones") {
+          console.log("a");
+        } else {
+          alert(res.data[0].clave_empleado);
+          return;
+        }
+      }
+    });
     ventaTemporal.forEach((elemento) => {
       peinadosApi
         .post("DetalleCitasServicios", null, {
@@ -302,6 +405,13 @@ function CrearCita() {
             idCliente: formCita.no_cliente,
           },
         })
+        .then((response) => {
+          Swal.fire({
+            icon: "success",
+            text: "Registro Realizado con éxito",
+            confirmButtonColor: "#3085d6",
+          });
+        })
         .catch((error) => {
           Swal.fire({
             icon: "error",
@@ -310,11 +420,6 @@ function CrearCita() {
             confirmButtonColor: "#3085d6", // Cambiar el color del botón OK
           });
         });
-    });
-    Swal.fire({
-      icon: "success",
-      text: "Registro Realizado con éxito",
-      confirmButtonColor: "#3085d6",
     });
   };
   const postCrearCita = async () => {
@@ -342,6 +447,16 @@ function CrearCita() {
     let minutosDesdeMedianocheCita = horaCita * 60 + minutoCita;
 
     let esValida = minutosDesdeMedianocheCita >= minutosDesdeMedianocheEntrada && minutosDesdeMedianocheCita <= minutosDesdeMedianocheSalida;
+
+    if (new Date(formCita.fecha) < new Date()) {
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: `Imposible agregar una cita en el pasado`,
+        confirmButtonColor: "#3085d6", // Cambiar el color del botón OK
+      });
+      return;
+    }
     if (
       formCita.no_estilista == 0 ||
       formCita.no_cliente == 0 ||
@@ -390,7 +505,7 @@ function CrearCita() {
                         registrada: true,
                         observacion: 0,
                         user_uc: 0,
-                        estatus: formCita.estatusAsignado ? 3 : formCita.estatusRequerido ? 2 : 4,
+                        estatus: formCita.estatusAsignado ? 3 : formCita.estatusRequerido ? 2 : 5,
                       },
                     })
                     .then((response) => {
@@ -438,7 +553,7 @@ function CrearCita() {
               registrada: true,
               observacion: 0,
               user_uc: 0,
-              estatus: formCita.estatusAsignado ? 3 : formCita.estatusRequerido ? 2 : 4,
+              estatus: formCita.estatusAsignado ? 3 : formCita.estatusRequerido ? 2 : 5,
             },
           })
           .then((response) => {
@@ -460,14 +575,6 @@ function CrearCita() {
     return;
   };
 
-  const columnsClientes = [
-    { field: "nombre", headerName: "Nombre", width: 250 },
-    { field: "telefono", headerName: "Telefono", width: 130 },
-    { field: "celular", headerName: "Celular", width: 130 },
-    { field: "cumpleaños", headerName: "Cumpleaños", width: 130, renderCell: (params) => <p>{params.row.cumpleaños}</p> },
-    { field: "edit", headerName: "Seleccionar", renderCell: renderButtonClient, width: 130 },
-  ];
-
   const columnsClientes2 = useMemo(() => [
     {
       accessorKey: "acciones",
@@ -478,7 +585,13 @@ function CrearCita() {
           <Button
             variant={"contained"}
             onClick={() => {
-              setFormCita({ ...formCita, id_cliente: cell.row.original.id, no_cliente: cell.row.original.id });
+              setFormCita({
+                ...formCita,
+                id_cliente: cell.row.original.id,
+                no_cliente: cell.row.original.id,
+                cumpleaños: new Date(cell.row.original.cumpleaños),
+                cve_cliente: cell.row.original.no_cliente,
+              });
               setFormCitaDescripciones({ ...formCita, descripcion_no_cliente: cell.row.original.nombre });
               setClientesModal(false);
             }}
@@ -510,48 +623,98 @@ function CrearCita() {
     },
   ]);
 
-  const columnsPuntos2 = useMemo(() => [
+  const columnsProductosMRT = useMemo(() => [
     {
       accessorKey: "acciones",
-      header: "Acciones",
+      header: "Acción",
       size: 100,
       Cell: ({ cell }) => (
         <div>
-          <MdOutlineFolder size={20} onClick={() => setModalOperacionesPuntos(true)} />
+          <Button
+            variant={"contained"}
+            onClick={() => {
+              const newId = ventaTemporal.length > 0 ? ventaTemporal[ventaTemporal.length - 1].id + 1 : 0;
+              setDataVentaTemporal({
+                clave: cell.row.original.id,
+                descripcion: cell.row.original.descripcion,
+                precio: cell.row.original.precio_lista,
+                tiempo: cell.row.original.tiempox,
+              });
+              setModalCantidad(true);
+              setProductosModal(false);
+            }}
+          >
+            Agregar
+          </Button>
         </div>
       ),
     },
     {
-      accessorKey: "sucursal",
-      header: "Sucursal",
+      accessorKey: "clave_prod",
+      header: "clave_prod",
       size: 100,
     },
     {
-      accessorKey: "fecha_movto",
-      header: "Fecha",
-      size: 100,
-      Cell: ({ cell }) => {
-        const fecha = cell.row.original.fecha_movto;
-        const fechaConvertida = fecha ? format(fecha, "dd/MM/yyyy") : "";
-        return <p>{fechaConvertida}</p>;
-      },
-    },
-    {
-      accessorKey: "id",
-      header: "Folio",
+      accessorKey: "descripcion",
+      header: "descripcion",
       size: 100,
     },
     {
-      accessorKey: "puntos",
-      header: "Puntos",
+      accessorKey: "tiempox",
+      header: "tiempox",
       size: 100,
+      Cell: ({ cell }) => <p className="centered-cell">{cell.row.original.tiempox + " min"}</p>,
+      className: "centered-cell", // Agrega esta línea para aplicar la clase CSS
     },
     {
-      accessorKey: "observaciones",
-      header: "Observaciones",
+      accessorKey: "precio_lista",
+      header: "precio_lista",
       size: 100,
+      Cell: ({ cell }) => (
+        <p className="centered-cell">{Number(cell.row.original.precio_lista).toLocaleString("es-MX", { style: "currency", currency: "MXN" })}</p>
+      ),
+      className: "centered-cell", // Agrega esta línea para aplicar la clase CSS
     },
   ]);
+  // const columnsProductosMRT = useMemo(
+  //   () => [
+  //     {
+  //       accessorKey: "clave_prod",
+  //       header: "Clave prod",
+  //       size: 100,
+  //     },
+  //     {
+  //       accessorKey: "descripcion",
+  //       header: "Descripción",
+  //       size: 100,
+  //     },
+  //     {
+  //       accessorKey: "tiempox",
+  //       header: "Tiempo",
+  //       size: 100,
+  //     },
+  //     // {
+  //     //   accessorKey: "seleccinar",
+  //     //   header: "Seleccionar",
+  //     //   size: 100,
+  //     //   Cell: ({ cell }) => (
+  //     //     <div>
+  //     //       <Button
+  //     //         variant={"contained"}
+  //     //         onClick={() => {
+  //     //           setFormCita({ ...formCita, id_punto: cell.row.original.id, no_punto: cell.row.original.id });
+  //     //           setFormCitaDescripciones({ ...formCita, descripcion_no_punto: cell.row.original.sucursal });
+  //     //           setPuntosModal(false);
+  //     //         }}
+  //     //       >
+  //     //         Agregar
+  //     //       </Button>
+  //     //     </div>
+  //     //   ),
+  //     // },
+  //   ],
+  //   []
+  // ); // Asegúrate de que todas las dependencias necesarias estén aquí.
 
   const columnsProductos = [
     { field: "x", headerName: "Seleccion", renderCell: renderButtonProduct, width: 130 },
@@ -560,6 +723,14 @@ function CrearCita() {
     { field: "precio_lista", headerName: "Precio", width: 130, renderCell: (params) => <p>{params.row.precio_lista.toFixed(2)}</p> },
     { field: "tiempox", headerName: "Tiempo", width: 130, renderCell: (params) => <p>{params.row.tiempox + " Min"}</p> },
   ];
+  const columnsDataVentasHistoriales = [
+    // { field: "x", headerName: "Seleccion", renderCell: renderButtonProduct, width: 130 },
+    { field: "sucursal", headerName: "Sucursal", width: 130 },
+    { field: "fecha", headerName: "Fecha", width: 250 },
+    { field: "no_venta2", headerName: "No_venta2", width: 130 },
+    { field: "no_venta", headerName: "No_venta", width: 130 },
+  ];
+
   const columnsPuntos = [
     { field: "x", headerName: "Seleccion", renderCell: () => <MdOutlineFolder size={20} onClick={() => setModalOperacionesPuntos(true)} /> },
     { field: "sucursal", headerName: "Sucursal", width: 90 },
@@ -589,10 +760,7 @@ function CrearCita() {
         <Button
           variant={"contained"}
           onClick={() => {
-            // setformClienteEspera({ ...formClienteEspera, tiempo_servicio: params.row.tiempox, descripcion_clave_prod: params.row.descripcion });
-            // return;
             const newId = ventaTemporal.length > 0 ? ventaTemporal[ventaTemporal.length - 1].id + 1 : 0;
-
             setDataVentaTemporal({
               clave: params.row.id,
               descripcion: params.row.descripcion,
@@ -600,22 +768,7 @@ function CrearCita() {
               tiempo: params.row.tiempox,
             });
             setModalCantidad(true);
-
             setProductosModal(false);
-            // setVentaTemporal((prevVentaTemporal) => {
-            //   const newId = prevVentaTemporal.length > 0 ? prevVentaTemporal[prevVentaTemporal.length - 1].id + 1 : 0;
-            //   const newVentaTemporal = [
-            //     ...prevVentaTemporal,
-            //     {
-            //       id: newId,
-            //       clave: params.row.clave_prod,
-            //       descripcion: params.row.descripcion,
-            //       precio: params.row.precio_lista,
-            //       tiempo: params.row.tiempox,
-            //     },
-            //   ];
-            //   return newVentaTemporal;
-            // });
           }}
         >
           Agregar
@@ -653,9 +806,7 @@ function CrearCita() {
             disabled={!formCitaDescripciones.descripcion_no_cliente}
             color={"primary"}
             onClick={() => {
-              if (dataClientesPuntos.length == 0) {
-                alert("Este cliente todavia no cuenta con puntos");
-              }
+              setModalVentasHistorial(true);
             }}
           >
             Historial ventas
@@ -692,6 +843,18 @@ function CrearCita() {
                 id="puntos"
               />
             </FormGroup>
+            {dataClasificacion[0]?.descripcion ? (
+              <FormGroup>
+                <Label for="clasificacion">Clasificacion</Label>
+                <Input
+                  disabled
+                  value={dataClasificacion[0]?.descripcion ? dataClasificacion[0]?.descripcion : 0}
+                  type="text"
+                  name="clasificacion"
+                  id="clasificacion"
+                />
+              </FormGroup>
+            ) : null}
           </Col>
 
           <Col>
@@ -871,7 +1034,7 @@ function CrearCita() {
                 >
                   Guardar
                 </Button>
-                <Button color="danger" block disabled={agregarServicios} onClick={() => window.close()}>
+                <Button color="danger" block onClick={() => window.close()}>
                   Salir
                 </Button>
               </ButtonGroup>
@@ -879,6 +1042,7 @@ function CrearCita() {
           </Box>
         </Box>
       </Container>
+
       <Modal open={clientesModal} onClose={() => setClientesModal(false)}>
         <Box sx={style}>
           <Typography variant="h4">Seleccionar cliente</Typography>
@@ -895,7 +1059,15 @@ function CrearCita() {
       <Modal open={productosModal} onClose={() => setProductosModal(false)}>
         <Box sx={style}>
           <Typography variant="h4">Agregar productos</Typography>
-          <DataGrid rows={dataProductos} columns={columnsProductos} />
+          {/* <DataGrid rows={dataProductos} columns={columnsProductos} /> */}
+          {dataProductos ? (
+            <MaterialReactTable
+              columns={columnsProductosMRT}
+              data={dataProductos}
+              initialState={{ density: "compact" }}
+              muiTableContainerProps={{ sx: { maxHeight: "330px" } }}
+            />
+          ) : null}
         </Box>
       </Modal>
 
@@ -923,12 +1095,12 @@ function CrearCita() {
         </Box>
       </Modal>
 
-      <Modal open={productosModal} onClose={() => setProductosModal(false)}>
+      {/* <Modal open={productosModal} onClose={() => setProductosModal(false)}>
         <Box sx={style}>
           <Typography variant="h4">Agregar productos</Typography>
           <DataGrid rows={dataProductos} columns={columnsProductos} />
         </Box>
-      </Modal>
+      </Modal> */}
 
       <Modal open={verificarContraModal} onClose={() => setVerificarContraModal(false)}>
         <Box sx={style}>
@@ -945,6 +1117,49 @@ function CrearCita() {
         </Box>
       </Modal>
 
+      <Modal open={ModalVentasHistorial} onClose={() => setModalVentasHistorial(false)}>
+        <Box sx={style}>
+          <Typography variant="h4">Historial de ventas</Typography>
+          <Row>
+            <Col md={1}>
+              <Label>Cliente:</Label>
+            </Col>
+            <Col md={5}>
+              <Input disabled placeholder="cveCliente" value={formCita.no_cliente ? formCita.no_cliente : ""}></Input>
+            </Col>
+            <Col md={6}>
+              <Input
+                disabled
+                placeholder="nombreCliente"
+                value={formCitaDescripciones.descripcion_no_cliente ? formCitaDescripciones.descripcion_no_cliente : ""}
+              ></Input>
+            </Col>
+          </Row>
+          <Row style={{ marginTop: "18px", marginBottom: "18px" }}>
+            <Col md={1}>
+              <Label>Estilista::</Label>
+            </Col>
+            <Col md={4}>
+              <Input placeholder="Estilista"></Input>
+            </Col>
+            <Col md={1}>
+              <Label>Servicio:</Label>
+            </Col>
+            <Col md={4}>
+              <Input placeholder="Estilista"></Input>
+            </Col>
+            <Col md={2}>
+              <Button> Consultar</Button>
+            </Col>
+          </Row>
+          <DataGrid
+            rows={dataVentasHistoriales}
+            columns={columnsDataVentasHistoriales}
+            getRowId={(row) => Number(row.sucursal) + Number(row.no_venta)}
+          />
+        </Box>
+      </Modal>
+
       <Modal open={ModalCantidad} onClose={() => setModalCantidad(false)} size={"sm"}>
         <Box sx={styleCantidad}>
           <Typography variant="h5">Agregue la cantidad</Typography>
@@ -952,7 +1167,7 @@ function CrearCita() {
             type="text"
             name="minutos"
             id="minutos"
-            placeholder={formCitaServicio.cantidad}
+            value={formCitaServicio.cantidad}
             onChange={(v) => {
               setFormCitaServicio({ ...formCitaServicio, cantidad: v.target.value });
             }}

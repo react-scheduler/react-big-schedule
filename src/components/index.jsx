@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import React, { Component } from "react";
+import PropTypes from "prop-types";
 
 // Col, Row and Icon do not have their own less files for styling. They use
 // rules declared in antd's global css. If these styles are imported directly
@@ -19,20 +19,20 @@ import PropTypes from 'prop-types';
 // separately here to avoid importing from files which have required the global
 // antd styles.
 
-import EventItem from './EventItem';
-import DnDSource from './DnDSource';
-import DnDContext from './DnDContext';
-import ResourceView from './ResourceView';
-import HeaderView from './HeaderView';
-import BodyView from './BodyView';
-import ResourceEvents from './ResourceEvents';
-import AgendaView from './AgendaView';
-import AddMorePopover from './AddMorePopover';
-import SchedulerData from './SchedulerData';
-import DemoData from '../sample-data/sample1';
-import SchedulerHeader from './SchedulerHeader';
-import { ViewType, CellUnit, DATETIME_FORMAT, DATE_FORMAT, SummaryPos } from '../config/default';
-import wrapperFun from './WrapperFun';
+import EventItem from "./EventItem";
+import DnDSource from "./DnDSource";
+import DnDContext from "./DnDContext";
+import ResourceView from "./ResourceView";
+import HeaderView from "./HeaderView";
+import BodyView from "./BodyView";
+import ResourceEvents from "./ResourceEvents";
+import AgendaView from "./AgendaView";
+import AddMorePopover from "./AddMorePopover";
+import SchedulerData from "./SchedulerData";
+import DemoData from "../sample-data/sample1";
+import SchedulerHeader from "./SchedulerHeader";
+import { ViewType, CellUnit, DATETIME_FORMAT, DATE_FORMAT, SummaryPos } from "../config/default";
+import wrapperFun from "./WrapperFun";
 
 class Scheduler extends Component {
   constructor(props) {
@@ -40,7 +40,7 @@ class Scheduler extends Component {
 
     const { schedulerData, dndSources, parentRef } = props;
     let sources = [];
-    sources.push(new DnDSource(dndProps => dndProps.eventItem, EventItem, schedulerData.config.dragAndDropEnabled));
+    sources.push(new DnDSource((dndProps) => dndProps.eventItem, EventItem, schedulerData.config.dragAndDropEnabled));
     if (dndSources !== undefined && dndSources.length > 0) {
       sources = [...sources, ...dndSources];
     }
@@ -65,7 +65,7 @@ class Scheduler extends Component {
     }
   }
 
-  onWindowResize = e => {
+  onWindowResize = (e) => {
     const { schedulerData } = this.props;
     schedulerData._setDocumentWidth(document.documentElement.clientWidth);
     this.setState({ documentWidth: document.documentElement.clientWidth, documentHeight: document.documentElement.clientHeight });
@@ -137,12 +137,12 @@ class Scheduler extends Component {
     const { localeDayjs, behaviors } = schedulerData;
     if (schedulerData.getScrollToSpecialDayjs() && !!behaviors.getScrollSpecialDayjsFunc) {
       if (!!this.schedulerContent && this.schedulerContent.scrollWidth > this.schedulerContent.clientWidth) {
-        const start = localeDayjs(new Date(schedulerData.startDate)).startOf('day');
-        const end = localeDayjs(new Date(schedulerData.endDate)).endOf('day');
+        const start = localeDayjs(new Date(schedulerData.startDate)).startOf("day");
+        const end = localeDayjs(new Date(schedulerData.endDate)).endOf("day");
         const specialDayjs = behaviors.getScrollSpecialDayjsFunc(schedulerData, start, end);
         if (specialDayjs >= start && specialDayjs <= end) {
           let index = 0;
-          schedulerData.headers.forEach(item => {
+          schedulerData.headers.forEach((item) => {
             const header = localeDayjs(new Date(item.time));
             if (specialDayjs >= header) index++;
           });
@@ -169,8 +169,10 @@ class Scheduler extends Component {
       const DndResourceEvents = this.state.dndContext.getDropTarget(config.dragAndDropEnabled);
       const eventDndSource = this.state.dndContext.getDndSource();
 
-      const displayRenderData = renderData.filter(o => o.render);
-      const resourceEventsList = displayRenderData.map(item => <DndResourceEvents {...this.props} key={item.slotId} resourceEvents={item} dndSource={eventDndSource} />);
+      const displayRenderData = renderData.filter((o) => o.render);
+      const resourceEventsList = displayRenderData.map((item) => (
+        <DndResourceEvents {...this.props} key={item.slotId} resourceEvents={item} dndSource={eventDndSource} />
+      ));
 
       const { contentScrollbarHeight } = this.state;
       const { contentScrollbarWidth } = this.state;
@@ -180,17 +182,17 @@ class Scheduler extends Component {
       const resourcePaddingBottom = resourceScrollbarHeight === 0 ? contentScrollbarHeight : 0;
       const contentPaddingBottom = contentScrollbarHeight === 0 ? resourceScrollbarHeight : 0;
       let schedulerContentStyle = {
-        overflowX: viewType === ViewType.Week ? 'hidden' : 'auto',
-        overflowY: 'auto',
-        margin: '0px',
-        position: 'relative',
+        overflowX: viewType === ViewType.Week ? "hidden" : "auto",
+        overflowY: "auto",
+        margin: "0px",
+        position: "relative",
         height: contentHeight,
         paddingBottom: contentPaddingBottom,
       };
       let resourceContentStyle = {
         height: contentHeight,
-        overflowX: 'auto',
-        overflowY: 'auto',
+        overflowX: "auto",
+        overflowY: "auto",
         width: resourceTableWidth + resourceScrollbarWidth - 2,
         margin: `0px -${contentScrollbarWidth}px 0px 0px`,
       };
@@ -208,10 +210,10 @@ class Scheduler extends Component {
       const resourceName = schedulerData.isEventPerspective ? config.taskName : config.resourceName;
       tbodyContent = (
         <tr>
-          <td style={{ display: config.resourceViewEnabled ? undefined : 'none', width: resourceTableWidth, verticalAlign: 'top' }}>
+          <td style={{ display: config.resourceViewEnabled ? undefined : "none", width: resourceTableWidth, verticalAlign: "top" }}>
             <div className="resource-view">
-              <div style={{ overflow: 'hidden', borderBottom: '1px solid #e9e9e9', height: config.tableHeaderHeight }}>
-                <div style={{ overflowX: 'scroll', overflowY: 'hidden', margin: `0px 0px -${contentScrollbarHeight}px` }}>
+              <div style={{ overflow: "hidden", borderBottom: "1px solid #e9e9e9", height: config.tableHeaderHeight }}>
+                <div style={{ overflowX: "scroll", overflowY: "hidden", margin: `0px 0px -${contentScrollbarHeight}px` }}>
                   <table className="resource-table">
                     <thead>
                       <tr style={{ height: config.tableHeaderHeight }}>
@@ -233,10 +235,10 @@ class Scheduler extends Component {
             </div>
           </td>
           <td>
-            <div className="scheduler-view" style={{ width: schedulerContainerWidth, verticalAlign: 'top' }}>
-              <div style={{ overflow: 'hidden', borderBottom: '1px solid #e9e9e9', height: config.tableHeaderHeight }}>
+            <div className="scheduler-view" style={{ width: schedulerContainerWidth, verticalAlign: "top" }}>
+              <div style={{ overflow: "hidden", borderBottom: "1px solid #e9e9e9", height: config.tableHeaderHeight }}>
                 <div
-                  style={{ overflowX: 'scroll', overflowY: 'hidden', margin: `0px 0px -${contentScrollbarHeight}px` }}
+                  style={{ overflowX: "scroll", overflowY: "hidden", margin: `0px 0px -${contentScrollbarHeight}px` }}
                   ref={this.schedulerHeadRef}
                   onMouseOver={this.onSchedulerHeadMouseOver}
                   onMouseOut={this.onSchedulerHeadMouseOut}
@@ -338,7 +340,7 @@ class Scheduler extends Component {
     if (needSet) this.setState(tmpState);
   };
 
-  schedulerHeadRef = element => {
+  schedulerHeadRef = (element) => {
     this.schedulerHead = element;
   };
 
@@ -356,7 +358,7 @@ class Scheduler extends Component {
     }
   };
 
-  schedulerResourceRef = element => {
+  schedulerResourceRef = (element) => {
     this.schedulerResource = element;
   };
 
@@ -376,11 +378,11 @@ class Scheduler extends Component {
     }
   };
 
-  schedulerContentRef = element => {
+  schedulerContentRef = (element) => {
     this.schedulerContent = element;
   };
 
-  schedulerContentBgTableRef = element => {
+  schedulerContentBgTableRef = (element) => {
     this.schedulerContentBgTable = element;
   };
 
@@ -405,14 +407,20 @@ class Scheduler extends Component {
       if (this.schedulerContent.scrollLeft === 0 && onScrollLeft !== undefined) {
         onScrollLeft(schedulerData, this.schedulerContent, this.schedulerContent.scrollWidth - this.schedulerContent.clientWidth);
       }
-      if (Math.round(this.schedulerContent.scrollLeft) === this.schedulerContent.scrollWidth - this.schedulerContent.clientWidth && onScrollRight !== undefined) {
+      if (
+        Math.round(this.schedulerContent.scrollLeft) === this.schedulerContent.scrollWidth - this.schedulerContent.clientWidth &&
+        onScrollRight !== undefined
+      ) {
         onScrollRight(schedulerData, this.schedulerContent, this.schedulerContent.scrollWidth - this.schedulerContent.clientWidth);
       }
     } else if (this.schedulerContent.scrollTop !== this.scrollTop) {
       if (this.schedulerContent.scrollTop === 0 && onScrollTop !== undefined) {
         onScrollTop(schedulerData, this.schedulerContent, this.schedulerContent.scrollHeight - this.schedulerContent.clientHeight);
       }
-      if (Math.round(this.schedulerContent.scrollTop) === this.schedulerContent.scrollHeight - this.schedulerContent.clientHeight && onScrollBottom !== undefined) {
+      if (
+        Math.round(this.schedulerContent.scrollTop) === this.schedulerContent.scrollHeight - this.schedulerContent.clientHeight &&
+        onScrollBottom !== undefined
+      ) {
         onScrollBottom(schedulerData, this.schedulerContent, this.schedulerContent.scrollHeight - this.schedulerContent.clientHeight);
       }
     }
@@ -420,11 +428,11 @@ class Scheduler extends Component {
     this.scrollTop = this.schedulerContent.scrollTop;
   };
 
-  onViewChange = e => {
+  onViewChange = (e) => {
     const { onViewChange, schedulerData } = this.props;
     const viewType = parseInt(e.target.value.charAt(0));
-    const showAgenda = e.target.value.charAt(1) === '1';
-    const isEventPerspective = e.target.value.charAt(2) === '1';
+    const showAgenda = e.target.value.charAt(1) === "1";
+    const isEventPerspective = e.target.value.charAt(2) === "1";
     onViewChange(schedulerData, { viewType, showAgenda, isEventPerspective });
     this.setState({ ...this.state, spinning: false });
   };
@@ -439,10 +447,23 @@ class Scheduler extends Component {
     prevClick(schedulerData);
   };
 
-  onSelect = date => {
+  onSelect = (date) => {
     const { onSelectDate, schedulerData } = this.props;
     onSelectDate(schedulerData, date);
   };
 }
 
-export { DATE_FORMAT, DATETIME_FORMAT, Scheduler, SchedulerData, ViewType, CellUnit, SummaryPos, DnDSource, DnDContext, AddMorePopover, DemoData, wrapperFun };
+export {
+  DATE_FORMAT,
+  DATETIME_FORMAT,
+  Scheduler,
+  SchedulerData,
+  ViewType,
+  CellUnit,
+  SummaryPos,
+  DnDSource,
+  DnDContext,
+  AddMorePopover,
+  DemoData,
+  wrapperFun,
+};

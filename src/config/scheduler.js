@@ -1,26 +1,26 @@
 import { ViewType, SummaryPos } from "./default";
 
 export default {
-  schedulerWidth: "100%",
-  besidesWidth: 20,
+  schedulerWidth: "104%",
+  besidesWidth: 10,
   schedulerMaxHeight: 0,
   tableHeaderHeight: 40,
   schedulerContentHeight: "500px",
 
   responsiveByParent: false,
 
-  agendaResourceTableWidth: 160,
+  agendaResourceTableWidth: 90,
   agendaMaxEventWidth: 100,
 
-  dayResourceTableWidth: 100,
-  weekResourceTableWidth: "16%",
-  monthResourceTableWidth: 160,
-  quarterResourceTableWidth: 160,
-  yearResourceTableWidth: 160,
-  customResourceTableWidth: 160,
+  dayResourceTableWidth: 90,
+  weekResourceTableWidth: "2%",
+  monthResourceTableWidth: 90,
+  quarterResourceTableWidth: 90,
+  yearResourceTableWidth: 90,
+  customResourceTableWidth: 90,
 
   dayCellWidth: 20,
-  weekCellWidth: "12%",
+  weekCellWidth: "8%",
   monthCellWidth: 80,
   quarterCellWidth: 80,
   yearCellWidth: 80,
@@ -37,11 +37,11 @@ export default {
   eventItemPopoverPlacement: "bottomLeft",
   eventItemPopoverWidth: 300,
 
-  eventItemHeight: 22,
-  eventItemLineHeight: 6,
+  eventItemHeight: 20,
+  eventItemLineHeight: 4,
   nonAgendaSlotMinHeight: 0,
-  dayStartFrom: 7,
-  dayStopTo: 22,
+  dayStartFrom: 8,
+  dayStopTo: 20,
   defaultEventBgColor: "#80C5F6",
   selectedAreaColor: "#7EC2F3",
   nonWorkingTimeHeadColor: "#999999",
@@ -51,8 +51,8 @@ export default {
   summaryPos: SummaryPos.TopRight,
   groupOnlySlotColor: "#F8F8F8",
 
-  startResizable: true,
-  endResizable: true,
+  startResizable: false,
+  endResizable: false,
   movable: true,
   creatable: true,
   crossResourceMove: true,

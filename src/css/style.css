@@ -147,15 +147,15 @@ table.scheduler-table tr:last-child td {
 }
 
 .round-all {
-  border-radius: 14px;
+  border-radius: 0px;
 }
 
 .round-head {
-  border-radius: 14px 0px 0px 14px;
+  border-radius: 0px;
 }
 
 .round-tail {
-  border-radius: 0px 14px 14px 0px;
+  border-radius: 0px;
 }
 
 .round-none {
@@ -256,12 +256,28 @@ table.scheduler-table tr:last-child td {
   background-color: transparent;
 }
 .centered-cell {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  justify-items: center;
+  text-align: center;
+  font-weight: "bold";
+  line-height: "28px";
+  height: "28px";
+  margin: 0;
 }
 /* archivoDeEstilos.css */
 .hidePagination {
   display: none;
+}
+.contenedor-principal {
+  display: flex;
+  flex-direction: column; /* Cambia la dirección a vertical en pantallas pequeñas */
+  justify-content: space-between;
+  align-items: center; /* Alinea los elementos al inicio */
+  width: 100%; /* Asegura que tome todo el ancho disponible */
+}
+
+@media (min-width: 768px) {
+  .contenedor-principal {
+    flex-direction: row; /* En pantallas más grandes, usa dirección de fila */
+    justify-content: space-between;
+    align-items: flex-start;
+  }
 }

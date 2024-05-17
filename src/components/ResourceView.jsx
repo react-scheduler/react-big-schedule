@@ -54,7 +54,7 @@ function ResourceView({ schedulerData, contentScrollbarHeight, slotClickedFunc, 
     }
 
     const tdStyle = {
-      height: item.rowHeight,
+      height: 5,
       backgroundColor: item.groupOnly ? schedulerData.config.groupOnlySlotColor : undefined,
     };
 

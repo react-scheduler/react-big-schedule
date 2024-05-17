@@ -12,6 +12,7 @@ import Timer from "../components/Timer";
 import { Container, Button, Badge, Label, Input, Col, Row } from "reactstrap";
 import Swal from "sweetalert2";
 import "../css/style.css";
+import { useCitaEmpalme } from "../functions/crearCita/useCitaEmpalme4";
 let schedulerData;
 
 const initialState = {
@@ -93,16 +94,16 @@ function Basic() {
             // bgColor: "red",
             bgColor:
               item.estadoCita == 1
-                ? "#FFA500"
+                ? "#F8C471" // Sandy Orange
                 : item.estadoCita == 2
-                ? "#00FFFF"
+                ? "#AFEEEE" // Pale Turquoise
                 : item.estadoCita == 3
-                ? "#FFFF00"
+                ? "#FFFACD" // Lemon Chiffon
                 : item.estadoCita == 4
-                ? "#008000"
+                ? "#90EE90" // Light Green
                 : item.estadoCita == 5
-                ? "#800080"
-                : "#000000",
+                ? "#DDA0DD" // Plum
+                : "#E0E0E0", // Light Gray
           };
         })
       );
@@ -123,16 +124,16 @@ function Basic() {
           // bgColor: "red",
           bgColor:
             item.estadoCita == 1
-              ? "#FFA500"
+              ? "#F8C471" // Sandy Orange
               : item.estadoCita == 2
-              ? "#00FFFF"
+              ? "#AFEEEE" // Pale Turquoise
               : item.estadoCita == 3
-              ? "#FFFF00"
+              ? "#FFFACD" // Lemon Chiffon
               : item.estadoCita == 4
-              ? "#008000"
+              ? "#90EE90" // Light Green
               : item.estadoCita == 5
-              ? "#800080"
-              : "#000000",
+              ? "#DDA0DD" // Plum
+              : "#E0E0E0", // Light Gray
         };
       });
     } catch (err) {
@@ -275,6 +276,7 @@ function Basic() {
       idCliente: event.no_cliente,
       fecha: event.hora1,
       flag: 0,
+      estadoCita: event.estadoCita,
     });
     return;
     setDatosParametros({
@@ -377,27 +379,27 @@ function Basic() {
       fecha: start,
       flag: 0,
     });
-    if (
-      confirm(
-        `Do you want to create a new event? {slotId: ${slotId}, slotName: ${slotName}, start: ${start}, end: ${end}, type: ${type}, item: ${item}}`
-      )
-    ) {
-      let newFreshId = 0;
-      schedulerData.events.forEach((item) => {
-        if (item.id >= newFreshId) newFreshId = item.id + 1;
-      });
+    // if (
+    //   confirm(
+    //     `Do you want to create a new event? {slotId: ${slotId}, slotName: ${slotName}, start: ${start}, end: ${end}, type: ${type}, item: ${item}}`
+    //   )
+    // ) {
+    //   let newFreshId = 0;
+    //   schedulerData.events.forEach((item) => {
+    //     if (item.id >= newFreshId) newFreshId = item.id + 1;
+    //   });
 
-      let newEvent = {
-        id: newFreshId,
-        title: "New event you just created",
-        start: start,
-        end: end,
-        resourceId: slotId,
-        bgColor: "purple",
-      };
-      schedulerData.addEvent(newEvent);
-      dispatch({ type: "UPDATE_SCHEDULER", payload: schedulerData });
-    }
+    //   let newEvent = {
+    //     id: newFreshId,
+    //     title: "New event you just created",
+    //     start: start,
+    //     end: end,
+    //     resourceId: slotId,
+    //     bgColor: "purple",
+    //   };
+    //   schedulerData.addEvent(newEvent);
+    //   dispatch({ type: "UPDATE_SCHEDULER", payload: schedulerData });
+    // }
   };
 
   const onScrollLeft = (schedulerData, schedulerContent) => {
@@ -423,26 +425,21 @@ function Basic() {
 
   const toggleExpandFunc = (schedulerData, slotId) => {
     schedulerData.toggleExpandStatus(slotId);
-    console.log({ schedulerData });
-    console.log({ slotId });
-    alert("PEPE");
     dispatch({ type: "UPDATE_SCHEDULER", payload: schedulerData });
   };
 
   const columns = [
-    { field: "id", headerName: "Clave", width: 70, align: "center" },
+    { field: "id", headerName: "Clave", width: 70, align: "center", sortable: false }, // Esta es la columna del ID único
     {
       field: "stao_estilista",
       headerName: "Modo",
       width: 130,
       align: "center",
-      flex: 1,
-
       options: {
         setCellProps: () => ({ align: "center", justifyContent: "center" }),
       },
       renderCell: (params) => (
-        <p>
+        <p style={{ textAlign: "center", lineHeight: "28px", height: "28px", margin: 0 }}>
           {params.row.stao_estilista == 1
             ? "No disponible"
             : params.row.stao_estilista == 2
@@ -459,17 +456,21 @@ function Basic() {
     },
     {
       field: "hora_cita",
-      headerName: "Hora2",
-      width: 50,
-      renderCell: (params) => <p>{format(new Date(params.row.hora_cita), "HH:mm")}</p>,
+      headerName: "Hora inicio",
+      width: 80,
+      renderCell: (params) => (
+        <p style={{ textAlign: "center", lineHeight: "28px", height: "28px", margin: 0 }}>{format(new Date(params.row.hora_cita), "HH:mm")}</p>
+      ),
       cellClassName: "centered-cell", // Agrega esta línea para aplicar la clase CSS
     },
     {
       field: "horafinal",
-      headerName: "HF",
+      headerName: "Hora final",
       type: "number",
-      width: 50,
-      renderCell: (params) => <p>{format(new Date(params.row.horafinal), "HH:mm")}</p>,
+      width: 80,
+      renderCell: (params) => (
+        <p style={{ textAlign: "center", lineHeight: "28px", height: "28px", margin: 0 }}>{format(new Date(params.row.horafinal), "HH:mm")}</p>
+      ),
       cellClassName: "centered-cell", // Agrega esta línea para aplicar la clase CSS
     },
     {
@@ -480,12 +481,21 @@ function Basic() {
       width: 250,
     },
     { field: "descripcion", headerName: "Servicio", width: 250 },
-    { field: "tiempo", headerName: "Tiempo", width: 130, renderCell: (params) => <p>{params.row.tiempo + " min"}</p> },
+    {
+      field: "tiempo",
+      headerName: "Tiempo",
+      width: 130,
+      renderCell: (params) => <p style={{ textAlign: "center", lineHeight: "28px", height: "28px", margin: 0 }}>{params.row.tiempo + " min"}</p>,
+    },
     {
       field: "importe",
       headerName: "Total",
       width: 130,
-      renderCell: (params) => <p>{Number(params.row.importe).toLocaleString("es-MX", { style: "currency", currency: "MXN" })}</p>,
+      renderCell: (params) => (
+        <p style={{ textAlign: "center", lineHeight: "28px", height: "28px", margin: 0 }}>
+          {Number(params.row.importe).toLocaleString("es-MX", { style: "currency", currency: "MXN" })}
+        </p>
+      ),
     },
   ];
 
@@ -500,8 +510,8 @@ function Basic() {
     const features = `width=${width},height=${height},left=${left},top=${top},toolbar=0,location=0,menubar=0,scrollbars=1,resizable=1`;
     window.open(url, "_blank", features);
   };
-  const handleOpenNewWindowEdit = ({ idCita, idUser, idCliente, fecha, flag }) => {
-    const url = `${ligaPruebas}miliga/editarcita?idCita=${idCita}&idUser=${idUser}&idCliente=${idCliente}&fecha=${fecha}&idSuc=${1}&idRec=${1}&flag=${flag}`; // Reemplaza esto con la URL que desees abrir
+  const handleOpenNewWindowEdit = ({ idCita, idUser, idCliente, fecha, flag, estadoCita }) => {
+    const url = `${ligaPruebas}miliga/editarcita?idCita=${idCita}&idUser=${idUser}&idCliente=${idCliente}&fecha=${fecha}&idSuc=${1}&idRec=${1}&flag=${flag}&estadoCita=${estadoCita}`; // Reemplaza esto con la URL que desees abrir
     const width = 1200;
     const height = 600;
     const left = (window.screen.width - width) / 2;
@@ -575,32 +585,44 @@ function Basic() {
     display: "flex",
     gap: "10px",
   };
-
+  {
+    /* item.estadoCita == 1
+              ? "#F8C471" // Sandy Orange
+              : item.estadoCita == 2
+              ? "#AFEEEE" // Pale Turquoise
+              : item.estadoCita == 3
+              ? "#FFFACD" // Lemon Chiffon
+              : item.estadoCita == 4
+              ? "#90EE90" // Light Green
+              : item.estadoCita == 5
+              ? "#DDA0DD" // Plum
+              : "#E0E0E0", // Light Gray */
+  }
   const boxStyles = {
     noDisponible: {
-      backgroundColor: "#FFA500",
+      backgroundColor: "#F8C471",
       padding: "10px",
       color: "black",
     },
     requerido: {
-      backgroundColor: "#00FFFF",
+      backgroundColor: "#AFEEEE",
       padding: "10px",
       color: "black",
     },
     asignado: {
-      backgroundColor: "#FFFF00",
+      backgroundColor: "#FFFACD",
       padding: "10px",
       color: "black",
     },
     enServicio: {
-      backgroundColor: "#008000",
+      backgroundColor: "#90EE90",
       padding: "10px",
-      color: "white",
+      color: "black",
     },
     domicilio: {
-      backgroundColor: "#800080",
+      backgroundColor: "#DDA0DD",
       padding: "10px",
-      color: "white",
+      color: "black",
     },
     conflicto: {
       backgroundColor: "#000000",
@@ -649,7 +671,7 @@ function Basic() {
   };
   return (
     <>
-      <div style={{ flex: 1, justifyContent: "space-between", alignContent: "space-between", alignItems: "start", display: "flex" }}>
+      <div className="contenedor-principal">
         <div style={{ display: "flex" }}>
           <h4>Fecha: {datosParametros.fecha.toLocaleDateString()}</h4>
           <h4>´ y Hora: </h4>
@@ -699,10 +721,11 @@ function Basic() {
       </div>
 
       <div style={{ flex: 1, justifyContent: "right", alignContent: "right", alignItems: "right", display: "flex" }}></div>
-      <div style={{ height: 170, width: "100%" }}>
+      <div style={{ height: "2%", display: "table", tableLayout: "fixed", width: "100%" }}>
         <DataGrid
           rows={arregloCitaDia}
           columns={columns}
+          getRowId={(row) => row.id + row.importe + row.tiempo}
           rowHeight={28}
           columnHeaderHeight={28}
           hideFooterPagination

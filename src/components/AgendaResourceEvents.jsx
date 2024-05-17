@@ -49,7 +49,7 @@ function AgendaResourceEvents(props) {
   }
 
   return (
-    <tr style={{ minHeight: config.eventItemLineHeight + 5 }}>
+    <tr style={{ minHeight: config.eventItemLineHeight - 5 }}>
       <td data-resource-id={resourceEvents.slotId}>{slotItem}</td>
       <td>
         <div className="day-event-container">{events}</div>
