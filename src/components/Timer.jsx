@@ -23,7 +23,7 @@ const Timer = () => {
   const horaFormateada = horaActual.toLocaleTimeString();
   return (
     <div className="timer">
-      <h4> {horaFormateada}</h4>
+      <h2> {horaFormateada}</h2>
     </div>
   );
 };

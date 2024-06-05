@@ -6,13 +6,16 @@ import { jezaApi } from "../api/jezaApi2";
 import { peinadosApi } from "../api/peinadosApi";
 import Modal from "../components/Modal";
 import { format } from "date-fns-tz";
-import { set } from "date-fns";
+import { isToday } from "date-fns";
 import { DataGrid } from "@mui/x-data-grid";
 import Timer from "../components/Timer";
-import { Container, Button, Badge, Label, Input, Col, Row } from "reactstrap";
+import { Container, Button, Badge, Label, Input, Col, Row, ModalHeader, ModalBody, ModalFooter } from "reactstrap";
 import Swal from "sweetalert2";
 import "../css/style.css";
 import { useCitaEmpalme } from "../functions/crearCita/useCitaEmpalme4";
+import { es } from "date-fns/locale";
+import { useNominaTrabajadores } from "../functions/crearCita/useNominaTrabajadores";
+
 let schedulerData;
 
 const initialState = {
@@ -41,6 +44,16 @@ function Basic() {
   const [tipoCita, setTipoCita] = useState("");
   const [verificador, setVerificador] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalActualizarOpen, setIsModalActualizarOpen] = useState(false);
+  const [event, setEvent] = useState();
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
   const [datosParametros, setDatosParametros] = useState({
     idUser: 0,
     fecha: new Date(),
@@ -50,7 +63,58 @@ function Basic() {
   });
   const [datosParametrosCitaTemp, setDatosParametrosCitaTemp] = useState({});
   const [datosParametrosFechaCitaTemp, setDatosParametrosFechaCitaTemp] = useState({});
+  const { dataTrabajadores } = useNominaTrabajadores();
+  useEffect(() => {
+    console.log({ dataTrabajadores });
+  }, [dataTrabajadores]);
 
+  function validarContraseña() {
+    return new Promise((resolve, reject) => {
+      Swal.fire({
+        title: "Ingrese su contraseña",
+        input: "password",
+        inputAttributes: {
+          autocapitalize: "off",
+        },
+        showCancelButton: true,
+        confirmButtonText: "Confirmar",
+        showLoaderOnConfirm: true,
+        preConfirm: (contraseña) => {
+          // Aquí puedes agregar tu lógica de validación de contraseña
+          // Por ejemplo, podrías comparar la contraseña ingresada con una contraseña almacenada o realizar una llamada a una API para verificar la contraseña
+          return new Promise((resolve) => {
+            setTimeout(() => {
+              // Supongamos que la contraseña es "password"
+              if (contraseña === "1234") {
+                resolve();
+              } else {
+                Swal.fire({
+                  icon: "error",
+                  title: "Contraseña incorrecta",
+                  text: "Por favor, ingrese una contraseña correcta.",
+                  confirmButtonText: "Entendido",
+                }).then((isConfirmed) => {
+                  if (isConfirmed.isConfirmed) Swal.close();
+                });
+              }
+            }, 2000);
+          });
+        },
+        allowOutsideClick: () => !Swal.isLoading(),
+      })
+        .then((result) => {
+          if (result.isConfirmed) {
+            resolve(true); // Resuelve la promesa con valor true si la contraseña es correcta
+          } else {
+            resolve(false); // Resuelve la promesa con valor false si el usuario cancela la entrada de contraseña
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+          resolve(false); // Resuelve la promesa con valor false si ocurre algún error durante la validación de la contraseña
+        });
+    });
+  }
   const [formServicio, setFormServicio] = useState({
     id_Cita: 0,
     idServicio: 0,
@@ -82,8 +146,8 @@ function Basic() {
           let hora1 = new Date(item.hora1);
           let hora2 = new Date(item.hora2);
           let fechaBase = new Date(item.fecha);
-          hora1.setFullYear(fechaBase.getFullYear(), fechaBase.getMonth(), fechaBase.getDate());
-          hora2.setFullYear(fechaBase.getFullYear(), fechaBase.getMonth(), fechaBase.getDate());
+          hora1.setFullYear(new Date(item.fecha).getFullYear(), new Date(item.fecha).getMonth(), new Date(item.fecha).getDate());
+          hora2.setFullYear(new Date(item.fecha).getFullYear(), new Date(item.fecha).getMonth(), new Date(item.fecha).getDate());
           return {
             ...item,
             start: hora1.toISOString(),
@@ -98,7 +162,7 @@ function Basic() {
                 : item.estadoCita == 2
                 ? "#AFEEEE" // Pale Turquoise
                 : item.estadoCita == 3
-                ? "#FFFACD" // Lemon Chiffon
+                ? "#FFF26C" // Lemon Chiffon
                 : item.estadoCita == 4
                 ? "#90EE90" // Light Green
                 : item.estadoCita == 5
@@ -128,7 +192,7 @@ function Basic() {
               : item.estadoCita == 2
               ? "#AFEEEE" // Pale Turquoise
               : item.estadoCita == 3
-              ? "#FFFACD" // Lemon Chiffon
+              ? "#FFF26C" // Lemon Chiffon
               : item.estadoCita == 4
               ? "#90EE90" // Light Green
               : item.estadoCita == 5
@@ -165,7 +229,7 @@ function Basic() {
   };
   const getCitasDia = () => {
     peinadosApi
-      .get(`/ClientesCitasDia4?suc=1&cliente=0&fecha=${format(datosParametros.fecha, "yyyyMMdd")}&tipoCita=${tipoCita ? tipoCita : "%"}`)
+      .get(`/ClientesCitasDia5?suc=1&cliente=0&fecha=${format(datosParametros.fecha, "yyyyMMdd")}&tipoCita=${tipoCita ? tipoCita : "%"}`)
       .then((response) => {
         setArregloCitaDia(response.data);
       });
@@ -326,9 +390,9 @@ function Basic() {
   };
 
   const ops2 = (schedulerData, event) => {
-    // setIsModalOpen(true);
-    console.log(event);
-    // return;
+    openModal();
+    setEvent(event);
+    return;
     editCita2(event);
   };
 
@@ -346,25 +410,39 @@ function Basic() {
   };
 
   const moveEvent = (schedulerData, event, slotId, slotName, start, end) => {
+    console.log(event);
     console.log(start);
     console.log(slotId);
-    const start2 = new Date();
 
+    if ((event.estadoCita = 2 && slotId != event.no_estilista)) {
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: `Cita requerida, imposible cambiar de estilista`,
+      });
+      return;
+    }
+
+    const nombreAgendaNuevo = dataTrabajadores.find((item) => item.id === slotId).nombre_agenda;
+    const nombreAgendaAnterior = dataTrabajadores.find((item) => item.id === event.no_estilista).nombre_agenda;
     Swal.fire({
-      title: `Esta segur de hacer este cambio a la estilista: ${slotName} a las ${start}?`,
+      title: "Cambio de Cita",
+      html: `
+        <p>CLIENTE: Publico en General</p>
+        <p>ANTERIOR:<br>Horas: ${format(new Date(event.hora1), "hh:mm a")}   Estilista: ${nombreAgendaAnterior ? nombreAgendaAnterior : ""}</p>
+        <p>NUEVA:<br>Horas: ${format(new Date(start), "hh:mm a")}   Estilista: ${nombreAgendaNuevo ? nombreAgendaNuevo : ""}</p>
+        <p>Quiere confirmar el cambio?</p>
+      `,
       showCancelButton: true,
-      confirmButtonText: "Save",
+      confirmButtonText: "Sí",
+      cancelButtonText: "No",
     }).then((result) => {
-      /* Read more about isConfirmed, isDenied below */
       if (result.isConfirmed) {
         setDatosParametrosFechaCitaTemp({
           fecha: start,
           usuarioEstilista: slotId,
         });
         setDatosParametrosCitaTemp(event);
-        // schedulerData.moveEvent(event, slotId, slotName, start, end);
-        // actualizarFechayCitas(schedulerData, 0.01);
-        window.location.reload();
       }
     });
   };
@@ -434,12 +512,11 @@ function Basic() {
       field: "stao_estilista",
       headerName: "Modo",
       width: 130,
-      align: "center",
       options: {
         setCellProps: () => ({ align: "center", justifyContent: "center" }),
       },
       renderCell: (params) => (
-        <p style={{ textAlign: "center", lineHeight: "28px", height: "28px", margin: 0 }}>
+        <p style={{ lineHeight: "28px", height: "28px", margin: 0 }}>
           {params.row.stao_estilista == 1
             ? "No disponible"
             : params.row.stao_estilista == 2
@@ -458,6 +535,7 @@ function Basic() {
       field: "hora_cita",
       headerName: "Hora inicio",
       width: 80,
+      align: "center",
       renderCell: (params) => (
         <p style={{ textAlign: "center", lineHeight: "28px", height: "28px", margin: 0 }}>{format(new Date(params.row.hora_cita), "HH:mm")}</p>
       ),
@@ -466,6 +544,8 @@ function Basic() {
     {
       field: "horafinal",
       headerName: "Hora final",
+      align: "center",
+
       type: "number",
       width: 80,
       renderCell: (params) => (
@@ -503,8 +583,8 @@ function Basic() {
   // const ligaPruebas = "http://cbinfo.no-ip.info:9019/";
   const handleOpenNewWindow = ({ idCita, idUser, idCliente, fecha, flag }) => {
     const url = `${ligaPruebas}miliga/crearcita?idCita=${idCita}&idUser=${idUser}&idCliente=${idCliente}&fecha=${fecha}&idSuc=${1}&idRec=${1}&flag=${flag}`; // Reemplaza esto con la URL que desees abrir
-    const width = 1200;
-    const height = 600;
+    const width = 390;
+    const height = 800;
     const left = (window.screen.width - width) / 2;
     const top = (window.screen.height - height) / 2;
     const features = `width=${width},height=${height},left=${left},top=${top},toolbar=0,location=0,menubar=0,scrollbars=1,resizable=1`;
@@ -513,16 +593,16 @@ function Basic() {
   const handleOpenNewWindowEdit = ({ idCita, idUser, idCliente, fecha, flag, estadoCita }) => {
     const url = `${ligaPruebas}miliga/editarcita?idCita=${idCita}&idUser=${idUser}&idCliente=${idCliente}&fecha=${fecha}&idSuc=${1}&idRec=${1}&flag=${flag}&estadoCita=${estadoCita}`; // Reemplaza esto con la URL que desees abrir
     const width = 1200;
-    const height = 600;
+    const height = 800;
     const left = (window.screen.width - width) / 2;
     const top = (window.screen.height - height) / 2;
     const features = `width=${width},height=${height},left=${left},top=${top},toolbar=0,location=0,menubar=0,scrollbars=1,resizable=1`;
     window.open(url, "_blank", features);
   };
   const handleOpenNewWindowNewSchedule = () => {
-    const url = `${ligaPruebas}miliga/crearcita?idCita`; // Reemplaza esto con la URL que desees abrir
-    const width = 1200;
-    const height = 600;
+    const url = `${ligaPruebas}miliga/crearcita?fecha=${datosParametros.fecha}`; // Reemplaza esto con la URL que desees abrir
+    const width = 450;
+    const height = 800;
     const left = (window.screen.width - width) / 2;
     const top = (window.screen.height - height) / 2;
     const features = `width=${width},height=${height},left=${left},top=${top},toolbar=0,location=0,menubar=0,scrollbars=1,resizable=1`;
@@ -559,7 +639,7 @@ function Basic() {
           no_cita: 1,
           no_estilista: datosParametrosFechaCitaTemp.usuarioEstilista,
           no_cliente: datosParametrosCitaTemp.no_cliente,
-          dia_cita: datosParametrosCitaTemp.fecha,
+          dia_cita: datosParametrosFechaCitaTemp.fecha,
           hora_cita: datosParametrosFechaCitaTemp.fecha,
           fecha: fechaSinHora,
           tiempo: datosParametrosCitaTemp.tiempo,
@@ -610,7 +690,7 @@ function Basic() {
       color: "black",
     },
     asignado: {
-      backgroundColor: "#FFFACD",
+      backgroundColor: "#FFF26C",
       padding: "10px",
       color: "black",
     },
@@ -625,38 +705,44 @@ function Basic() {
       color: "black",
     },
     conflicto: {
-      backgroundColor: "#000000",
+      backgroundColor: "#E0E0E0",
       padding: "10px",
       color: "white",
     },
   };
-  const editCita2 = (eventItem) => {
-    let fechaActual = new Date(eventItem.hora1);
-    // Extrae el año, mes y día
-    let año = fechaActual.getFullYear();
-    let mes = fechaActual.getMonth(); // Nota: getMonth() devuelve un valor de 0 a 11, donde 0 es enero y 11 es diciembre
-    let día = fechaActual.getDate();
-    let fechaSinHora = new Date(año, mes, día);
-    peinadosApi
-      .put("/DetalleCitasReducido", null, {
-        params: {
-          id: eventItem.idCita,
-          no_estilista: eventItem.no_estilista,
-          no_cliente: eventItem.no_cliente,
-          dia_cita: eventItem.hora1,
-          hora_cita: eventItem.hora1,
-          fecha: fechaSinHora,
-          user: eventItem.no_estilista,
-          cancelada: true,
-          stao_estilista: 1,
-          nota_canc: 0,
-          registrada: false,
-          observacion: 1,
-          user_uc: 0,
-          estatus: 0,
-        },
-      })
-      .then((response) => {
+  const editCita2 = async (eventItem) => {
+    try {
+      // Extraer fecha y crear una nueva fecha sin la hora
+      let fechaActual = new Date(eventItem.hora1);
+      let año = fechaActual.getFullYear();
+      let mes = fechaActual.getMonth(); // Nota: getMonth() devuelve un valor de 0 a 11, donde 0 es enero y 11 es diciembre
+      let día = fechaActual.getDate();
+      let fechaSinHora = new Date(año, mes, día);
+
+      // Validar contraseña
+      const contraseñaValidada = await validarContraseña();
+      if (contraseñaValidada) {
+        // Realizar la solicitud PUT
+        const response = await peinadosApi.put("/DetalleCitasReducido", null, {
+          params: {
+            id: eventItem.idCita,
+            no_estilista: eventItem.no_estilista,
+            no_cliente: eventItem.no_cliente,
+            dia_cita: eventItem.hora1,
+            hora_cita: eventItem.hora1,
+            fecha: fechaSinHora,
+            user: eventItem.no_estilista,
+            cancelada: true,
+            stao_estilista: 1,
+            nota_canc: 0,
+            registrada: false,
+            observacion: 1,
+            user_uc: 0,
+            estatus: 0,
+          },
+        });
+
+        // Mostrar mensaje de éxito
         console.log(response);
         Swal.fire({
           title: "Cita cancelada",
@@ -667,14 +753,29 @@ function Basic() {
             window.location.reload();
           }
         });
+      } else {
+        Swal.fire({
+          title: "Contraseña incorrecta",
+          icon: "error",
+          confirmButtonText: "Ok",
+        });
+      }
+    } catch (error) {
+      // Manejo de errores
+      console.error("Error al cancelar la cita:", error);
+      Swal.fire({
+        title: "Error",
+        text: "Ocurrió un error al cancelar la cita. Por favor, inténtalo de nuevo.",
+        icon: "error",
+        confirmButtonText: "Ok",
       });
+    }
   };
+
   return (
     <>
       <div className="contenedor-principal">
-        <div style={{ display: "flex" }}>
-          <h4>Fecha: {datosParametros.fecha.toLocaleDateString()}</h4>
-          <h4>´ y Hora: </h4>
+        <div>
           <Timer />
         </div>
         <Row>
@@ -690,11 +791,22 @@ function Basic() {
             </Input>
           </Col>
         </Row>
+        <div style={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center" }}>
+          <div style={{ display: "flex" }}>
+            <h2 style={{ marginRight: "10px", backgroundColor: "#ffccfc", padding: "5px" }}>{isToday(datosParametros.fecha) ? "Hoy  " : ""}</h2>
+            <h2 style={{ backgroundColor: "#ffccfc", padding: "5px" }}>Fecha: {datosParametros.fecha.toLocaleDateString()}</h2>
+          </div>
+          <h5 style={{ marginTop: "0", backgroundColor: "#ffccfc", padding: "5px" }}>
+            {format(new Date(datosParametros.fecha), "EEEE", { locale: es })}
+          </h5>
+        </div>
         <div>
+          <div></div>
           <Button
             size="sm"
             onClick={() => {
               handleOpenNewWindowNewSchedule();
+              setIsModalActualizarOpen(true);
             }}
           >
             Nueva Cita
@@ -725,19 +837,18 @@ function Basic() {
         <DataGrid
           rows={arregloCitaDia}
           columns={columns}
-          getRowId={(row) => row.id + row.importe + row.tiempo}
+          getRowId={(row) => row.id + row.importe + row.tiempo + row.descripcion}
           rowHeight={28}
           columnHeaderHeight={28}
-          hideFooterPagination
-          hideFooter
+          initialState={{ pagination: { paginationModel: { pageSize: 3 } } }}
           sx={{
             "& .MuiDataGrid-pagination": {
-              display: "none",
+              height: "10px",
             },
           }}
         />
       </div>
-      <div style={{ marginLeft: "1%" }}>
+      <div style={{ marginLeft: "0%" }}>
         {state.showScheduler && (
           <Scheduler
             key={1}
@@ -748,7 +859,7 @@ function Basic() {
             onViewChange={onViewChange}
             viewEventClick={ops1}
             viewEventText="Editar cita:"
-            viewEvent2Text="Cancelar cita"
+            viewEvent2Text="Seleccionar opciones"
             viewEvent2Click={ops2}
             updateEventStart={updateEventStart}
             updateEventEnd={updateEventEnd}
@@ -772,6 +883,45 @@ function Basic() {
           <div style={boxStyles.conflicto}>CONFLICTO</div>
         </div>
       </div>
+      {isModalOpen && (
+        <div className="modal-overlay">
+          <div className="modal-content">
+            <button className="close-button" onClick={closeModal}>
+              ×
+            </button>
+            <h2>Seleccione la accion</h2>
+            <Button
+              style={{ marginBottom: "10px" }}
+              onClick={() => {
+                editCita2(event);
+              }}
+            >
+              Cancelar cita
+            </Button>
+            <Button style={{ marginBottom: "10px" }}> Liberar cita </Button>
+            <Button style={{ marginBottom: "10px" }}> Alta de servicio </Button>
+            <Button style={{ marginBottom: "10px" }}> Cambio modo de cita </Button>
+          </div>
+        </div>
+      )}
+      {isModalActualizarOpen && (
+        <div className="modal-overlay">
+          <div className="modal-content">
+            <button className="close-button" onClick={setIsModalActualizarOpen(false)}>
+              ×
+            </button>
+            <br />
+            <Button
+              style={{ marginBottom: "10px" }}
+              onClick={() => {
+                window.location.reload();
+              }}
+            >
+              Actualizar agenda
+            </Button>
+          </div>
+        </div>
+      )}
     </>
   );
 }

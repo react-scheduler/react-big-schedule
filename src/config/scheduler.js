@@ -5,7 +5,7 @@ export default {
   besidesWidth: 10,
   schedulerMaxHeight: 0,
   tableHeaderHeight: 40,
-  schedulerContentHeight: "500px",
+  schedulerContentHeight: "800px",
 
   responsiveByParent: false,
 
@@ -40,8 +40,8 @@ export default {
   eventItemHeight: 20,
   eventItemLineHeight: 4,
   nonAgendaSlotMinHeight: 0,
-  dayStartFrom: 8,
-  dayStopTo: 20,
+  dayStartFrom: 7,
+  dayStopTo: 22,
   defaultEventBgColor: "#80C5F6",
   selectedAreaColor: "#7EC2F3",
   nonWorkingTimeHeadColor: "#999999",
@@ -87,7 +87,7 @@ export default {
   minuteStep: 15,
 
   views: [
-    { viewName: "Day", viewType: ViewType.Day, showAgenda: false, isEventPerspective: false },
+    { viewName: "Day", viewType: ViewType.Day, showAgenda: false, isEventPerspective: true },
     // { viewName: "Week", viewType: ViewType.Week, showAgenda: false, isEventPerspective: false },
     // { viewName: "Month", viewType: ViewType.Month, showAgenda: false, isEventPerspective: false },
     // { viewName: "Quarter", viewType: ViewType.Quarter, showAgenda: false, isEventPerspective: false },

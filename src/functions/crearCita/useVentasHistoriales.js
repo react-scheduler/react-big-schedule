@@ -5,7 +5,7 @@ import { format } from "date-fns-tz";
 export const useVentasHistoriales = ({ userID, claveProd, sucursal, fechaInicio, fechaFin, idCliente }) => {
   const [dataVentasHistoriales, setDataVentasHistoriales] = useState([]);
 
-  const fetch = async () => {
+  const fetchVentasHistoriales = async () => {
     try {
       const response = await peinadosApi.get(
         `/sp_detalleVentasHistorialSel2?UserID=${userID ? userID : ""}&ClaveProd=${claveProd ? claveProd : ""}&Sucursal=${
@@ -21,7 +21,7 @@ export const useVentasHistoriales = ({ userID, claveProd, sucursal, fechaInicio,
 
   useEffect(() => {
     if (idCliente == "" || !idCliente) return;
-    fetch();
+    fetchVentasHistoriales();
   }, [idCliente]);
-  return { dataVentasHistoriales };
+  return { dataVentasHistoriales, fetchVentasHistoriales };
 };

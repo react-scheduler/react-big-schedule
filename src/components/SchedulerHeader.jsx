@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
-import PropTypes from 'prop-types';
-import { Col, Row, Spin, Radio, Space, Popover, Calendar } from 'antd';
-import { RightOutlined, LeftOutlined } from '@ant-design/icons';
-import dayjs from 'dayjs';
-import { DATE_FORMAT } from '../config/default';
+import React, { useState } from "react";
+import PropTypes from "prop-types";
+import { Col, Row, Spin, Radio, Space, Popover, Calendar } from "antd";
+import { RightOutlined, LeftOutlined } from "@ant-design/icons";
+import dayjs from "dayjs";
+import { DATE_FORMAT } from "../config/default";
 
 const RadioButton = Radio.Button;
 const RadioGroup = Radio.Group;
@@ -46,7 +46,7 @@ function SchedulerHeader({ onViewChange, goNext, goBack, onSelectDate, scheduler
         locale={calendarLocale}
         defaultValue={dayjs(selectDate)}
         fullscreen={false}
-        onSelect={date => {
+        onSelect={(date) => {
           setVisible(false);
           handleEvents(onSelectDate, false, date.format(DATE_FORMAT));
         }}
@@ -54,34 +54,21 @@ function SchedulerHeader({ onViewChange, goNext, goBack, onSelectDate, scheduler
     </div>
   );
 
-  const radioButtonList = config.views.map(item => (
+  const radioButtonList = config.views.map((item) => (
     <RadioButton
       key={`${item.viewType}${item.showAgenda ? 1 : 0}${item.isEventPerspective ? 1 : 0}`}
       value={`${item.viewType}${item.showAgenda ? 1 : 0}${item.isEventPerspective ? 1 : 0}`}
     >
-      <span style={{ margin: '0px 8px' }}>{item.viewName}</span>
+      <span style={{ margin: "0px 8px" }}>{item.viewName}</span>
     </RadioButton>
   ));
 
   return (
-    <Row gutter={[10, 10]} type="flex" align="middle" justify="space-between" style={{ marginBottom: '24px' }}>
+    <Row gutter={[10, 10]} type="flex" align="middle" justify="space-between" style={{ marginBottom: "24px" }}>
       {leftCustomHeader}
       <Col>
         <div className="header2-text">
           <Space>
-            <div>
-              <LeftOutlined type="left" style={{ marginRight: '8px' }} className="icon-nav" onClick={() => handleEvents(goBack, false)} />
-              {config.calendarPopoverEnabled ? (
-                <Popover content={popover} placement="bottomLeft" trigger="click" open={visible} onOpenChange={setVisible} overlayClassName="scheduler-header-popover">
-                  <span className="header2-text-label" style={{ cursor: 'pointer' }}>
-                    {dateLabel}
-                  </span>
-                </Popover>
-              ) : (
-                <span className="header2-text-label">{dateLabel}</span>
-              )}
-              <RightOutlined type="right" style={{ marginLeft: '8px' }} className="icon-nav" onClick={() => handleEvents(goNext, false)} />
-            </div>
             <Spin spinning={dateSpinning} />
           </Space>
         </div>
@@ -89,9 +76,48 @@ function SchedulerHeader({ onViewChange, goNext, goBack, onSelectDate, scheduler
       <Col>
         <Space>
           <Spin spinning={viewSpinning} />
-          <RadioGroup buttonStyle="solid" defaultValue={defaultValue} size="default" onChange={event => handleEvents(onViewChange, true, event)}>
-            {radioButtonList}
-          </RadioGroup>
+          <div className="header2-text">
+            <Space>
+              <div>
+                <LeftOutlined
+                  size={50}
+                  type="left"
+                  style={{ marginRight: "8px", fontSize: "28px", color: "#08c" }}
+                  className="icon-nav"
+                  onClick={() => handleEvents(goBack, false)}
+                />
+                {config.calendarPopoverEnabled ? (
+                  <Popover
+                    content={popover}
+                    placement="bottomLeft"
+                    trigger="click"
+                    open={visible}
+                    onOpenChange={setVisible}
+                    overlayClassName="scheduler-header-popover"
+                  >
+                    <span className="header2-text-label" style={{ cursor: "pointer", fontSize: "22px" }}>
+                      {dateLabel}
+                    </span>
+                  </Popover>
+                ) : (
+                  <span className="header2-text-label">{dateLabel}</span>
+                )}
+                <RightOutlined
+                  size={50}
+                  type="right"
+                  style={{ marginLeft: "8px", fontSize: "28px", color: "#08c" }}
+                  className="icon-nav"
+                  onClick={() => handleEvents(goNext, false)}
+                />
+              </div>
+              <Spin spinning={dateSpinning} />
+            </Space>
+          </div>
+        </Space>
+      </Col>
+      <Col>
+        <Space>
+          <Spin spinning={viewSpinning} />
         </Space>
       </Col>
       {rightCustomHeader}

@@ -101,11 +101,12 @@ function ListaEspera() {
     });
   };
   const getProductos = () => {
-    peinadosApi.get("/productos2?id=0&descripcion=%&verInventariable=2&esServicio=2&esInsumo=2&obsoleto=2&marca=%").then((response) => {
-      setDataProductos(response.data);
-    });
+    peinadosApi
+      .get("/sp_cPSEAC?id=0&cia=1&sucursal=2&almacen=1&marca=%&descripcion=%&verinventariable=0&esServicio=2&esInsumo=0&obsoleto=0")
+      .then((response) => {
+        setDataProductos(response.data);
+      });
   };
-
   const columnsClientes2 = useMemo(() => [
     {
       accessorKey: "acciones",

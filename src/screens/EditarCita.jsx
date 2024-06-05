@@ -180,9 +180,11 @@ function EditarCita() {
   };
 
   const getProductos = () => {
-    peinadosApi.get("/productos2?id=0&descripcion=%&verInventariable=0&esServicio=2&esInsumo=0&obsoleto=0&marca=%").then((response) => {
-      setDataProductos(response.data);
-    });
+    peinadosApi
+      .get("/sp_cPSEAC?id=0&cia=1&sucursal=2&almacen=1&marca=%&descripcion=%&verinventariable=0&esServicio=2&esInsumo=0&obsoleto=0")
+      .then((response) => {
+        setDataProductos(response.data);
+      });
   };
   const getOperaciones = () => {
     peinadosApi.get(`/sp_detalleOperaciones6?noCliente=${formCita.no_cliente}`).then((response) => {
@@ -544,14 +546,14 @@ function EditarCita() {
     { field: "x", headerName: "Seleccion", renderCell: renderButtonProduct, width: 130 },
     { field: "clave_prod", headerName: "Clave prod", width: 130 },
     { field: "descripcion", headerName: "Descripción", width: 250 },
-    { field: "precio_lista", headerName: "Precio", width: 130, renderCell: (params) => <p>{params.row.precio_lista.toFixed(2)}</p> },
+    { field: "precio", headerName: "Precio", width: 130, renderCell: (params) => <p>{params.row.precio.toFixed(2)}</p> },
     { field: "tiempox", headerName: "Tiempo", width: 130, renderCell: (params) => <p>{params.row.tiempox + " Min"}</p> },
   ];
   const columnsProductosEdit = [
     { field: "x", headerName: "Seleccion", renderCell: renderButtonProductEdit, width: 130 },
     { field: "clave_prod", headerName: "Clave prod", width: 130 },
     { field: "descripcion", headerName: "Descripción", width: 250 },
-    { field: "precio_lista", headerName: "Precio", width: 130, renderCell: (params) => <p>{params.row.precio_lista.toFixed(2)}</p> },
+    { field: "precio", headerName: "Precio", width: 130, renderCell: (params) => <p>{params.row.precio.toFixed(2)}</p> },
     { field: "tiempox", headerName: "Tiempo", width: 130, renderCell: (params) => <p>{params.row.tiempox + " Min"}</p> },
   ];
 

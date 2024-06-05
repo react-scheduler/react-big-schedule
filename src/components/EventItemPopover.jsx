@@ -43,7 +43,7 @@ function EventItemPopover({
 
   // http://cbinfo.no-ip.info:9018/sp_detalleCitasServiciosResumen_Result?idCita=2087
   const getEstilistas = () => {
-    peinadosApi.get(`/sp_detalleCitasServiciosResumen_Result?idCita=${eventItem.idCita}`).then((response) => {
+    peinadosApi.get(`/sp_detalleCitasServiciosResumen2?idCita=${eventItem.idCita}`).then((response) => {
       setDataPuntosPorCliente(response.data[0]);
     });
   };
@@ -110,6 +110,7 @@ function EventItemPopover({
           <Col>
             <p className="header2-text">Cliente: {dataPuntosporCliente?.nombre}</p>
             <p className="header2-text">Servicios: {dataPuntosporCliente?.descripcion}</p>
+            <p className="header2-text">Observaciones: {dataPuntosporCliente?.observaciones}</p>
           </Col>
           <Col span={22}>
             {showViewEvent && renderViewEvent(viewEventText, viewEventClick)}

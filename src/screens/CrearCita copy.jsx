@@ -5,13 +5,12 @@ import { peinadosApi } from "../api/peinadosApi";
 import { FormControl, TextField, FormControlLabel, Checkbox, Box, ButtonGroup, Modal, Typography } from "@mui/material";
 import { FormGroup, Label, Input, Button, Container, Row, Col, InputGroup, InputGroupText, Collapse } from "reactstrap";
 import { styled } from "@mui/material/styles";
-import Draggable from "react-draggable";
 
 import Swal from "sweetalert2";
 import { format } from "date-fns-tz";
 import { MdOutlineFolder } from "react-icons/md";
 import { MaterialReactTable } from "material-react-table";
-import { LocalizationProvider, DatePicker, TimePicker } from "@mui/x-date-pickers";
+import { LocalizationProvider, DateTimePicker } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { startOfToday, setHours, parseISO, isValid } from "date-fns";
 import "../css/style.css";
@@ -26,7 +25,7 @@ import { useVentasOperaciones } from "../functions/crearCita/useVentasOperacione
 import { useSucursales } from "../functions/crearCita/useSucursales";
 import { useNominaTrabajadores } from "../functions/crearCita/useNominaTrabajadores";
 import { useDetalleCitasObservaciones } from "../functions/crearCita/useDetalleCitasObservaciones";
-import { AiFillDelete, AiFillEdit, AiOutlineClose, AiOutlineArrowRight } from "react-icons/ai";
+import { AiFillDelete, AiFillEdit, AiOutlineClose } from "react-icons/ai";
 import { useObservaciones } from "../functions/crearCita/useObservaciones";
 
 function CrearCita() {
@@ -129,7 +128,6 @@ function CrearCita() {
     sucursal: 0,
     fecha_movto: null,
   });
-  const [movableReactPrueba, setMovableReactPrueba] = useState(true);
   const [abierto, setAbierto] = useState(false);
   const [clientesModal, setClientesModal] = useState(false);
   const [ModalClientesPuntos, setModalClientesPuntos] = useState(false);
@@ -633,7 +631,6 @@ function CrearCita() {
       setProductosModal(true);
       return;
     }
-
     let fechaActual = new Date(formCita.fecha);
     // Extrae el año, mes y día
     let año = fechaActual.getFullYear();
@@ -663,7 +660,7 @@ function CrearCita() {
       Swal.fire({
         icon: "error",
         title: "Error",
-        text: `Imposible agregar una cita en el pasado ${formCita.fecha}`,
+        text: `Imposible agregar una cita en el pasado`,
         confirmButtonColor: "#3085d6", // Cambiar el color del botón OK
       });
       return;
@@ -703,8 +700,8 @@ function CrearCita() {
                       sucursal: 1,
                       no_estilista: formCita.no_estilista,
                       no_cliente: formCita.no_cliente,
-                      dia_cita: new Date(formCita.fecha),
-                      hora_cita: new Date(formCita.fecha),
+                      dia_cita: formCita.fecha,
+                      hora_cita: formCita.fecha,
                       fecha: fechaSinHora,
                       tiempo: 0,
                       user: formCita.no_estilista,
@@ -1245,35 +1242,37 @@ function CrearCita() {
         validarContraseña().then(async (contraseñaValidada) => {
           if (!contraseñaValidada) return;
           else {
-            await peinadosApi
-              .put(`/sp_detalleCitasServiciosTerminado2`, null, {
-                params: {
-                  idCita: formCitaServicio.idCita,
-                },
-              })
-              .then((response) => {
-                Swal.fire({
-                  icon: "success",
-                  text: "Registro Realizado con éxito, ",
-                  confirmButtonColor: "#3085d6",
-                  cancelButtonColor: "#d33",
-                  confirmButtonText: "Cerrar",
-                }).then((result) => {
-                  if (result.isConfirmed) {
-                    window.close();
-                  } else {
-                    window.close();
-                  }
+            ventaTemporal.forEach(async (elemento) => {
+              await peinadosApi
+                .put(`/sp_detalleCitasServiciosTerminado2`, null, {
+                  params: {
+                    idCita: formCitaServicio.idCita,
+                  },
+                })
+                .then((response) => {
+                  Swal.fire({
+                    icon: "success",
+                    text: "Registro Realizado con éxito, ",
+                    confirmButtonColor: "#3085d6",
+                    cancelButtonColor: "#d33",
+                    confirmButtonText: "Cerrar",
+                  }).then((result) => {
+                    if (result.isConfirmed) {
+                      window.close();
+                    } else {
+                      window.close();
+                    }
+                  });
+                })
+                .catch((error) => {
+                  Swal.fire({
+                    icon: "error",
+                    title: "Error",
+                    text: `Favor de contactase cons sistemas ${error}`,
+                    confirmButtonColor: "#3085d6", // Cambiar el color del botón OK
+                  });
                 });
-              })
-              .catch((error) => {
-                Swal.fire({
-                  icon: "error",
-                  title: "Error",
-                  text: `Favor de contactase cons sistemas ${error}`,
-                  confirmButtonColor: "#3085d6", // Cambiar el color del botón OK
-                });
-              });
+            });
           }
         });
       }
@@ -1339,22 +1338,6 @@ function CrearCita() {
       });
   };
 
-  const handleChangeFecha = (type, value) => {
-    let newDateTime;
-    if (type === "fecha") {
-      newDateTime = value ? new Date(value) : null;
-      if (formCita.fecha) {
-        const time = new Date(formCita.fecha).toTimeString().split(" ")[0];
-        newDateTime = new Date(`${value.toDateString()} ${time}`);
-      }
-    } else {
-      newDateTime = formCita.fecha ? new Date(formCita.fecha) : new Date();
-      newDateTime.setHours(value.getHours());
-      newDateTime.setMinutes(value.getMinutes());
-      console.log(newDateTime);
-    }
-    setFormCita({ ...formCita, fecha: newDateTime });
-  };
   return (
     <div>
       <Container>
@@ -1393,196 +1376,145 @@ function CrearCita() {
         </div>
       </Container>
       <Container>
-        <div style={{ padding: "2px", maxWidth: "600px", margin: "0 auto" }}>
-          <Row form>
-            <Col xs="6">
-              <FormGroup style={{ display: "flex", alignItems: "center", marginBottom: "1px" }}>
-                <Label for="cliente" style={{ marginRight: "5px", fontSize: "0.8rem" }}>
-                  Cliente:
-                </Label>
-                <InputGroup size="sm" style={{ flexGrow: 1 }}>
-                  <Input
-                    disabled
-                    value={formCitaDescripciones.descripcion_no_cliente}
-                    type="text"
-                    name="cliente"
-                    id="cliente"
-                    style={{ fontSize: "0.8rem" }}
-                  />
-                  <Button size="sm" onClick={() => setClientesModal(true)} style={{ fontSize: "0.8rem" }}>
-                    Buscar
-                  </Button>
-                </InputGroup>
-              </FormGroup>
-            </Col>
-
-            <Col xs="6" style={{ display: "flex", alignItems: "center", marginBottom: "1px" }}>
-              <FormGroup style={{ display: "flex", alignItems: "center", marginBottom: "1px" }}>
-                <Label for="puntos" style={{ marginRight: "5px", fontSize: "0.8rem" }}>
-                  Ptos:
-                </Label>
+        <Row>
+          <Col>
+            <FormGroup>
+              <Label for="cliente">Cliente</Label>
+              <InputGroup addonType="append">
                 <Input
                   bsSize="sm"
                   disabled
-                  value={dataPuntosporCliente[0]?.puntosTotal || 0}
+                  value={formCitaDescripciones.descripcion_no_cliente}
                   type="text"
-                  name="puntos"
-                  id="puntos"
-                  style={{ fontSize: "0.8rem" }}
+                  name="cliente"
+                  id="cliente"
+                  size={"small"}
                 />
-              </FormGroup>
-            </Col>
-
-            <Col xs="6">
-              <FormGroup style={{ display: "flex", alignItems: "center", marginBottom: "1px" }}>
-                <Label style={{ marginRight: "5px", fontSize: "0.8rem" }} for="clasificacion">
-                  Clasificacion
-                </Label>
+                <Button size="sm" onClick={() => setClientesModal(true)}>
+                  Buscar
+                </Button>
+              </InputGroup>
+            </FormGroup>
+            <FormGroup>
+              <Label for="puntos">Puntos</Label>
+              <Input
+                disabled
+                value={dataPuntosporCliente[0]?.puntosTotal ? dataPuntosporCliente[0]?.puntosTotal : 0}
+                type="text"
+                name="puntos"
+                id="puntos"
+              />
+            </FormGroup>
+            {dataClasificacion[0]?.descripcion ? (
+              <FormGroup>
+                <Label for="clasificacion">Clasificacion</Label>
                 <Input
                   disabled
                   value={dataClasificacion[0]?.descripcion ? dataClasificacion[0]?.descripcion : 0}
                   type="text"
                   name="clasificacion"
                   id="clasificacion"
-                  style={{ fontSize: "0.8rem" }}
                 />
               </FormGroup>
-            </Col>
+            ) : null}
+          </Col>
 
-            <Col xs="6">
-              <FormGroup check style={{ display: "flex", alignItems: "center", marginBottom: "1px" }}>
-                <Label check>
-                  <Input name="esServicioDomicilio" type="checkbox" checked={formCita.esServicioDomicilio} onChange={handleCheckboxChangeDomicilio} />
-                  <strong style={{ fontSize: "0.8rem" }}>Servicio a domicilio</strong>
-                </Label>
-              </FormGroup>
-            </Col>
+          <Col>
+            <FormGroup>
+              <Label for="atiende">Atiende</Label>
+              <Input
+                type="select"
+                name="atiende"
+                id="atiende"
+                value={formCita.no_estilista}
+                onChange={(valor) => {
+                  setFormCita({ ...formCita, no_estilista: valor.target.value });
+                }}
+              >
+                <option value="0">Seleccione un estilista</option>
 
-            <Col xs="6">
-              <FormGroup style={{ display: "flex", alignItems: "center", marginBottom: "1px" }}>
-                <Label for="fecha" style={{ fontSize: "0.8rem", marginRight: "5px" }}>
-                  Fecha cita:
-                </Label>
-                <LocalizationProvider dateAdapter={AdapterDateFns}>
-                  <DatePicker
-                    slotProps={{ textField: { size: "small" } }}
-                    style={{ height: 20 }}
-                    value={formCita.fecha ? new Date(formCita.fecha) : null}
-                    onChange={(fecha) => handleChangeFecha("fecha", fecha)}
-                    sx={{
-                      "& .MuiInputBase-input": {
-                        width: "120px",
-                      },
-                    }}
-                    renderInput={(props) => (
-                      <TextField
-                        {...props}
-                        size="small"
-                        sx={{
-                          fontSize: "0.8rem",
-                          backgroundColor: "#ffccac",
-                          "& .MuiInputBase-input": {
-                            height: "30px", // Ajusta la altura aquí
-                            padding: "0 14px", // Ajusta el padding para centrar el texto
-                          },
-                          "& .MuiOutlinedInput-root": {
-                            height: "30px", // Ajusta la altura aquí
-                            padding: "0px", // Remueve el padding interno
-                          },
-                          "& .MuiOutlinedInput-input": {
-                            height: "30px", // Ajusta la altura aquí
-                            display: "flex",
-                            alignItems: "center",
-                          },
-                          "& .MuiInputAdornment-root": {
-                            height: "30px", // Asegura que los adornos tengan la misma altura
-                            "& button": {
-                              height: "30px", // Ajusta la altura del botón del ícono
-                            },
-                          },
-                        }}
-                      />
-                    )}
-                  />
-                </LocalizationProvider>
-              </FormGroup>
-            </Col>
-            <Col xs="6">
-              <FormGroup style={{ display: "flex", alignItems: "center", marginBottom: "5px" }}>
-                <Label for="hora" style={{ fontSize: "0.8rem", marginRight: "5px" }}>
-                  Hora cita:
-                </Label>
-                <LocalizationProvider dateAdapter={AdapterDateFns}>
-                  <TimePicker
-                    slotProps={{ textField: { size: "small" } }}
-                    value={formCita.fecha ? new Date(decodeURIComponent(formCita.fecha)) : null}
-                    // value={formCita.fecha ? new Date(formCita.fecha).toTimeString().substring(0, 5) : null}
-                    onChange={(hora) => handleChangeFecha("hora", hora)}
-                    renderInput={(props) => (
-                      <Input
-                        {...props}
-                        size="small"
-                        style={{
-                          fontSize: "0.8rem",
-                          backgroundColor: "#ffccac",
-                        }}
-                      />
-                    )}
-                  />
-                </LocalizationProvider>
-              </FormGroup>
-            </Col>
-            <Col xs="6">
-              <FormGroup style={{ display: "flex", alignItems: "center", marginBottom: "0px" }}>
-                <Label for="atiende" style={{ fontSize: "0.8rem", marginRight: "0px" }}>
-                  Atiende:
-                </Label>
-                <Input
-                  bsSize="sm"
-                  type="select"
-                  name="atiende"
-                  id="atiende"
-                  value={formCita.no_estilista}
-                  onChange={(e) => setFormCita({ ...formCita, no_estilista: e.target.value })}
-                  style={{ fontSize: "0.8rem" }}
-                >
-                  <option value="0">Seleccione un estilista</option>
-                  {dataEstilistas.map((opcion, index) => (
+                {dataEstilistas.map((opcion, index) => {
+                  return (
                     <option value={opcion.id} key={index}>
                       {opcion.estilista}
                     </option>
-                  ))}
-                </Input>
-              </FormGroup>
-            </Col>
-            <Col xs="6">
-              <FormGroup style={{ display: "flex", alignItems: "center", marginBottom: "0px" }}>
-                <FormGroup check>
-                  <Label check style={{ fontSize: "0.8rem", marginRight: "5px" }}>
-                    <Input
-                      name="estatus"
-                      type="checkbox"
-                      checked={formCita.estatusRequerido}
-                      onChange={() => handleCheckboxChange("estatusRequerido")}
-                    />{" "}
-                    <strong>Requerido</strong>
-                  </Label>
-                </FormGroup>
-                <FormGroup check>
-                  <Label check style={{ fontSize: "0.8rem" }}>
-                    <Input
-                      name="estatus"
-                      type="checkbox"
-                      checked={formCita.estatusAsignado}
-                      onChange={() => handleCheckboxChange("estatusAsignado")}
-                    />{" "}
-                    <strong>Asignado</strong>
-                  </Label>
-                </FormGroup>
-              </FormGroup>
-            </Col>
-          </Row>
-        </div>
+                  );
+                })}
+              </Input>
+            </FormGroup>
+
+            <FormGroup>
+              <Label for="observaciones">Observaciones del cliente</Label>
+              <Input
+                type="text"
+                name="observaciones"
+                id="observaciones"
+                value={formCita.observacion}
+                onChange={(valor) => {
+                  setFormCita({ ...formCita, observacion: valor.target.value });
+                }}
+              />
+            </FormGroup>
+          </Col>
+
+          <Col>
+            <FormGroup>
+              <Label for="fecha">Fecha de la cita</Label>
+
+              <LocalizationProvider dateAdapter={AdapterDateFns}>
+                <DateTimePicker
+                  ampm={true}
+                  time
+                  value={formCita.fecha ? new Date(formCita.fecha) : null}
+                  timeSteps={{ minutes: 15 }}
+                  minTime={minDateTime}
+                  maxTime={maxDateTime}
+                  sx={{ width: "100%", height: "50%", ml: 0.3 }}
+                  slotProps={{
+                    textField: {
+                      size: "small",
+                      sx: {
+                        "& .MuiInputBase-input": {
+                          fontWeight: "bold", // Para poner el texto en negritas
+                          fontSize: "1.2rem", // Para aumentar el tamaño de la fuente
+                          backgroundColor: "#ffccac",
+                        },
+                      },
+                    },
+                  }}
+                  timezone={"America/Mexico_City"}
+                  format="dd/MM/yyyy HH:mm" // Formato DDMMAAAA HH:mm (hora en formato 24 horas)
+                  onChange={(fecha) => {
+                    setFormCita({ ...formCita, fecha: fecha });
+                    // setDatosParametros({
+                    //   ...datosParametros,
+                    //   fecha: fecha,
+                    // });
+                  }}
+                />
+              </LocalizationProvider>
+            </FormGroup>
+
+            <FormGroup check>
+              <Label check>
+                <Input name="estatus" type="checkbox" checked={formCita.estatusRequerido} onChange={() => handleCheckboxChange("estatusRequerido")} />{" "}
+                <strong>Requerido</strong>
+              </Label>
+            </FormGroup>
+            <FormGroup check>
+              <Label check>
+                <Input name="estatus" type="checkbox" checked={formCita.estatusAsignado} onChange={() => handleCheckboxChange("estatusAsignado")} />{" "}
+                <strong>Asignado</strong>
+              </Label>
+            </FormGroup>
+            <FormGroup check>
+              <Label check>
+                <Input name="esServicioDomicilio" type="checkbox" checked={formCita.esServicioDomicilio} onChange={handleCheckboxChangeDomicilio} />{" "}
+                <strong>Servicio a domicilio</strong>
+              </Label>
+            </FormGroup>
+          </Col>
+        </Row>
       </Container>
       <hr />
       <Container>
@@ -1607,9 +1539,7 @@ function CrearCita() {
             <Col style={{ border: "1px solid black", padding: "10px", margin: "10px", width: "300px", textAlign: "center", fontWeight: "bold" }}>
               <Label>Clave de reservación</Label>
               {/* <Input value={"100-2-75"}> </Input> */}
-              <Input value={formCitaServicio.idCita ? formCitaServicio.idCita + "-" + 1 + "-" + format(new Date(formCita.fecha), "ddM") : ""}>
-                {" "}
-              </Input>
+              <Input value={formCitaServicio.idCita ? formCitaServicio.idCita + "-" + 1 + "-" + format(formCita.fecha, "ddM") : ""}> </Input>
             </Col>
             <Col>
               <FormGroup>
@@ -1663,6 +1593,8 @@ function CrearCita() {
             <AiOutlineClose onClick={() => setClientesModal(false)} />
           </div>
           <Typography variant="h4">Seleccionar cliente</Typography>
+          {/* <DataGrid rows={dataClientes} columns={columnsClientes} />
+           */}
           <MaterialReactTable
             columns={columnsClientes2}
             data={dataClientes}
@@ -1970,20 +1902,6 @@ function CrearCita() {
           ) : null}
         </Box>
       </Modal>
-      {/* 
-      <Draggable>
-        <div>
-          <Modal open={movableReactPrueba}>
-            <Box sx={style}>
-              <Draggable>
-                <div>
-                  <h1>Hola mundo</h1>
-                </div>
-              </Draggable>
-            </Box>
-          </Modal>
-        </div>
-      </Draggable> */}
 
       {/* Hazme un modal como lo he estado haciendo para que edite el estilista y el servicio, ingresando a su vez una cantidad */}
       <Modal open={modalEdicionServicios} onClose={() => setModalEdicionServicios(false)}>
