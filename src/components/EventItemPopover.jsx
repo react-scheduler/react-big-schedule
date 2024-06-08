@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { Col, Row } from "antd";
 import { peinadosApi } from "../api/peinadosApi";
+import { useObservaciones } from "../functions/crearCita/useObservaciones";
+import { AiFillEye } from "react-icons/ai";
 
 function EventItemPopover({
   schedulerData,
@@ -40,25 +42,29 @@ function EventItemPopover({
     </button>
   );
   const [dataPuntosporCliente, setDataPuntosPorCliente] = useState({});
+  const { dataObservaciones, fetchObservaciones } = useObservaciones({ idCliente: eventItem.no_cliente });
 
   // http://cbinfo.no-ip.info:9018/sp_detalleCitasServiciosResumen_Result?idCita=2087
   const getEstilistas = () => {
+    console.log({ eventItem });
     peinadosApi.get(`/sp_detalleCitasServiciosResumen2?idCita=${eventItem.idCita}`).then((response) => {
       setDataPuntosPorCliente(response.data[0]);
     });
   };
   useEffect(() => {
     getEstilistas();
-    console.log(eventItem);
   }, []);
 
   return (
     <div style={{ width: config.eventItemPopoverWidth }}>
       <Row type="flex" align="middle">
         {config.eventItemPopoverShowColor && (
-          <Col span={2}>
+          <Row justify="space-between" style={{ width: "100%" }}>
             <div className="status-dot" style={{ backgroundColor: statusColor }} />
-          </Col>
+            <div>
+              <AiFillEye size={23} onClick={() => (window.location.href = "http://cbinfo.no-ip.info:9020/CatClientes")} />
+            </div>
+          </Row>
         )}
         <Col span={22} className="overflow-text">
           <span className="header2-text" title={title}>

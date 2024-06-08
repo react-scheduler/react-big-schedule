@@ -1395,20 +1395,25 @@ function CrearCita() {
       <Container>
         <div style={{ padding: "2px", maxWidth: "600px", margin: "0 auto" }}>
           <Row form>
-            <Col xs="12">
+            <Col xs="6">
               <FormGroup style={{ display: "flex", alignItems: "center", marginBottom: "1px" }}>
                 <Label for="cliente" style={{ marginRight: "5px", fontSize: "0.8rem" }}>
                   Cliente:
                 </Label>
+                <InputGroup size="sm" style={{ flexGrow: 1 }}>
+                  <Input
+                    disabled
+                    value={formCitaDescripciones.descripcion_no_cliente}
+                    type="text"
+                    name="cliente"
+                    id="cliente"
+                    style={{ fontSize: "0.8rem" }}
+                  />
+                  <Button size="sm" onClick={() => setClientesModal(true)} style={{ fontSize: "0.8rem" }}>
+                    Buscar
+                  </Button>
+                </InputGroup>
               </FormGroup>
-            </Col>
-            <Col xs="6">
-              <InputGroup size="sm" style={{ flexGrow: 1 }}>
-                <Label for="cliente" style={{ marginRight: "5px", fontSize: "0.8rem" }}>
-                  Observacion:
-                </Label>
-                <Input disabled value={formCita.observacion} type="text" name="observacion" id="observacion" style={{ fontSize: "0.8rem" }} />
-              </InputGroup>
             </Col>
 
             <Col xs="6" style={{ display: "flex", alignItems: "center", marginBottom: "1px" }}>

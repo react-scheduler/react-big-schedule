@@ -349,3 +349,7 @@ table.scheduler-table tr:last-child td {
   font-size: 24px;
   cursor: pointer;
 }
+
+.swal2-popup {
+  z-index: 10000;
+}
