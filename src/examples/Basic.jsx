@@ -96,9 +96,6 @@ function Basic() {
   });
   const [datosParametrosCitaTemp, setDatosParametrosCitaTemp] = useState({});
   const [datosParametrosFechaCitaTemp, setDatosParametrosFechaCitaTemp] = useState({});
-  useEffect(() => {
-    console.log({ dataTrabajadores });
-  }, [dataTrabajadores]);
 
   function validarContraseña() {
     return new Promise((resolve, reject) => {
@@ -150,6 +147,7 @@ function Basic() {
         });
     });
   }
+  const [formCitasObservaciones2, setFormCitasObservaciones2] = useState("");
   const [formServicio, setFormServicio] = useState({
     id_Cita: 0,
     idServicio: 0,
@@ -163,9 +161,9 @@ function Basic() {
   });
 
   useEffect(() => {
+    console.log("ESTAMOS");
     if (datosParametrosCitaTemp.no_cliente) {
       putEditarCita();
-      console.log({ datosParametrosCitaTemp });
     }
   }, [datosParametrosCitaTemp]);
 
@@ -270,16 +268,19 @@ function Basic() {
       });
   };
   useEffect(() => {
+    console.log("ESTAMOS");
     fetchData();
     getCitasDia();
   }, []);
   useEffect(() => {
+    console.log("ESTAMOS");
     getCitasDia();
   }, [tipoCita, datosParametros.fecha]);
 
   const [state, dispatch] = useReducer(reducer, initialState);
   const [inicializarAgenda, setinicializarAgenda] = useState(false);
   useEffect(() => {
+    console.log("ESTAMOS");
     schedulerData = new SchedulerData(datosParametros.fecha, ViewType.Day, false, false, {
       besidesWidth: window.innerWidth <= 1600 ? 100 : 350,
       dayMaxEvents: 99,
@@ -953,6 +954,7 @@ function Basic() {
   const [valido, setValido] = useState(false);
   const [totalOperacionesPuntos, settotalOperacionesPuntos] = useState(0);
   useEffect(() => {
+    console.log("ESTAMOS");
     const total = dataOperaciones.reduce((a, b) => a + b.precio, 0);
     if (total <= 0) return;
     settotalOperacionesPuntos(total);
@@ -1030,16 +1032,14 @@ function Basic() {
   const idSuc = new URLSearchParams(window.location.search).get("idSuc");
   const minDateTime = setHours(startOfToday(), 8);
 
-  useEffect(() => {
-    // if (dataProductos.length > 0) setProductosModal(true);
-  }, [dataProductos]);
-
   const maxDateTime = setHours(startOfToday(), 20);
   useEffect(() => {
+    console.log("actualizando.........");
     setFormCita({ ...formCita, fecha: fecha, no_estilista: idUser, sucursal: idSuc });
   }, [idUser, fecha, idRec, idSuc]);
 
   useEffect(() => {
+    console.log("ESTAMOS");
     getClientes();
     getEstilistas();
     getProductos();
@@ -1047,6 +1047,7 @@ function Basic() {
   }, []);
 
   useEffect(() => {
+    console.log("actualizando.........");
     if (formCita.no_cliente == 0) return;
     getClientesePuntos();
     getOperaciones();
@@ -1056,6 +1057,7 @@ function Basic() {
     });
   }, [formCita.no_cliente]);
   useEffect(() => {
+    console.log("ESTAMOS");
     getOperaciones();
   }, [formPuntosObservaciones]);
 
@@ -1210,6 +1212,7 @@ function Basic() {
   }, [dataCuentasPendientes]);
 
   useEffect(() => {
+    console.log("ESTAMOS");
     if (dataClientesSaldosPendientes.length > 0 && dataClientesSaldosPendientes[0].saldo > 0) {
       Swal.fire({
         title: "Cuenta pendiente",
@@ -1218,9 +1221,7 @@ function Basic() {
       });
     }
   }, [dataClientesSaldosPendientes]);
-  useEffect(() => {
-    console.log("dataCitasServicios ha cambiado:", dataCitasServicios);
-  }, [dataCitasServicios]);
+
   useEffect(() => {
     console.log("EJECUTANDOSE");
     const calculateTotals = () => {
@@ -2237,7 +2238,7 @@ function Basic() {
               cantidad: formCitaServicio.cantidad ? formCitaServicio.cantidad : 1,
               tiempo: tiempo,
               precio: precio,
-              observaciones: formCita.observacion,
+              observaciones: formCita.observacion ? formCita.observacion : "",
               usuarioAlta: formCita.no_estilista,
               usuarioCambio: formCita.no_estilista,
               sucursal: 2,
@@ -3142,11 +3143,12 @@ function Basic() {
                     <Label for="cliente" style={{ marginRight: "5px", fontSize: "0.8rem" }}>
                       Observacion:
                     </Label>
+
                     <Input
-                      value={formCita.observacion}
-                      onChange={(event) => {
-                        setFormCita((prev) => ({ ...prev, observacion: event.target.value }));
-                      }}
+                      // onChange={(event) => {
+                      //   setFormCita((prev) => ({ ...prev, observacion: event.target.value }));
+                      // }}
+                      onChange={(e) => setFormCitasObservaciones2(e.target.value)}
                       type="text"
                       name="observacion"
                       id="observacion"
