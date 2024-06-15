@@ -23,6 +23,7 @@ import {
   FormGroup,
   InputGroup,
   ButtonGroup,
+  InputGroupText,
 } from "reactstrap";
 import Swal from "sweetalert2";
 import "../css/style.css";
@@ -43,11 +44,12 @@ import { useVentasOperaciones } from "../functions/crearCita/useVentasOperacione
 import { useSucursales } from "../functions/crearCita/useSucursales";
 import { useNominaTrabajadores } from "../functions/crearCita/useNominaTrabajadores";
 import { useDetalleCitasObservaciones } from "../functions/crearCita/useDetalleCitasObservaciones";
-import { AiFillDelete, AiFillEdit, AiOutlineClose } from "react-icons/ai";
+import { AiFillDelete, AiFillEdit, AiOutlineClose, AiOutlineSearch, AiOutlineReload } from "react-icons/ai";
 import { useObservaciones } from "../functions/crearCita/useObservaciones";
 import { styled } from "@mui/material/styles";
 import { Box, Typography, Modal } from "@mui/material";
 import Draggable from "react-draggable";
+import debounce from "lodash.debounce";
 
 let schedulerData;
 
@@ -93,9 +95,18 @@ function Basic() {
     idRec: 0,
     idSuc: 0,
     idCliente: 0,
+    nombreCliente: "",
+    nombreEstilista: "",
   });
   const [datosParametrosCitaTemp, setDatosParametrosCitaTemp] = useState({});
   const [datosParametrosFechaCitaTemp, setDatosParametrosFechaCitaTemp] = useState({});
+  const handleChangeObservaciones = (e) => {
+    const debouncedOnChange = debounce(() => {
+      setFormCitasObservaciones2(e.target.value);
+    }, 300); // 300 milisegundos de retraso
+
+    debouncedOnChange();
+  };
 
   function validarContraseña() {
     return new Promise((resolve, reject) => {
@@ -173,12 +184,14 @@ function Basic() {
 
   const getCitas = async (fecha) => {
     try {
-      const response = await peinadosApi.get(`/DetalleAgendaSelv7?fecha=${format(fecha ? fecha : datosParametros.fecha, "yyyyMMdd")}&suc=1`);
+      const response = await peinadosApi.get(
+        `/DetalleAgendaSelv13?fecha=${format(fecha ? fecha : datosParametros.fecha, "yyyyMMdd")}&suc=1&nomberEstilista=${""}&nombreCliente=${""}`
+      );
       setArregloCita(
         response.data.map((item) => {
+          console.log(item);
           let hora1 = new Date(item.hora1);
           let hora2 = new Date(item.hora2);
-          let fechaBase = new Date(item.fecha);
           hora1.setFullYear(new Date(item.fecha).getFullYear(), new Date(item.fecha).getMonth(), new Date(item.fecha).getDate());
           hora2.setFullYear(new Date(item.fecha).getFullYear(), new Date(item.fecha).getMonth(), new Date(item.fecha).getDate());
           return {
@@ -188,10 +201,11 @@ function Basic() {
             resourceId: item.no_estilista,
             title: "",
             type: 2,
-            // bgColor: "red",
             bgColor:
               item.estadoCita == 1
                 ? "#F8C471" // Sandy Orange
+                : item.esDomicilio == true
+                ? "#DDA0DD" // Plum
                 : item.estadoCita == 2
                 ? "#AFEEEE" // Pale Turquoise
                 : item.estadoCita == 3
@@ -222,6 +236,8 @@ function Basic() {
           bgColor:
             item.estadoCita == 1
               ? "#F8C471" // Sandy Orange
+              : item.esDomicilio == true
+              ? "#DDA0DD" // Plum
               : item.estadoCita == 2
               ? "#AFEEEE" // Pale Turquoise
               : item.estadoCita == 3
@@ -258,29 +274,29 @@ function Basic() {
         console.log(err);
       });
     getCitas();
-    console.log(getCitas());
   };
-  const getCitasDia = () => {
+  const getCitasDia = (elimina) => {
     peinadosApi
-      .get(`/ClientesCitasDia5?suc=1&cliente=0&fecha=${format(datosParametros.fecha, "yyyyMMdd")}&tipoCita=${tipoCita ? tipoCita : "%"}`)
+      .get(
+        `/ClientesCitasDia6?suc=1&cliente=0&fecha=${format(datosParametros.fecha, "yyyyMMdd")}&tipoCita=${
+          tipoCita ? tipoCita : "%"
+        }&nombreEstilista=${elimina ? "" : datosParametros.nombreEstilista}&nombreCliente=${elimina ? "" : datosParametros.nombreCliente}`
+      )
       .then((response) => {
         setArregloCitaDia(response.data);
       });
   };
   useEffect(() => {
-    console.log("ESTAMOS");
     fetchData();
     getCitasDia();
   }, []);
   useEffect(() => {
-    console.log("ESTAMOS");
     getCitasDia();
   }, [tipoCita, datosParametros.fecha]);
 
   const [state, dispatch] = useReducer(reducer, initialState);
   const [inicializarAgenda, setinicializarAgenda] = useState(false);
   useEffect(() => {
-    console.log("ESTAMOS");
     schedulerData = new SchedulerData(datosParametros.fecha, ViewType.Day, false, false, {
       besidesWidth: window.innerWidth <= 1600 ? 100 : 350,
       dayMaxEvents: 99,
@@ -292,7 +308,6 @@ function Basic() {
       eventItemPopoverTrigger: "click",
       schedulerContentHeight: "100%",
     });
-
     schedulerData.setSchedulerLocale(dayjsLocale);
     schedulerData.setCalendarPopoverLocale(antdLocale);
     schedulerData.setResources(arreglo);
@@ -306,7 +321,6 @@ function Basic() {
         return () => dispatch({ type: "REINITIALIZE" });
       }, 1500);
     }
-    console.log(arregloCita);
   }, [arreglo, arregloCita]);
 
   const actualizarAgenda = (response, schedulerData) => {
@@ -450,7 +464,7 @@ function Basic() {
     console.log(start);
     console.log(slotId);
 
-    if ((event.estadoCita = 2 && slotId != event.no_estilista)) {
+    if ((event.cia == 2 || event.estadoCita == 2) && slotId != event.no_estilista) {
       Swal.fire({
         icon: "error",
         title: "Error",
@@ -545,6 +559,7 @@ function Basic() {
 
   const columns = [
     { field: "id", headerName: "Clave", width: 70, align: "center", sortable: false }, // Esta es la columna del ID único
+    { field: "d_stilista", headerName: "Estilista", width: 120, align: "center", sortable: false }, // Esta es la columna del ID único
     {
       field: "stao_estilista",
       headerName: "Modo",
@@ -692,7 +707,7 @@ function Basic() {
           registrada: true,
           observacion: 0,
           user_uc: 0,
-          estatus: datosParametrosCitaTemp.type,
+          estatus: datosParametrosCitaTemp.cia,
         },
       })
       .then((response) => {
@@ -1565,7 +1580,7 @@ function Basic() {
                       stao_estilista: 1,
                       nota_canc: 0,
                       registrada: true,
-                      observacion: formCita.observacion,
+                      observacion: formCitasObservaciones2,
                       user_uc: 0,
                       estatus: formCita.estatusAsignado ? 3 : formCita.estatusRequerido ? 2 : 1,
                       servDomicilio: formCita.esServicioDomicilio == false ? 0 : 1,
@@ -1609,7 +1624,7 @@ function Basic() {
               stao_estilista: 1,
               nota_canc: 0,
               registrada: true,
-              observacion: formCita.observacion,
+              observacion: formCitasObservaciones2,
               user_uc: 0,
               estatus: formCita.estatusAsignado ? 3 : formCita.estatusRequerido ? 2 : 1,
               servDomicilio: formCita.esServicioDomicilio == false ? 0 : 1,
@@ -2238,7 +2253,7 @@ function Basic() {
               cantidad: formCitaServicio.cantidad ? formCitaServicio.cantidad : 1,
               tiempo: tiempo,
               precio: precio,
-              observaciones: formCita.observacion ? formCita.observacion : "",
+              observaciones: formCitasObservaciones2 ? formCitasObservaciones2 : "",
               usuarioAlta: formCita.no_estilista,
               usuarioCambio: formCita.no_estilista,
               sucursal: 2,
@@ -2341,7 +2356,7 @@ function Basic() {
     } else {
       if (resHorario) {
         console.log(resHorario);
-        if (resHorario.data[0].clave_empleado == "Cita sin restricciones") {
+        if (resHorario.data[0].clave_empleado == "Cita sin restricciones" || resHorario.data[0].clave_empleado == "Prosiga") {
           console.log(0);
         } else {
           const isConfirmed = await Swal.fire({
@@ -2368,15 +2383,47 @@ function Basic() {
         </div>
         <Row>
           <Col>
-            <Label>Tipo de cita:</Label>
-          </Col>
-          <Col>
-            <Input type="select" size={"sm"} value={tipoCita} onChange={(e) => setTipoCita(e.target.value)}>
-              <option value={"%"}>Todos</option>
-              <option value={"1"}>Cita</option>
-              <option value={"2"}>Servicio</option>
-              <option value={"3"}>Pagado</option>
-            </Input>
+            <InputGroup style={{ marginBottom: "5px" }}>
+              <Label style={{ fontSize: "0.8rem" }}>Tipo de cita:</Label>
+              <Input style={{ fontSize: "0.8rem" }} type="select" size={"sm"} value={tipoCita} onChange={(e) => setTipoCita(e.target.value)}>
+                <option value={"%"}>Todos</option>
+                <option value={"1"}>Cita</option>
+                <option value={"2"}>Servicio</option>
+                <option value={"3"}>Pagado</option>
+              </Input>
+            </InputGroup>
+            <div>
+              <InputGroup style={{ marginBottom: "5px" }}>
+                <Label style={{ fontSize: "0.8rem" }}>Nombre cliente:</Label>
+                <Input
+                  style={{ fontSize: "0.8rem" }}
+                  onChange={(v) => setDatosParametros({ ...datosParametros, nombreCliente: v.target.value })}
+                  size={"sm"}
+                  value={datosParametros.nombreCliente}
+                ></Input>
+              </InputGroup>
+              <InputGroup style={{ marginBottom: "5px" }}>
+                <Label style={{ fontSize: "0.8rem" }}>Nombre estilista:</Label>
+                <Input
+                  style={{ fontSize: "0.8rem" }}
+                  onChange={(v) => setDatosParametros({ ...datosParametros, nombreEstilista: v.target.value })}
+                  size={"sm"}
+                  value={datosParametros.nombreEstilista}
+                ></Input>
+                <Button color="primary" size="sm">
+                  <AiOutlineSearch size={19} onClick={() => getCitasDia()} />
+                </Button>
+                <Button color="secondary" size="sm">
+                  <AiOutlineReload
+                    size={19}
+                    onClick={() => {
+                      setDatosParametros({ ...datosParametros, nombreCliente: "", nombreEstilista: "" });
+                      getCitasDia(1);
+                    }}
+                  />
+                </Button>
+              </InputGroup>
+            </div>
           </Col>
         </Row>
         <div style={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center" }}>
@@ -2388,6 +2435,7 @@ function Basic() {
             {format(new Date(datosParametros.fecha), "EEEE", { locale: es })}
           </h5>
         </div>
+
         <div>
           <div></div>
           <Button
@@ -2483,16 +2531,29 @@ function Basic() {
             <Button
               style={{ marginBottom: "10px" }}
               onClick={() => {
-                // editCita2(event);
-                console.log(event);
-                putDetalleCitasServiciosUpd4(0, event.sucursal, event.idCita, 0, event.no_estilista, 0, 0, 1, 0, 0, new date());
+                putDetalleCitasServiciosUpd4(0, event.sucursal, event.idCita, 0, event.no_estilista, 0, 0, 1, 0, 0, new Date());
               }}
             >
               Cancelar cita
             </Button>
             <Button style={{ marginBottom: "10px" }}> Liberar cita </Button>
             <Button style={{ marginBottom: "10px" }}> Alta de servicio </Button>
-            <Button style={{ marginBottom: "10px" }}> Cambio modo de cita </Button>
+            <Button
+              onClick={() => {
+                handleOpenNewWindowEdit({
+                  idCita: event.idCita,
+                  idUser: event.no_estilista,
+                  idCliente: event.no_cliente,
+                  fecha: event.hora1,
+                  flag: 1,
+                  estadoCita: event.estadoCita,
+                });
+              }}
+              style={{ marginBottom: "10px" }}
+            >
+              {" "}
+              Cambio modo de cita{" "}
+            </Button>
           </div>
         </div>
       )}
@@ -2643,9 +2704,7 @@ function Basic() {
             <Col md={1}>
               <Label>Cliente:</Label>
             </Col>
-            <Col md={5}>
-              <Input disabled placeholder="cveCliente" value={formCita.no_cliente ? formCita.no_cliente : ""}></Input>
-            </Col>
+
             <Col md={6}>
               <Input
                 disabled
@@ -3148,7 +3207,7 @@ function Basic() {
                       // onChange={(event) => {
                       //   setFormCita((prev) => ({ ...prev, observacion: event.target.value }));
                       // }}
-                      onChange={(e) => setFormCitasObservaciones2(e.target.value)}
+                      onChange={handleChangeObservaciones}
                       type="text"
                       name="observacion"
                       id="observacion"
@@ -3273,7 +3332,7 @@ function Basic() {
                     </Label>
                     <LocalizationProvider dateAdapter={AdapterDateFns}>
                       <TimePicker
-                        timeSteps={15}
+                        timeSteps={{ minutes: 15 }}
                         slotProps={{ textField: { size: "small" } }}
                         value={formCita.fecha ? new Date(decodeURIComponent(formCita.fecha)) : null}
                         // value={formCita.fecha ? new Date(formCita.fecha).toTimeString().substring(0, 5) : null}

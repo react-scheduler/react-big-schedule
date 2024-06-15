@@ -1,21 +1,15 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { DataGrid } from "@mui/x-data-grid";
-import { Table, Button, Modal, ModalHeader, ModalBody, ModalFooter, Input, FormGroup, Label, Col, Row, InputGroup, Container } from "reactstrap";
+import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Input, FormGroup, Label, Col, Row, InputGroup, Container } from "reactstrap";
 import { peinadosApi } from "../api/peinadosApi";
-import { estilistas, productos } from "../data/Data";
 import { format } from "date-fns-tz";
 import { MdOutlineDelete, MdFolderOpen, MdCalendarMonth } from "react-icons/md";
 import Swal from "sweetalert2";
 import { MaterialReactTable } from "material-react-table";
+import { useListaEspera } from "../functions/listaEspera/useListaEspera";
 
 function ListaEspera() {
   const [openListaEspera, setOpenListaEspera] = useState(false);
-  const columns = [
-    { field: "clave", headerName: "Clave", width: 70 },
-    { field: "descripcion", headerName: "Descripción", width: 130 },
-    { field: "precio", headerName: "Precio", width: 130 },
-    { field: "tiempo", headerName: "Tiempo", width: 130 },
-  ];
 
   const rows = [
     {
@@ -57,7 +51,6 @@ function ListaEspera() {
   const [estilistasModal, setEstilistasModal] = useState(false);
 
   const [dataClientes, setDataClientes] = useState({});
-  const [dataListaEspera, setDataListaEspera] = useState({});
   const [dataEstilistas, setDataEstilistas] = useState({});
   const [dataProductos, setDataProductos] = useState({});
 
@@ -67,7 +60,7 @@ function ListaEspera() {
     no_cliente: "",
     descripcion_no_cliente: "",
     fecha: new Date(),
-    clave_prod: "",
+    clave_prod: 0,
     descripcion_clave_prod: "",
     hora_estimada: 0,
     atendido: 0,
@@ -77,21 +70,17 @@ function ListaEspera() {
     usuario_cita: 0,
     usuario_servicio: 0,
     usuario_elimina: 0,
+    precio: 0,
   });
   useEffect(() => {
     getClientes();
-    getListaEspera();
     getEstilistas();
     getProductos();
   }, []);
+  const { dataListaEspera, fetchListaEspera } = useListaEspera({ id: 0, sucursal: 1 });
   const getClientes = () => {
     peinadosApi.get("/clientes?id=0").then((response) => {
       setDataClientes(response.data);
-    });
-  };
-  const getListaEspera = () => {
-    peinadosApi.get("/ListaEspera?id=0").then((response) => {
-      setDataListaEspera(response.data);
     });
   };
 
@@ -147,7 +136,56 @@ function ListaEspera() {
       size: 100,
     },
   ]);
-
+  function validarContraseña() {
+    return new Promise((resolve, reject) => {
+      Swal.fire({
+        title: "Ingrese su contraseña",
+        input: "password",
+        inputAttributes: {
+          autocapitalize: "off",
+        },
+        customClass: {
+          popup: "swal2-popup", // Agrega una clase personalizada al cuadro de diálogo
+        },
+        showCancelButton: true,
+        confirmButtonText: "Confirmar",
+        showLoaderOnConfirm: true,
+        preConfirm: (contraseña) => {
+          // Aquí puedes agregar tu lógica de validación de contraseña
+          // Por ejemplo, podrías comparar la contraseña ingresada con una contraseña almacenada o realizar una llamada a una API para verificar la contraseña
+          return new Promise((resolve) => {
+            setTimeout(() => {
+              // Supongamos que la contraseña es "password"
+              if (contraseña === "1234") {
+                resolve();
+              } else {
+                Swal.fire({
+                  icon: "error",
+                  title: "Contraseña incorrecta",
+                  text: "Por favor, ingrese una contraseña correcta.",
+                  confirmButtonText: "Entendido",
+                }).then((isConfirmed) => {
+                  if (isConfirmed.isConfirmed) Swal.close();
+                });
+              }
+            }, 2000);
+          });
+        },
+        allowOutsideClick: () => !Swal.isLoading(),
+      })
+        .then((result) => {
+          if (result.isConfirmed) {
+            resolve(true); // Resuelve la promesa con valor true si la contraseña es correcta
+          } else {
+            resolve(false); // Resuelve la promesa con valor false si el usuario cancela la entrada de contraseña
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+          resolve(false); // Resuelve la promesa con valor false si ocurre algún error durante la validación de la contraseña
+        });
+    });
+  }
   const columnsClientes = [
     { field: "nombre", headerName: "nombre", width: 250 },
     { field: "telefono", headerName: "telefono", width: 130 },
@@ -181,7 +219,8 @@ function ListaEspera() {
               ...formClienteEspera,
               tiempo_servicio: params.row.tiempox,
               descripcion_clave_prod: params.row.descripcion,
-              clave_prod: params.row.clave_prod,
+              clave_prod: params.row.id,
+              precio: params.row.precio_lista,
             });
             console.log(params.row);
             setProductosModal(false);
@@ -208,10 +247,40 @@ function ListaEspera() {
       </div>
     );
   }
+  const listaEsperaPost = async (idListaEspera, tipo) => {
+    const contraseñaValidada = await validarContraseña();
+    if (contraseñaValidada) {
+      peinadosApi
+        .post("/sp_listaEsperaAdd3", null, {
+          params: {
+            sucursal: formClienteEspera.sucursal ? formClienteEspera.sucursal : 1,
+            idListaEspera: idListaEspera,
+            tipo: tipo,
+          },
+        })
+        .then((response) => {
+          Swal.fire({
+            icon: "success",
+            title: "Listo!",
+            text: "Se creo exitosamente.",
+            confirmButtonText: "Entendido",
+          });
+          fetchListaEspera();
+          console.log(response);
+        });
+    }
+  };
+
   function renderDeleteListaEspera(params) {
     return (
       <div>
-        <MdCalendarMonth title="C" size={25} />
+        <MdCalendarMonth
+          onClick={() => {
+            listaEsperaPost(params.row.id, 1);
+          }}
+          title="C"
+          size={25}
+        />
         <MdFolderOpen
           title="S"
           size={25}
@@ -239,7 +308,7 @@ function ListaEspera() {
                     text: "Registro eliminado con éxito",
                     confirmButtonColor: "#3085d6",
                   });
-                  getListaEspera();
+                  fetchListaEspera();
                   // getDescuento();
                 });
               }
@@ -276,8 +345,8 @@ function ListaEspera() {
       renderCell: (params) => <p>{format(new Date(params.row.fecha), "p")}</p>,
     },
     { field: "nombreCompleto", headerName: "Nombre completo", width: 250 },
-    { field: "claveEstilista", headerName: "Clave estilista", width: 130 },
-    { field: "descripcion", headerName: "Servicio", width: 130, renderCell: (params) => <p>{params.row.descripcion}</p> },
+    { field: "descripcion", headerName: "Servicio", width: 130, renderCell: (params) => <p className="centered-cell">{params.row.descripcion}</p> },
+    { field: "tiempo_servicio", headerName: "Tiempo", width: 130 },
     {
       field: "hora_estimada",
       headerName: "Hora estimada",
@@ -308,61 +377,22 @@ function ListaEspera() {
           hora_estimada: formClienteEspera.hora_estimada,
           atendido: 1,
           estilista: formClienteEspera.estilista,
-          tiempo_servicio: 0,
+          tiempo_servicio: formClienteEspera.tiempo_servicio,
           usuario_registra: 1,
           usuario_cita: formClienteEspera.no_cliente,
           usuario_servicio: 0,
           usuario_elimina: 0,
+          precio: formClienteEspera.precio,
         },
       });
     }
-    alert("Lista de espera creado con éxito");
-    getListaEspera();
+    Swal.fire({
+      icon: "success",
+      text: "Lista de espera creado con información",
+    });
+    fetchListaEspera();
   };
-  const postCrearCita = async () => {
-    let fechaActual = new Date();
-    // Extrae el año, mes y día
-    let año = fechaActual.getFullYear();
-    let mes = fechaActual.getMonth(); // Nota: getMonth() devuelve un valor de 0 a 11, donde 0 es enero y 11 es diciembre
-    let día = fechaActual.getDate();
-    let fechaSinHora = new Date(año, mes, día);
 
-    if (formClienteEspera == "2") {
-      alert("Faltan por ingresar datos favor de verificar");
-    } else {
-      await peinadosApi
-        .post("/DetalleCitas", null, {
-          params: {
-            cia: 1,
-            sucursal: 1,
-            no_estilista: "formCita",
-            no_cliente: "formCita",
-            dia_cita: "formCita",
-            hora_cita: "formCita",
-            fecha: fechaSinHora,
-            tiempo: 50,
-            user: "formCita",
-            importe: 0,
-            cancelada: false,
-            stao_estilista: 1,
-            nota_canc: 0,
-            registrada: true,
-            observacion: 0,
-            user_uc: 0,
-            estatus: formClienteEspera == "2" ? 3 : formClienteEspera == "3" ? 2 : 4,
-          },
-        })
-        .then((response) => {
-          // setFormCitaServicio({ ...formCitaServicio, idCita: response.data.mensaje2 });
-          // setOpen(true);
-          // setAgregarServicios(true);
-          alert("Cita creada con éxito");
-        })
-        .catch((error) => {
-          alert(`Hubo un error, ${error}`);
-        });
-    }
-  };
   return (
     <div>
       <Container>

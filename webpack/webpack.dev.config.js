@@ -10,8 +10,8 @@ module.exports = {
   entry: "./src/examples/index.jsx",
   output: {
     path: path.resolve(__dirname, "..", "dist"),
-    // filename: "bundle.js",
-    filename: "static/js/[name].js",
+    filename: "bundle.js",
+    // filename: "static/js/[name].js",
   },
   module: {
     rules: [
@@ -44,8 +44,8 @@ module.exports = {
     minimize: true,
     minimizer: [new TerserPlugin()],
 
-    splitChunks: {
-      chunks: "all",
-    },
+    // splitChunks: {
+    //   chunks: "all",
+    // },
   },
 };
