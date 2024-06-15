@@ -116,7 +116,7 @@ function EventItemPopover({
           <Col>
             <p className="header2-text">Cliente: {dataPuntosporCliente?.nombre}</p>
             <p className="header2-text">Servicios: {dataPuntosporCliente?.descripcion}</p>
-            <p className="header2-text">Observaciones: {dataPuntosporCliente?.observaciones}</p>
+            <p className="header2-text">Observaciones de la cita: {dataPuntosporCliente?.observaciones}</p>
           </Col>
           <Col span={22}>
             {showViewEvent && renderViewEvent(viewEventText, viewEventClick)}

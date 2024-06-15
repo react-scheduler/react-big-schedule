@@ -460,11 +460,7 @@ function Basic() {
   };
 
   const moveEvent = (schedulerData, event, slotId, slotName, start, end) => {
-    console.log(event);
-    console.log(start);
-    console.log(slotId);
-
-    if ((event.cia == 2 || event.estadoCita == 2) && slotId != event.no_estilista) {
+    if ((event.estadoCita == 2) && slotId != event.no_estilista) {
       Swal.fire({
         icon: "error",
         title: "Error",
@@ -475,6 +471,7 @@ function Basic() {
 
     const nombreAgendaNuevo = dataTrabajadores.find((item) => item.id === slotId).nombre_agenda;
     const nombreAgendaAnterior = dataTrabajadores.find((item) => item.id === event.no_estilista).nombre_agenda;
+
     Swal.fire({
       title: "Cambio de Cita",
       html: `
@@ -488,7 +485,6 @@ function Basic() {
       cancelButtonText: "No",
     }).then((result) => {
       if (result.isConfirmed) {
-        console.log(start);
         setDatosParametrosFechaCitaTemp({
           fecha: start,
           usuarioEstilista: slotId,
@@ -707,7 +703,7 @@ function Basic() {
           registrada: true,
           observacion: 0,
           user_uc: 0,
-          estatus: datosParametrosCitaTemp.cia,
+          estatus: datosParametrosCitaTemp.modoCita,
         },
       })
       .then((response) => {
@@ -1786,15 +1782,15 @@ function Basic() {
       ),
       className: "centered-cell", // Agrega esta línea para aplicar la clase CSS
     },
-    {
-      accessorKey: "precioPromocion",
-      header: "Precio",
-      size: 100,
-      Cell: ({ cell }) => (
-        <p className="centered-cell">{Number(cell.row.original.precioPromocion).toLocaleString("es-MX", { style: "currency", currency: "MXN" })}</p>
-      ),
-      className: "centered-cell", // Agrega esta línea para aplicar la clase CSS
-    },
+    // {
+    //   accessorKey: "precioPromocion",
+    //   header: "Precio",
+    //   size: 100,
+    //   Cell: ({ cell }) => (
+    //     <p className="centered-cell">{Number(cell.row.original.precioPromocion).toLocaleString("es-MX", { style: "currency", currency: "MXN" })}</p>
+    //   ),
+    //   className: "centered-cell", // Agrega esta línea para aplicar la clase CSS
+    // },
   ]);
 
   const columnsProductosMRTEdicion = useMemo(() => [
