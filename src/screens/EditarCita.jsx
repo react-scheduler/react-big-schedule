@@ -108,7 +108,7 @@ function EditarCita() {
   const idCita = new URLSearchParams(window.location.search).get("idCita");
   const idCliente = new URLSearchParams(window.location.search).get("idCliente");
   const estadoCita = new URLSearchParams(window.location.search).get("estadoCita");
-  const cambioCitaModo = new URLSearchParams(window.location.search).get("cambioCitaModo");
+  const cambioCitaModo = new URLSearchParams(window.location.search).get("flag");
 
   const minDateTime = setHours(startOfToday(), 8);
 
@@ -122,6 +122,7 @@ function EditarCita() {
       sucursal: idSuc,
       no_cliente: idCliente,
       id: idCita,
+      cambioCitaModo: cambioCitaModo,
       estatusRequerido: estadoCita == 2 ? true : false,
       estatusAsignado: estadoCita == 3 ? true : false,
       esServicioDomicilio: estadoCita == 5 ? true : false,
@@ -133,11 +134,12 @@ function EditarCita() {
 
   useEffect(() => {
     if (dataClientes.length > 0) {
-      const seleccionarNombre = dataClientes.find((cliente) => cliente.id == idCliente);
+      console.log(formCita.no_cliente);
+      const seleccionarNombre = dataClientes.find((cliente) => cliente.id == formCita.no_cliente);
       setFormCitaDescripciones({ ...formCitaDescripciones, descripcion_no_cliente: seleccionarNombre?.nombre });
       setLoadingModal(false);
     }
-  }, [dataClientes, idCliente]);
+  }, [dataClientes, formCita.no_cliente]);
 
   useEffect(() => {
     setLoadingModal(true);
@@ -151,7 +153,7 @@ function EditarCita() {
 
   useEffect(() => {
     getClientesePuntos();
-    getOperaciones();
+    // getOperaciones();
     getDetalleCitasServicios();
   }, [formCita.no_cliente]);
 
@@ -196,7 +198,9 @@ function EditarCita() {
   const { dataCuentasPendientes } = useDetalleCuentaPendietes({ no_cliente: formCita.no_cliente });
   const { dataClientesSaldosPendientes } = useDetalleSaldosPendientes({ no_cliente: formCita.no_cliente });
 
-  const updateCita = () => {
+  const updateCita = async () => {
+    const contraseñaValidada = await validarContraseña();
+    if (!contraseñaValidada) return;
     let fechaActual = new Date(formCita.fecha);
     // Extrae el año, mes y día
     let año = fechaActual.getFullYear();
@@ -217,9 +221,10 @@ function EditarCita() {
           stao_estilista: 1,
           nota_canc: 0,
           registrada: false,
-          observacion: 1,
+          observacion: "",
           user_uc: 0,
-          estatus: formCita.estatusAsignado ? 3 : formCita.estatusRequerido ? 2 : 4,
+          estatus: formCita.cambioCitaModo && formCita.estatusAsignado ? 2 : formCita.cambioCitaModo && formCita.estatusRequerido ? 3 : 4,
+          // estatus: formCita.estatusAsignado ? 3 : formCita.estatusRequerido ? 2 : 4,
         },
       })
       .then((response) => {
@@ -274,6 +279,56 @@ function EditarCita() {
         });
       });
   };
+  function validarContraseña() {
+    return new Promise((resolve, reject) => {
+      Swal.fire({
+        title: "Ingrese su contraseña",
+        input: "password",
+        inputAttributes: {
+          autocapitalize: "off",
+        },
+        customClass: {
+          popup: "swal2-popup", // Agrega una clase personalizada al cuadro de diálogo
+        },
+        showCancelButton: true,
+        confirmButtonText: "Confirmar",
+        showLoaderOnConfirm: true,
+        preConfirm: (contraseña) => {
+          // Aquí puedes agregar tu lógica de validación de contraseña
+          // Por ejemplo, podrías comparar la contraseña ingresada con una contraseña almacenada o realizar una llamada a una API para verificar la contraseña
+          return new Promise((resolve) => {
+            setTimeout(() => {
+              // Supongamos que la contraseña es "password"
+              if (contraseña === "1234") {
+                resolve();
+              } else {
+                Swal.fire({
+                  icon: "error",
+                  title: "Contraseña incorrecta",
+                  text: "Por favor, ingrese una contraseña correcta.",
+                  confirmButtonText: "Entendido",
+                }).then((isConfirmed) => {
+                  if (isConfirmed.isConfirmed) Swal.close();
+                });
+              }
+            }, 2000);
+          });
+        },
+        allowOutsideClick: () => !Swal.isLoading(),
+      })
+        .then((result) => {
+          if (result.isConfirmed) {
+            resolve(true); // Resuelve la promesa con valor true si la contraseña es correcta
+          } else {
+            resolve(false); // Resuelve la promesa con valor false si el usuario cancela la entrada de contraseña
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+          resolve(false); // Resuelve la promesa con valor false si ocurre algún error durante la validación de la contraseña
+        });
+    });
+  }
   const [tempCitaServicio, setTempCitaServicio] = useState({});
   const columns = [
     {
@@ -690,8 +745,6 @@ function EditarCita() {
     <div>
       <Container>
         <h1>Cambio de cita</h1>
-        <br />
-        <br />
       </Container>
       <Container>
         <Row style={{ marginBottom: "10px" }}>
@@ -717,7 +770,16 @@ function EditarCita() {
         <Row style={{ marginBottom: "10px" }}>
           <InputGroup>
             <Label for="cliente">Cliente: </Label>
-            <Input bsSize="sm" disabled value={formCitaDescripciones.descripcion_no_cliente} type="text" name="cliente" id="cliente" size={"small"} />
+            <Input
+              style={{ fontSize: "0.8rem" }}
+              bsSize="sm"
+              disabled
+              value={formCitaDescripciones.descripcion_no_cliente}
+              type="text"
+              name="cliente"
+              id="cliente"
+              size={"small"}
+            />
           </InputGroup>
         </Row>
         <Row style={{ marginBottom: "10px" }}>
@@ -725,6 +787,7 @@ function EditarCita() {
             <InputGroup>
               <Label for="atiende">Atiende</Label>
               <Input
+                style={{ fontSize: "0.8rem" }}
                 disabled
                 type="select"
                 name="atiende"
@@ -749,7 +812,7 @@ function EditarCita() {
           <Col xs={6}>
             <InputGroup>
               <Label>Modo:</Label>
-              <Input disabled value={formCita.estatusRequerido ? "R" : "A"}></Input>
+              <Input style={{ fontSize: "0.8rem" }} disabled value={formCita.estatusRequerido ? "R" : "A"}></Input>
             </InputGroup>
           </Col>
         </Row>
@@ -757,7 +820,7 @@ function EditarCita() {
           <Col xs={6}>
             <InputGroup>
               <Label>Hora:</Label>
-              <Input disabled value={format(new Date(fecha), "hh:mm")}>
+              <Input style={{ fontSize: "0.8rem" }} disabled value={format(new Date(fecha), "hh:mm")}>
                 {" "}
               </Input>
             </InputGroup>
@@ -765,146 +828,24 @@ function EditarCita() {
           <Col xs={3}>
             <InputGroup>
               <Label>Tiempo:</Label>
-              <Input disabled value={60}>
+              <Input style={{ fontSize: "0.8rem" }} disabled value={60}>
                 {" "}
               </Input>
             </InputGroup>
           </Col>
         </Row>
-        {/* <FormGroup>
-          <Label for="observaciones">Observaciones</Label>
-          <Input
-            disabled
-            type="text"
-            name="observaciones"
-            id="observaciones"
-            value={formCita.observacion}
-            onChange={(valor) => {
-              setFormCita({ ...formCita, observacion: valor.target.value });
-            }}
-          />
-        </FormGroup>
-
-        <FormGroup check>
-          <Label check>
-            <Input
-              disabled
-              name="estatus"
-              type="checkbox"
-              checked={formCita.estatusRequerido}
-              onChange={(e) =>
-                setFormCita({
-                  ...formCita,
-                  estatusRequerido: formCita.estatusRequerido,
-                  estatusAsignado: formCita.estatusAsignado == true ? !formCita.estatusAsignado : null,
-                  esServicioDomicilio: formCita.esServicioDomicilio == true ? !formCita.esServicioDomicilio : null,
-                })
-              }
-            />{" "}
-            <strong>Requerido</strong>
-          </Label>
-        </FormGroup>
-        <FormGroup check>
-          <Label check>
-            <Input
-              disabled
-              name="estatus"
-              type="checkbox"
-              checked={formCita.estatusAsignado}
-              onChange={(e) =>
-                setFormCita({
-                  ...formCita,
-                  estatusAsignado: !formCita.estatusAsignado,
-                  estatusRequerido: formCita.estatusRequerido == true ? !formCita.estatusRequerido : null,
-                  esServicioDomicilio: formCita.esServicioDomicilio == true ? !formCita.esServicioDomicilio : null,
-                })
-              }
-            />{" "}
-            <strong>Asignado</strong>
-          </Label>
-        </FormGroup>
-
-        <FormGroup check>
-          <Label check>
-            <Input
-              disabled
-              type="checkbox"
-              checked={formCita.esServicioDomicilio}
-              onChange={(e) =>
-                setFormCita({
-                  ...formCita,
-                  esServicioDomicilio: !formCita.esServicioDomicilio,
-                  estatusAsignado: formCita.estatusAsignado == true ? !formCita.estatusAsignado : null,
-                  estatusRequerido: formCita.estatusRequerido == true ? !formCita.estatusRequerido : null,
-                })
-              }
-            />{" "}
-            <strong>Servicio a domicillio</strong>
-          </Label>
-        </FormGroup> */}
       </Container>
 
       {/* <hr /> */}
+
       <Container>
-        <h3>Cita modificada</h3>
-        <Row>
+        <Row style={{ marginBottom: "10px" }}>
           <Col>
-            <FormGroup>
-              <Label for="cliente">Cliente</Label>
-              <InputGroup addonType="append">
-                <Input
-                  bsSize="sm"
-                  disabled
-                  value={formCitaDescripciones.descripcion_no_cliente}
-                  type="text"
-                  name="cliente"
-                  id="cliente"
-                  size={"small"}
-                />
-                <Button size="sm" onClick={() => setClientesModal(true)}>
-                  Buscar
-                </Button>
-              </InputGroup>
-            </FormGroup>
-            <FormGroup>
-              <Label for="atiende">Atiende</Label>
-              <Input
-                type="select"
-                name="atiende"
-                id="atiende"
-                value={formCita.no_estilista}
-                onChange={(valor) => {
-                  setFormCita({ ...formCita, no_estilista: valor.target.value });
-                }}
-              >
-                <option value="0">Seleccione un estilista</option>
-
-                {dataEstilistas.map((opcion, index) => {
-                  return (
-                    <option value={opcion.id} key={index}>
-                      {opcion.estilista}
-                    </option>
-                  );
-                })}
-              </Input>
-            </FormGroup>
-            <FormGroup>
-              <Label for="observaciones">Observaciones</Label>
-              <Input
-                type="text"
-                name="observaciones"
-                id="observaciones"
-                value={formCita.observacion}
-                onChange={(valor) => {
-                  setFormCita({ ...formCita, observacion: valor.target.value });
-                }}
-              />
-            </FormGroup>
+            <h3>Cita modificada</h3>
           </Col>
-
           <Col>
-            <FormGroup>
-              <Label for="fecha">Fecha de la cita</Label>
+            <InputGroup>
+              <Label for="fecha">Fecha cita</Label>
               <LocalizationProvider dateAdapter={AdapterDateFns}>
                 <DateTimePicker
                   value={new Date(formCita.fecha)}
@@ -925,7 +866,124 @@ function EditarCita() {
                   }}
                 />
               </LocalizationProvider>
+            </InputGroup>
+          </Col>
+        </Row>
+        <Row>
+          <FormGroup>
+            <InputGroup addonType="append">
+              <Label for="cliente">Cliente</Label>
+              <Input
+                style={{ fontSize: "0.8rem" }}
+                bsSize="sm"
+                disabled
+                value={formCitaDescripciones.descripcion_no_cliente}
+                type="text"
+                name="cliente"
+                id="cliente"
+                size={"small"}
+              />
+              <Button size="sm" onClick={() => setClientesModal(true)}>
+                Buscar
+              </Button>
+            </InputGroup>
+          </FormGroup>
+        </Row>
+
+        <Row style={{ marginBottom: "10px" }}>
+          <Col>
+            <InputGroup>
+              <Label for="atiende">Atiende</Label>
+              <Input
+                disabled
+                style={{ fontSize: "0.8rem" }}
+                type="select"
+                name="atiende"
+                id="atiende"
+                value={formCita.no_estilista}
+                onChange={(valor) => {
+                  setFormCita({ ...formCita, no_estilista: valor.target.value });
+                }}
+              >
+                <option value="0">Seleccione un estilista</option>
+
+                {dataEstilistas.map((opcion, index) => {
+                  return (
+                    <option value={opcion.id} key={index}>
+                      {opcion.estilista}
+                    </option>
+                  );
+                })}
+              </Input>
+            </InputGroup>
+          </Col>
+          <Col>
+            {formCita.cambioCitaModo == 1 ? (
+              <InputGroup>
+                <Label>Modo:</Label>
+                <Input
+                  style={{ fontSize: "0.8rem", fontWeight: "bold", color: "red" }}
+                  disabled
+                  value={formCita.estatusRequerido ? "A" : "R"}
+                ></Input>
+              </InputGroup>
+            ) : null}
+          </Col>
+        </Row>
+        <Row style={{ marginBottom: "10px" }}>
+          <Col xs={6}>
+            <InputGroup>
+              <Label>Hora:</Label>
+              <Input style={{ fontSize: "0.8rem" }} disabled value={format(new Date(fecha), "hh:mm")}>
+                {" "}
+              </Input>
+            </InputGroup>
+          </Col>
+          <Col xs={3}>
+            <InputGroup>
+              <Label>Tiempo:</Label>
+              <Input style={{ fontSize: "0.8rem" }} disabled value={60}>
+                {" "}
+              </Input>
+            </InputGroup>
+          </Col>
+        </Row>
+
+        {/* <Col>
+            <FormGroup>
+              <Label for="cliente">Cliente</Label>
+              <InputGroup addonType="append">
+                <Input
+                  bsSize="sm"
+                  disabled
+                  value={formCitaDescripciones.descripcion_no_cliente}
+                  type="text"
+                  name="cliente"
+                  id="cliente"
+                  size={"small"}
+                />
+                <Button size="sm" onClick={() => setClientesModal(true)}>
+                  Buscar
+                </Button>
+              </InputGroup>
             </FormGroup>
+            
+            <FormGroup>
+              <Label for="observaciones">Observaciones</Label>
+              <Input
+                type="text"
+                name="observaciones"
+                id="observaciones"
+                value={formCita.observacion}
+                onChange={(valor) => {
+                  setFormCita({ ...formCita, observacion: valor.target.value });
+                }}
+              />
+            </FormGroup>
+          </Col>
+
+          <Col>
+            
 
             <FormGroup check>
               <Label check>
@@ -983,72 +1041,22 @@ function EditarCita() {
             <Button color={"success"} onClick={handleOpen}>
               Guardar
             </Button>
-          </Col>
-        </Row>
+          </Col> */}
       </Container>
-
+      <br />
       <hr />
-      <Container>
-        {agregarServicios ? (
-          <Box marginLeft={6} marginRight={6} gap={2} alignItems={"center"} justifyContent={"center"}>
-            {/* <Button color={"success"} onClick={() => setProductosModal(true)} variant="contained">
-              Ingresar servicios...
-            </Button> */}
-            <Box sx={{ width: "100%" }}>
-              <DataGrid
-                autoHeight
-                slots={{ noRowsOverlay: CustomNoRowsOverlay }}
-                sx={{ "--DataGrid-overlayHeight": "250px" }}
-                rows={dataCitasServicios}
-                columns={columns}
-              />
-            </Box>
-            {/* <Box marginLeft={6} marginRight={6} marginTop={1} gap={2} display="flex" justifyContent={"center"} alignItems={"center"}>
-              <Col>
-                <FormGroup>
-                  <Label for="total2">Total</Label>
-                  <Input type="text" name="total2" id="total2" disabled />
-                </FormGroup>
-
-                <FormGroup>
-                  <Label for="otros">Otros</Label>
-                  <Input type="text" name="otros" id="otros" disabled placeholder={formVentaTemporal.otros} />
-                </FormGroup>
-                <FormGroup>
-                  <Label for="total">Total</Label>
-                  <Input type="text" name="total" id="total" placeholder={formVentaTemporal.precioTotal} disabled />
-                </FormGroup>
-              </Col>
-              <Col>
-                <FormGroup>
-                  <Label for="minutos">Minutos</Label>
-                  <Input type="text" name="minutos" id="minutos" placeholder={formVentaTemporal.tiempo + " Min"} disabled />
-                </FormGroup>
-
-                <FormGroup>
-                  <Label for="horas">Horas</Label>
-                  <Input type="text" name="horas" id="horas" placeholder={(formVentaTemporal.tiempo / 60).toFixed(2) + " Hrs"} disabled />
-                </FormGroup>
-
-                <ButtonGroup style={{ marginBottom: "10%" }}>
-                  <Button
-                    color="primary"
-                    block
-                    onClick={() => {
-                      postCitaServicios();
-                    }}
-                  >
-                    Guardar
-                  </Button>
-                  </ButtonGroup>
-                  </Col> onClick={() => window.close()
-                </Box> */}
-            <Button style={{ marginVertical: "px" }} color="danger" block onClick={() => window.close()}>
-              Salir
-            </Button>
-          </Box>
-        ) : null}
+      <br />
+      <Container style={{ display: "flex", justifyContent: "flex-end" }}>
+        <ButtonGroup>
+          <Button style={{ marginRight: 5 }} color="success" onClick={() => updateCita()}>
+            Aceptar
+          </Button>
+          <Button color="danger" onClick={() => window.close()}>
+            Salir
+          </Button>
+        </ButtonGroup>
       </Container>
+
       <Modal open={clientesModal} onClose={() => setClientesModal(false)}>
         <Box sx={style}>
           <Typography variant="h4">Seleccionar cliente</Typography>
