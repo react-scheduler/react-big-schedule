@@ -7,7 +7,7 @@ export const useListaEspera = ({ id, sucursal }) => {
   const fetchListaEspera = async () => {
     console.log("AAAAAAAA");
     try {
-      const response = await peinadosApi.get(`/ListaEspera?id=${id}&sucursal=${sucursal}`);
+      const response = await peinadosApi.get(`/ListaEspera9?id=${id}&sucursal=${sucursal}`);
       setDataListaEspera(response.data);
       console.log("Fetched data:", response.data); // O usa response.data aquí
     } catch (error) {

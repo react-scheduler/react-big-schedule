@@ -47,9 +47,12 @@ function EventItemPopover({
   // http://cbinfo.no-ip.info:9018/sp_detalleCitasServiciosResumen_Result?idCita=2087
   const getEstilistas = () => {
     console.log({ eventItem });
-    peinadosApi.get(`/sp_detalleCitasServiciosResumen2?idCita=${eventItem.idCita}`).then((response) => {
-      setDataPuntosPorCliente(response.data[0]);
-    });
+
+    peinadosApi
+      .get(`/sp_detalleCitasServiciosResumen3?idCita=${eventItem.idCita}&cve_cliente=${eventItem.no_cliente}&estilista=${eventItem.no_estilista}`)
+      .then((response) => {
+        setDataPuntosPorCliente(response.data[0]);
+      });
   };
   useEffect(() => {
     getEstilistas();

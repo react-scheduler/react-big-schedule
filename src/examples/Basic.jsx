@@ -186,7 +186,7 @@ function Basic() {
   const getCitas = async (fecha) => {
     try {
       const response = await peinadosApi.get(
-        `/DetalleAgendaSelv13?fecha=${format(fecha ? fecha : datosParametros.fecha, "yyyyMMdd")}&suc=1&nomberEstilista=${""}&nombreCliente=${""}`
+        `/DetalleAgendaSelv15?fecha=${format(fecha ? fecha : datosParametros.fecha, "yyyyMMdd")}&suc=1&nomberEstilista=${"%"}&nombreCliente=${"%"}`
       );
       setArregloCita(
         response.data.map((item) => {
@@ -392,6 +392,7 @@ function Basic() {
       fecha: event.hora1,
       flag: 0,
       estadoCita: event.estadoCita,
+      tiempo: event.tiempo,
     });
     return;
     setDatosParametros({
@@ -462,6 +463,15 @@ function Basic() {
   };
 
   const moveEvent = (schedulerData, event, slotId, slotName, start, end) => {
+    console.log(start);
+    if (new Date(start) < new Date()) {
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: `La fecha de la hora no puede ser anterior al dia de hoy`,
+      });
+      return;
+    }
     if (event.estadoCita == 2 && slotId != event.no_estilista) {
       Swal.fire({
         icon: "error",
@@ -642,8 +652,8 @@ function Basic() {
     const features = `width=${width},height=${height},left=${left},top=${top},toolbar=0,location=0,menubar=0,scrollbars=1,resizable=1`;
     window.open(url, "_blank", features);
   };
-  const handleOpenNewWindowEdit = ({ idCita, idUser, idCliente, fecha, flag, estadoCita }) => {
-    const url = `${ligaPruebas}miliga/editarcita?idCita=${idCita}&idUser=${idUser}&idCliente=${idCliente}&fecha=${fecha}&idSuc=${1}&idRec=${1}&flag=${flag}&estadoCita=${estadoCita}`; // Reemplaza esto con la URL que desees abrir
+  const handleOpenNewWindowEdit = ({ idCita, idUser, idCliente, fecha, flag, estadoCita, tiempo }) => {
+    const url = `${ligaPruebas}miliga/editarcita?idCita=${idCita}&idUser=${idUser}&idCliente=${idCliente}&fecha=${fecha}&idSuc=${1}&idRec=${1}&flag=${flag}&estadoCita=${estadoCita}&tiempo=${tiempo}`; // Reemplaza esto con la URL que desees abrir
     const width = 600;
     const height = 800;
     const left = (window.screen.width - width) / 2;
@@ -681,8 +691,6 @@ function Basic() {
     let mes = fechaActual.getMonth(); // Nota: getMonth() devuelve un valor de 0 a 11, donde 0 es enero y 11 es diciembre
     let día = fechaActual.getDate();
     let fechaSinHora = new Date(año, mes, día);
-    console.log({ datosParametrosCitaTemp });
-    console.log({ datosParametrosFechaCitaTemp });
     peinadosApi
       .put("/DetalleCitas", null, {
         params: {
@@ -702,12 +710,12 @@ function Basic() {
           serv: "1",
           importe: 100,
           cancelada: false,
-          stao_estilista: datosParametrosCitaTemp.modoCita,
+          stao_estilista: datosParametrosCitaTemp.estadoCita,
           nota_canc: 0,
           registrada: true,
           observacion: 0,
           user_uc: 0,
-          estatus: datosParametrosCitaTemp.modoCita,
+          estatus: datosParametrosCitaTemp.estadoCita,
         },
       })
       .then((response) => {
@@ -2600,6 +2608,7 @@ function Basic() {
                   fecha: event.hora1,
                   flag: 1,
                   estadoCita: event.estadoCita,
+                  tiempo: event.tiempo,
                 });
               }}
               style={{ marginBottom: "10px" }}
@@ -3297,8 +3306,30 @@ function Basic() {
       </Modal>
       {/*  */}
       <Draggable>
-        <Modal open={ModalCrear} style={{ maxWidth: "41%", maxHeight: "95%", overflow: "auto" }} onClose={() => setModalCrear(false)}>
+        <Modal keepMounted open={ModalCrear} style={{ maxWidth: "41%", maxHeight: "95%", overflow: "auto" }} onClose={() => setModalCrear(false)}>
           <Box sx={styleCrearCita}>
+            <div
+              onClick={() => setModalCrear(false)}
+              style={{
+                cursor: "pointer",
+                marginRight: "10px",
+                marginTop: "10px",
+                width: "20px",
+                height: "20px",
+                backgroundColor: "red",
+                color: "white",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                position: "absolute", // Agrega esta línea
+                top: "10px", // Agrega esta línea
+                right: "10px", // Agrega esta línea
+                borderRadius: "50%",
+                // si requiero ponerlo en la derecha
+              }}
+            >
+              X
+            </div>
             <div style={{ flex: 1, justifyContent: "space-between", alignContent: "right", alignItems: "right", display: "flex" }}>
               <h1>Creación de cita</h1>
               <div>

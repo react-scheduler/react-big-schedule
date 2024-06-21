@@ -109,6 +109,7 @@ function EditarCita() {
   const idCliente = new URLSearchParams(window.location.search).get("idCliente");
   const estadoCita = new URLSearchParams(window.location.search).get("estadoCita");
   const cambioCitaModo = new URLSearchParams(window.location.search).get("flag");
+  const tiempo = new URLSearchParams(window.location.search).get("tiempo");
 
   const minDateTime = setHours(startOfToday(), 8);
 
@@ -126,11 +127,12 @@ function EditarCita() {
       estatusRequerido: estadoCita == 2 ? true : false,
       estatusAsignado: estadoCita == 3 ? true : false,
       esServicioDomicilio: estadoCita == 5 ? true : false,
+      tiempo: tiempo,
     });
     // if (estadoCita == 2) setFormCita({ ...formCita, estatusRequerido: true });
     // if (estadoCita == 3) setFormCita({ ...formCita, estatusAsignado: true });
     // if (estadoCita == 5) setFormCita({ ...formCita, esServicioDomicilio: true });
-  }, [idUser, fecha, idRec, idSuc, idCliente, idCita]);
+  }, [idUser, fecha, idRec, idSuc, idCliente, idCita, tiempo]);
 
   useEffect(() => {
     if (dataClientes.length > 0) {
@@ -746,6 +748,7 @@ function EditarCita() {
       <Container>
         <h1>Cambio de cita</h1>
       </Container>
+      <hr />
       <Container>
         <Row style={{ marginBottom: "10px" }}>
           <Col>
@@ -753,13 +756,13 @@ function EditarCita() {
           </Col>
           <Col>
             <InputGroup>
-              <Label for="fecha">Fecha cita</Label>
+              <Label for="fecha">Fecha cita:</Label>
               <Input
                 disabled
-                type="datetime-local"
+                type="date"
                 name="fecha"
                 id="fecha"
-                value={fecha}
+                value={format(new Date(fecha), "yyyy-MM-dd")}
                 onChange={(e) => {
                   setFormCita({ ...formCita, fecha: e.target.value });
                 }}
@@ -785,7 +788,7 @@ function EditarCita() {
         <Row style={{ marginBottom: "10px" }}>
           <Col>
             <InputGroup>
-              <Label for="atiende">Atiende</Label>
+              <Label for="atiende">Atiende:</Label>
               <Input
                 style={{ fontSize: "0.8rem" }}
                 disabled
@@ -828,7 +831,7 @@ function EditarCita() {
           <Col xs={3}>
             <InputGroup>
               <Label>Tiempo:</Label>
-              <Input style={{ fontSize: "0.8rem" }} disabled value={60}>
+              <Input style={{ fontSize: "0.8rem" }} disabled value={formCita.tiempo}>
                 {" "}
               </Input>
             </InputGroup>
@@ -840,14 +843,16 @@ function EditarCita() {
 
       <Container>
         <Row style={{ marginBottom: "10px" }}>
+          <hr />
           <Col>
             <h3>Cita modificada</h3>
           </Col>
           <Col>
             <InputGroup>
-              <Label for="fecha">Fecha cita</Label>
+              <Label for="fecha">Fecha cita:</Label>
               <LocalizationProvider dateAdapter={AdapterDateFns}>
                 <DateTimePicker
+                  disabled
                   value={new Date(formCita.fecha)}
                   timeSteps={{ minutes: 15 }}
                   minTime={minDateTime}
@@ -856,7 +861,7 @@ function EditarCita() {
                   slotProps={{ textField: { size: "small" } }}
                   timezone={"America/Mexico_City"}
                   ampm={false}
-                  format="dd/MM/yyyy HH:mm" // Formato DDMMAAAA HH:mm (hora en formato 24 horas)
+                  format="dd/MM/yyyy" // Formato DDMMAAAA HH:mm (hora en formato 24 horas)
                   onChange={(fecha) => {
                     setFormCita({ ...formCita, fecha: fecha });
                     // setDatosParametros({
@@ -872,7 +877,7 @@ function EditarCita() {
         <Row>
           <FormGroup>
             <InputGroup addonType="append">
-              <Label for="cliente">Cliente</Label>
+              <Label for="cliente">Cliente:</Label>
               <Input
                 style={{ fontSize: "0.8rem" }}
                 bsSize="sm"
@@ -893,7 +898,7 @@ function EditarCita() {
         <Row style={{ marginBottom: "10px" }}>
           <Col>
             <InputGroup>
-              <Label for="atiende">Atiende</Label>
+              <Label for="atiende">Atiende:</Label>
               <Input
                 disabled
                 style={{ fontSize: "0.8rem" }}
@@ -942,7 +947,7 @@ function EditarCita() {
           <Col xs={3}>
             <InputGroup>
               <Label>Tiempo:</Label>
-              <Input style={{ fontSize: "0.8rem" }} disabled value={60}>
+              <Input style={{ fontSize: "0.8rem" }} disabled value={formCita.tiempo}>
                 {" "}
               </Input>
             </InputGroup>

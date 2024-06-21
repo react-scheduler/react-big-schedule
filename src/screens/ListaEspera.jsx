@@ -2,12 +2,12 @@ import React, { useState, useEffect, useMemo } from "react";
 import { DataGrid } from "@mui/x-data-grid";
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Input, FormGroup, Label, Col, Row, InputGroup, Container } from "reactstrap";
 import { peinadosApi } from "../api/peinadosApi";
+import { startOfToday, setHours, parseISO, isValid } from "date-fns";
 import { format } from "date-fns-tz";
 import { MdOutlineDelete, MdFolderOpen, MdCalendarMonth } from "react-icons/md";
 import Swal from "sweetalert2";
 import { MaterialReactTable } from "material-react-table";
 import { useListaEspera } from "../functions/listaEspera/useListaEspera";
-import { startOfToday, setHours, parseISO, isValid } from "date-fns";
 import { LocalizationProvider, TimePicker } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 
@@ -52,6 +52,7 @@ function ListaEspera() {
   const [clientesModal, setClientesModal] = useState(false);
   const [productosModal, setProductosModal] = useState(false);
   const [estilistasModal, setEstilistasModal] = useState(false);
+  const [modalCitaServicio, setModalCitaServicio] = useState(false);
 
   const [dataClientes, setDataClientes] = useState({});
   const [dataEstilistas, setDataEstilistas] = useState({});
@@ -294,7 +295,7 @@ function ListaEspera() {
         });
     }
   };
-
+  const [formListaEsperaVerificacion, setFormListaEsperaVerificacion] = useState();
   function renderDeleteListaEspera(params) {
     return (
       <div>
@@ -309,7 +310,19 @@ function ListaEspera() {
           title="S"
           size={25}
           onClick={() => {
-            listaEsperaPost(params.row.id, 2);
+            console.log(params);
+            setModalCitaServicio(true);
+            setFormListaEsperaVerificacion({
+              id: params.row.id,
+              fecha: params.row.fecha,
+              estilista: params.row.estilista,
+              estilista_descripcion: params.row.nombreEstilsta,
+              servicio_descripcion: params.row.descripcion,
+              cliente_descripcion: params.row.nombreCompleto,
+              hora_estimada: params.row.hora_estimada,
+              max_detalle_venta_id: params.row.max_detalle_venta_id,
+            });
+            // listaEsperaPost(params.row.id, 2);
           }}
         />
         <MdOutlineDelete
@@ -326,7 +339,7 @@ function ListaEspera() {
               confirmButtonText: "Sí, eliminar",
             }).then((result) => {
               if (result.isConfirmed) {
-                peinadosApi.delete(`/ListaEspera?id=${params.id}`).then(() => {
+                peinadosApi.delete(`/ListaEspera2?id=${params.id}&usuario=${10}`).then(() => {
                   Swal.fire({
                     icon: "success",
                     text: "Registro eliminado con éxito",
@@ -477,6 +490,7 @@ function ListaEspera() {
     });
     fetchListaEspera();
   };
+  const timeZone = "America/Mexico_City"; // Ajusta esto a tu zona horaria
 
   return (
     <div>
@@ -502,12 +516,6 @@ function ListaEspera() {
         <ModalBody>
           <Row>
             <Col md={6}>
-              <FormGroup>
-                <Label for="cliente">Hora</Label>
-                {/* <InputGroup>
-                  <Input defaultValue={format(formClienteEspera.fecha, "p")} type="text" name="fecha" id="fecha" disabled />
-                </InputGroup> */}
-              </FormGroup>
               <FormGroup>
                 <Label for="cliente">Cliente</Label>
                 <InputGroup>
@@ -654,6 +662,51 @@ function ListaEspera() {
         <ModalFooter>
           <Button color="primary" onClick={() => setEstilistasModal(!estilistasModal)}>
             Agregar
+          </Button>
+        </ModalFooter>
+      </Modal>
+      <Modal isOpen={modalCitaServicio} toggle={() => setModalCitaServicio(!modalCitaServicio)} size="lg">
+        <ModalHeader toggle={() => setModalCitaServicio(!modalCitaServicio)}>Folio y Hora</ModalHeader>
+        <ModalBody>
+          <FormGroup>
+            <Label>Cliente</Label>
+            <Input disabled type="text" value={formListaEsperaVerificacion?.cliente_descripcion}></Input>
+          </FormGroup>
+          <FormGroup>
+            <Label>Estilista</Label>
+            <Input disabled type="text" value={formListaEsperaVerificacion?.estilista_descripcion}></Input>
+          </FormGroup>
+          <FormGroup>
+            <Label>Servicio</Label>
+            <Input disabled type="text" value={formListaEsperaVerificacion?.servicio_descripcion}></Input>
+          </FormGroup>
+          <FormGroup>
+            <Label>Hora</Label>
+            <input
+              disabled
+              type="time"
+              value={
+                formListaEsperaVerificacion?.horaEstimada ? format(parseISO(formListaEsperaVerificacion?.horaEstimada), "HH:mm", { timeZone }) : ""
+              }
+            ></input>
+          </FormGroup>
+          <FormGroup>
+            <Label>Folio</Label>
+            <Input disabled type="text" value={formListaEsperaVerificacion?.max_detalle_venta_id}></Input>
+          </FormGroup>
+        </ModalBody>
+        <ModalFooter>
+          <Button
+            color="primary"
+            onClick={() => {
+              listaEsperaPost(formListaEsperaVerificacion.id, 2);
+              setModalCitaServicio(!modalCitaServicio);
+            }}
+          >
+            Agregar
+          </Button>
+          <Button color="error" onClick={() => setModalCitaServicio(!modalCitaServicio)}>
+            Salir
           </Button>
         </ModalFooter>
       </Modal>
