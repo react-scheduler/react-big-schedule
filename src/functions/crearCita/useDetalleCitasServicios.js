@@ -20,5 +20,5 @@ export const useDetalleCitasServicios = ({ fecha, noCliente, sucursal, idCita })
     fetchDetalleCitasServicios();
   }, [idCita, noCliente, fecha, sucursal]); // Agrega todas las dependencias relevantes aquí
 
-  return { dataCitasServicios, fetchDetalleCitasServicios };
+  return { dataCitasServicios, fetchDetalleCitasServicios, setdataCitasServicios };
 };

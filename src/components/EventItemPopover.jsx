@@ -49,7 +49,9 @@ function EventItemPopover({
     console.log({ eventItem });
 
     peinadosApi
-      .get(`/sp_detalleCitasServiciosResumen3?idCita=${eventItem.idCita}&cve_cliente=${eventItem.no_cliente}&estilista=${eventItem.no_estilista}`)
+      .get(
+        `/sp_detalleCitasServiciosResumen5?idCita=${eventItem.idCita}&cve_cliente=${eventItem.no_cliente}&estilista=${eventItem.no_estilista}&idVenta=${eventItem.idVenta}`
+      )
       .then((response) => {
         setDataPuntosPorCliente(response.data[0]);
       });

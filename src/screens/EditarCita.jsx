@@ -5,7 +5,7 @@ import { peinadosApi } from "../api/peinadosApi";
 import { FormControl, TextField, FormControlLabel, Checkbox, Box, ButtonGroup, Modal, Typography } from "@mui/material";
 import { FormGroup, Label, Input, Button, Container, Row, Col, InputGroup, InputGroupText, Collapse, Spinner } from "reactstrap";
 import { styled } from "@mui/material/styles";
-import { LocalizationProvider, DateTimePicker } from "@mui/x-date-pickers";
+import { LocalizationProvider, DateTimePicker, TimePicker } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import Swal from "sweetalert2";
 import { format } from "date-fns-tz";
@@ -63,7 +63,34 @@ function EditarCita() {
     estatusAsignado: false,
     estatusRequerido: false,
   });
+  const [tempFormCita, setTempFormCita] = useState({
+    id: 0,
+    cia: 1,
+    sucursal: 1,
+    no_estilista: 0,
+    no_cliente: 0,
+    dia_cita: new Date(),
+    hora_cita: new Date(),
+    fecha: new Date(),
+    tiempo: 0,
+    user: 1,
+    importe: 0,
+    cancelada: false,
+    stao_estilista: 0,
+    nota_canc: "nota cancelacion",
+    registrada: false,
+    observacion: ".",
+    user_uc: 1,
+    estatus: 0,
+    estatusAsignado: false,
+    estatusRequerido: false,
+  });
   const [formCitaDescripciones, setFormCitaDescripciones] = useState({
+    descripcion_no_estilista: "",
+    descripcion_no_cliente: "",
+    descripcion_no_cancelacio: "",
+  });
+  const [tempFormCitaDescripciones, setTempFormCitaDescripciones] = useState({
     descripcion_no_estilista: "",
     descripcion_no_cliente: "",
     descripcion_no_cancelacio: "",
@@ -138,7 +165,9 @@ function EditarCita() {
     if (dataClientes.length > 0) {
       console.log(formCita.no_cliente);
       const seleccionarNombre = dataClientes.find((cliente) => cliente.id == formCita.no_cliente);
+      const seleccionarNombreTemp = dataClientes.find((cliente) => cliente.id == tempFormCita.no_cliente);
       setFormCitaDescripciones({ ...formCitaDescripciones, descripcion_no_cliente: seleccionarNombre?.nombre });
+      setTempFormCitaDescripciones({ ...tempFormCitaDescripciones, descripcion_no_cliente: seleccionarNombreTemp?.nombre });
       setLoadingModal(false);
     }
   }, [dataClientes, formCita.no_cliente]);
@@ -199,6 +228,26 @@ function EditarCita() {
 
   const { dataCuentasPendientes } = useDetalleCuentaPendietes({ no_cliente: formCita.no_cliente });
   const { dataClientesSaldosPendientes } = useDetalleSaldosPendientes({ no_cliente: formCita.no_cliente });
+  const [formCitaServioActualizacion, setFormCitaServioActualizacion] = useState();
+  const updateServicios = () => {
+    // Hazme el peinadosApi PUT sp_detalleCitasServiciosUpdv3?idServicio={idServicio}&cantidad={cantidad}&tiempo={tiempo}&precio={precio}&usuarioCambio={usuarioCambio}&idEstilista={idEstilista}&fechaCita={fechaCita}&estatusCita={estatusCita}&id={id}
+
+    peinadosApi
+      .put("/sp_detalleCitasServiciosUpdv3", null, {
+        params: {
+          idServicio: 0,
+          cantidad: 0,
+          tiempo: 0,
+          precio: 0,
+          usuarioCambio: 0,
+          idEstilista: 0,
+          fechaCita: 0,
+          estatusCita: 0,
+          id: 0, // idCitaServicio
+        },
+      })
+      .then((response) => {});
+  };
 
   const updateCita = async () => {
     const contraseñaValidada = await validarContraseña();
@@ -742,7 +791,22 @@ function EditarCita() {
     );
   }
   const [agregarServicios, setAgregarServicios] = useState(true);
-
+  const handleChangeFechaServicio = (type, value) => {
+    let newDateTime;
+    if (type === "fecha") {
+      newDateTime = value ? new Date(value) : null;
+      if (formCita.fecha) {
+        const time = new Date(formCita.fecha).toTimeString().split(" ")[0];
+        newDateTime = new Date(`${value.toDateString()} ${time}`);
+      }
+    } else {
+      newDateTime = formCita.fecha ? new Date(formCita.fecha) : new Date();
+      newDateTime.setHours(value.getHours());
+      newDateTime.setMinutes(value.getMinutes());
+      console.log(newDateTime);
+    }
+    setFormCita({ ...formCita, fecha: newDateTime });
+  };
   return (
     <div>
       <Container>
@@ -758,13 +822,13 @@ function EditarCita() {
             <InputGroup>
               <Label for="fecha">Fecha cita:</Label>
               <Input
-                disabled
+                disabled={formCita.cambioCitaModo == 1}
                 type="date"
                 name="fecha"
                 id="fecha"
                 value={format(new Date(fecha), "yyyy-MM-dd")}
                 onChange={(e) => {
-                  setFormCita({ ...formCita, fecha: e.target.value });
+                  setTempFormCita({ ...tempFormCita, fecha: e.target.value });
                 }}
               />
             </InputGroup>
@@ -879,7 +943,7 @@ function EditarCita() {
             <InputGroup addonType="append">
               <Label for="cliente">Cliente:</Label>
               <Input
-                style={{ fontSize: "0.8rem" }}
+                style={{ fontSize: "1.2rem" }}
                 bsSize="sm"
                 disabled
                 value={formCitaDescripciones.descripcion_no_cliente}
@@ -900,8 +964,8 @@ function EditarCita() {
             <InputGroup>
               <Label for="atiende">Atiende:</Label>
               <Input
-                disabled
-                style={{ fontSize: "0.8rem" }}
+                disabled={formCita.cambioCitaModo == 1}
+                style={{ fontSize: "1.2rem" }}
                 type="select"
                 name="atiende"
                 id="atiende"
@@ -927,126 +991,77 @@ function EditarCita() {
               <InputGroup>
                 <Label>Modo:</Label>
                 <Input
-                  style={{ fontSize: "0.8rem", fontWeight: "bold", color: "red" }}
+                  style={{ fontSize: "1.2rem", fontWeight: "bold", color: "red" }}
                   disabled
                   value={formCita.estatusRequerido ? "A" : "R"}
                 ></Input>
               </InputGroup>
-            ) : null}
+            ) : (
+              <InputGroup>
+                <Label>Modo:</Label>
+                <Input style={{ fontSize: "1.2rem" }} disabled value={formCita.estatusRequerido ? "R" : "A"}></Input>
+                <Button>Cambio Modo</Button>
+              </InputGroup>
+            )}
           </Col>
         </Row>
         <Row style={{ marginBottom: "10px" }}>
           <Col xs={6}>
             <InputGroup>
               <Label>Hora:</Label>
-              <Input style={{ fontSize: "0.8rem" }} disabled value={format(new Date(fecha), "hh:mm")}>
+              {/* <Input style={{ fontSize: "0.8rem" }} disabled={formCita.cambioCitaModo == 1} value={format(new Date(fecha), "hh:mm")}>
                 {" "}
-              </Input>
+              </Input> */}
+              <LocalizationProvider dateAdapter={AdapterDateFns}>
+                <TimePicker
+                  disabled={formCita.cambioCitaModo == 1}
+                  timeSteps={{ minutes: 15 }}
+                  slotProps={{ textField: { size: "small" } }}
+                  value={formCita.fecha ? new Date(decodeURIComponent(formCita.fecha)) : null}
+                  // value={formCita.fecha ? new Date(formCita.fecha).toTimeString().substring(0, 5) : null}
+                  onChange={(hora) => handleChangeFechaServicio("hora", hora)}
+                  sx={{
+                    "& .MuiInputBase-input": {
+                      width: "128px",
+                    },
+                    "& .MuiPickersDay-dayWithMargin": {
+                      // Oculta el ícono del DatePicker
+                      display: "none",
+                    },
+                    "& .MuiSvgIcon-root": {
+                      // Aquí se oculta el ícono
+                      width: "0.8rem",
+                      backgroundColor: "#ffccac",
+                    },
+                  }}
+                  renderInput={(props) => (
+                    <Input
+                      {...props}
+                      size="small"
+                      style={{
+                        fontSize: "1.2rem",
+                        backgroundColor: "#ffccac",
+                      }}
+                    />
+                  )}
+                />
+              </LocalizationProvider>
             </InputGroup>
           </Col>
           <Col xs={3}>
             <InputGroup>
               <Label>Tiempo:</Label>
-              <Input style={{ fontSize: "0.8rem" }} disabled value={formCita.tiempo}>
+              <Input
+                style={{ fontSize: "1.2rem" }}
+                disabled={formCita.cambioCitaModo == 1}
+                value={formCita.tiempo}
+                onChange={(e) => setFormCita({ ...formCita, tiempo: e.target.value })}
+              >
                 {" "}
               </Input>
             </InputGroup>
           </Col>
         </Row>
-
-        {/* <Col>
-            <FormGroup>
-              <Label for="cliente">Cliente</Label>
-              <InputGroup addonType="append">
-                <Input
-                  bsSize="sm"
-                  disabled
-                  value={formCitaDescripciones.descripcion_no_cliente}
-                  type="text"
-                  name="cliente"
-                  id="cliente"
-                  size={"small"}
-                />
-                <Button size="sm" onClick={() => setClientesModal(true)}>
-                  Buscar
-                </Button>
-              </InputGroup>
-            </FormGroup>
-            
-            <FormGroup>
-              <Label for="observaciones">Observaciones</Label>
-              <Input
-                type="text"
-                name="observaciones"
-                id="observaciones"
-                value={formCita.observacion}
-                onChange={(valor) => {
-                  setFormCita({ ...formCita, observacion: valor.target.value });
-                }}
-              />
-            </FormGroup>
-          </Col>
-
-          <Col>
-            
-
-            <FormGroup check>
-              <Label check>
-                <Input
-                  name="estatus"
-                  type="checkbox"
-                  checked={formCita.estatusRequerido}
-                  onChange={(e) =>
-                    setFormCita({
-                      ...formCita,
-                      estatusRequerido: !formCita.estatusRequerido,
-                      estatusAsignado: formCita.estatusAsignado == true ? !formCita.estatusAsignado : null,
-                      esServicioDomicilio: formCita.esServicioDomicilio == true ? !formCita.esServicioDomicilio : null,
-                    })
-                  }
-                />{" "}
-                <strong>Requerido</strong>
-              </Label>
-            </FormGroup>
-            <FormGroup check>
-              <Label check>
-                <Input
-                  name="estatus"
-                  type="checkbox"
-                  checked={formCita.estatusAsignado}
-                  onChange={(e) =>
-                    setFormCita({
-                      ...formCita,
-                      estatusAsignado: !formCita.estatusAsignado,
-                      estatusRequerido: formCita.estatusRequerido == true ? !formCita.estatusRequerido : null,
-                      esServicioDomicilio: formCita.esServicioDomicilio == true ? !formCita.esServicioDomicilio : null,
-                    })
-                  }
-                />{" "}
-                <strong>Asignado</strong>
-              </Label>
-            </FormGroup>
-            <FormGroup check>
-              <Label check>
-                <Input
-                  type="checkbox"
-                  checked={formCita.esServicioDomicilio}
-                  onChange={(e) =>
-                    setFormCita({
-                      ...formCita,
-                      esServicioDomicilio: !formCita.esServicioDomicilio,
-                      estatusAsignado: formCita.estatusAsignado == true ? !formCita.estatusAsignado : null,
-                      estatusRequerido: formCita.estatusRequerido == true ? !formCita.estatusRequerido : null,
-                    })
-                  }
-                />{" "}
-                <strong>Servicio a domicillio</strong>
-              </Label>
-            </FormGroup>
-            <Button color={"success"} onClick={handleOpen}>
-              Guardar
-            </Button>
-          </Col> */}
       </Container>
       <br />
       <hr />

@@ -16,7 +16,7 @@
 }
 
 .header3-text {
-  font-size: 12px;
+  font-size: 16px;
   font-weight: 500;
 }
 
@@ -103,7 +103,7 @@ table.scheduler-content-table {
 table.resource-table tr,
 table.scheduler-bg-table tr,
 table.scheduler-table tr {
-  border-bottom: 1px solid #cecece;
+  border-bottom: 1px solid #7c7c7c;
 }
 
 table.resource-table th,
@@ -111,12 +111,12 @@ table.scheduler-table th,
 table.resource-table td,
 table.scheduler-bg-table td,
 table.scheduler-table td {
-  border-right: 1.7px solid #cecece;
-  border-bottom: 1px solid #cecece;
+  border-right: 1.7px solid #7c7c7c;
+  border-bottom: 1px solid #7c7c7c;
 }
 
 table.scheduler-bg-table th {
-  border-right: 1.7px solid #cecece;
+  border-right: 1.7px solid #7c7c7c;
 }
 
 table.resource-table tr th:last-child,
@@ -167,7 +167,11 @@ table.scheduler-table tr:last-child td {
 }
 
 .event-item {
-  margin: 1px 0;
+  border: rgb(95, 95, 95) 1px solid;
+  position: absolute;
+  border-radius: 0px;
+
+  margin: 1px 1px;
   width: 100%;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -351,5 +355,14 @@ table.scheduler-table tr:last-child td {
 }
 
 .swal2-popup {
-  z-index: 10000;
+  z-index: 100002; /* Un número mayor que el z-index del modal */
+}
+.swal2-container {
+  z-index: 100001;
+}
+.label-fixed-width {
+  display: inline-block;
+  width: 150px; /* Set the desired width */
+  text-align: right;
+  margin-right: 10px; /* Add some space between the label and input */
 }

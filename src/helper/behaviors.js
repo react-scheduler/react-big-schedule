@@ -59,6 +59,11 @@ export const getDateLabel = (schedulerData, viewType, startDate, endDate) => {
 
   return dateLabel;
 };
+export const getDate = (schedulerData, viewType, startDate, endDate) => {
+  const { localeDayjs } = schedulerData;
+  const start = localeDayjs(new Date(startDate));
+  return start;
+};
 
 export const getEventText = (schedulerData, event) =>
   schedulerData.isEventPerspective ? schedulerData.resources.find((item) => item.id === event.resourceId)?.name || event.title : event.title;
@@ -84,6 +89,7 @@ export default {
   getNonAgendaViewBodyCellBgColorFunc: undefined,
   getScrollSpecialDayjsFunc: getScrollSpecialDayjs,
   getDateLabelFunc: getDateLabel,
+  getDateFunc: getDate,
   getEventTextFunc: getEventText,
   isNonWorkingTimeFunc: isNonWorkingTime,
 };

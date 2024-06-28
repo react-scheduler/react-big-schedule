@@ -6,7 +6,7 @@ export const useDetalleCuentaPendietes = ({ no_cliente }) => {
 
   const fetchDetalleCuentaPendientes = async () => {
     try {
-      const response = await peinadosApi.get(`/sp_DetalleCuentaPendiente6?no_cliente=${no_cliente}`);
+      const response = await peinadosApi.get(`/sp_DetalleCuentaPendiente5?no_cliente=${no_cliente}`);
       setDataCuentasPendientes(response.data);
     } catch (error) {
       console.log(error);

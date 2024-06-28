@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { Col, Row, Spin, Radio, Space, Popover, Calendar } from "antd";
 import { RightOutlined, LeftOutlined } from "@ant-design/icons";
@@ -15,6 +15,7 @@ function SchedulerHeader({ onViewChange, goNext, goBack, onSelectDate, scheduler
 
   const { viewType, showAgenda, isEventPerspective, config } = schedulerData;
   const dateLabel = schedulerData.getDateLabel();
+
   const selectDate = schedulerData.getSelectedDate();
   const calendarLocale = schedulerData.getCalendarPopoverLocale()?.default?.Calendar;
   const defaultValue = `${viewType}${showAgenda ? 1 : 0}${isEventPerspective ? 1 : 0}`;
@@ -64,7 +65,7 @@ function SchedulerHeader({ onViewChange, goNext, goBack, onSelectDate, scheduler
   ));
 
   return (
-    <Row gutter={[10, 10]} type="flex" align="middle" justify="space-between" style={{ marginBottom: "24px" }}>
+    <Row gutter={[0, 0]} type="flex" align="middle" justify="space-between" style={{ marginBottom: "0px" }}>
       {leftCustomHeader}
       <Col>
         <div className="header2-text">
@@ -76,7 +77,8 @@ function SchedulerHeader({ onViewChange, goNext, goBack, onSelectDate, scheduler
       <Col>
         <Space>
           <Spin spinning={viewSpinning} />
-          <div className="header2-text">
+          {/* Quiero que se quede estatic el div, en la parte de arriba */}
+          <div className="header2-text" style={{ alignItems: "center", sticky: "top", top: "0px", zIndex: "1", position: "fixed" }}>
             <Space>
               <div>
                 <LeftOutlined

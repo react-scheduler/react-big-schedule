@@ -1,7 +1,7 @@
 import { ViewType, SummaryPos } from "./default";
 
 export default {
-  schedulerWidth: "104%",
+  schedulerWidth: "97%",
   besidesWidth: 10,
   schedulerMaxHeight: 0,
   tableHeaderHeight: 40,

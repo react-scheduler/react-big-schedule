@@ -23,7 +23,7 @@ function AgendaEventItem(props) {
 
   let eventItemTemplate = (
     <div className={`${roundCls} event-item`} key={eventItem.id} style={eventItemStyle}>
-      <span style={{ marginLeft: "10px", lineHeight: `${config.eventItemHeight}px` }}>{titleText}</span>
+      <span style={{ marginLeft: "10px", border: "black", borderWidth: "1px", lineHeight: `${config.eventItemHeight}px` }}>{titleText}</span>
     </div>
   );
 

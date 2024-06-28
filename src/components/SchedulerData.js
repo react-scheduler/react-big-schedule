@@ -399,6 +399,11 @@ export default class SchedulerData {
 
     return dateLabel;
   }
+  getDate() {
+    const start = new Date(this.startDate).toISOString();
+    console.log({ start });
+    return start;
+  }
 
   addEvent(newEvent) {
     this._attachEvent(newEvent);

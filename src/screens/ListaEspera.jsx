@@ -10,6 +10,8 @@ import { MaterialReactTable } from "material-react-table";
 import { useListaEspera } from "../functions/listaEspera/useListaEspera";
 import { LocalizationProvider, TimePicker } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import { useCitaEmpalme } from "../functions/crearCita/useCitaEmpalme4";
+import { useHorarioDisponibleEstilistas6 } from "../functions/crearCita/useHorarioDisponibleEstilistas6";
 
 function ListaEspera() {
   const [openListaEspera, setOpenListaEspera] = useState(false);
@@ -101,6 +103,16 @@ function ListaEspera() {
         setDataProductos(response.data);
       });
   };
+  const { dataCitaEmpalme, fetchCitaEmpalme } = useCitaEmpalme({
+    fechacita: new Date(),
+    no_estilista: 40,
+    tiempoCita: 40,
+  });
+  const { dataHorarioDisponibleEstilistas, fetchHorarioDisponibleEstilistas } = useHorarioDisponibleEstilistas6({
+    fecha: new Date(),
+    cveEmpleado: 40,
+    tiempo: 40,
+  });
   const columnsClientes2 = useMemo(() => [
     {
       accessorKey: "acciones",
@@ -272,7 +284,57 @@ function ListaEspera() {
       </div>
     );
   }
-  const listaEsperaPost = async (idListaEspera, tipo) => {
+
+  async function verificarDisponibilidad(tiempo, fecha, estilista) {
+    const res = await fetchCitaEmpalme(tiempo, fecha, estilista);
+    const resHorario = await fetchHorarioDisponibleEstilistas(fecha, estilista, tiempo);
+
+    if (res && res.data[0].id > 0) {
+      const isConfirmed = await Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "El estilista no tiene horario disponible, empalme.",
+        confirmButtonColor: "#3085d6",
+        confirmButtonText: "Ok",
+        showConfirmButton: true,
+        showCancelButton: true,
+      });
+
+      if (!isConfirmed.isConfirmed) {
+        return false;
+      } else {
+        return false;
+      }
+      // return false;
+    } else {
+      if (resHorario) {
+        console.log(resHorario);
+        if (resHorario.data[0].clave_empleado == "Cita sin restricciones" || resHorario.data[0].clave_empleado == "Prosiga") {
+          console.log(0);
+        } else {
+          const isConfirmed = await Swal.fire({
+            icon: "error",
+            title: "Error",
+            text: `El estilista no tiene horario disponible`,
+            confirmButtonColor: "#3085d6",
+            confirmButtonText: "Quiere continuar?",
+            showConfirmButton: true,
+            showCancelButton: true,
+          });
+          if (!isConfirmed.isConfirmed) return false;
+        }
+      }
+    }
+    return true;
+  }
+
+  const listaEsperaPost = async (idListaEspera, tipo, tiempo, estilista, fecha) => {
+    console.log({ tiempo });
+    console.log({ estilista });
+    console.log({ fecha });
+    const isVerified = await verificarDisponibilidad(tiempo, fecha, estilista);
+    if (!isVerified) return;
+
     const contraseñaValidada = await validarContraseña();
     if (contraseñaValidada) {
       peinadosApi
@@ -301,7 +363,10 @@ function ListaEspera() {
       <div>
         <MdCalendarMonth
           onClick={() => {
-            listaEsperaPost(params.row.id, 1);
+            console.log(params.row.tiempo);
+            console.log(params.row.estilista);
+            console.log(params.row.hora_estimada);
+            listaEsperaPost(params.row.id, 1, params.row.tiempo_servicio, params.row.estilista, new Date(params.row.hora_estimada));
           }}
           title="C"
           size={25}
@@ -321,6 +386,7 @@ function ListaEspera() {
               cliente_descripcion: params.row.nombreCompleto,
               hora_estimada: params.row.hora_estimada,
               max_detalle_venta_id: params.row.max_detalle_venta_id,
+              tiempo: params.row.tiempo_servicio,
             });
             // listaEsperaPost(params.row.id, 2);
           }}
@@ -452,11 +518,10 @@ function ListaEspera() {
       renderCell: (params) => <p className="centered-cell">{format(new Date(params.row.hora_estimada), "p")}</p>,
     },
     { field: "nombreEstilsta", headerName: "Nombre estilista", width: 200 },
+    { field: "observacion", headerName: "Observacion", width: 200 },
   ];
 
   const postListaEspera = () => {
-    console.log({ formClienteEspera });
-
     if (
       formClienteEspera.no_cliente == null ||
       formClienteEspera.clave_prod == null ||
@@ -481,6 +546,7 @@ function ListaEspera() {
           usuario_servicio: 0,
           usuario_elimina: 0,
           precio: formClienteEspera.precio,
+          observacion: formClienteEspera.observacion ? formClienteEspera.observacion : "",
         },
       });
     }
@@ -511,49 +577,49 @@ function ListaEspera() {
         <DataGrid rows={dataListaEspera} columns={columnListaEspera} />
       </Container>
 
-      <Modal isOpen={openListaEspera} toggle={() => setOpenListaEspera(false)} size="lg">
+      <Modal isOpen={openListaEspera} toggle={() => setOpenListaEspera(false)} size="xl">
         <ModalHeader toggle={() => setOpenListaEspera(false)}>Agregar listas de espera</ModalHeader>
         <ModalBody>
           <Row>
             <Col md={6}>
               <FormGroup>
-                <Label for="cliente">Cliente</Label>
+                <Label style={{ fontSize: "1.2rem" }} for="cliente">
+                  Cliente
+                </Label>
                 <InputGroup>
-                  <Input value={formClienteEspera.descripcion_no_cliente} type="text" name="cliente" id="cliente" disabled />
+                  <Input
+                    style={{ fontSize: "1.2rem" }}
+                    value={formClienteEspera.descripcion_no_cliente}
+                    type="text"
+                    name="cliente"
+                    id="cliente"
+                    disabled
+                  />
                   <Button onClick={() => setClientesModal(true)}>Agregar</Button>
                 </InputGroup>
               </FormGroup>
 
               <FormGroup>
-                <Label for="cliente">Estilista</Label>
+                <Label style={{ fontSize: "1.2rem" }} for="cliente">
+                  Estilista
+                </Label>
                 <InputGroup>
-                  <Input value={formClienteEspera.estilista_descripcion} type="text" name="estilista" id="estilista" disabled />
+                  <Input
+                    style={{ fontSize: "1.2rem" }}
+                    value={formClienteEspera.estilista_descripcion}
+                    type="text"
+                    name="estilista"
+                    id="estilista"
+                    disabled
+                  />
                   <Button onClick={() => setEstilistasModal(true)}>Agregar</Button>
                 </InputGroup>
-              </FormGroup>
-            </Col>
-            <Col md={6}>
-              <FormGroup>
-                <Label for="productoServicio">Producto/Servicio</Label>
-                <InputGroup>
-                  <Input type="text" name="productoServicio" id="productoServicio" disabled value={formClienteEspera.descripcion_clave_prod} />
-                  <Button
-                    onClick={() => {
-                      setProductosModal(true);
-                    }}
-                  >
-                    Agregar
-                  </Button>
-                </InputGroup>
-              </FormGroup>{" "}
-              <FormGroup>
-                <Label for="tiempoServicio">Tiempo de servicio</Label>
-                <Input type="text" name="tiempoServicio" id="tiempoServicio" disabled value={formClienteEspera.tiempo_servicio} />
               </FormGroup>
               <FormGroup>
                 <Label for="horaEstimada">Hora estimada</Label>
                 <LocalizationProvider dateAdapter={AdapterDateFns}>
                   <TimePicker
+                    style={{ fontSize: "1.2rem" }}
                     ampm={true} // Si quieres formato de 24 horas
                     timeSteps={{ minutes: 15 }}
                     value={formClienteEspera.hora_estimada ? new Date(decodeURIComponent(formClienteEspera.hora_estimada)) : null}
@@ -571,7 +637,7 @@ function ListaEspera() {
                         {...params}
                         size="small"
                         style={{
-                          fontSize: "0.7rem",
+                          fontSize: "1.2rem",
                           backgroundColor: "#ffccac",
                         }}
                       />
@@ -601,6 +667,58 @@ function ListaEspera() {
                     setformClienteEspera({ ...formClienteEspera, hora_estimada: now });
                   }}
                 /> */}
+              </FormGroup>
+            </Col>
+            <Col md={6}>
+              <FormGroup>
+                <Label style={{ fontSize: "1.2rem" }} for="productoServicio">
+                  Producto/Servicio
+                </Label>
+                <InputGroup>
+                  <Input
+                    style={{ fontSize: "1.2rem" }}
+                    type="text"
+                    name="productoServicio"
+                    id="productoServicio"
+                    disabled
+                    value={formClienteEspera.descripcion_clave_prod}
+                  />
+                  <Button
+                    onClick={() => {
+                      setProductosModal(true);
+                    }}
+                  >
+                    Agregar
+                  </Button>
+                </InputGroup>
+              </FormGroup>{" "}
+              <FormGroup>
+                <Label style={{ fontSize: "1.2rem" }} for="tiempoServicio">
+                  Tiempo de servicio
+                </Label>
+                <Input
+                  style={{ fontSize: "1.2rem" }}
+                  type="text"
+                  name="tiempoServicio"
+                  id="tiempoServicio"
+                  disabled
+                  value={formClienteEspera.tiempo_servicio}
+                />
+              </FormGroup>
+              <FormGroup>
+                <Label style={{ fontSize: "1.2rem" }} for="observacion">
+                  Observacion
+                </Label>
+                <Input
+                  style={{ fontSize: "1.2rem" }}
+                  type="text"
+                  name="tiempoServicio"
+                  id="tiempoServicio"
+                  value={formClienteEspera.observacion}
+                  onChange={(event) => {
+                    setformClienteEspera({ ...formClienteEspera, observacion: event.target.value });
+                  }}
+                />
               </FormGroup>
             </Col>
           </Row>
@@ -685,21 +803,28 @@ function ListaEspera() {
             <input
               disabled
               type="time"
-              value={
-                formListaEsperaVerificacion?.horaEstimada ? format(parseISO(formListaEsperaVerificacion?.horaEstimada), "HH:mm", { timeZone }) : ""
-              }
+              value={formListaEsperaVerificacion?.hora_estimada ? format(parseISO(formListaEsperaVerificacion.hora_estimada), "HH:mm") : ""}
             ></input>
           </FormGroup>
-          <FormGroup>
+          {/* <FormGroup>
             <Label>Folio</Label>
             <Input disabled type="text" value={formListaEsperaVerificacion?.max_detalle_venta_id}></Input>
-          </FormGroup>
+          </FormGroup> */}
         </ModalBody>
         <ModalFooter>
           <Button
             color="primary"
             onClick={() => {
-              listaEsperaPost(formListaEsperaVerificacion.id, 2);
+              //listaEsperaPost(formListaEsperaVerificacion.id, 2);
+
+              listaEsperaPost(
+                formListaEsperaVerificacion.id,
+                2,
+                formListaEsperaVerificacion.tiempo,
+                formListaEsperaVerificacion.estilista,
+                new Date(formListaEsperaVerificacion.hora_estimada)
+              );
+
               setModalCitaServicio(!modalCitaServicio);
             }}
           >

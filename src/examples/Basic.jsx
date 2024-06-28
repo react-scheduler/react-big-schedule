@@ -80,6 +80,8 @@ function Basic() {
   const [verificador, setVerificador] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalServicioUso, setModalServicioUso] = useState(false);
+  const [modalCitas, setModalCitas] = useState(false);
+  const [ModalCitaEditEstilista, setModalCitaEditEstilista] = useState(false);
   const [isModalActualizarOpen, setIsModalActualizarOpen] = useState(false);
   const [event, setEvent] = useState();
   const openModal = () => {
@@ -117,9 +119,12 @@ function Basic() {
         inputAttributes: {
           autocapitalize: "off",
         },
+        inputAutoFocus: true, // Establece el enfoque automáticamente
         customClass: {
           popup: "swal2-popup", // Agrega una clase personalizada al cuadro de diálogo
+          container: "swal2-container", // Agrega una clase personalizada al contenedor
         },
+
         showCancelButton: true,
         confirmButtonText: "Confirmar",
         showLoaderOnConfirm: true,
@@ -173,7 +178,6 @@ function Basic() {
   });
 
   useEffect(() => {
-    console.log("ESTAMOS");
     if (datosParametrosCitaTemp.no_cliente) {
       putEditarCita();
     }
@@ -186,11 +190,10 @@ function Basic() {
   const getCitas = async (fecha) => {
     try {
       const response = await peinadosApi.get(
-        `/DetalleAgendaSelv15?fecha=${format(fecha ? fecha : datosParametros.fecha, "yyyyMMdd")}&suc=1&nomberEstilista=${"%"}&nombreCliente=${"%"}`
+        `/DetalleAgendaSelv18?fecha=${format(fecha ? fecha : datosParametros.fecha, "yyyyMMdd")}&suc=1&nomberEstilista=${"%"}&nombreCliente=${"%"}`
       );
       setArregloCita(
         response.data.map((item) => {
-          console.log(item);
           let hora1 = new Date(item.hora1);
           let hora2 = new Date(item.hora2);
           hora1.setFullYear(new Date(item.fecha).getFullYear(), new Date(item.fecha).getMonth(), new Date(item.fecha).getDate());
@@ -279,7 +282,7 @@ function Basic() {
   const getCitasDia = (elimina) => {
     peinadosApi
       .get(
-        `/ClientesCitasDia7?suc=1&cliente=0&fecha=${format(datosParametros.fecha, "yyyyMMdd")}&tipoCita=${
+        `/ClientesCitasDia9?suc=1&cliente=0&fecha=${format(datosParametros.fecha, "yyyyMMdd")}&tipoCita=${
           tipoCita ? tipoCita : "%"
         }&nombreEstilista=${elimina ? "" : datosParametros.nombreEstilista}&nombreCliente=${elimina ? "" : datosParametros.nombreCliente}`
       )
@@ -325,8 +328,6 @@ function Basic() {
   }, [arreglo, arregloCita]);
 
   const actualizarAgenda = (response, schedulerData) => {
-    console.log({ response });
-    console.log("AQUI ANDAMOS");
     schedulerData.setEvents(response);
     dispatch({ type: "UPDATE_SCHEDULER", payload: schedulerData });
   };
@@ -462,8 +463,10 @@ function Basic() {
     dispatch({ type: "UPDATE_SCHEDULER", payload: schedulerData });
   };
 
-  const moveEvent = (schedulerData, event, slotId, slotName, start, end) => {
-    console.log(start);
+  const moveEvent = async (schedulerData, event, slotId, slotName, start, end) => {
+    const isVerified = await verificarDisponibilidad(event.tiempo, new Date(start), slotId);
+    if (!isVerified) return;
+    // return;
     if (new Date(start) < new Date()) {
       Swal.fire({
         icon: "error",
@@ -495,13 +498,16 @@ function Basic() {
       showCancelButton: true,
       confirmButtonText: "Sí",
       cancelButtonText: "No",
-    }).then((result) => {
+    }).then(async (result) => {
       if (result.isConfirmed) {
-        setDatosParametrosFechaCitaTemp({
-          fecha: start,
-          usuarioEstilista: slotId,
-        });
-        setDatosParametrosCitaTemp(event);
+        const contraseñaValidada = await validarContraseña();
+        if (contraseñaValidada) {
+          setDatosParametrosFechaCitaTemp({
+            fecha: start,
+            usuarioEstilista: slotId,
+          });
+          setDatosParametrosCitaTemp(event);
+        }
       }
     });
   };
@@ -566,6 +572,67 @@ function Basic() {
   };
 
   const columns = [
+    {
+      field: "accion",
+      headerName: "Accion",
+      width: 70,
+      align: "center",
+      sortable: false,
+      renderCell: (params) => (
+        <div>
+          <Button
+            onClick={() => {
+              console.log(params.row);
+              setEvent({
+                fecha: params.row.fecha,
+                no_cliente: params.row.no_cliente2,
+                estadoCita: params.row.estatusCita,
+                hora1: params.row.hora_cita,
+                tiempo: params.row.tiempo,
+                idCita: params.row.id,
+                no_estilista: params.row.idEstilista,
+                verificacion: true,
+              });
+              setFormCitaServicio({
+                ...formCitaServicio,
+                idCita: params.row.id,
+              });
+              setFormCita({
+                ...formCita,
+                no_cliente: params.row.no_cliente2,
+                fecha: params.row.hora_cita,
+                no_estilista: params.row.idEstilista,
+                estatusCita: 100,
+              });
+              setModalServicioUso(true);
+            }}
+          >
+            AS
+          </Button>
+          <Button
+            onClick={() => {
+              console.log(params);
+              setEvent({
+                fecha: params.row.fecha,
+                no_cliente: params.row.no_cliente2,
+                estadoCita: params.row.estatusCita,
+                hora1: params.row.hora_cita,
+                tiempo: params.row.tiempo,
+                idCita: params.row.id,
+                no_estilista: params.row.idEstilista,
+              });
+              setModalEdicionServicios(true);
+
+              // setEvent(params.row.)
+            }}
+          >
+            E
+          </Button>
+        </div>
+      ),
+    },
+
+    // Esta es la columna del ID único
     { field: "id", headerName: "Clave", width: 70, align: "center", sortable: false }, // Esta es la columna del ID único
     { field: "d_stilista", headerName: "Estilista", width: 120, align: "center", sortable: false }, // Esta es la columna del ID único
     {
@@ -620,7 +687,7 @@ function Basic() {
       headerName: "Cliente",
       description: "This column has a value getter and is not sortable.",
       sortable: false,
-      width: 250,
+      width: 300,
     },
     { field: "descripcion", headerName: "Servicio", width: 250 },
     {
@@ -642,7 +709,7 @@ function Basic() {
   ];
 
   const ligaPruebas = "http://localhost:5173/";
-  // const ligaPruebas = "http://cbinfo.no-ip.info:9019/";
+  //const ligaPruebas = "http://cbinfo.no-ip.info:9019/";
   const handleOpenNewWindow = ({ idCita, idUser, idCliente, fecha, flag }) => {
     const url = `${ligaPruebas}miliga/crearcita?idCita=${idCita}&idUser=${idUser}&idCliente=${idCliente}&fecha=${fecha}&idSuc=${1}&idRec=${1}&flag=${flag}`; // Reemplaza esto con la URL que desees abrir
     const width = 390;
@@ -683,7 +750,26 @@ function Basic() {
     const features = `width=${width},height=${height},left=${left},top=${top},toolbar=0,location=0,menubar=0,scrollbars=1,resizable=1`;
     window.open(url, "_blank", features);
   };
+  const [formCitaServioActualizacion, setFormCitaServioActualizacion] = useState();
+  const updateServicios = () => {
+    // Hazme el peinadosApi PUT sp_detalleCitasServiciosUpdv3?idServicio={idServicio}&cantidad={cantidad}&tiempo={tiempo}&precio={precio}&usuarioCambio={usuarioCambio}&idEstilista={idEstilista}&fechaCita={fechaCita}&estatusCita={estatusCita}&id={id}
 
+    peinadosApi
+      .put("/sp_detalleCitasServiciosUpdv3", null, {
+        params: {
+          idServicio: 0,
+          cantidad: 0,
+          tiempo: 0,
+          precio: 0,
+          usuarioCambio: 0,
+          idEstilista: 0,
+          fechaCita: 0,
+          estatusCita: 0,
+          id: 0, // idCitaServicio
+        },
+      })
+      .then((response) => {});
+  };
   const putEditarCita = async () => {
     let fechaActual = new Date();
     // Extrae el año, mes y día
@@ -720,6 +806,9 @@ function Basic() {
       })
       .then((response) => {
         Swal.fire("Saved!", "", "success");
+        setTimeout(() => {
+          window.location.reload();
+        }, 1000);
       });
   };
 
@@ -884,6 +973,18 @@ function Basic() {
     boxShadow: 24,
     p: 4,
   };
+  const styleAltaServicio = {
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    width: "75%",
+    height: "85%",
+    bgcolor: "background.paper",
+    border: "2px solid #000",
+    boxShadow: 24,
+    p: 4,
+  };
 
   const [formCita, setFormCita] = useState({
     cia: 1,
@@ -907,6 +1008,7 @@ function Basic() {
     esServicioDomicilio: false,
     registrada: false,
     cumpleaños: null,
+    estatusCita: 0,
   });
   const [formCitaDescripciones, setFormCitaDescripciones] = useState({
     descripcion_no_estilista: "",
@@ -933,6 +1035,7 @@ function Basic() {
     tiempo: 0,
     precioTotal: 0,
     otros: 0,
+    precioTotalyOtros: 0,
   });
   const [formCitaServicio, setFormCitaServicio] = useState({
     idCita: null,
@@ -955,6 +1058,7 @@ function Basic() {
   const [ModalCantidad, setModalCantidad] = useState(false);
   const [ModalCrear, setModalCrear] = useState(false);
   const [ProductosModalEdicion, setProductosModalEdicion] = useState(false);
+  const [ProductosModalEdicionServicios, setProductosModalEdicionServicios] = useState(false);
   const [modalEdicionServicios, setModalEdicionServicios] = useState(false);
   const [productosModal, setProductosModal] = useState(false);
   const [modalCitasObservaciones, setModalCitasObservaciones] = useState(false);
@@ -1070,7 +1174,6 @@ function Basic() {
   }, []);
 
   useEffect(() => {
-    console.log("actualizando.........");
     if (formCita.no_cliente == 0) return;
     getClientesePuntos();
     getOperaciones();
@@ -1078,6 +1181,11 @@ function Basic() {
     fetchDetalleCitasObservaciones().then((response) => {
       if (response.data.length > 0) setModalCitasObservaciones(true);
     });
+    const otrosClientes = dataClientes.find((item) => item.id == formCita.no_cliente);
+    if (otrosClientes) {
+      // console.log({ otrosClientes?.saldoCta });
+      setFormVentaTemporal({ ...formVentaTemporal, otros: otrosClientes?.saldoCta });
+    }
   }, [formCita.no_cliente]);
   useEffect(() => {
     console.log("ESTAMOS");
@@ -1129,9 +1237,9 @@ function Basic() {
       setdataEstilistaDisponibilidadHorario(response.data);
     });
   };
-  const { dataCitasServicios, fetchDetalleCitasServicios } = useDetalleCitasServicios({
+  const { dataCitasServicios, fetchDetalleCitasServicios, setdataCitasServicios } = useDetalleCitasServicios({
     noCliente: formCita.no_cliente,
-    sucursal: 2,
+    sucursal: 1,
     fecha: formCita.fecha ? format(new Date(formCita.fecha), "yyyy/MM/dd") : new Date(),
     idCita: formCitaServicio.idCita,
   });
@@ -1215,7 +1323,7 @@ function Basic() {
 
   useEffect(() => {
     if (dataCuentasPendientes.length > 0) {
-      setFormVentaTemporal({ ...formVentaTemporal, otros: dataCuentasPendientes[0].mensaje });
+      // setFormVentaTemporal({ ...formVentaTemporal, otros: dataCuentasPendientes[0].mensaje });
     }
     if (isNaN(formCita.cumpleaños) == false) {
       if (comparaFecha(formCita.cumpleaños, 15)) {
@@ -1266,6 +1374,7 @@ function Basic() {
       ...prevState,
       precioTotal: totalPrice,
       tiempo: totalTime,
+      precioTotalyOtros: totalPrice + formVentaTemporal.otros,
     }));
   }, [dataCitasServicios]);
 
@@ -1283,7 +1392,7 @@ function Basic() {
 
               putDetalleCitasServiciosUpd4(
                 cell.row.id,
-                2,
+                1, //sucursal: 2 sucursal: 1
                 formCitaServicio.idCita,
                 cell.row.tiempo,
                 cell.row.idEstilista,
@@ -1300,15 +1409,16 @@ function Basic() {
           <AiFillEdit
             size={20}
             onClick={() => {
+              console.log(cell.row);
               setModalEdicionServicios(true);
 
               setFormDetalleCitasServicios({
-                ...formCitaServicio,
+                ...formDetalleCitasServicios,
                 cantidad: cell.row.cantidad,
                 id: cell.row.id,
                 idEstilista: cell.row.idEstilista,
                 idServicio: cell.row.id_servicio,
-                d_clave_prod: cell.row.observaciones,
+                d_clave_prod: cell.row.descripcion,
                 tiempo: cell.row.tiempo,
                 precio: cell.row.precio,
                 fecha: cell.row.fecha,
@@ -1326,7 +1436,7 @@ function Basic() {
       width: 120,
       renderCell: (cell) => {
         // Divide el texto en dos partes por el espacio
-        const [parte1, parte2] = cell.row.observaciones.split(" ");
+        const [parte1, parte2] = cell.row.descripcion.split(" ");
 
         return (
           <div className="centered-cell" style={{ whiteSpace: "normal", lineHeight: "0.2em" }}>
@@ -1451,6 +1561,7 @@ function Basic() {
                   }).then((result) => {
                     if (result.isConfirmed) {
                       setVentaTemporal([]);
+                      window.location.reload();
                     } else {
                       window.close();
                     }
@@ -1836,10 +1947,71 @@ function Basic() {
                   d_clave_prod: cell.row.original.descripcion,
                   tiempo: cell.row.original.tiempox,
                   precio: cell.row.original.precio,
-                  fecha: cell.row.fecha,
+                  // fecha: cell.row.fecha,
                 });
                 setProductosModalEdicion(false);
               }
+            }}
+          >
+            Agregar
+          </Button>
+        </div>
+      ),
+    },
+    {
+      accessorKey: "clave_prod",
+      header: "Clave_prod",
+      size: 100,
+    },
+    {
+      accessorKey: "descripcion",
+      header: "Descripcion",
+      size: 100,
+    },
+    {
+      accessorKey: "tiempox",
+      header: "Tiempo",
+      size: 100,
+      Cell: ({ cell }) => <p className="centered-cell">{cell.row.original.tiempox + " min"}</p>,
+      className: "centered-cell", // Agrega esta línea para aplicar la clase CSS
+    },
+    {
+      accessorKey: "precio",
+      header: "Precio",
+      size: 100,
+      Cell: ({ cell }) => (
+        <p className="centered-cell">{Number(cell.row.original.precio).toLocaleString("es-MX", { style: "currency", currency: "MXN" })}</p>
+      ),
+      className: "centered-cell", // Agrega esta línea para aplicar la clase CSS
+    },
+    {
+      accessorKey: "precioPromocion",
+      header: "Precio",
+      size: 100,
+      Cell: ({ cell }) => (
+        <p className="centered-cell">{Number(cell.row.original.precioPromocion).toLocaleString("es-MX", { style: "currency", currency: "MXN" })}</p>
+      ),
+      className: "centered-cell", // Agrega esta línea para aplicar la clase CSS
+    },
+  ]);
+  const columnsProductosMRTEdicionServicios = useMemo(() => [
+    {
+      accessorKey: "acciones",
+      header: "Acción",
+      size: 100,
+      Cell: ({ cell }) => (
+        <div>
+          <Button
+            variant={"contained"}
+            onClick={() => {
+              setFormCitaServioActualizacion({
+                ...formCitaServioActualizacion,
+                idServicio: cell.row.original.id,
+                descripcion: cell.row.original.descripcion,
+                tiempo: cell.row.original.tiempox,
+                precio: cell.row.original.precio,
+              });
+              setProductosModalEdicionServicios(false);
             }}
           >
             Agregar
@@ -2043,7 +2215,22 @@ function Basic() {
     tiempo: null,
     fecha: null,
   });
-  const putDetalleCitasServiciosUpd4 = (id, sucursal, idCita, tiempo, idEstilista, mostrar, idServicio, usuario, cantidad, precio, fechaCita) => {
+  const putDetalleCitasServiciosUpd4 = async (
+    id,
+    sucursal,
+    idCita,
+    tiempo,
+    idEstilista,
+    mostrar,
+    idServicio,
+    usuario,
+    cantidad,
+    precio,
+    fechaCita
+  ) => {
+    const contraseñaValidada = await validarContraseña();
+    if (!contraseñaValidada) return;
+
     peinadosApi
       .put(`/sp_DetalleCitasServiciosUpd6`, null, {
         params: {
@@ -2057,7 +2244,7 @@ function Basic() {
           usuario: usuario,
           cantidad: cantidad,
           precio: precio,
-          fechaCita: fechaCita,
+          fechaCita: fechaCita ? fechaCita : formCita.fecha,
         },
       })
       .then((response) => {
@@ -2067,6 +2254,10 @@ function Basic() {
           text: "Registro Realizado ",
           confirmButtonColor: "#3085d6",
           confirmButtonText: "Ok",
+        }).then((result) => {
+          // if (result.isConfirmed) {
+          //   window.location.reload();
+          // }
         });
         setModalEdicionServicios(false);
       });
@@ -2109,6 +2300,13 @@ function Basic() {
       setModalCitasObservaciones(false);
     });
   };
+  const putCitasServiciosTerminadoFunction = async () => {
+    await peinadosApi.put(`/sp_detalleCitasServiciosTerminado2`, null, {
+      params: {
+        idCita: formCitaServicio.idCita,
+      },
+    });
+  };
   const putCitasServiciosTerminado = () => {
     setModalCrear(false);
     Swal.fire({
@@ -2134,15 +2332,52 @@ function Basic() {
               .then((response) => {
                 Swal.fire({
                   icon: "success",
-                  text: "Registro Realizado con éxito, ",
+                  text: "Registro Realizado con éxito, desea registrar otro servicio con otro estilista? ",
                   confirmButtonColor: "#3085d6",
                   cancelButtonColor: "#d33",
-                  confirmButtonText: "Cerrar",
+                  confirmButtonText: "ok",
+                  showConfirmButton: true,
+                  cancelButtonText: "Cancelar",
+                  showCancelButton: true,
                 }).then((result) => {
                   if (result.isConfirmed) {
-                    window.close();
+                    // setFormCitaServicio([]);
+                    setFormCitaServicio({
+                      ...formCitaServicio,
+                      idCita: null,
+                      estatusAsignado: false,
+                      estatusRequerido: false,
+                    });
+                    setFormCita({
+                      ...formCita,
+                      cia: null,
+                      sucursal: null,
+                      no_estilista: 0,
+                    });
+
+                    setFormCitaDescripciones({
+                      ...formCitaDescripciones,
+                      descripcion_no_cancelacion: "",
+                      descripcion_no_estilista: "",
+                    });
+                    setdataCitasServicios([]);
+                    // setFormDetalleCitasServicios({
+                    //   cantidad: null,
+                    //   id: null,
+                    //   idEstilista: null,
+                    //   idServicio: null,
+                    //   d_clave_prod: null,
+                    //   tiempo: null,
+                    //   fecha: null,
+                    // });
+                    // setFormCita([]);
+                    // setFormCitaDescripciones([]);
+                    setTimeout(() => {
+                      setModalCrear(true);
+                    }, 1000);
                   } else {
                     window.close();
+                    window.location.reload();
                   }
                 });
               })
@@ -2252,7 +2487,7 @@ function Basic() {
   //   });
   // };
   const postCitasServicios = (clave, tiempo, precio) => {
-    verificarDisponibilidad().then((isVerified) => {
+    verificarDisponibilidad(formVentaTemporal.tiempo, formCita.fecha, formCita.no_estilista).then((isVerified) => {
       if (isVerified) {
         peinadosApi
           .post(`/sp_detalleCitasServiciosAdd7`, null, {
@@ -2265,17 +2500,20 @@ function Basic() {
               observaciones: formCitasObservaciones2 ? formCitasObservaciones2 : "",
               usuarioAlta: formCita.no_estilista,
               usuarioCambio: formCita.no_estilista,
-              sucursal: 2,
+              sucursal: 1,
               fecha: new Date(),
               idCliente: formCita.no_cliente,
               idEstilista: formCita.no_estilista,
               fechaCita: formCita.fecha,
               esDomicilio: formCita.esServicioDomicilio == false ? 0 : 1,
-              estatusCita: formCita.estatusAsignado ? 3 : formCita.estatusRequerido ? 2 : 1,
+              estatusCita: formCita.estatusAsignado ? 3 : formCita.estatusRequerido ? 2 : formCita.estatusCita == 100 ? 100 : 1,
             },
           })
           .then((response) => {
-            fetchDetalleCitasServicios();
+            setTimeout(() => {
+              fetchDetalleCitasServicios();
+              if (event?.verificacion == true) putCitasServiciosTerminadoFunction();
+            }, 1000);
           });
       }
     });
@@ -2296,6 +2534,23 @@ function Basic() {
       console.log(newDateTime);
     }
     setFormCita({ ...formCita, fecha: newDateTime });
+  };
+  const handleChangeFechaEdicionServicio = (type, value) => {
+    let newDateTime;
+    if (type === "fecha") {
+      onSelectDate(state.viewModel, format(value, "yyyy-MM-dd"));
+      newDateTime = value ? new Date(value) : null;
+      if (formCitaServioActualizacion?.hora_cita) {
+        const time = new Date(formCitaServioActualizacion?.hora_cita).toTimeString().split(" ")[0];
+        newDateTime = new Date(`${value.toDateString()} ${time}`);
+      }
+    } else {
+      newDateTime = formCitaServioActualizacion?.hora_cita ? new Date(formCitaServioActualizacion?.hora_cita) : new Date();
+      newDateTime.setHours(value.getHours());
+      newDateTime.setMinutes(value.getMinutes());
+      console.log(newDateTime);
+    }
+    setFormCitaServioActualizacion({ ...formCitaServioActualizacion, hora_cita: newDateTime });
   };
   const handleChangeFechaServicio = (type, value) => {
     let newDateTime;
@@ -2350,6 +2605,8 @@ function Basic() {
           title: "Cita actualizada",
           icon: "success",
           confirmButtonText: "Ok",
+        }).then((result) => {
+          window.reload();
         });
       });
   };
@@ -2391,17 +2648,30 @@ function Basic() {
   //   return { res, resHorario };
   // }
 
-  async function verificarDisponibilidad() {
-    const res = await fetchCitaEmpalme();
-    const resHorario = await fetchHorarioDisponibleEstilistas();
+  async function verificarDisponibilidad(tiempo, fecha, estilista) {
+    const res = await fetchCitaEmpalme(tiempo, fecha, estilista);
+    const resHorario = await fetchHorarioDisponibleEstilistas(fecha, estilista, tiempo);
 
     if (res && res.data[0].id > 0) {
-      Swal.fire({
+      const isConfirmed = await Swal.fire({
         icon: "error",
         title: "Error",
-        text: `El estilista no tiene horario disponible, empalme`,
+        text: "El estilista no tiene horario disponible, empalme. ¿Desea asignar la cita?",
+        confirmButtonColor: "#3085d6",
+        confirmButtonText: "Ok",
+        showConfirmButton: true,
+        showCancelButton: true,
       });
-      return false;
+
+      if (!isConfirmed.isConfirmed) {
+        return false;
+      } else {
+        const res = await validarContraseña();
+        if (!res) return false;
+
+        return true;
+      }
+      // return false;
     } else {
       if (resHorario) {
         console.log(resHorario);
@@ -2423,7 +2693,17 @@ function Basic() {
     }
     return true;
   }
-
+  const [colummEdit, setColummEdit] = useState("");
+  const handleCellDoubleClick = (params) => {
+    setFormCitaServioActualizacion(params.row);
+    setColummEdit(params.field);
+    setModalCitaEditEstilista(true);
+    // params contiene información sobre la celda,
+    // como el ID de la fila y el campo de la celda.
+    console.log(`Doble clic en la fila ${params.id}, columna ${params.field}`);
+    // Aquí puedes poner la acción que quieras realizar.
+    console.log({ params });
+  };
   return (
     <>
       <div className="contenedor-principal">
@@ -2431,9 +2711,11 @@ function Basic() {
           <Timer />
         </div>
         <Row>
-          <Col>
+          {/* <Col>
             <InputGroup style={{ marginBottom: "5px" }}>
-              <Label style={{ fontSize: "0.8rem" }}>Tipo de cita:</Label>
+              <Label className="label-fixed-width" style={{ fontSize: "0.8rem" }}>
+                Tipo de cita:
+              </Label>
               <Input style={{ fontSize: "0.8rem" }} type="select" size={"sm"} value={tipoCita} onChange={(e) => setTipoCita(e.target.value)}>
                 <option value={"%"}>Todos</option>
                 <option value={"1"}>Cita</option>
@@ -2443,7 +2725,9 @@ function Basic() {
             </InputGroup>
             <div>
               <InputGroup style={{ marginBottom: "5px" }}>
-                <Label style={{ fontSize: "0.8rem" }}>Nombre cliente:</Label>
+                <Label className="label-fixed-width" style={{ fontSize: "0.8rem" }}>
+                  Nombre cliente:
+                </Label>
                 <Input
                   style={{ fontSize: "0.8rem" }}
                   onChange={(v) => setDatosParametros({ ...datosParametros, nombreCliente: v.target.value })}
@@ -2452,7 +2736,9 @@ function Basic() {
                 ></Input>
               </InputGroup>
               <InputGroup style={{ marginBottom: "5px" }}>
-                <Label style={{ fontSize: "0.8rem" }}>Nombre estilista:</Label>
+                <Label className="label-fixed-width" style={{ fontSize: "0.8rem" }}>
+                  Nombre estilista:
+                </Label>
                 <Input
                   style={{ fontSize: "0.8rem" }}
                   onChange={(v) => setDatosParametros({ ...datosParametros, nombreEstilista: v.target.value })}
@@ -2473,9 +2759,9 @@ function Basic() {
                 </Button>
               </InputGroup>
             </div>
-          </Col>
+          </Col> */}
         </Row>
-        <div style={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center" }}>
+        {/* <div style={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center" }}>
           <div style={{ display: "flex" }}>
             <h2 style={{ marginRight: "10px", backgroundColor: "#ffccfc", padding: "5px" }}>{isToday(datosParametros.fecha) ? "Hoy  " : ""}</h2>
             <h2 style={{ backgroundColor: "#ffccfc", padding: "5px" }}>Fecha: {datosParametros.fecha.toLocaleDateString()}</h2>
@@ -2483,48 +2769,60 @@ function Basic() {
           <h5 style={{ marginTop: "0", backgroundColor: "#ffccfc", padding: "5px" }}>
             {format(new Date(datosParametros.fecha), "EEEE", { locale: es })}
           </h5>
-        </div>
+        </div> */}
 
-        <div>
-          <div></div>
-          <Button
-            size="sm"
-            onClick={() => {
-              setModalCrear(true);
-              return;
-              handleOpenNewWindowNewSchedule();
-              setIsModalActualizarOpen(true);
-            }}
-          >
-            Nueva Cita
-          </Button>
-          <Button
-            size="sm"
-            color={"primary"}
-            onClick={() => {
-              handleOpenNewWindowListaEspera();
-            }}
-          >
-            Lista de espera
-          </Button>
-          <Button
-            size="sm"
-            color={"success"}
-            onClick={() => {
-              window.location.reload();
-            }}
-          >
-            Actualizar sitio
-          </Button>
-        </div>
+        <Row>
+          <Col>
+            <Button
+              size="sm"
+              onClick={() => {
+                setModalCrear(true);
+                return;
+                handleOpenNewWindowNewSchedule();
+                setIsModalActualizarOpen(true);
+              }}
+            >
+              Nueva Cita
+            </Button>
+            <Button
+              size="sm"
+              color={"primary"}
+              onClick={() => {
+                handleOpenNewWindowListaEspera();
+                setIsModalActualizarOpen(true);
+              }}
+            >
+              Lista de espera
+            </Button>
+            <Button
+              size="sm"
+              color={"success"}
+              onClick={() => {
+                window.location.reload();
+              }}
+            >
+              Actualizar sitio
+            </Button>
+            <Button
+              size="sm"
+              color={"success"}
+              onClick={() => {
+                setModalCitas(true);
+              }}
+            >
+              Mostrar citas
+            </Button>
+          </Col>
+        </Row>
       </div>
 
       <div style={{ flex: 1, justifyContent: "right", alignContent: "right", alignItems: "right", display: "flex" }}></div>
-      <div style={{ height: "2%", display: "table", tableLayout: "fixed", width: "100%" }}>
+      {/* <div style={{ height: "2%", display: "table", tableLayout: "fixed", width: "100%" }}>
         <DataGrid
           rows={arregloCitaDia}
           columns={columns}
           getRowId={(row) => row.id + row.importe + row.tiempo + row.descripcion}
+          onCellDoubleClick={handleCellDoubleClick}
           rowHeight={28}
           columnHeaderHeight={28}
           initialState={{ pagination: { paginationModel: { pageSize: 3 } } }}
@@ -2534,7 +2832,7 @@ function Basic() {
             },
           }}
         />
-      </div>
+      </div> */}
       <div style={{ marginLeft: "0%" }}>
         {state.showScheduler && (
           <Scheduler
@@ -2545,7 +2843,7 @@ function Basic() {
             onSelectDate={onSelectDate}
             onViewChange={onViewChange}
             viewEventClick={ops1}
-            // viewEventText="Editar cita:"
+            viewEventText="Editar cita:"
             viewEvent2Text="Seleccionar opciones"
             viewEvent2Click={ops2}
             updateEventStart={updateEventStart}
@@ -2653,8 +2951,79 @@ function Basic() {
         </Box>
       </Modal>
 
-      <Modal open={modalServicioUso} onClose={() => setModalServicioUso(false)}>
-        <Box sx={styleObservaciones}>
+      <Modal open={modalCitas} onClose={() => setModalCitas(false)} disableAutoFocus>
+        <Box sx={style}>
+          <div style={{ height: "2%", display: "table", tableLayout: "fixed", width: "100%" }}>
+            <h3>Tabla de citas</h3>
+            <Col sm={6}>
+              <InputGroup style={{ marginBottom: "5px" }}>
+                <Label className="label-fixed-width" style={{ fontSize: "0.8rem" }}>
+                  Tipo de cita:
+                </Label>
+                <Input style={{ fontSize: "0.8rem" }} type="select" size={"sm"} value={tipoCita} onChange={(e) => setTipoCita(e.target.value)}>
+                  <option value={"%"}>Todos</option>
+                  <option value={"1"}>Cita</option>
+                  <option value={"2"}>Servicio</option>
+                  <option value={"3"}>Pagado</option>
+                </Input>
+              </InputGroup>
+              <div>
+                <InputGroup style={{ marginBottom: "5px" }}>
+                  <Label className="label-fixed-width" style={{ fontSize: "0.8rem" }}>
+                    Nombre cliente:
+                  </Label>
+                  <Input
+                    style={{ fontSize: "0.8rem" }}
+                    onChange={(v) => setDatosParametros({ ...datosParametros, nombreCliente: v.target.value })}
+                    size={"sm"}
+                    value={datosParametros.nombreCliente}
+                  ></Input>
+                </InputGroup>
+                <InputGroup style={{ marginBottom: "5px" }}>
+                  <Label className="label-fixed-width" style={{ fontSize: "0.8rem" }}>
+                    Nombre estilista:
+                  </Label>
+                  <Input
+                    style={{ fontSize: "0.8rem" }}
+                    onChange={(v) => setDatosParametros({ ...datosParametros, nombreEstilista: v.target.value })}
+                    size={"sm"}
+                    value={datosParametros.nombreEstilista}
+                  ></Input>
+                  <Button color="primary" size="sm">
+                    <AiOutlineSearch size={19} onClick={() => getCitasDia()} />
+                  </Button>
+                  <Button color="secondary" size="sm">
+                    <AiOutlineReload
+                      size={19}
+                      onClick={() => {
+                        setDatosParametros({ ...datosParametros, nombreCliente: "", nombreEstilista: "" });
+                        getCitasDia(1);
+                      }}
+                    />
+                  </Button>
+                </InputGroup>
+              </div>
+            </Col>
+            <br />
+            <DataGrid
+              rows={arregloCitaDia}
+              columns={columns}
+              getRowId={(row) => row.id + row.importe + row.tiempo + row.descripcion}
+              onCellDoubleClick={handleCellDoubleClick}
+              rowHeight={28}
+              columnHeaderHeight={28}
+              sx={{
+                "& .MuiDataGrid-pagination": {
+                  height: "10px",
+                },
+              }}
+            />
+          </div>
+        </Box>
+      </Modal>
+
+      <Modal open={modalServicioUso} onClose={() => setModalServicioUso(false)} disableAutoFocus disableRestoreFocus disableEnforceFocus>
+        <Box sx={styleAltaServicio}>
           <h3>Alta de servicio</h3>
 
           <Container>
@@ -2671,9 +3040,6 @@ function Basic() {
                     name="fecha"
                     id="fecha"
                     value={event?.fecha ? format(new Date(event?.fecha), "yyyy-MMMM-dd", { locale: es }) : ""}
-                    // onChange={(e) => {
-                    //   setFormCita({ ...formCita, fecha: e.target.value });
-                    // }}
                   />
                 </InputGroup>
               </Col>
@@ -2694,32 +3060,6 @@ function Basic() {
               </InputGroup>
             </Row>
             <Row style={{ marginBottom: "10px" }}>
-              <Col>
-                <InputGroup>
-                  <Label for="atiende">Atiende</Label>
-                  <Input
-                    style={{ fontSize: "0.8rem" }}
-                    disabled
-                    type="select"
-                    name="atiende"
-                    id="atiende"
-                    value={event?.no_estilista ? event?.no_estilista : ""}
-                    // onChange={(valor) => {
-                    //   setFormCita({ ...formCita, no_estilista: valor.target.value });
-                    // }}
-                  >
-                    <option value="0">Seleccione un estilista</option>
-
-                    {dataEstilistas.map((opcion, index) => {
-                      return (
-                        <option value={opcion.id} key={index}>
-                          {opcion.estilista}
-                        </option>
-                      );
-                    })}
-                  </Input>
-                </InputGroup>
-              </Col>
               <Col xs={6}>
                 <InputGroup>
                   <Label>Modo:</Label>
@@ -2744,9 +3084,23 @@ function Basic() {
               </Col>
             </Row>
           </Container>
+          <br />
+          <Button color="primary" onClick={() => setProductosModal(true)}>
+            Ingresar servicios
+          </Button>
+          <DataGrid autoHeight rows={dataCitasServicios} columns={columnsCitasServicios}></DataGrid>
           <Container>
             <ButtonGroup>
-              <Button style={{ marginRight: "10px" }} color="primary" onClick={() => updateCita()}>
+              <Button
+                style={{ marginRight: "10px" }}
+                color="primary"
+                onClick={() => {
+                  updateCita();
+                  setModalServicioUso(false);
+                  setModalCitaEditEstilista(false);
+                  setModalCitas(false);
+                }}
+              >
                 Guardar
               </Button>
               <Button color="danger" onClick={() => setModalServicioUso(false)}>
@@ -3053,6 +3407,20 @@ function Basic() {
           ) : null}
         </Box>
       </Modal>
+      <Modal open={ProductosModalEdicionServicios} onClose={() => setProductosModalEdicionServicios(false)}>
+        <Box sx={style}>
+          <Typography variant="h4">Agregar productos</Typography>
+          {/* <DataGrid rows={dataProductos} columns={columnsProductos} /> */}
+          {dataProductos ? (
+            <MaterialReactTable
+              columns={columnsProductosMRTEdicionServicios}
+              data={dataProductos}
+              initialState={{ density: "compact" }}
+              muiTableContainerProps={{ sx: { maxHeight: "330px" } }}
+            />
+          ) : null}
+        </Box>
+      </Modal>
       {/* 
       <Draggable>
         <div>
@@ -3069,7 +3437,15 @@ function Basic() {
       </Draggable> */}
 
       {/* Hazme un modal como lo he estado haciendo para que edite el estilista y el servicio, ingresando a su vez una cantidad */}
-      <Modal open={modalEdicionServicios} onClose={() => setModalEdicionServicios(false)}>
+      <Modal
+        open={modalEdicionServicios}
+        onClose={() => setModalEdicionServicios(false)}
+        disableAutoFocus
+        disableEnforceFocus
+        disableEscapeKeyDown
+        disableRestoreFocus
+        disableScrollLock
+      >
         <Box sx={styleObservaciones}>
           <Row form>
             <Col md={6}>
@@ -3078,6 +3454,7 @@ function Basic() {
                 <Input
                   type="select"
                   name="atiende"
+                  disabled
                   id="atiende"
                   value={formDetalleCitasServicios.idEstilista}
                   onChange={(valor) => {
@@ -3251,6 +3628,112 @@ function Basic() {
           </Row>
         </Box>
       </Modal>
+      <Modal open={ModalCitaEditEstilista} onClose={() => setModalCitaEditEstilista(false)} size={"sm"}>
+        <Box sx={styleCantidad}>
+          {colummEdit == "d_stilista" ? (
+            <>
+              <Label for="atiende" style={{ marginRight: "0px" }}>
+                Atiende:
+              </Label>
+              <Input
+                bsSize="sm"
+                type="select"
+                name="atiende"
+                id="atiende"
+                value={formCitaServioActualizacion?.idEstilista}
+                onChange={(e) => setFormCitaServioActualizacion({ ...formCitaServioActualizacion, idEstilista: e.target.value })}
+                style={{ fontSize: "0.8rem" }}
+              >
+                <option value="0">Seleccione un estilista</option>
+                {dataEstilistas.map((opcion, index) => (
+                  <option value={opcion.id} key={index}>
+                    {opcion.estilista}
+                  </option>
+                ))}
+              </Input>
+            </>
+          ) : null}
+
+          {colummEdit == "stao_estilista" ? (
+            <>
+              <Input value={formCitaServioActualizacion?.estatusCita == 2 ? "Requerido" : "Asignado"}></Input>
+              <Button
+                onClick={() =>
+                  setFormCitaServioActualizacion({
+                    ...formCitaServioActualizacion,
+                    estatusCita: formCitaServioActualizacion.estatusCita == 2 ? 3 : 2,
+                  })
+                }
+              >
+                Cambio
+              </Button>
+            </>
+          ) : null}
+          {colummEdit == "hora_cita" ? (
+            <LocalizationProvider dateAdapter={AdapterDateFns}>
+              <TimePicker
+                timeSteps={{ minutes: 15 }}
+                slotProps={{ textField: { size: "small" } }}
+                value={formCitaServioActualizacion?.hora_cita ? new Date(decodeURIComponent(formCitaServioActualizacion?.hora_cita)) : null}
+                // value={formCitaServioActualizacion?.hora_cita ? new Date(formCita.fecha).toTimeString().substring(0, 5) : null}
+                onChange={(hora) => handleChangeFechaEdicionServicio("hora", hora)}
+                sx={{
+                  "& .MuiInputBase-input": {
+                    width: "128px",
+                  },
+                  "& .MuiPickersDay-dayWithMargin": {
+                    // Oculta el ícono del DatePicker
+                    display: "none",
+                  },
+                  "& .MuiSvgIcon-root": {
+                    // Aquí se oculta el ícono
+                    width: "0.8rem",
+                    backgroundColor: "#ffccac",
+                  },
+                }}
+                renderInput={(props) => (
+                  <Input
+                    {...props}
+                    size="small"
+                    style={{
+                      fontSize: "0.8rem",
+                      backgroundColor: "#ffccac",
+                    }}
+                  />
+                )}
+              />
+            </LocalizationProvider>
+          ) : null}
+          {colummEdit == "descripcion" ? (
+            <>
+              <Input value={formCitaServioActualizacion?.descripcion}></Input>
+              <Button onClick={() => setProductosModalEdicionServicios(true)}>Cambio</Button>
+              <Label>Tiempo</Label>
+              <Input
+                value={formCitaServioActualizacion?.tiempo}
+                onChange={(e) => setFormCitaServioActualizacion({ ...formCitaServioActualizacion, tiempo: e.target.value })}
+              ></Input>
+            </>
+          ) : null}
+          {colummEdit == "tiempo" ? (
+            <Input
+              value={formCitaServioActualizacion?.tiempo}
+              onChange={(e) => setFormCitaServioActualizacion({ ...formCitaServioActualizacion, tiempo: e.target.value })}
+            ></Input>
+          ) : null}
+          <br />
+          <div style={{ display: "flex", justifyContent: "flex-end" }}>
+            <Button
+              color="success"
+              onClick={() => {
+                console.log("a");
+              }}
+            >
+              Guardar
+            </Button>
+          </div>
+        </Box>
+      </Modal>
 
       <Modal open={ModalCantidad} onClose={() => setModalCantidad(false)} size={"sm"}>
         <Box sx={styleCantidad}>
@@ -3387,7 +3870,7 @@ function Basic() {
                 </Col>
                 <Col xs="6">
                   <InputGroup size="sm" style={{ flexGrow: 1 }}>
-                    <Label for="cliente" style={{ marginRight: "5px", fontSize: "0.8rem" }}>
+                    <Label for="cliente" style={{ marginRight: "5px", fontSize: "0.8rem", width: 70 }}>
                       Observacion:
                     </Label>
 
@@ -3456,6 +3939,7 @@ function Basic() {
                     </Label>
                     <LocalizationProvider dateAdapter={AdapterDateFns}>
                       <DatePicker
+                        disabled={formCitaServicio.idCita}
                         openPickerIcon={<Box />} // Aquí se elimina el ícono
                         slotProps={{ textField: { size: "small" } }}
                         style={{ height: 20 }}
@@ -3520,6 +4004,7 @@ function Basic() {
                     </Label>
                     <LocalizationProvider dateAdapter={AdapterDateFns}>
                       <TimePicker
+                        disabled={formCitaServicio.idCita}
                         timeSteps={{ minutes: 15 }}
                         slotProps={{ textField: { size: "small" } }}
                         value={formCita.fecha ? new Date(decodeURIComponent(formCita.fecha)) : null}
@@ -3559,6 +4044,7 @@ function Basic() {
                       Atiende:
                     </Label>
                     <Input
+                      disabled={formCitaServicio.idCita}
                       bsSize="sm"
                       type="select"
                       name="atiende"
@@ -3633,7 +4119,7 @@ function Basic() {
                 <Col>
                   <FormGroup>
                     <Label for="total2">Total</Label>
-                    <Input type="text" name="total2" id="total2" disabled />
+                    <Input type="text" name="total2" id="total2" placeholder={"$" + formVentaTemporal.precioTotal.toFixed(2)} disabled />
                   </FormGroup>
 
                   <FormGroup>
@@ -3642,7 +4128,7 @@ function Basic() {
                   </FormGroup>
                   <FormGroup>
                     <Label for="total">Total</Label>
-                    <Input type="text" name="total" id="total" placeholder={"$" + formVentaTemporal.precioTotal.toFixed(2)} disabled />
+                    <Input type="text" name="total" id="total" placeholder={"$" + formVentaTemporal.precioTotalyOtros.toFixed(2)} disabled />
                   </FormGroup>
                 </Col>
                 <Col>
