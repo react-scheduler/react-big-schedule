@@ -25,10 +25,12 @@ import {
   ButtonGroup,
   InputGroupText,
 } from "reactstrap";
+import { FaMoneyBillAlt } from "react-icons/fa";
+
 import Swal from "sweetalert2";
 import "../css/style.css";
 import { es } from "date-fns/locale";
-import { MdOutlineFolder } from "react-icons/md";
+import { MdOutlineFolder, MdOutlineFreeCancellation } from "react-icons/md";
 import { MaterialReactTable } from "material-react-table";
 import { LocalizationProvider, DatePicker, TimePicker } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
@@ -464,6 +466,14 @@ function Basic() {
   };
 
   const moveEvent = async (schedulerData, event, slotId, slotName, start, end) => {
+    if (event.estadoCita == 4) {
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: `Cita en proceso, imposible cambiar de estilista desde agenda`,
+      });
+      return;
+    }
     const isVerified = await verificarDisponibilidad(event.tiempo, new Date(start), slotId);
     if (!isVerified) return;
     // return;
@@ -580,9 +590,10 @@ function Basic() {
       sortable: false,
       renderCell: (params) => (
         <div>
-          <Button
+          <FaMoneyBillAlt
+            size={20}
+            disabled
             onClick={() => {
-              console.log(params.row);
               setEvent({
                 fecha: params.row.fecha,
                 no_cliente: params.row.no_cliente2,
@@ -608,10 +619,9 @@ function Basic() {
             }}
           >
             AS
-          </Button>
+          </FaMoneyBillAlt>
           <Button
             onClick={() => {
-              console.log(params);
               setEvent({
                 fecha: params.row.fecha,
                 no_cliente: params.row.no_cliente2,
@@ -622,12 +632,17 @@ function Basic() {
                 no_estilista: params.row.idEstilista,
               });
               setModalEdicionServicios(true);
-
-              // setEvent(params.row.)
             }}
           >
             E
           </Button>
+          <MdOutlineFreeCancellation
+            disabled
+            size={20}
+            onClick={() => putDetalleCitasServiciosUpd4(0, params.row.sucursal, params.row.id, 0, params.row.idEstilista, 0, 0, 1, 0, 0, new Date())}
+          >
+            Cancelar
+          </MdOutlineFreeCancellation>
         </div>
       ),
     },
@@ -1469,7 +1484,97 @@ function Basic() {
       renderCell: (cell) => <p className="centered-cell">{format(new Date(cell.row.fecha), "hh:mm a")}</p>,
     },
   ];
+  const columnsCitasServiciosAltaServicio = [
+    {
+      field: "Accion",
+      headerName: "Accion",
+      width: 50,
+      renderCell: (cell) => (
+        <>
+          <AiFillDelete
+            size={20}
+            onClick={() => {
+              setDataVentaTemporal({ ...dataVentaTemporal, id: cell.row.id });
 
+              putDetalleCitasServiciosUpd4(
+                cell.row.id,
+                1, //sucursal: 2 sucursal: 1
+                formCitaServicio.idCita,
+                cell.row.tiempo,
+                cell.row.idEstilista,
+                1,
+                cell.row.id_servicio,
+                0,
+                0,
+                cell.row.precio
+              );
+            }}
+          >
+            Eliminar
+          </AiFillDelete>
+          <AiFillEdit
+            size={20}
+            onClick={() => {
+              console.log(cell.row);
+              setModalEdicionServicios(true);
+
+              setFormDetalleCitasServicios({
+                ...formDetalleCitasServicios,
+                cantidad: cell.row.cantidad,
+                id: cell.row.id,
+                idEstilista: cell.row.idEstilista,
+                idServicio: cell.row.id_servicio,
+                d_clave_prod: cell.row.descripcion,
+                tiempo: cell.row.tiempo,
+                precio: cell.row.precio,
+                fecha: cell.row.fecha,
+              });
+            }}
+          >
+            Editar
+          </AiFillEdit>
+        </>
+      ),
+    },
+    {
+      field: "observaciones",
+      headerName: "Descripción",
+      width: 120,
+      renderCell: (cell) => {
+        // Divide el texto en dos partes por el espacio
+        const [parte1, parte2] = cell.row.descripcion.split(" ");
+
+        return (
+          <div className="centered-cell" style={{ whiteSpace: "normal", lineHeight: "0.2em" }}>
+            <p>{parte1}</p>
+            <p>{parte2}</p>
+          </div>
+        );
+      },
+    },
+    {
+      field: "precio",
+      headerName: "Precio",
+      width: 70,
+      renderCell: (cell) => <p className="centered-cell">{cell.row.precio.toFixed(2)}</p>,
+      cellClassName: "centered-cell", // Agrega esta línea para aplicar la clase CSS
+    },
+    {
+      field: "tiempo",
+      headerName: "Tiempo",
+      width: 70,
+      renderCell: (cell) => <p className="centered-cell">{cell.row.tiempo + " Min"}</p>,
+      cellClassName: "centered-cell", // Agrega esta línea para aplicar la clase CSS
+    },
+    { field: "cantidad", headerName: "Cantidad", width: 70 },
+    { field: "nombre_agenda", headerName: "Nombre Estilista", width: 130 },
+    // {
+    //   field: "fecha",
+    //   headerName: "Hora cita",
+    //   width: 130,
+    //   renderCell: (cell) => <p className="centered-cell">{format(new Date(cell.row.fecha), "hh:mm a")}</p>,
+    // },
+  ];
   const rows = [
     {
       id: 10,
@@ -2253,11 +2358,11 @@ function Basic() {
           icon: "success",
           text: "Registro Realizado ",
           confirmButtonColor: "#3085d6",
-          confirmButtonText: "Ok",
+          confirmButtonText: "Recargar pagina",
         }).then((result) => {
-          // if (result.isConfirmed) {
-          //   window.location.reload();
-          // }
+          if (result.isConfirmed) {
+            window.location.reload();
+          }
         });
         setModalEdicionServicios(false);
       });
@@ -2606,7 +2711,7 @@ function Basic() {
           icon: "success",
           confirmButtonText: "Ok",
         }).then((result) => {
-          window.reload();
+          window.location.reload();
         });
       });
   };
@@ -2707,9 +2812,7 @@ function Basic() {
   return (
     <>
       <div className="contenedor-principal">
-        <div>
-          <Timer />
-        </div>
+        <Timer />
         <Row>
           {/* <Col>
             <InputGroup style={{ marginBottom: "5px" }}>
@@ -2951,7 +3054,7 @@ function Basic() {
         </Box>
       </Modal>
 
-      <Modal open={modalCitas} onClose={() => setModalCitas(false)} disableAutoFocus>
+      <Modal open={modalCitas} onClose={() => setModalCitas(false)} disableAutoFocus disableEnforceFocus>
         <Box sx={style}>
           <div style={{ height: "2%", display: "table", tableLayout: "fixed", width: "100%" }}>
             <h3>Tabla de citas</h3>
@@ -3033,8 +3136,11 @@ function Basic() {
               </Col>
               <Col>
                 <InputGroup>
-                  <Label for="fecha">Fecha cita</Label>
+                  <Label style={{ fontSize: "1.2rem", minWidth: "90px" }} for="fecha">
+                    Fecha cita:
+                  </Label>
                   <Input
+                    style={{ fontSize: "1.2rem" }}
                     disabled
                     type="datetime"
                     name="fecha"
@@ -3046,9 +3152,11 @@ function Basic() {
             </Row>
             <Row style={{ marginBottom: "10px" }}>
               <InputGroup>
-                <Label for="cliente">Cliente: </Label>
+                <Label style={{ fontSize: "1.2rem", minWidth: "70px" }} for="cliente">
+                  Cliente:{" "}
+                </Label>
                 <Input
-                  style={{ fontSize: "0.8rem" }}
+                  style={{ fontSize: "1.2rem" }}
                   bsSize="sm"
                   disabled
                   value={event?.no_cliente ? dataClientes.find((cliente) => cliente.id == event?.no_cliente)?.nombre : ""}
@@ -3062,24 +3170,32 @@ function Basic() {
             <Row style={{ marginBottom: "10px" }}>
               <Col xs={6}>
                 <InputGroup>
-                  <Label>Modo:</Label>
-                  <Input style={{ fontSize: "0.8rem" }} disabled value={event?.estadoCita == 2 ? "R" : "A"}></Input>
+                  <Label style={{ fontSize: "1.2rem", minWidth: "70px" }}>Modo:</Label>
+                  <Input style={{ fontSize: "1.2rem" }} disabled value={event?.estadoCita == 2 ? "R" : "A"}></Input>
+                </InputGroup>
+              </Col>
+              <Col xs={6}>
+                <InputGroup>
+                  <Label style={{ fontSize: "1.2rem", minWidth: "90px" }}>Tiempo:</Label>
+                  <Input
+                    style={{ fontSize: "1.2rem" }}
+                    disabled
+                    value={
+                      dataCitasServicios.length > 0
+                        ? dataCitasServicios.reduce((acc, service) => acc + Number(service.tiempo) * Number(service.cantidad), 0)
+                        : ""
+                    }
+                  >
+                    {" "}
+                  </Input>
                 </InputGroup>
               </Col>
             </Row>
             <Row style={{ marginBottom: "10px" }}>
               <Col xs={6}>
                 <InputGroup>
-                  <Label>Hora:</Label>
-                  <Input style={{ fontSize: "0.8rem" }} disabled value={event?.hora1 ? format(new Date(event?.hora1), "hh:mm") : ""}></Input>
-                </InputGroup>
-              </Col>
-              <Col xs={3}>
-                <InputGroup>
-                  <Label>Tiempo:</Label>
-                  <Input style={{ fontSize: "0.8rem" }} disabled value={event?.tiempo}>
-                    {" "}
-                  </Input>
+                  <Label style={{ fontSize: "1.2rem", minWidth: "70px" }}>Hora:</Label>
+                  <Input style={{ fontSize: "1.2rem" }} disabled value={event?.hora1 ? format(new Date(event?.hora1), "hh:mm") : ""}></Input>
                 </InputGroup>
               </Col>
             </Row>
@@ -3088,7 +3204,7 @@ function Basic() {
           <Button color="primary" onClick={() => setProductosModal(true)}>
             Ingresar servicios
           </Button>
-          <DataGrid autoHeight rows={dataCitasServicios} columns={columnsCitasServicios}></DataGrid>
+          <DataGrid autoHeight rows={dataCitasServicios} columns={columnsCitasServiciosAltaServicio}></DataGrid>
           <Container>
             <ButtonGroup>
               <Button
@@ -3483,7 +3599,7 @@ function Basic() {
                 </InputGroup>
               </FormGroup>
             </Col>
-            <Col md={6}>
+            <Col md={4}>
               <FormGroup>
                 <Label>Ingrese la cantidad a modificiar</Label>
                 <Input
@@ -3494,7 +3610,7 @@ function Basic() {
                 ></Input>
               </FormGroup>
             </Col>
-            <Col md="6">
+            <Col md="8">
               <FormGroup style={{ display: "flex", alignItems: "center", marginBottom: "0px" }}>
                 <Row>
                   <Col md={6}>
@@ -3504,6 +3620,7 @@ function Basic() {
 
                     <LocalizationProvider dateAdapter={AdapterDateFns}>
                       <DatePicker
+                        disabled
                         openPickerIcon={<Box />} // Aquí se elimina el ícono
                         slotProps={{ textField: { size: "small" } }}
                         style={{ height: 20 }}
@@ -3608,7 +3725,7 @@ function Basic() {
                   onClick={() => {
                     putDetalleCitasServiciosUpd4(
                       formDetalleCitasServicios.id,
-                      2,
+                      1, //SUCURSAL: 1 SUCURSAL: 2
                       formCitaServicio.idCita,
                       formDetalleCitasServicios.tiempo,
                       formDetalleCitasServicios.idEstilista,
@@ -3846,9 +3963,9 @@ function Basic() {
                 </Button>
               </div>
             </div>
-            <div style={{ padding: "2px", maxWidth: "600px", margin: "0 auto" }}>
+            <div style={{ maxWidth: "600px", margin: "0 auto" }}>
               <Row form>
-                <Col xs="12" style={{ padding: 0, marginBottom: 0 }}>
+                <Col xs="12" style={{ marginBottom: 0 }}>
                   <FormGroup style={{ display: "flex", alignItems: "center", marginBottom: "0px" }}>
                     <Label for="cliente" style={{ marginRight: "5px", fontSize: "0.8rem" }}>
                       Cliente:

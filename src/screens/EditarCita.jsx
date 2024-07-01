@@ -820,8 +820,11 @@ function EditarCita() {
           </Col>
           <Col>
             <InputGroup>
-              <Label for="fecha">Fecha cita:</Label>
+              <Label style={{ fontSize: "1.2rem", maxWidth: "100px", width: "100px" }} for="fecha">
+                Fecha cita:
+              </Label>
               <Input
+                style={{ fontSize: "1.2rem" }}
                 disabled={formCita.cambioCitaModo == 1}
                 type="date"
                 name="fecha"
@@ -836,9 +839,11 @@ function EditarCita() {
         </Row>
         <Row style={{ marginBottom: "10px" }}>
           <InputGroup>
-            <Label for="cliente">Cliente: </Label>
+            <Label style={{ fontSize: "1.2rem", maxWidth: "100px", width: "80px" }} for="cliente">
+              Cliente:{" "}
+            </Label>
             <Input
-              style={{ fontSize: "0.8rem" }}
+              style={{ fontSize: "1.2rem" }}
               bsSize="sm"
               disabled
               value={formCitaDescripciones.descripcion_no_cliente}
@@ -852,9 +857,11 @@ function EditarCita() {
         <Row style={{ marginBottom: "10px" }}>
           <Col>
             <InputGroup>
-              <Label for="atiende">Atiende:</Label>
+              <Label style={{ fontSize: "1.2rem", maxWidth: "100px", width: "80px" }} for="atiende">
+                Atiende:
+              </Label>
               <Input
-                style={{ fontSize: "0.8rem" }}
+                style={{ fontSize: "1.2rem" }}
                 disabled
                 type="select"
                 name="atiende"
@@ -878,24 +885,24 @@ function EditarCita() {
           </Col>
           <Col xs={6}>
             <InputGroup>
-              <Label>Modo:</Label>
-              <Input style={{ fontSize: "0.8rem" }} disabled value={formCita.estatusRequerido ? "R" : "A"}></Input>
+              <Label style={{ fontSize: "1.2rem", maxWidth: "100px", width: "100px" }}>Modo:</Label>
+              <Input style={{ fontSize: "1.2rem" }} disabled value={formCita.estatusRequerido ? "R" : "A"}></Input>
             </InputGroup>
           </Col>
         </Row>
         <Row style={{ marginBottom: "10px" }}>
           <Col xs={6}>
             <InputGroup>
-              <Label>Hora:</Label>
-              <Input style={{ fontSize: "0.8rem" }} disabled value={format(new Date(fecha), "hh:mm")}>
+              <Label style={{ fontSize: "1.2rem", maxWidth: "100px", width: "80px" }}>Hora:</Label>
+              <Input style={{ fontSize: "1.2rem" }} disabled value={format(new Date(fecha), "hh:mm")}>
                 {" "}
               </Input>
             </InputGroup>
           </Col>
-          <Col xs={3}>
+          <Col xs={6}>
             <InputGroup>
-              <Label>Tiempo:</Label>
-              <Input style={{ fontSize: "0.8rem" }} disabled value={formCita.tiempo}>
+              <Label style={{ fontSize: "1.2rem", maxWidth: "100px", width: "100px" }}>Tiempo:</Label>
+              <Input style={{ fontSize: "1.2rem" }} disabled value={formCita.tiempo}>
                 {" "}
               </Input>
             </InputGroup>
@@ -913,7 +920,9 @@ function EditarCita() {
           </Col>
           <Col>
             <InputGroup>
-              <Label for="fecha">Fecha cita:</Label>
+              <Label style={{ fontSize: "1.2rem", maxWidth: "100px", width: "100px" }} for="fecha">
+                Fecha cita:
+              </Label>
               <LocalizationProvider dateAdapter={AdapterDateFns}>
                 <DateTimePicker
                   disabled
@@ -941,7 +950,9 @@ function EditarCita() {
         <Row>
           <FormGroup>
             <InputGroup addonType="append">
-              <Label for="cliente">Cliente:</Label>
+              <Label style={{ fontSize: "1.2rem", maxWidth: "100px", width: "80px" }} for="cliente">
+                Cliente:
+              </Label>
               <Input
                 style={{ fontSize: "1.2rem" }}
                 bsSize="sm"
@@ -962,7 +973,9 @@ function EditarCita() {
         <Row style={{ marginBottom: "10px" }}>
           <Col>
             <InputGroup>
-              <Label for="atiende">Atiende:</Label>
+              <Label style={{ fontSize: "1.2rem", maxWidth: "100px", width: "80px" }} for="atiende">
+                Atiende:
+              </Label>
               <Input
                 disabled={formCita.cambioCitaModo == 1}
                 style={{ fontSize: "1.2rem" }}
@@ -989,7 +1002,7 @@ function EditarCita() {
           <Col>
             {formCita.cambioCitaModo == 1 ? (
               <InputGroup>
-                <Label>Modo:</Label>
+                <Label style={{ fontSize: "1.2rem", maxWidth: "100px", width: "100px" }}>Modo:</Label>
                 <Input
                   style={{ fontSize: "1.2rem", fontWeight: "bold", color: "red" }}
                   disabled
@@ -998,7 +1011,7 @@ function EditarCita() {
               </InputGroup>
             ) : (
               <InputGroup>
-                <Label>Modo:</Label>
+                <Label style={{ fontSize: "1.2rem", maxWidth: "100px", width: "100px" }}>Modo:</Label>
                 <Input style={{ fontSize: "1.2rem" }} disabled value={formCita.estatusRequerido ? "R" : "A"}></Input>
                 <Button>Cambio Modo</Button>
               </InputGroup>
@@ -1008,7 +1021,7 @@ function EditarCita() {
         <Row style={{ marginBottom: "10px" }}>
           <Col xs={6}>
             <InputGroup>
-              <Label>Hora:</Label>
+              <Label style={{ fontSize: "1.2rem", maxWidth: "100px", width: "80px" }}>Hora:</Label>
               {/* <Input style={{ fontSize: "0.8rem" }} disabled={formCita.cambioCitaModo == 1} value={format(new Date(fecha), "hh:mm")}>
                 {" "}
               </Input> */}
@@ -1048,9 +1061,9 @@ function EditarCita() {
               </LocalizationProvider>
             </InputGroup>
           </Col>
-          <Col xs={3}>
+          <Col xs={6}>
             <InputGroup>
-              <Label>Tiempo:</Label>
+              <Label style={{ fontSize: "1.2rem", maxWidth: "100px", width: "100px" }}>Tiempo:</Label>
               <Input
                 style={{ fontSize: "1.2rem" }}
                 disabled={formCita.cambioCitaModo == 1}

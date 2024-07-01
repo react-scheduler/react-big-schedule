@@ -22,7 +22,7 @@ const Timer = () => {
   // Formatear la hora a un string legible. Puedes ajustar el formato como prefieras.
   const horaFormateada = horaActual.toLocaleTimeString();
   return (
-    <div className="timer">
+    <div className="timer" style={{ margin: 0, padding: 0 }}>
       <h2> {horaFormateada}</h2>
     </div>
   );

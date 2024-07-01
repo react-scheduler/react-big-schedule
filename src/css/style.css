@@ -276,6 +276,8 @@ table.scheduler-table tr:last-child td {
   justify-content: space-between;
   align-items: center; /* Alinea los elementos al inicio */
   width: 100%; /* Asegura que tome todo el ancho disponible */
+  margin: 0;
+  padding: 0;
 }
 
 @media (min-width: 768px) {
@@ -283,6 +285,8 @@ table.scheduler-table tr:last-child td {
     flex-direction: row; /* En pantallas más grandes, usa dirección de fila */
     justify-content: space-between;
     align-items: flex-start;
+    margin: 0;
+    padding: 0;
   }
 }
 .dropbtn {

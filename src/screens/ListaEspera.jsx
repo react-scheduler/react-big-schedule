@@ -329,9 +329,6 @@ function ListaEspera() {
   }
 
   const listaEsperaPost = async (idListaEspera, tipo, tiempo, estilista, fecha) => {
-    console.log({ tiempo });
-    console.log({ estilista });
-    console.log({ fecha });
     const isVerified = await verificarDisponibilidad(tiempo, fecha, estilista);
     if (!isVerified) return;
 
@@ -363,9 +360,6 @@ function ListaEspera() {
       <div>
         <MdCalendarMonth
           onClick={() => {
-            console.log(params.row.tiempo);
-            console.log(params.row.estilista);
-            console.log(params.row.hora_estimada);
             listaEsperaPost(params.row.id, 1, params.row.tiempo_servicio, params.row.estilista, new Date(params.row.hora_estimada));
           }}
           title="C"
@@ -375,7 +369,6 @@ function ListaEspera() {
           title="S"
           size={25}
           onClick={() => {
-            console.log(params);
             setModalCitaServicio(true);
             setFormListaEsperaVerificacion({
               id: params.row.id,
@@ -506,7 +499,7 @@ function ListaEspera() {
       field: "fecha",
       headerName: "hora",
       width: 130,
-      renderCell: (params) => <p>{format(new Date(params.row.fecha), "p")}</p>,
+      renderCell: (params) => <p className="centered-cell"> {format(new Date(params.row.fecha), "p")}</p>,
     },
     { field: "nombreCompleto", headerName: "Nombre completo", width: 250 },
     { field: "descripcion", headerName: "Servicio", width: 130, renderCell: (params) => <p className="centered-cell">{params.row.descripcion}</p> },
