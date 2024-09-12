@@ -11,4 +11,4 @@ export {
   AddMorePopover,
   DemoData,
   wrapperFun,
-} from './components/index';
+} from './components/Scheduler';

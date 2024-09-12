@@ -1,16 +1,21 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, {CSSProperties} from "react";
+import PropTypes from "prop-types";
+import { SchedulerData } from "./SchedulerData";
 
-function BodyView({ schedulerData }) {
+interface BodyViewProps {
+  schedulerData: SchedulerData;
+}
+
+function BodyView({ schedulerData }: BodyViewProps) {
   const { renderData, headers, config, behaviors } = schedulerData;
   const width = schedulerData.getContentCellWidth();
 
   const tableRows = renderData
-    .filter(o => o.render)
+    .filter((o) => o.render)
     .map(({ slotId, groupOnly, rowHeight }) => {
       const rowCells = headers.map((header, index) => {
         const key = `${slotId}_${header.time}`;
-        const style = index === headers.length - 1 ? {} : { width };
+        const style: CSSProperties = index === headers.length - 1 ? {} : { width };
         if (header.nonWorkingTime) {
           style.backgroundColor = config.nonWorkingTimeBodyBgColor;
         }
@@ -18,7 +23,11 @@ function BodyView({ schedulerData }) {
           style.backgroundColor = config.groupOnlySlotColor;
         }
         if (behaviors.getNonAgendaViewBodyCellBgColorFunc) {
-          const cellBgColor = behaviors.getNonAgendaViewBodyCellBgColorFunc(schedulerData, slotId, header);
+          const cellBgColor = behaviors.getNonAgendaViewBodyCellBgColorFunc(
+            schedulerData,
+            slotId,
+            header
+          );
           if (cellBgColor) {
             style.backgroundColor = cellBgColor;
           }
