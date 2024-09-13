@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 function getPos(element) {
   let x = 0;
   let y = 0;

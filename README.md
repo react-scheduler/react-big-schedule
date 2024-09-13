@@ -1,3 +1,8 @@
+
+# Fork Warning
+
+This is a fork used internally by Muzz and is currently only used to visualize data. We can assure that the scheduler visualization is working. However, editing and modification of events are not used by us and have not been tested. Use at your own risk.
+
 # React Big Schedule (react-big-schedule)
 
 [![NPM version][npm-image]][npm-url] [![MIT License][mit-image]][mit-url] [![CodeQL][codeql-image]][codeql-url] [![CodeFactor][codeFactor-badge]][codeFactor-link]

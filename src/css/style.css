@@ -82,6 +82,7 @@
 table.resource-table,
 table.scheduler-bg-table,
 table.scheduler-table {
+  /* scrollbar-width: none;  */
   width: 100%;
   margin: 0;
   padding: 0;
