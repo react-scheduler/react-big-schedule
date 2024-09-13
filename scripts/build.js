@@ -19,7 +19,6 @@ async function build() {
   const root = path.resolve(__dirname, '..');
   const sourceDir = path.resolve(root, 'src');
   const targetDir = path.resolve(root, 'dist');
-  const typingDir = path.resolve(root, 'typing');
   const jsTarget = targetDir;
   const cssTarget = path.resolve(targetDir, 'css');
   const excludedFolders = ['examples', 'main.jsx'];
@@ -35,9 +34,6 @@ async function build() {
 
     process.stdout.write('Copying CSS Files... \n');
     await fs.copy(`${sourceDir}/css/`, cssTarget);
-
-    process.stdout.write('Copying Typescript Files... \n');
-    await fs.copy(`${typingDir}/`, targetDir);
 
     process.stdout.write('Success! \n');
   } catch (e) {
