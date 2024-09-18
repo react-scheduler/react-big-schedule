@@ -118,7 +118,7 @@ or
 2.) Import dependencies
 
 ```
-import { Scheduler, SchedulerData, ViewType, DATE_FORMAT } from "react-big-schedule";
+import Scheduler, { SchedulerData, ViewType, DATE_FORMAT } from "react-big-schedule";
 import dayjs from "dayjs";
 import "react-big-schedule/dist/css/style.css";
 ```
