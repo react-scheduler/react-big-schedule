@@ -583,12 +583,12 @@ export default class SchedulerData {
           recurringEventEnd: item.end,
           id: `${item.id}-${index}`,
           start: rule.origOptions.tzid
-            ? this.localeDayjs.utc(time).utcOffset(this.localeDayjs(new Date().utcOffset)(), true).format(DATETIME_FORMAT)
+            ? this.localeDayjs.utc(time).utcOffset(this.localeDayjs(new Date()).utcOffset(), true).format(DATETIME_FORMAT)
             : this.localeDayjs(new Date(time)).format(DATETIME_FORMAT),
           end: rule.origOptions.tzid
             ? this.localeDayjs
               .utc(time)
-              .utcOffset(this.localeDayjs(new Date().utcOffset)(), true)
+              .utcOffset(this.localeDayjs(new Date()).utcOffset(), true)
               .add(oldEnd.diff(oldStart), 'ms')
               .add(this.localeDayjs(new Date(oldUntil)).utcOffset() - this.localeDayjs(new Date(item.start)).utcOffset(), 'm')
               .format(DATETIME_FORMAT)
