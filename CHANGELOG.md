@@ -1,3 +1,11 @@
+## [4.4.1](https://github.com/react-scheduler/react-big-schedule/compare/4.4.0...4.4.1)
+`2024-10-06`
+
+- Fix `CHANGELOG.MD` file.
+- Removed `default` keyword from Scheduler Class in `typing/index.d.ts` file of typescript by [@ansulagrawal](https://github.com/ansulagrawal) in [#154](https://github.com/react-scheduler/react-big-schedule/pull/154).
+- Updated utcOffset method calls to pass `new Date()` instead of `new Date().utcOffset` by [@ansulagrawal](https://github.com/ansulagrawal) in [#155](https://github.com/react-scheduler/react-big-schedule/pull/155).
+-Updated `node_modules` version by [@ansulagrawal](https://github.com/ansulagrawal).
+
 ## [4.4.0](https://github.com/react-scheduler/react-big-schedule/compare/4.3.3...4.4.0)
 
 `2024-02-21`
