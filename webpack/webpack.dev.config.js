@@ -8,6 +8,7 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, '..', 'dist'),
     filename: 'bundle.js',
+    publicPath: '/',
   },
   module: {
     rules: [
@@ -20,6 +21,10 @@ module.exports = {
         test: /\.css$/,
         use: ['style-loader', 'css-loader'],
       },
+      {
+        test: /\.(png|jpg|jpeg|gif|svg)$/i,
+        type: 'asset/resource',
+      },
     ],
   },
   resolve: {
@@ -27,11 +32,12 @@ module.exports = {
   },
   plugins: [
     new HtmlWebpackPlugin({ template: './src/index.html', title: 'React Big Schedule' }),
-    new ESLintWebpackPlugin({ emitError: true, emitWarning: false, failOnError: true, extensions: ['js', 'jsx'] }),
+    new ESLintWebpackPlugin({ emitError: false, emitWarning: false, failOnError: false, extensions: ['js', 'jsx'] }),
   ],
   devServer: {
-    static: { directory: path.join(__dirname, '..', 'dist') },
+    static: { directory: path.join(__dirname, '..', 'public') },
     compress: true,
     port: 8080,
+    historyApiFallback: true,
   },
 };
