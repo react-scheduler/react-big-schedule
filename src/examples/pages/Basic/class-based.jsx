@@ -73,7 +73,7 @@ class Basic extends Component {
     schedulerData.setEvents(DemoData.events);
     this.setState({ viewModel: schedulerData });
     function secondsBetween(date1, date2) {
-      var diff = Math.abs(date1.getTime() - date2.getTime());
+      const diff = Math.abs(date1.getTime() - date2.getTime());
       return diff / 1000;
     }
 
