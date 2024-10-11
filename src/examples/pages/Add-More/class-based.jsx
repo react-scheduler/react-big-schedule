@@ -1,58 +1,82 @@
 import React, { Component } from 'react';
-import { SchedulerData, ViewType, DemoData, Scheduler, wrapperFun } from '../components/index';
 
-class CustomEventStyle extends Component {
+import { Scheduler, SchedulerData, ViewType, AddMorePopover, DemoData, wrapperFun } from '../../../index';
+
+class AddMore extends Component {
   constructor(props) {
     super(props);
 
-    const schedulerData = new SchedulerData('2022-12-18', ViewType.Week, false, false, {
-      views: [
-        { viewName: 'Day(Agenda)', viewType: ViewType.Day, showAgenda: true, isEventPerspective: false },
-        { viewName: 'Week', viewType: ViewType.Week, showAgenda: false, isEventPerspective: false },
-        { viewName: 'Month(TaskView)', viewType: ViewType.Month, showAgenda: false, isEventPerspective: true },
-        { viewName: 'Year', viewType: ViewType.Year, showAgenda: false, isEventPerspective: false },
-      ],
+    let schedulerData = new SchedulerData('2022-12-18', ViewType.Week, false, false, {
+      besidesWidth: 350,
+      dayMaxEvents: 2,
+      weekMaxEvents: 4,
+      monthMaxEvents: 4,
+      quarterMaxEvents: 4,
+      yearMaxEvents: 4,
     });
     schedulerData.localeDayjs.locale('en');
     schedulerData.setResources(DemoData.resources);
-    schedulerData.setEvents(DemoData.eventsForCustomEventStyle);
+    schedulerData.setEvents(DemoData.events);
     this.state = {
       viewModel: schedulerData,
+      headerItem: undefined,
+      left: 0,
+      top: 0,
+      height: 0,
     };
   }
 
   render() {
     const { viewModel } = this.state;
+
+    let popover = <div />;
+    if (this.state.headerItem !== undefined) {
+      popover = (
+        <AddMorePopover
+          headerItem={this.state.headerItem}
+          eventItemClick={this.eventClicked}
+          viewEventClick={this.ops1}
+          viewEventText="Ops 1"
+          viewEvent2Click={this.ops2}
+          viewEvent2Text="Ops 2"
+          schedulerData={viewModel}
+          closeAction={this.onSetAddMoreState}
+          left={this.state.left}
+          top={this.state.top}
+          height={this.state.height}
+          moveEvent={this.moveEvent}
+        />
+      );
+    }
+
     return (
       <div>
-        <div>
-          <h3 style={{ textAlign: 'center' }}>Custom event style</h3>
-          <Scheduler
-            schedulerData={viewModel}
-            prevClick={this.prevClick}
-            nextClick={this.nextClick}
-            onSelectDate={this.onSelectDate}
-            onViewChange={this.onViewChange}
-            eventItemClick={this.eventClicked}
-            viewEventClick={this.ops1}
-            viewEventText="Ops 1"
-            viewEvent2Text="Ops 2"
-            viewEvent2Click={this.ops2}
-            updateEventStart={this.updateEventStart}
-            updateEventEnd={this.updateEventEnd}
-            moveEvent={this.moveEvent}
-            newEvent={this.newEvent}
-            eventItemTemplateResolver={this.eventItemTemplateResolver}
-            toggleExpandFunc={this.toggleExpandFunc}
-          />
-        </div>
+        <Scheduler
+          schedulerData={viewModel}
+          prevClick={this.prevClick}
+          nextClick={this.nextClick}
+          onSelectDate={this.onSelectDate}
+          onViewChange={this.onViewChange}
+          eventItemClick={this.eventClicked}
+          viewEventClick={this.ops1}
+          viewEventText="Ops 1"
+          viewEvent2Text="Ops 2"
+          viewEvent2Click={this.ops2}
+          updateEventStart={this.updateEventStart}
+          updateEventEnd={this.updateEventEnd}
+          moveEvent={this.moveEvent}
+          newEvent={this.newEvent}
+          onSetAddMoreState={this.onSetAddMoreState}
+          toggleExpandFunc={this.toggleExpandFunc}
+        />
+        {popover}
       </div>
     );
   }
 
   prevClick = schedulerData => {
     schedulerData.prev();
-    schedulerData.setEvents(DemoData.eventsForCustomEventStyle);
+    schedulerData.setEvents(DemoData.events);
     this.setState({
       viewModel: schedulerData,
     });
@@ -60,7 +84,7 @@ class CustomEventStyle extends Component {
 
   nextClick = schedulerData => {
     schedulerData.next();
-    schedulerData.setEvents(DemoData.eventsForCustomEventStyle);
+    schedulerData.setEvents(DemoData.events);
     this.setState({
       viewModel: schedulerData,
     });
@@ -68,7 +92,7 @@ class CustomEventStyle extends Component {
 
   onViewChange = (schedulerData, view) => {
     schedulerData.setViewType(view.viewType, view.showAgenda, view.isEventPerspective);
-    schedulerData.setEvents(DemoData.eventsForCustomEventStyle);
+    schedulerData.setEvents(DemoData.events);
     this.setState({
       viewModel: schedulerData,
     });
@@ -76,7 +100,7 @@ class CustomEventStyle extends Component {
 
   onSelectDate = (schedulerData, date) => {
     schedulerData.setDate(date);
-    schedulerData.setEvents(DemoData.eventsForCustomEventStyle);
+    schedulerData.setEvents(DemoData.events);
     this.setState({
       viewModel: schedulerData,
     });
@@ -94,18 +118,18 @@ class CustomEventStyle extends Component {
     alert(`You just executed ops2 to event: {id: ${event.id}, title: ${event.title}}`);
   };
 
-  newEvent = (schedulerData, slotId, slotName, start, end, type, item) => {
+  newEvent = (schedulerData, slotId = '', slotName = '', start = '', end = '', type = '', item = '') => {
     if (confirm(`Do you want to create a new event? {slotId: ${slotId}, slotName: ${slotName}, start: ${start}, end: ${end}, type: ${type}, item: ${item}}`)) {
       let newFreshId = 0;
-      schedulerData.eventsForCustomEventStyle?.forEach(item => {
+      schedulerData.events.forEach(item => {
         if (item.id >= newFreshId) newFreshId = item.id + 1;
       });
 
-      const newEvent = {
+      let newEvent = {
         id: newFreshId,
         title: 'New event you just created',
-        start,
-        end,
+        start: start,
+        end: end,
         resourceId: slotId,
         bgColor: 'purple',
       };
@@ -147,23 +171,19 @@ class CustomEventStyle extends Component {
     }
   };
 
-  eventItemTemplateResolver = (schedulerData, event, bgColor, isStart, isEnd, mustAddCssClass, mustBeHeight, agendaMaxEventWidth) => {
-    const borderWidth = isStart ? '4' : '0';
-    let borderColor = 'rgba(0,139,236,1)';
-      let backgroundColor = '#80C5F6';
-    const titleText = schedulerData.behaviors.getEventTextFunc(schedulerData, event);
-    if (event.type) {
-      borderColor = event.type === 1 ? 'rgba(0,139,236,1)' : event.type === 3 ? 'rgba(245,60,43,1)' : '#999';
-      backgroundColor = event.type === 1 ? '#80C5F6' : event.type === 3 ? '#FA9E95' : '#D9D9D9';
+  onSetAddMoreState = newState => {
+    if (newState === undefined) {
+      this.setState({
+        headerItem: undefined,
+        left: 0,
+        top: 0,
+        height: 0,
+      });
+    } else {
+      this.setState({
+        ...newState,
+      });
     }
-    let divStyle = { borderLeft: `${borderWidth}px solid ${borderColor}`, backgroundColor, height: mustBeHeight };
-    if (agendaMaxEventWidth) divStyle = { ...divStyle, maxWidth: agendaMaxEventWidth };
-
-    return (
-      <div key={event.id} className={mustAddCssClass} style={divStyle}>
-        <span style={{ marginLeft: '4px', lineHeight: `${mustBeHeight}px` }}>{titleText}</span>
-      </div>
-    );
   };
 
   toggleExpandFunc = (schedulerData, slotId) => {
@@ -174,4 +194,4 @@ class CustomEventStyle extends Component {
   };
 }
 
-export default wrapperFun(CustomEventStyle);
+export default wrapperFun(AddMore);
