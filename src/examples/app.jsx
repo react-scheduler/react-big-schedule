@@ -15,6 +15,7 @@ const Basic = lazy(() => import('./pages/Basic'));
 const ReadOnly = lazy(() => import('./pages/Read-Only'));
 const AddMore = lazy(() => import('./pages/Add-More'));
 const DragAndDrop = lazy(() => import('./pages/Drag-And-Drop'));
+const CustomTime = lazy(() => import('./pages/Custom-Time'));
 
 
 function App() {
@@ -60,6 +61,14 @@ function App() {
           element: (
             <Suspense fallback={<Fallback />}>
               <DragAndDrop />
+            </Suspense>
+          ),
+        },
+        {
+          path: '/custom-time',
+          element: (
+            <Suspense fallback={<Fallback />}>
+              <CustomTime />
             </Suspense>
           ),
         },
