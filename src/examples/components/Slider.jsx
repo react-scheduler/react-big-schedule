@@ -8,6 +8,7 @@ const items = [
   { label: 'Read Only', key: 'read-only', path: '/read-only' },
   { label: 'Add More', key: 'add-more', path: '/add-more' },
   { label: 'Drag and Drop', key: 'drag-and-drop', path: '/drag-and-drop' },
+  { label: 'Custom Time', key: 'custom-time', path: '/custom-time' },
 ];
 
 function Slider() {
