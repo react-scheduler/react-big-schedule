@@ -1,5 +1,5 @@
-import { Dayjs } from "dayjs";
-import { SummaryPos, ViewType } from "../config/default";
+import type { Dayjs } from "dayjs";
+import type { SummaryPos, ViewType } from "../config/default";
 
 export interface View {
   viewName?: string;
@@ -97,10 +97,10 @@ export interface Resource {
   groupOnly?: boolean;
 }
 
-export type HeadersType = {
+export interface HeadersType {
   time: string;
   nonWorkingTime?: boolean;
-};
+}
 
 export interface HeaderItem {
   time: string;
