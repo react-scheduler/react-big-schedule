@@ -30,17 +30,15 @@ const stopDragHelper = ({ count, cellUnit, config, dragType, eventItem, localeDa
   });
 };
 
-const startResizable = ({ eventItem, isInPopover, schedulerData }) =>
-  schedulerData.config.startResizable === true &&
-  isInPopover === false &&
-  (eventItem.resizable === undefined || eventItem.resizable !== false) &&
-  (eventItem.startResizable === undefined || eventItem.startResizable !== false);
+const startResizable = ({ eventItem, isInPopover, schedulerData }) => schedulerData.config.startResizable === true
+  && isInPopover === false
+  && (eventItem.resizable === undefined || eventItem.resizable !== false)
+  && (eventItem.startResizable === undefined || eventItem.startResizable !== false);
 
-const endResizable = ({ eventItem, isInPopover, schedulerData }) =>
-  schedulerData.config.endResizable === true &&
-  isInPopover === false &&
-  (eventItem.resizable === undefined || eventItem.resizable !== false) &&
-  (eventItem.endResizable === undefined || eventItem.endResizable !== false);
+const endResizable = ({ eventItem, isInPopover, schedulerData }) => schedulerData.config.endResizable === true
+  && isInPopover === false
+  && (eventItem.resizable === undefined || eventItem.resizable !== false)
+  && (eventItem.endResizable === undefined || eventItem.endResizable !== false);
 
 class EventItem extends Component {
   constructor(props) {
@@ -450,7 +448,8 @@ class EventItem extends Component {
         style={{ left, width, top }}
         onClick={() => {
           if (eventItemClick) eventItemClick(schedulerData, eventItem);
-        }}>
+        }}
+      >
         {eventItemTemplate}
         {startResizeDiv}
         {endResizeDiv}
@@ -507,7 +506,8 @@ class EventItem extends Component {
         placement={isPopoverPlacementMousePosition ? mousePositionPlacement : popoverPlacement}
         content={content}
         trigger={config.eventItemPopoverTrigger}
-        overlayClassName="scheduler-event-item-popover">
+        overlayClassName="scheduler-event-item-popover"
+      >
         {aItem}
       </Popover>
     );
