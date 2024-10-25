@@ -5,7 +5,7 @@ import { Popover } from 'antd';
 import EventItemPopover from './EventItemPopover';
 import { DnDTypes, CellUnit, DATETIME_FORMAT } from '../config/default';
 
-const stopDragHelper = ({ count, cellUnit, config, dragtype, eventItem, localeDayjs, value }) => {
+const stopDragHelper = ({ count, cellUnit, config, dragType, eventItem, localeDayjs, value }) => {
   const whileTrue = true;
   let tCount = 0;
   let i = 0;
@@ -14,7 +14,7 @@ const stopDragHelper = ({ count, cellUnit, config, dragtype, eventItem, localeDa
     if (count !== 0 && cellUnit !== CellUnit.Hour && config.displayWeekend === false) {
       while (whileTrue) {
         i = count > 0 ? i + 1 : i - 1;
-        const date = localeDayjs(new Date(eventItem[dragtype])).add(i, 'days');
+        const date = localeDayjs(new Date(eventItem[dragType])).add(i, 'days');
         const dayOfWeek = date.weekday();
 
         if (dayOfWeek !== 0 && dayOfWeek !== 6) {
@@ -30,15 +30,17 @@ const stopDragHelper = ({ count, cellUnit, config, dragtype, eventItem, localeDa
   });
 };
 
-const startResizable = ({ eventItem, isInPopover, schedulerData }) => schedulerData.config.startResizable === true
-  && isInPopover === false
-  && (eventItem.resizable === undefined || eventItem.resizable !== false)
-  && (eventItem.startResizable === undefined || eventItem.startResizable !== false);
+const startResizable = ({ eventItem, isInPopover, schedulerData }) =>
+  schedulerData.config.startResizable === true &&
+  isInPopover === false &&
+  (eventItem.resizable === undefined || eventItem.resizable !== false) &&
+  (eventItem.startResizable === undefined || eventItem.startResizable !== false);
 
-const endResizable = ({ eventItem, isInPopover, schedulerData }) => schedulerData.config.endResizable === true
-  && isInPopover === false
-  && (eventItem.resizable === undefined || eventItem.resizable !== false)
-  && (eventItem.endResizable === undefined || eventItem.endResizable !== false);
+const endResizable = ({ eventItem, isInPopover, schedulerData }) =>
+  schedulerData.config.endResizable === true &&
+  isInPopover === false &&
+  (eventItem.resizable === undefined || eventItem.resizable !== false) &&
+  (eventItem.endResizable === undefined || eventItem.endResizable !== false);
 
 class EventItem extends Component {
   constructor(props) {
@@ -70,11 +72,11 @@ class EventItem extends Component {
     }
   }
 
-  resizerHelper = (dragtype, eventType = 'addEventListener') => {
-    const resizer = dragtype === 'start' ? this.startResizer : this.endResizer;
-    const doDrag = dragtype === 'start' ? this.doStartDrag : this.doEndDrag;
-    const stopDrag = dragtype === 'start' ? this.stopStartDrag : this.stopEndDrag;
-    const cancelDrag = dragtype === 'start' ? this.cancelStartDrag : this.cancelEndDrag;
+  resizerHelper = (dragType, eventType = 'addEventListener') => {
+    const resizer = dragType === 'start' ? this.startResizer : this.endResizer;
+    const doDrag = dragType === 'start' ? this.doStartDrag : this.doEndDrag;
+    const stopDrag = dragType === 'start' ? this.stopStartDrag : this.stopEndDrag;
+    const cancelDrag = dragType === 'start' ? this.cancelStartDrag : this.cancelEndDrag;
     if (this.supportTouch) {
       resizer[eventType]('touchmove', doDrag, false);
       resizer[eventType]('touchend', stopDrag, false);
@@ -85,7 +87,7 @@ class EventItem extends Component {
     }
   };
 
-  initDragHelper = (ev, dragtype) => {
+  initDragHelper = (ev, dragType) => {
     const { schedulerData, eventItem } = this.props;
     const slotId = schedulerData._getEventSlotId(eventItem);
     const slot = schedulerData.getSlotById(slotId);
@@ -102,10 +104,10 @@ class EventItem extends Component {
       if (ev.buttons !== undefined && ev.buttons !== 1) return;
       clientX = ev.clientX;
     }
-    this.setState({ [dragtype === 'start' ? 'startX' : 'endX']: clientX });
+    this.setState({ [dragType === 'start' ? 'startX' : 'endX']: clientX });
 
     schedulerData._startResizing();
-    this.resizerHelper(dragtype, 'addEventListener');
+    this.resizerHelper(dragType, 'addEventListener');
     document.onselectstart = () => false;
     document.ondragstart = () => false;
   };
@@ -192,7 +194,7 @@ class EventItem extends Component {
       config,
       eventItem,
       localeDayjs,
-      dragtype: 'start',
+      dragType: 'start',
       value: newStart,
     });
 
@@ -317,7 +319,7 @@ class EventItem extends Component {
       .add(cellUnit === CellUnit.Hour ? count * config.minuteStep : count, cellUnit === CellUnit.Hour ? 'minutes' : 'days')
       .format(DATETIME_FORMAT);
     newEnd = await stopDragHelper({
-      dragtype: 'start',
+      dragType: 'end',
       cellUnit,
       config,
       count,
@@ -351,7 +353,7 @@ class EventItem extends Component {
       if (conflictOccurred !== undefined) {
         conflictOccurred(schedulerData, 'EndResize', eventItem, DnDTypes.EVENT, slotId, slot ? slot.name : null, eventItem.start, newEnd);
       } else {
-        console.log('Conflict occurred, set conflictOccurred func in Scheduler to handle it');
+        console.error('Conflict occurred, set conflictOccurred func in Scheduler to handle it');
       }
       this.subscribeResizeEvent(this.props);
     } else if (updateEventEnd !== undefined) {
@@ -448,8 +450,7 @@ class EventItem extends Component {
         style={{ left, width, top }}
         onClick={() => {
           if (eventItemClick) eventItemClick(schedulerData, eventItem);
-        }}
-      >
+        }}>
         {eventItemTemplate}
         {startResizeDiv}
         {endResizeDiv}
@@ -506,8 +507,7 @@ class EventItem extends Component {
         placement={isPopoverPlacementMousePosition ? mousePositionPlacement : popoverPlacement}
         content={content}
         trigger={config.eventItemPopoverTrigger}
-        overlayClassName="scheduler-event-item-popover"
-      >
+        overlayClassName="scheduler-event-item-popover">
         {aItem}
       </Popover>
     );
@@ -515,6 +515,7 @@ class EventItem extends Component {
 }
 
 export default EventItem;
+
 EventItem.propTypes = {
   schedulerData: PropTypes.object.isRequired,
   eventItem: PropTypes.object.isRequired,

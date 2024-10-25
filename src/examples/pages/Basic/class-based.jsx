@@ -1,5 +1,5 @@
-import * as antdLocale from 'antd/locale/pt_BR';
-import * as dayjsLocale from 'dayjs/locale/pt-br';
+// import * as antdLocale from 'antd/locale/pt_BR';
+// import * as dayjsLocale from 'dayjs/locale/pt-br';
 import React, { Component } from 'react';
 
 import { DemoData, Scheduler, SchedulerData, ViewType, wrapperFun } from '../../../index';
@@ -10,6 +10,7 @@ class Basic extends Component {
 
     let schedulerData = new SchedulerData('2022-12-22', ViewType.Week, false, false, {
       besidesWidth: 300,
+      responsiveByParent: true,
       dayMaxEvents: 99,
       weekMaxEvents: 9669,
       monthMaxEvents: 9669,
@@ -17,11 +18,11 @@ class Basic extends Component {
       yearMaxEvents: 9956,
       customMaxEvents: 9965,
       eventItemPopoverTrigger: 'click',
-      schedulerContentHeight: '100%',
+      displayWeekend: false,
     });
 
-    schedulerData.setSchedulerLocale(dayjsLocale);
-    schedulerData.setCalendarPopoverLocale(antdLocale);
+    // schedulerData.setSchedulerLocale(dayjsLocale);
+    // schedulerData.setCalendarPopoverLocale(antdLocale);
     schedulerData.setResources(DemoData.resources);
     schedulerData.setEvents(DemoData.events);
     this.state = {
@@ -129,6 +130,7 @@ class Basic extends Component {
 
   updateEventEnd = (schedulerData, event, newEnd) => {
     if (confirm(`Do you want to adjust the end of the event? {eventId: ${event.id}, eventTitle: ${event.title}, newEnd: ${newEnd}}`)) {
+      console.log(event, newEnd);
       schedulerData.updateEventEnd(event, newEnd);
     }
     this.setState({ viewModel: schedulerData });
