@@ -2,7 +2,7 @@
 `2024-10-25`
 
 - Fixed typo of `dragtype` to `dragType` by  [@ansulagrawal](https://github.com/ansulagrawal) in [#171](https://github.com/react-scheduler/react-big-schedule/pull/171).
-- Fixed `End Drag` bug [#167](https://github.com/react-scheduler/react-big-schedule/issues/167) by  [@ansulagrawal](https://github.com/ansulagrawal) in [#171](https://github.com/react-scheduler/react-big-schedule/pull/171), thanks to [@Navid-gh](https://github.com/Navid-gh) for raising a bug.
+- Fixed `End Drag` bug [#167](https://github.com/react-scheduler/react-big-schedule/issues/167) by [@ansulagrawal](https://github.com/ansulagrawal) in [#171](https://github.com/react-scheduler/react-big-schedule/pull/171), thanks to [@Navid-gh](https://github.com/Navid-gh) for raising a bug.
 
 ## [4.4.1](https://github.com/react-scheduler/react-big-schedule/compare/4.4.0...4.4.1)
 `2024-10-06`
