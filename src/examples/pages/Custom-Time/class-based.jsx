@@ -1,42 +1,64 @@
+import * as antdLocale from 'antd/locale/pt_BR';
+import * as dayjsLocale from 'dayjs/locale/pt-br';
 import React, { Component } from 'react';
-import { Scheduler, SchedulerData, ViewType, DemoData, wrapperFun } from '../components/index';
-import '../css/style.css';
 
-class OverlapCheck extends Component {
+import { DemoData, Scheduler, SchedulerData, ViewType, wrapperFun } from '../../../index';
+
+const startHr = 8;
+
+class CustomTime extends Component {
   constructor(props) {
     super(props);
 
-    const schedulerData = new SchedulerData('2022-12-18', ViewType.Week, false, false, { checkConflict: true });
-    schedulerData.localeDayjs.locale('en');
+    let schedulerData = new SchedulerData(
+      '2022-12-22',
+      ViewType.Day,
+      false,
+      false,
+      {
+        besidesWidth: 300,
+        dayMaxEvents: 99,
+        dayStartFrom: 8,
+        dayStopTo: 18,
+        customMaxEvents: 9965,
+        eventItemPopoverTrigger: 'click',
+        schedulerContentHeight: '100%',
+        views: [],
+      },
+    );
+
+    schedulerData.setSchedulerLocale(dayjsLocale);
+    schedulerData.setCalendarPopoverLocale(antdLocale);
     schedulerData.setResources(DemoData.resources);
     schedulerData.setEvents(DemoData.events);
-    this.state = { viewModel: schedulerData };
+    this.state = {
+      viewModel: schedulerData,
+    };
   }
 
   render() {
     const { viewModel } = this.state;
     return (
-      <div>
-        <h3 style={{ textAlign: 'center' }}>Overlap check</h3>
-        <Scheduler
-          schedulerData={viewModel}
-          prevClick={this.prevClick}
-          nextClick={this.nextClick}
-          onSelectDate={this.onSelectDate}
-          onViewChange={this.onViewChange}
-          eventItemClick={this.eventClicked}
-          viewEventClick={this.ops1}
-          viewEventText="Ops 1"
-          viewEvent2Text="Ops 2"
-          viewEvent2Click={this.ops2}
-          updateEventStart={this.updateEventStart}
-          updateEventEnd={this.updateEventEnd}
-          moveEvent={this.moveEvent}
-          newEvent={this.newEvent}
-          conflictOccurred={this.conflictOccurred}
-          toggleExpandFunc={this.toggleExpandFunc}
-        />
-      </div>
+      <Scheduler
+        schedulerData={viewModel}
+        prevClick={this.prevClick}
+        nextClick={this.nextClick}
+        onSelectDate={this.onSelectDate}
+        onViewChange={this.onViewChange}
+        viewEventClick={this.ops1}
+        viewEventText="Ops 1"
+        viewEvent2Text="Ops 2"
+        viewEvent2Click={this.ops2}
+        updateEventStart={this.updateEventStart}
+        updateEventEnd={this.updateEventEnd}
+        moveEvent={this.moveEvent}
+        newEvent={this.newEvent}
+        onScrollLeft={this.onScrollLeft}
+        onScrollRight={this.onScrollRight}
+        onScrollTop={this.onScrollTop}
+        onScrollBottom={this.onScrollBottom}
+        toggleExpandFunc={this.toggleExpandFunc}
+      />
     );
   }
 
@@ -53,15 +75,24 @@ class OverlapCheck extends Component {
   };
 
   onViewChange = (schedulerData, view) => {
+    const start = new Date();
     schedulerData.setViewType(view.viewType, view.showAgenda, view.isEventPerspective);
     schedulerData.setEvents(DemoData.events);
     this.setState({ viewModel: schedulerData });
+    function secondsBetween(date1, date2) {
+      const diff = Math.abs(date1.getTime() - date2.getTime());
+      return diff / 1000;
+    }
+
+    console.log('Elapsed seconds: ' + secondsBetween(start, new Date()));
   };
 
   onSelectDate = (schedulerData, date) => {
     schedulerData.setDate(date);
     schedulerData.setEvents(DemoData.events);
-    this.setState({ viewModel: schedulerData });
+    this.setState({
+      viewModel: schedulerData,
+    });
   };
 
   eventClicked = (schedulerData, event) => {
@@ -83,18 +114,16 @@ class OverlapCheck extends Component {
         if (item.id >= newFreshId) newFreshId = item.id + 1;
       });
 
-      const newEvent = {
+      let newEvent = {
         id: newFreshId,
         title: 'New event you just created',
-        start,
-        end,
+        start: start,
+        end: end,
         resourceId: slotId,
         bgColor: 'purple',
       };
       schedulerData.addEvent(newEvent);
-      this.setState({
-        viewModel: schedulerData,
-      });
+      this.setState({ viewModel: schedulerData });
     }
   };
 
@@ -102,18 +131,14 @@ class OverlapCheck extends Component {
     if (confirm(`Do you want to adjust the start of the event? {eventId: ${event.id}, eventTitle: ${event.title}, newStart: ${newStart}}`)) {
       schedulerData.updateEventStart(event, newStart);
     }
-    this.setState({
-      viewModel: schedulerData,
-    });
+    this.setState({ viewModel: schedulerData });
   };
 
   updateEventEnd = (schedulerData, event, newEnd) => {
     if (confirm(`Do you want to adjust the end of the event? {eventId: ${event.id}, eventTitle: ${event.title}, newEnd: ${newEnd}}`)) {
       schedulerData.updateEventEnd(event, newEnd);
     }
-    this.setState({
-      viewModel: schedulerData,
-    });
+    this.setState({ viewModel: schedulerData });
   };
 
   moveEvent = (schedulerData, event, slotId, slotName, start, end) => {
@@ -123,15 +148,33 @@ class OverlapCheck extends Component {
       )
     ) {
       schedulerData.moveEvent(event, slotId, slotName, start, end);
-      this.setState({
-        viewModel: schedulerData,
-      });
+      this.setState({ viewModel: schedulerData });
     }
   };
 
-  conflictOccurred = (schedulerData, action, event, type, slotId, slotName, start, end) => {
-    alert(`Conflict occurred. {action: ${action}, event: ${event}`);
+  onScrollRight = (schedulerData, schedulerContent, maxScrollLeft) => {
+    if (schedulerData.ViewTypes === ViewType.Day) {
+      schedulerData.next();
+      schedulerData.setEvents(DemoData.events);
+      this.setState({ viewModel: schedulerData });
+
+      schedulerContent.scrollLeft = maxScrollLeft - 10;
+    }
   };
+
+  onScrollLeft = (schedulerData, schedulerContent) => {
+    if (schedulerData.ViewTypes === ViewType.Day) {
+      schedulerData.prev();
+      schedulerData.setEvents(DemoData.events);
+      this.setState({ viewModel: schedulerData });
+
+      schedulerContent.scrollLeft = 10;
+    }
+  };
+
+  onScrollTop = () => console.log('onScrollTop');
+
+  onScrollBottom = () => console.log('onScrollBottom');
 
   toggleExpandFunc = (schedulerData, slotId) => {
     schedulerData.toggleExpandStatus(slotId);
@@ -139,4 +182,4 @@ class OverlapCheck extends Component {
   };
 }
 
-export default wrapperFun(OverlapCheck);
+export default wrapperFun(CustomTime);

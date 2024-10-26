@@ -1,14 +1,15 @@
-import React, { Component } from 'react';
-import * as dayjsLocale from 'dayjs/locale/pt-br';
 import * as antdLocale from 'antd/locale/pt_BR';
+import * as dayjsLocale from 'dayjs/locale/pt-br';
+import React, { Component } from 'react';
 
-import { Scheduler, SchedulerData, ViewType, DemoData, wrapperFun } from '../index';
+import { DemoData, Scheduler, SchedulerData, ViewType, wrapperFun } from '../../../index';
 
 class Basic extends Component {
   constructor(props) {
     super(props);
 
-    const schedulerData = new SchedulerData('2022-12-02', ViewType.Month, false, false, {
+    let schedulerData = new SchedulerData('2022-12-22', ViewType.Week, false, false, {
+      besidesWidth: 300,
       dayMaxEvents: 99,
       weekMaxEvents: 9669,
       monthMaxEvents: 9669,
@@ -16,7 +17,7 @@ class Basic extends Component {
       yearMaxEvents: 9956,
       customMaxEvents: 9965,
       eventItemPopoverTrigger: 'click',
-      schedulerContentHeight: '350px',
+      schedulerContentHeight: '100%',
     });
 
     schedulerData.setSchedulerLocale(dayjsLocale);
@@ -37,7 +38,6 @@ class Basic extends Component {
         nextClick={this.nextClick}
         onSelectDate={this.onSelectDate}
         onViewChange={this.onViewChange}
-        // eventItemClick={this.eventClicked}
         viewEventClick={this.ops1}
         viewEventText="Ops 1"
         viewEvent2Text="Ops 2"
@@ -77,7 +77,7 @@ class Basic extends Component {
       return diff / 1000;
     }
 
-    console.log(`Elapsed seconds: ${secondsBetween(start, new Date())}`);
+    console.log('Elapsed seconds: ' + secondsBetween(start, new Date()));
   };
 
   onSelectDate = (schedulerData, date) => {
@@ -107,18 +107,16 @@ class Basic extends Component {
         if (item.id >= newFreshId) newFreshId = item.id + 1;
       });
 
-      const newEvent = {
+      let newEvent = {
         id: newFreshId,
         title: 'New event you just created',
-        start,
-        end,
+        start: start,
+        end: end,
         resourceId: slotId,
         bgColor: 'purple',
       };
       schedulerData.addEvent(newEvent);
-      this.setState({
-        viewModel: schedulerData,
-      });
+      this.setState({ viewModel: schedulerData });
     }
   };
 
@@ -126,18 +124,14 @@ class Basic extends Component {
     if (confirm(`Do you want to adjust the start of the event? {eventId: ${event.id}, eventTitle: ${event.title}, newStart: ${newStart}}`)) {
       schedulerData.updateEventStart(event, newStart);
     }
-    this.setState({
-      viewModel: schedulerData,
-    });
+    this.setState({ viewModel: schedulerData });
   };
 
   updateEventEnd = (schedulerData, event, newEnd) => {
     if (confirm(`Do you want to adjust the end of the event? {eventId: ${event.id}, eventTitle: ${event.title}, newEnd: ${newEnd}}`)) {
       schedulerData.updateEventEnd(event, newEnd);
     }
-    this.setState({
-      viewModel: schedulerData,
-    });
+    this.setState({ viewModel: schedulerData });
   };
 
   moveEvent = (schedulerData, event, slotId, slotName, start, end) => {
@@ -147,9 +141,7 @@ class Basic extends Component {
       )
     ) {
       schedulerData.moveEvent(event, slotId, slotName, start, end);
-      this.setState({
-        viewModel: schedulerData,
-      });
+      this.setState({ viewModel: schedulerData });
     }
   };
 
@@ -157,39 +149,29 @@ class Basic extends Component {
     if (schedulerData.ViewTypes === ViewType.Day) {
       schedulerData.next();
       schedulerData.setEvents(DemoData.events);
-      this.setState({
-        viewModel: schedulerData,
-      });
+      this.setState({ viewModel: schedulerData });
 
       schedulerContent.scrollLeft = maxScrollLeft - 10;
     }
   };
 
-  onScrollLeft = (schedulerData, schedulerContent, maxScrollLeft) => {
+  onScrollLeft = (schedulerData, schedulerContent) => {
     if (schedulerData.ViewTypes === ViewType.Day) {
       schedulerData.prev();
       schedulerData.setEvents(DemoData.events);
-      this.setState({
-        viewModel: schedulerData,
-      });
+      this.setState({ viewModel: schedulerData });
 
       schedulerContent.scrollLeft = 10;
     }
   };
 
-  onScrollTop = (schedulerData, schedulerContent, maxScrollTop) => {
-    console.log('onScrollTop');
-  };
+  onScrollTop = () => console.log('onScrollTop');
 
-  onScrollBottom = (schedulerData, schedulerContent, maxScrollTop) => {
-    console.log('onScrollBottom');
-  };
+  onScrollBottom = () => console.log('onScrollBottom');
 
   toggleExpandFunc = (schedulerData, slotId) => {
     schedulerData.toggleExpandStatus(slotId);
-    this.setState({
-      viewModel: schedulerData,
-    });
+    this.setState({ viewModel: schedulerData });
   };
 }
 
