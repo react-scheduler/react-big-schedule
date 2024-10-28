@@ -1,3 +1,5 @@
+// @ts-ignore
+
 import { DragSource, DragSourceConnector, DragSourceMonitor } from "react-dnd";
 import { DnDTypes, ViewType, DATETIME_FORMAT } from "../config/default";
 import dayjs from "dayjs";
