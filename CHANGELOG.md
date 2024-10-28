@@ -1,5 +1,10 @@
 # Change Logs:
 
+## [4.4.3](https://github.com/react-scheduler/react-big-schedule/compare/4.4.2...4.4.3)
+`2024-10-28`
+
+- Change the build type from `common.js` to `module.js` by  [@ansulagrawal](https://github.com/ansulagrawal) in [#174](https://github.com/react-scheduler/react-big-schedule/pull/175).
+
 ## [4.4.2](https://github.com/react-scheduler/react-big-schedule/compare/4.4.1...4.4.2)
 `2024-10-25`
 
