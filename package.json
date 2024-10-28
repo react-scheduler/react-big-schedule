@@ -55,7 +55,7 @@
   "scripts": {
     "start": "vite",
     "build": "vite build",
-    "build-lib": "node scripts/build.cjs",
+    "build-lib": "node scripts/build.js",
     "clean": "rimraf ./dist && mkdir dist",
     "lint": "eslint ./src"
   },
