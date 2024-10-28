@@ -1,12 +1,12 @@
 // Do this as the first thing so that any code reading it knows the right env.
-process.env.BABEL_ENV = 'production';
-process.env.NODE_ENV = 'production';
-
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { exec } from 'child_process';
 import fs from 'fs-extra';
 import { promisify } from 'util';
+
+process.env.BABEL_ENV = 'production';
+process.env.NODE_ENV = 'production';
 
 const execPromise = promisify(exec);
 const __filename = fileURLToPath(import.meta.url);
@@ -25,7 +25,7 @@ async function build() {
     // Validate source and target directories
     await fs.ensureDir(sourceDir);
     await fs.ensureDir(targetDir);
-    
+
     // Clean previous build
     console.log('Cleaning...');
     await execPromise('npm run clean');
