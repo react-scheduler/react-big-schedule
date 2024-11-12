@@ -15,7 +15,7 @@ const stopDragHelper = ({ count, cellUnit, config, dragType, eventItem, localeDa
       while (whileTrue) {
         i = count > 0 ? i + 1 : i - 1;
         const date = localeDayjs(new Date(eventItem[dragType])).add(i, 'days');
-        const dayOfWeek = date.weekday();
+        const dayOfWeek = date.day();
 
         if (dayOfWeek !== 0 && dayOfWeek !== 6) {
           tCount = count > 0 ? tCount + 1 : tCount - 1;

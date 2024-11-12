@@ -1,5 +1,10 @@
 # Change Logs:
 
+## [4.4.4](https://github.com/react-scheduler/react-big-schedule/compare/4.4.3...4.4.4)
+`2024-11-13`
+
+- Fix the `dayjs` locale issue by [@ansulagrawal](https://github.com/ansulagrawal) in [#178](https://github.com/react-scheduler/react-big-schedule/pull/179).
+
 ## [4.4.3](https://github.com/react-scheduler/react-big-schedule/compare/4.4.2...4.4.3)
 `2024-10-28`
 
