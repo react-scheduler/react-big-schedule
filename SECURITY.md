@@ -7,8 +7,8 @@ We take the security of react-big-schedule seriously. If you believe you have fo
 
 | Version |	Supported |
 | --------| --------- |
-| 4.3.2 or grater 	| :white_check_mark: |
-| 4.2.5	| :white_check_mark: |
+| 4.4.3 or grater 	| :white_check_mark: |
+| 4.4.1	| :white_check_mark: |
 | rest all | :x: |
 
 Please note that only the latest version of react-big-schedule will receive security updates. It is highly recommended to keep your dependencies up to date.

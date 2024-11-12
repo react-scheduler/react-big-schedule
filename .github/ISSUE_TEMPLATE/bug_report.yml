@@ -1,70 +1,104 @@
-name: Bug report
-description: Report a bug
-labels: [triage, bug]
+name: Bug Report
+description: Report a bug in react-big-schedule
+labels: [bug, needs-triage]
 body:
-  - type: checkboxes
-    id: checklist
+  - type: markdown
     attributes:
-      label: Checklist
+      value: |
+        Thanks for taking the time to report a bug! Please fill out this form as completely as possible.
+
+  - type: checkboxes
+    id: prerequisites
+    attributes:
+      label: Before Submitting
+      description: Please confirm these items before proceeding
       options:
-        - label: "I've verified that I'm running react-big-schedule latest version."
+        - label: I have searched existing issues for similar bugs
           required: true
+
   - type: textarea
     id: description
     attributes:
-      label: Describe the bug
-      placeholder: A clear and concise description of what the bug is.
+      label: Bug Description
+      description: What happened? What did you expect to happen?
+      placeholder: Provide a clear and concise description of the bug
     validations:
       required: true
+
   - type: textarea
     id: reproduction
     attributes:
-      label: Reproduction Link/Code
+      label: Reproduction
+      description: Help us reproduce the issue
       placeholder: |
-        Please add an example code or a reproduction link that can be used to reproduce the bug
+        Please provide either:
+        1. A minimal code example that reproduces the bug
+        2. A link to a repository or sandbox demonstrating the issue
     validations:
       required: true
+
   - type: textarea
-    id: howtoreproduce
+    id: steps
     attributes:
-      label: Steps to reproduce
+      label: Steps to Reproduce
+      description: List the exact steps to reproduce the behavior
       placeholder: |
         1. Go to '...'
-        2. Click on '....'
-        3. Scroll down to '....'
-        4. See error
+        2. Click on '...'
+        3. Scroll to '...'
+        4. Observe error
     validations:
       required: true
+
+  - type: dropdown
+    id: browsers
+    attributes:
+      label: Browser
+      description: Which browsers have you seen the problem on?
+      multiple: true
+      options:
+        - Chrome
+        - Firefox
+        - Safari
+        - Edge
+        - Other
+    validations:
+      required: true
+
   - type: input
     id: operating_system
     attributes:
       label: Operating System
-      placeholder: Enter your operating system
+      description: What operating system are you using?
+      placeholder: e.g., Windows 11, macOS 13.0, Ubuntu 22.04
     validations:
       required: true
-  - type: input
-    id: browser
-    attributes:
-      label: Browser
-      placeholder: Enter your browser
-    validations:
-      required: true
+
   - type: input
     id: react_version
     attributes:
-      label: React version
-      placeholder: Enter your React version
+      label: React Version
+      description: What version of React are you using?
+      placeholder: e.g., 18.2.0
     validations:
       required: true
+
   - type: input
-    id: schedule_version
+    id: package_version
     attributes:
-      label: react-big-schedule version
-      placeholder: Enter your react-big-schedule version
+      label: react-big-schedule Version
+      description: What version of react-big-schedule are you using?
+      placeholder: e.g., 4.4.3
     validations:
       required: true
+
   - type: textarea
-    id: additionalinfo
+    id: additional_context
     attributes:
-      label: Additional Information
-      placeholder: Add any additional information about the bug here.
+      label: Additional Context
+      description: Add any other relevant context about the problem
+      placeholder: |
+        - Console errors or logs
+        - Related issues
+        - Screenshots or recordings
+        - Special configurations

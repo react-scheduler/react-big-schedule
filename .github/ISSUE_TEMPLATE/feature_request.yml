@@ -1,51 +1,62 @@
-name: Feature request
-description: Request a new functionality
-labels: [triage, enhancement]
+name: Feature Request
+description: Suggest a new feature or enhancement for react-big-schedule
+labels: [enhancement, needs-review]
 body:
-  - type: checkboxes
-    id: checklist
+  - type: markdown
     attributes:
-      label: Checklist
+      value: |
+        Thanks for taking the time to suggest a new feature! Please fill out this form as completely as possible.
+
+  - type: checkboxes
+    id: prerequisites
+    attributes:
+      label: Before Submitting
+      description: Please confirm these items before proceeding
       options:
-        - label: I've looked through the [README](https://github.com/react-scheduler/react-big-schedule#readme)
+        - label: I have read the [documentation](https://github.com/react-scheduler/react-big-schedule#readme)
           required: true
-        - label: I've verified that I'm running react-big-schedule latest version.
-          required: true
-        - label: I've searched existing feature requests and confirmed that this request is not a duplicate
+        - label: I have searched existing feature requests to avoid duplicates
           required: true
 
   - type: textarea
-    id: description
+    id: problem
     attributes:
-      label: What problem does this feature solve?
-      placeholder: Explain your use case, context, and rationale behind this feature request
+      label: Problem Statement
+      description: What problem or use case does this feature address?
+      placeholder: Describe the specific challenge or limitation you're facing
     validations:
       required: true
 
   - type: textarea
-    id: proposed-solution
+    id: solution
     attributes:
       label: Proposed Solution
-      placeholder: Explain your proposed solution and how it would address the problem
+      description: How do you envision this feature working?
+      placeholder: Provide a detailed description of your proposed solution, including any API changes or new functionality
     validations:
       required: true
 
   - type: textarea
-    id: benefits
+    id: impact
     attributes:
-      label: Benefits
-      placeholder: Describe the benefits and impact of implementing this feature
+      label: Expected Impact
+      description: How would this feature benefit users?
+      placeholder: Explain the value this feature would add and who would benefit from it
     validations:
       required: true
 
   - type: textarea
     id: alternatives
     attributes:
-      label: Alternatives Considered
-      placeholder: List any alternatives you have considered or evaluated
+      label: Alternative Solutions
+      description: What alternatives have you considered?
+      placeholder: Describe any alternative approaches or workarounds you've explored
+    validations:
+      required: false
 
   - type: textarea
-    id: additional-info
+    id: context
     attributes:
-      label: Additional Information
-      placeholder: Include any additional information or context that might be useful
+      label: Additional Context
+      description: Any other relevant information?
+      placeholder: Add any other context, mockups, or examples that help explain your feature request
