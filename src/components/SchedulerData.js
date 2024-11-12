@@ -698,7 +698,7 @@ export default class SchedulerData {
     } else if (this.cellUnit === CellUnit.Day) {
       while (header >= start && header <= end) {
         const time = header.format(DATETIME_FORMAT);
-        const dayOfWeek = header.weekday();
+        const dayOfWeek = header.day();
         if (this.config.displayWeekend || (dayOfWeek !== 0 && dayOfWeek !== 6)) {
           const nonWorkingTime = this.behaviors.isNonWorkingTimeFunc(this, time);
           headers.push({ time, nonWorkingTime });
