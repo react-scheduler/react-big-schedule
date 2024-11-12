@@ -1,25 +1,63 @@
-name: Ask question
-description: Ask react-big-schedule related question
-labels: [question]
+name: Question about react-big-schedule
+description: Get help with using react-big-schedule
+labels: [question, help-wanted]
 body:
-  - type: checkboxes
-    id: checklist
+  - type: markdown
     attributes:
-      label: Checklist
+      value: |
+        Thanks for taking the time to ask a question! Let's make sure we have all the information needed to help you.
+
+  - type: checkboxes
+    id: prerequisites
+    attributes:
+      label: Before asking
+      description: Please confirm these items before proceeding
       options:
-        - label: I've looked through the [README](https://github.com/react-scheduler/react-big-schedule#readme)
+        - label: I have read the [documentation](https://github.com/react-scheduler/react-big-schedule#readme) thoroughly
           required: true
-        - label: I've verified that  I am running react-big-schedule latest version.
+        - label: I have searched existing issues and discussions for similar questions
           required: true
-        - label: I've searched the existing issues and discussions for a similar question
-        - label: I've provided relevant code snippets or error messages
-        - label: I've included steps to reproduce the issue
-        - label: I've checked the browser console for any errors
-        - label: I've tested the issue with the latest version of react-big-schedule
+
+  - type: dropdown
+    id: category
+    attributes:
+      label: Question Category
+      description: What aspect of react-big-schedule is your question about?
+      options:
+        - Installation & Setup
+        - Configuration & Props
+        - Styling & Customization
+        - Event Handling
+        - Performance
+        - Other
+    validations:
+      required: true
+
   - type: textarea
     id: question
     attributes:
-      label: Please make sure the question is worded well enough to be understood
-      placeholder: Provide any additional information and as much context and examples as possible
+      label: Your Question
+      description: What would you like to know about react-big-schedule?
+      placeholder: Please be as specific as possible and include any relevant code snippets or screenshots
     validations:
       required: true
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: Please provide your environment details
+      value: |
+        - react-big-schedule version:
+        - React version:
+        - Browser:
+        - Operating System:
+    validations:
+      required: true
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional Context
+      description: Add any other context, code snippets, or screenshots about your question here
+      placeholder: Include error messages, console logs, or relevant code that might help us understand your question better
