@@ -1,11 +1,11 @@
 import { Col, Row, Typography } from 'antd';
 import React, { useEffect, useReducer, useState } from 'react';
-import { DemoData, DnDSource, Scheduler, SchedulerData, ViewType, wrapperFun } from '../../../index';
-import ResourceItem from '../../components/ResourceItem';
-import ResourceList from '../../components/ResourceList';
-import TaskItem from '../../components/TaskItem';
-import TaskList from '../../components/TaskList';
-import { DnDTypes } from '../../helpers/DnDTypes';
+import { DemoData, DnDSource, Scheduler, SchedulerData, ViewType, wrapperFun } from '../../../index.js';
+import ResourceItem from '../../components/ResourceItem.jsx';
+import ResourceList from '../../components/ResourceList.jsx';
+import TaskItem from '../../components/TaskItem.jsx';
+import TaskList from '../../components/TaskList.jsx';
+import { DnDTypes } from '../../helpers/DnDTypes.js';
 
 const initialState = {
   showScheduler: false,

@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import AgendaEventItem from './AgendaEventItem';
+import AgendaEventItem from './AgendaEventItem.jsx';
 
 function AgendaResourceEvents(props) {
   const { schedulerData, resourceEvents, slotClickedFunc, slotItemTemplateResolver } = props;

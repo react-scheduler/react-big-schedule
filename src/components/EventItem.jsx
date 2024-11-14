@@ -1,9 +1,10 @@
-/* eslint-disable no-return-assign */
+/* eslint-disable */
+
 import React, { Component } from 'react';
 import { PropTypes } from 'prop-types';
 import { Popover } from 'antd';
-import EventItemPopover from './EventItemPopover';
-import { DnDTypes, CellUnit, DATETIME_FORMAT } from '../config/default';
+import { DnDTypes, CellUnit, DATETIME_FORMAT } from '../config/default.js';
+import EventItemPopover from './EventItemPopover.jsx';
 
 const stopDragHelper = ({ count, cellUnit, config, dragType, eventItem, localeDayjs, value }) => {
   const whileTrue = true;

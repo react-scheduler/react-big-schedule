@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-
 import { Scheduler, SchedulerData, ViewType, DemoData, wrapperFun } from '../../../index';
 
 class Readonly extends Component {

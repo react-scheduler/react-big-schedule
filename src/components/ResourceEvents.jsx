@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import { PropTypes } from 'prop-types';
-import AddMore from './AddMore';
-import Summary from './Summary';
-import SelectedArea from './SelectedArea';
 import { CellUnit, DATETIME_FORMAT, SummaryPos, DnDTypes } from '../config/default';
-import { getPos } from '../helper/utility';
+import { getPos } from '../helper/utility.js';
+import AddMore from './AddMore.jsx';
+import Summary from './Summary.jsx';
+import SelectedArea from './SelectedArea.jsx';
 
 class ResourceEvents extends Component {
   constructor(props) {

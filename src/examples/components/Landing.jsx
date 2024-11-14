@@ -1,8 +1,8 @@
 import React from 'react';
 import { Layout } from 'antd';
 import { Outlet } from 'react-router-dom';
-import Header from './Header';
-import Slider from './Slider';
+import Header from './Header.jsx';
+import Slider from './Slider.jsx';
 
 function Landing() {
   return (

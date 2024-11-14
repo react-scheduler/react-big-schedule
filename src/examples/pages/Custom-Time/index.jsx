@@ -1,7 +1,7 @@
 import { Row, Typography } from 'antd';
 import React from 'react';
-import ClassBased from './class-based';
-import SourceCode from '../../components/SourceCode';
+import SourceCode from '../../components/SourceCode.jsx';
+import ClassBased from './class-based.jsx';
 
 function CustomTime() {
   return (

@@ -1,16 +1,14 @@
-// Do this as the first thing so that any code reading it knows the right env.
-import path from 'path';
-import { fileURLToPath } from 'url';
-import { exec } from 'child_process';
-import fs from 'fs-extra';
-import { promisify } from 'util';
-
 process.env.BABEL_ENV = 'production';
 process.env.NODE_ENV = 'production';
 
-const execPromise = promisify(exec);
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+process.on('unhandledRejection', err => {
+  throw err;
+});
+
+const { promisify } = require('util');
+const path = require('path');
+const fs = require('fs-extra');
+const exec = promisify(require('child_process').exec);
 
 async function build() {
   const root = path.resolve(__dirname, '..');
@@ -19,30 +17,23 @@ async function build() {
   const typingDir = path.resolve(root, 'typing');
   const jsTarget = targetDir;
   const cssTarget = path.resolve(targetDir, 'css');
-  const excludedFolders = ['examples', 'main.jsx'];
+  const excludedFolders = ['examples', 'main.jsx'].map(folder => path.join(sourceDir, folder)).join(',');
 
   try {
-    // Validate source and target directories
-    await fs.ensureDir(sourceDir);
-    await fs.ensureDir(targetDir);
-
     // Clean previous build
     console.log('Cleaning...');
-    await execPromise('npm run clean');
+    await exec('npx rimraf dist');
+    await exec('mkdir dist');
 
-    // Transpile JS files using Babel, excluding specific folders
-    console.log('Transpiling JavaScript files with Babel... \n');
-    await execPromise(`babel ${sourceDir} --out-dir ${jsTarget} --ignore "${excludedFolders.map(folder => path.join(sourceDir, folder)).join(',')}"`);
+    // Transpiling and copying files
+    console.log('Processing files...');
+    await Promise.all([
+      exec(`npx babel ${sourceDir} --out-dir ${jsTarget} --ignore "${excludedFolders}"`),
+      fs.copy(path.join(sourceDir, 'css'), cssTarget),
+      fs.copy(typingDir, targetDir)
+    ]);
 
-    // Copy CSS files
-    console.log('Copying CSS Files...');
-    await fs.copy(`${sourceDir}/css/`, cssTarget);
-
-    // Copy TypeScript declaration files
-    console.log('Copying TypeScript Files...');
-    await fs.copy(`${typingDir}/`, targetDir);
-
-    console.log('Build process completed successfully!');
+    console.log('Success!');
   } catch (e) {
     console.error('Build process failed:', e.message);
     console.error('Stack trace:', e.stack);

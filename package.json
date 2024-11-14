@@ -39,7 +39,6 @@
     "README.md",
     "License"
   ],
-  "type": "module",
   "main": "dist/index.js",
   "homepage": "https://react-big-schedule.vercel.app",
   "repository": {
@@ -53,17 +52,18 @@
     "registry": "https://registry.npmjs.org/"
   },
   "scripts": {
-    "start": "vite",
-    "build": "vite build",
-    "build-lib": "node scripts/build.js",
-    "clean": "rimraf ./dist && mkdir dist",
-    "lint": "eslint ./src"
+    "dev": "webpack serve --open",
+    "build": "webpack --mode production",
+    "build:lib": "node scripts/build.js",
+    "clean": "npx rimraf dist",
+    "lint": "eslint ./src",
+    "lint:fix": "eslint ./src/**/*.{js,jsx} --fix"
   },
   "dependencies": {
     "@ant-design/icons": "^5.5.1",
-    "@babel/cli": "^7.25.7",
     "antd": "^5.21.3",
     "dayjs": "^1.11.13",
+    "fs-extra": "^11.2.0",
     "prop-types": "^15.8.1",
     "react": "^18.3.1",
     "react-dnd": "^14.0.5",
@@ -73,22 +73,23 @@
     "rrule": "^2.8.1"
   },
   "devDependencies": {
-    "@babel/core": "^7.25.8",
-    "@babel/preset-env": "^7.25.8",
-    "@babel/preset-react": "^7.25.7",
-    "@eslint/js": "^9.11.1",
-    "@types/react": "^18.3.10",
-    "@types/react-dom": "^18.3.0",
-    "@vitejs/plugin-react": "^4.3.2",
-    "babel-plugin-transform-runtime": "^6.23.0",
-    "eslint": "^8.2.0",
-    "eslint-config-airbnb": "^19.0.4",
+    "@babel/cli": "^7.25.9",
+    "@babel/core": "^7.26.0",
+    "@babel/preset-env": "^7.26.0",
+    "@babel/preset-react": "^7.25.9",
+    "babel-loader": "^9.2.1",
+    "css-loader": "^7.1.2",
+    "eslint": "^8.57.1",
     "eslint-plugin-import": "^2.31.0",
-    "eslint-plugin-jsx-a11y": "^6.10.0",
-    "eslint-plugin-react": "^7.37.1",
-    "eslint-plugin-react-hooks": "^4.6.2",
-    "fs-extra": "^11.2.0",
-    "globals": "^15.9.0",
-    "vite": "^5.4.8"
+    "eslint-plugin-jsx-a11y": "^6.10.2",
+    "eslint-plugin-react": "^7.37.2",
+    "eslint-plugin-react-hooks": "^5.0.0",
+    "eslint-webpack-plugin": "^4.2.0",
+    "html-webpack-plugin": "^5.6.3",
+    "style-loader": "^4.0.0",
+    "url-loader": "^4.1.1",
+    "webpack": "^5.96.1",
+    "webpack-cli": "^5.1.4",
+    "webpack-dev-server": "^5.1.0"
   }
 }

@@ -1,22 +1,18 @@
 import { Result } from 'antd';
 import React, { Suspense, lazy } from 'react';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-
 // Library Style
 import '../css/style.css';
-
 import './css/style.css';
-
 import Fallback from './components/Fallback.jsx';
 import Landing from './components/Landing.jsx';
 
-const Home = lazy(() => import('./pages/Home'));
-const Basic = lazy(() => import('./pages/Basic'));
-const ReadOnly = lazy(() => import('./pages/Read-Only'));
-const AddMore = lazy(() => import('./pages/Add-More'));
-const DragAndDrop = lazy(() => import('./pages/Drag-And-Drop'));
-const CustomTime = lazy(() => import('./pages/Custom-Time'));
-
+const Home = lazy(() => import('./pages/Home.jsx'));
+const Basic = lazy(() => import('./pages/Basic/index.jsx'));
+const ReadOnly = lazy(() => import('./pages/Read-Only/index.jsx'));
+const AddMore = lazy(() => import('./pages/Add-More/index.jsx'));
+const DragAndDrop = lazy(() => import('./pages/Drag-And-Drop/index.jsx'));
+const CustomTime = lazy(() => import('./pages/Custom-Time/index.jsx'));
 
 function App() {
   const router = createBrowserRouter([

@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Popover } from 'antd';
-import EventItemPopover from './EventItemPopover';
+import EventItemPopover from './EventItemPopover.jsx';
 
 function AgendaEventItem(props) {
   const { eventItem, isStart, isEnd, eventItemClick, schedulerData, eventItemTemplateResolver } = props;

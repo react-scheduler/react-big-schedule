@@ -11,4 +11,4 @@ export {
   SummaryPos,
   ViewType,
   wrapperFun,
-} from './components/index';
+} from './components/index.jsx';
