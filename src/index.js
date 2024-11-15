@@ -1,11 +1,11 @@
 export {
   AddMorePopover,
   CellUnit,
-  DATE_FORMAT,
   DATETIME_FORMAT,
+  DATE_FORMAT,
+  DemoData,
   DnDContext,
   DnDSource,
-  DemoData,
   Scheduler,
   SchedulerData,
   SummaryPos,

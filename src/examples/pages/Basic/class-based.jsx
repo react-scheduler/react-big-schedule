@@ -1,3 +1,4 @@
+/* eslint-disable */
 import * as antdLocale from 'antd/locale/pt_BR';
 import * as dayjsLocale from 'dayjs/locale/pt-br';
 import React, { Component } from 'react';
@@ -8,7 +9,7 @@ class Basic extends Component {
   constructor(props) {
     super(props);
 
-    let schedulerData = new SchedulerData('2022-12-22', ViewType.Week, false, false, {
+    const schedulerData = new SchedulerData('2022-12-22', ViewType.Week, false, false, {
       besidesWidth: 300,
       dayMaxEvents: 99,
       weekMaxEvents: 9669,

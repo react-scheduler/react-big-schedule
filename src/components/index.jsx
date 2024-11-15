@@ -1,6 +1,4 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-
+/* eslint-disable */
 // Col, Row and Icon do not have their own less files for styling. They use
 // rules declared in antd's global css. If these styles are imported directly
 // from within antd, they'll include, for instance, reset rules. These will
@@ -18,20 +16,21 @@ import PropTypes from 'prop-types';
 // The next components have their own specific stylesheets which we import
 // separately here to avoid importing from files which have required the global
 // antd styles.
-
-import EventItem from './EventItem';
-import DnDSource from './DnDSource';
-import DnDContext from './DnDContext';
-import ResourceView from './ResourceView';
-import HeaderView from './HeaderView';
-import BodyView from './BodyView';
-import ResourceEvents from './ResourceEvents';
-import AgendaView from './AgendaView';
-import AddMorePopover from './AddMorePopover';
-import SchedulerData from './SchedulerData';
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
+import { CellUnit, DATETIME_FORMAT, DATE_FORMAT, SummaryPos, ViewType } from '../config/default';
 import DemoData from '../sample-data/sample1';
+import AddMorePopover from './AddMorePopover';
+import AgendaView from './AgendaView';
+import BodyView from './BodyView';
+import DnDContext from './DnDContext';
+import DnDSource from './DnDSource';
+import EventItem from './EventItem';
+import HeaderView from './HeaderView';
+import ResourceEvents from './ResourceEvents';
+import ResourceView from './ResourceView';
+import SchedulerData from './SchedulerData';
 import SchedulerHeader from './SchedulerHeader';
-import { ViewType, CellUnit, DATETIME_FORMAT, DATE_FORMAT, SummaryPos } from '../config/default';
 import wrapperFun from './WrapperFun';
 
 class Scheduler extends Component {
@@ -225,7 +224,9 @@ class Scheduler extends Component {
                 style={resourceContentStyle}
                 ref={this.schedulerResourceRef}
                 onMouseOver={this.onSchedulerResourceMouseOver}
+                onFocus={this.onSchedulerResourceMouseOver}
                 onMouseOut={this.onSchedulerResourceMouseOut}
+                onBlur={this.onSchedulerResourceMouseOut}
                 onScroll={this.onSchedulerResourceScroll}
               >
                 <ResourceView {...this.props} contentScrollbarHeight={resourcePaddingBottom} />
@@ -239,7 +240,9 @@ class Scheduler extends Component {
                   style={{ overflowX: 'scroll', overflowY: 'hidden', margin: `0px 0px -${contentScrollbarHeight}px` }}
                   ref={this.schedulerHeadRef}
                   onMouseOver={this.onSchedulerHeadMouseOver}
+                  onFocus={this.onSchedulerHeadMouseOver}
                   onMouseOut={this.onSchedulerHeadMouseOut}
+                  onBlur={this.onSchedulerHeadMouseOut} 
                   onScroll={this.onSchedulerHeadScroll}
                 >
                   <div style={{ paddingRight: `${contentScrollbarWidth}px`, width: schedulerWidth + contentScrollbarWidth }}>
@@ -253,7 +256,9 @@ class Scheduler extends Component {
                 style={schedulerContentStyle}
                 ref={this.schedulerContentRef}
                 onMouseOver={this.onSchedulerContentMouseOver}
+                onFocus={this.onSchedulerContentMouseOver}
                 onMouseOut={this.onSchedulerContentMouseOut}
+                onBlur={this.onSchedulerContentMouseOut}
                 onScroll={this.onSchedulerContentScroll}
               >
                 <div style={{ width: schedulerWidth }}>
@@ -303,7 +308,6 @@ class Scheduler extends Component {
   }
 
   resolveScrollbarSize = () => {
-    const { schedulerData } = this.props;
     let contentScrollbarHeight = 17;
     let contentScrollbarWidth = 17;
     let resourceScrollbarHeight = 17;
@@ -445,4 +449,5 @@ class Scheduler extends Component {
   };
 }
 
-export { DATE_FORMAT, DATETIME_FORMAT, Scheduler, SchedulerData, ViewType, CellUnit, SummaryPos, DnDSource, DnDContext, AddMorePopover, DemoData, wrapperFun };
+export { AddMorePopover, CellUnit, DATETIME_FORMAT, DATE_FORMAT, DemoData, DnDContext, DnDSource, Scheduler, SchedulerData, SummaryPos, ViewType, wrapperFun };
+

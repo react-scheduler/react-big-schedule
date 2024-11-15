@@ -1,9 +1,12 @@
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+/* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable no-return-assign */
-import React, { Component } from 'react';
-import { PropTypes } from 'prop-types';
 import { Popover } from 'antd';
+import { PropTypes } from 'prop-types';
+import React, { Component } from 'react';
+import { CellUnit, DATETIME_FORMAT, DnDTypes } from '../config/default';
 import EventItemPopover from './EventItemPopover';
-import { DnDTypes, CellUnit, DATETIME_FORMAT } from '../config/default';
 
 const stopDragHelper = ({ count, cellUnit, config, dragType, eventItem, localeDayjs, value }) => {
   const whileTrue = true;

@@ -1,5 +1,5 @@
-import React from 'react';
 import PropTypes from 'prop-types';
+import React from 'react';
 import { SummaryPos } from '../config/default';
 
 function Summary({ schedulerData, summary, left, width, top }) {

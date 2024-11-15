@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 
 const { Title, Paragraph } = Typography;
 
-const Home = () => {
+function Home() {
   const navigate = useNavigate();
   return (
     <div className="home-page">
@@ -21,6 +21,6 @@ const Home = () => {
       </header>
     </div>
   );
-};
+}
 
 export default Home;
