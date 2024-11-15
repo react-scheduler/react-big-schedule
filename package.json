@@ -53,6 +53,7 @@
   },
   "scripts": {
     "dev": "webpack serve --open",
+    "build": "webpack --mode production",
     "build:lib": "node scripts/build.js",
     "clean": "npx rimraf dist",
     "lint": "eslint ./src",

@@ -42,8 +42,8 @@ module.exports = {
   },
   plugins: [
     new HtmlWebpackPlugin({
-      template: './src/index.html',
-      // favicon: './src/assets/banner.png',
+      template: './src/examples/index.html',
+      favicon: './src/examples/assets/banner.png',
     }),
     new ESLintPlugin({
       emitError: true,
