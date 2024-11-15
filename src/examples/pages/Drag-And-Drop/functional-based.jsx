@@ -99,8 +99,8 @@ function DragAndDrop() {
       let newEvent = {
         id: newFreshId,
         title: 'New event you just created',
-        start: start,
-        end: end,
+        start,
+        end,
         resourceId: slotId,
         bgColor: 'purple',
       };
@@ -154,9 +154,7 @@ function DragAndDrop() {
     console.log('moving event', schedulerData, slotId, slotName, newStart, newEnd, action, type, item);
   };
 
-  const subtitleGetter = (schedulerData, event) => {
-    return schedulerData.isEventPerspective ? schedulerData.getResourceById(event.resourceId).name : event.groupName;
-  };
+  const subtitleGetter = (schedulerData, event) => (schedulerData.isEventPerspective ? schedulerData.getResourceById(event.resourceId).name : event.groupName);
 
   const toggleExpandFunc = (schedulerData, slotId) => {
     schedulerData.toggleExpandStatus(slotId);
@@ -169,8 +167,8 @@ function DragAndDrop() {
         <>
           <Row align="middle" justify="center">
             <Typography.Title level={4}>
-              {state.showScheduler &&
-                (state.viewModel?.isEventPerspective ? 'Drag a resource from outside and drop to the resource view.' : 'Drag a task from outside and drop to the resource view')}
+              {state.showScheduler
+                && (state.viewModel?.isEventPerspective ? 'Drag a resource from outside and drop to the resource view.' : 'Drag a task from outside and drop to the resource view')}
             </Typography.Title>
           </Row>
           <Row>
