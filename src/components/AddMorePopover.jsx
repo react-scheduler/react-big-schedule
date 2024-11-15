@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Col, Row } from 'antd';
 import { CloseOutlined } from '@ant-design/icons';
-import EventItem from './EventItem.jsx';
-import DnDSource from './DnDSource.js';
+import EventItem from './EventItem';
+import DnDSource from './DnDSource';
 
 function AddMorePopover(props) {
   const { schedulerData, headerItem, left, top, height, closeAction } = props;

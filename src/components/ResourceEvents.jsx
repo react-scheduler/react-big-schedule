@@ -1,23 +1,13 @@
-import React, { Component } from 'react';
+/* eslint-disable */
 import { PropTypes } from 'prop-types';
-import { CellUnit, DATETIME_FORMAT, SummaryPos, DnDTypes } from '../config/default';
-import { getPos } from '../helper/utility.js';
-import AddMore from './AddMore.jsx';
-import Summary from './Summary.jsx';
-import SelectedArea from './SelectedArea.jsx';
+import React, { Component } from 'react';
+import { CellUnit, DATETIME_FORMAT, DnDTypes, SummaryPos } from '../config/default';
+import { getPos } from '../helper/utility';
+import AddMore from './AddMore';
+import SelectedArea from './SelectedArea';
+import Summary from './Summary';
 
 class ResourceEvents extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      isSelecting: false,
-      left: 0,
-      width: 0,
-    };
-    this.supportTouch = false; // 'ontouchstart' in window;
-  }
-
   static propTypes = {
     resourceEvents: PropTypes.object.isRequired,
     schedulerData: PropTypes.object.isRequired,
@@ -38,6 +28,17 @@ class ResourceEvents extends Component {
     eventItemTemplateResolver: PropTypes.func,
   };
 
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      isSelecting: false,
+      left: 0,
+      width: 0,
+    };
+    this.supportTouch = false; // 'ontouchstart' in window;
+  }
+
   componentDidMount() {
     const { schedulerData } = this.props;
     const { config } = schedulerData;
@@ -50,8 +51,9 @@ class ResourceEvents extends Component {
 
   componentDidUpdate(prevProps) {
     if (prevProps !== this.props) {
+      const { schedulerData } = this.props;
       this.supportTouchHelper('remove');
-      if (this.props.schedulerData.config.creatable) {
+      if (schedulerData.config.creatable) {
         this.supportTouchHelper();
       }
     }

@@ -7,8 +7,8 @@ process.on('unhandledRejection', err => {
 
 const { promisify } = require('util');
 const path = require('path');
-const fs = require('fs-extra');
 const exec = promisify(require('child_process').exec);
+const fs = require('fs-extra');
 
 async function build() {
   const root = path.resolve(__dirname, '..');
@@ -20,18 +20,20 @@ async function build() {
   const excludedFolders = ['examples', 'main.jsx'].map(folder => path.join(sourceDir, folder)).join(',');
 
   try {
-    // Clean previous build
+    // clean
     console.log('Cleaning...');
     await exec('npx rimraf dist');
     await exec('mkdir dist');
 
-    // Transpiling and copying files
-    console.log('Processing files...');
-    await Promise.all([
-      exec(`npx babel ${sourceDir} --out-dir ${jsTarget} --ignore "${excludedFolders}"`),
-      fs.copy(path.join(sourceDir, 'css'), cssTarget),
-      fs.copy(typingDir, targetDir)
-    ]);
+    // transpiling and copy js
+    console.log('Transpiling js with babel...');
+    await exec(`babel ${sourceDir} --out-dir ${jsTarget} --ignore "${excludedFolders}"`);
+
+    console.log('Copying CSS Files...');
+    await fs.copy(`${sourceDir}/css/`, cssTarget);
+
+    console.log('Copying Typescript Files...');
+    await fs.copy(`${typingDir}/`, targetDir);
 
     console.log('Success!');
   } catch (e) {

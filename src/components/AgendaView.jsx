@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import AgendaResourceEvents from './AgendaResourceEvents.jsx';
+import AgendaResourceEvents from './AgendaResourceEvents';
 
 function AgendaView(props) {
   const { schedulerData } = props;

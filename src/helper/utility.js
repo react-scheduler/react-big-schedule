@@ -1,4 +1,5 @@
-function getPos(element) {
+/* eslint-disable import/prefer-default-export */
+export function getPos(element) {
   let x = 0;
   let y = 0;
   let currentElement = element;
@@ -11,6 +12,3 @@ function getPos(element) {
 
   return { x, y };
 }
-
-export { getPos };
-export default getPos;

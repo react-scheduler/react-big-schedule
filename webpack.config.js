@@ -1,3 +1,4 @@
+/* eslint-disable import/no-extraneous-dependencies */
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ESLintPlugin = require('eslint-webpack-plugin');
@@ -40,8 +41,16 @@ module.exports = {
     extensions: ['.js', '.jsx'],
   },
   plugins: [
-    new HtmlWebpackPlugin({ template: './index.html', favicon: './src/assets/banner.png' }),
-    new ESLintPlugin({ extensions: ['js', 'jsx'] }),
+    new HtmlWebpackPlugin({
+      template: './src/index.html',
+      // favicon: './src/assets/banner.png',
+    }),
+    new ESLintPlugin({
+      emitError: true,
+      emitWarning: false,
+      failOnError: true,
+      extensions: ['js', 'jsx'],
+    }),
   ],
   devServer: {
     static: {
