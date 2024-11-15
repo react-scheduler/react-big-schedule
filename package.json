@@ -52,7 +52,7 @@
     "registry": "https://registry.npmjs.org/"
   },
   "scripts": {
-    "dev": "webpack serve --mode development --config ./webpack/webpack.dev.config.js",
+    "dev": "webpack serve --open",
     "build:lib": "node scripts/build.js",
     "clean": "npx rimraf dist",
     "lint": "eslint ./src",
