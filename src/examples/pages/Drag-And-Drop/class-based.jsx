@@ -1,17 +1,18 @@
+/* eslint-disable */
 import { Col, Row, Typography } from 'antd';
 import React, { Component } from 'react';
 import { DemoData, DnDSource, Scheduler, SchedulerData, ViewType, wrapperFun } from '../../../index';
-import ResourceItem from '../../components/ResourceItem.jsx';
-import ResourceList from '../../components/ResourceList.jsx';
-import TaskItem from '../../components/TaskItem.jsx';
-import TaskList from '../../components/TaskList.jsx';
-import { DnDTypes } from '../../helpers/DnDTypes.js';
+import ResourceItem from '../../components/ResourceItem';
+import ResourceList from '../../components/ResourceList';
+import TaskItem from '../../components/TaskItem';
+import TaskList from '../../components/TaskList';
+import { DnDTypes } from '../../helpers/DnDTypes';
 
 class DragAndDrop extends Component {
   constructor(props) {
     super(props);
 
-    let schedulerData = new SchedulerData('2022-12-18', ViewType.Month, false, false, {
+    const schedulerData = new SchedulerData('2022-12-18', ViewType.Month, false, false, {
       schedulerMaxHeight: 500,
       besidesWidth: window.innerWidth <= 1600 ? 400 : 500,
       views: [
@@ -35,7 +36,7 @@ class DragAndDrop extends Component {
 
     return (
       <div>
-        <Row align='middle' justify='center'>
+        <Row align="middle" justify="center">
           <Typography.Title level={4}>
             {viewModel.isEventPerspective
               ? 'Drag a resource from outside and drop to the resource view.'
@@ -52,8 +53,8 @@ class DragAndDrop extends Component {
               onViewChange={this.onViewChange}
               eventItemClick={this.eventClicked}
               viewEventClick={this.ops1}
-              viewEventText='Ops 1'
-              viewEvent2Text='Ops 2'
+              viewEventText="Ops 1"
+              viewEvent2Text="Ops 2"
               viewEvent2Click={this.ops2}
               updateEventStart={this.updateEventStart}
               updateEventEnd={this.updateEventEnd}
@@ -76,6 +77,7 @@ class DragAndDrop extends Component {
       </div>
     );
   }
+
   prevClick = schedulerData => {
     schedulerData.prev();
     schedulerData.setEvents(DemoData.eventsForTaskView);
@@ -131,8 +133,8 @@ class DragAndDrop extends Component {
       let newEvent = {
         id: newFreshId,
         title: 'New event you just created',
-        start: start,
-        end: end,
+        start,
+        end,
         resourceId: slotId,
         bgColor: 'purple',
       };
@@ -180,7 +182,7 @@ class DragAndDrop extends Component {
   moveEvent = (schedulerData, event, slotId, slotName, start, end) => {
     if (
       confirm(
-        `Do you want to move the event? {eventId: ${event.id}, eventTitle: ${event.title}, newSlotId: ${slotId}, newSlotName: ${slotName}, newStart: ${start}, newEnd: ${end}`
+        `Do you want to move the event? {eventId: ${event.id}, eventTitle: ${event.title}, newSlotId: ${slotId}, newSlotName: ${slotName}, newStart: ${start}, newEnd: ${end}`,
       )
     ) {
       schedulerData.moveEvent(event, slotId, slotName, start, end);
@@ -194,9 +196,7 @@ class DragAndDrop extends Component {
     console.log('moving event', schedulerData, slotId, slotName, newStart, newEnd, action, type, item);
   };
 
-  subtitleGetter = (schedulerData, event) => {
-    return schedulerData.isEventPerspective ? schedulerData.getResourceById(event.resourceId).name : event.groupName;
-  };
+  subtitleGetter = (schedulerData, event) => (schedulerData.isEventPerspective ? schedulerData.getResourceById(event.resourceId).name : event.groupName);
 
   toggleExpandFunc = (schedulerData, slotId) => {
     schedulerData.toggleExpandStatus(slotId);

@@ -1,12 +1,12 @@
+/* eslint-disable */
 import React, { Component } from 'react';
-
 import { Scheduler, SchedulerData, ViewType, AddMorePopover, DemoData, wrapperFun } from '../../../index';
 
 class AddMore extends Component {
   constructor(props) {
     super(props);
 
-    let schedulerData = new SchedulerData('2022-12-18', ViewType.Week, false, false, {
+    const schedulerData = new SchedulerData('2022-12-18', ViewType.Week, false, false, {
       besidesWidth: 350,
       dayMaxEvents: 2,
       weekMaxEvents: 4,

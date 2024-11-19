@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 import React, { Component } from 'react';
 
 import { Scheduler, SchedulerData, ViewType, DemoData, wrapperFun } from '../../../index';
@@ -6,7 +8,7 @@ class Readonly extends Component {
   constructor(props) {
     super(props);
 
-    let schedulerData = new SchedulerData('2022-12-22', ViewType.Week, false, false, {
+    const schedulerData = new SchedulerData('2022-12-22', ViewType.Week, false, false, {
       besidesWidth: 350,
       startResizable: false,
       endResizable: false,

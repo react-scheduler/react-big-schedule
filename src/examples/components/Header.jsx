@@ -3,8 +3,8 @@ import { Col, Row } from 'antd';
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-import logo from '/logo.png';
-import npm from '/npm.svg';
+import logo from '../assets/logo.png';
+import npm from '../assets/npm.svg';
 
 function Header() {
   return (
