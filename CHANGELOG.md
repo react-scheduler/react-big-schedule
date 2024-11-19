@@ -1,5 +1,10 @@
 # Change Logs:
 
+## [4.4.5](https://github.com/react-scheduler/react-big-schedule/compare/4.4.4...4.4.5)
+`2024-11-19`
+
+- Fix the library issue in `create-react-app` and `webpack` configration by [@ansulagrawal](https://github.com/ansulagrawal) in [#182](https://github.com/react-scheduler/react-big-schedule/pull/182).
+
 ## [4.4.4](https://github.com/react-scheduler/react-big-schedule/compare/4.4.3...4.4.4)
 `2024-11-13`
 
