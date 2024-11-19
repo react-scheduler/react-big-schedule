@@ -88,11 +88,11 @@ function AddMore() {
         if (item.id >= newFreshId) newFreshId = item.id + 1;
       });
 
-      let newEvent = {
+      const newEvent = {
         id: newFreshId,
         title: 'New event you just created',
-        start: start,
-        end: end,
+        start,
+        end,
         resourceId: slotId,
         bgColor: 'purple',
       };
