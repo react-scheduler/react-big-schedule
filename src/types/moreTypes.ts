@@ -1,17 +1,16 @@
-import { ConfigType, Dayjs, OptionType } from "dayjs";
-import React, { CSSProperties } from "react";
-import {
+import type { Dayjs } from "dayjs";
+import type { CSSProperties } from "react";
+import type React from "react";
+import type {
   EventItemType,
   HeaderEvent,
-  HeaderEventsType,
   HeaderItem,
   HeadersType,
   RenderDataItem,
-  ResourceEvent,
   State,
   View,
 } from "./baseType";
-import {
+import type {
   CellUnit,
   DnDSource,
   SchedulerData,

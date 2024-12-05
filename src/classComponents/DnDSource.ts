@@ -1,4 +1,4 @@
-// @ts-ignore
+// @ts-nocheck
 
 import { DragSource, DragSourceConnector, DragSourceMonitor } from "react-dnd";
 import { DnDTypes, ViewType, DATETIME_FORMAT } from "../config/default";

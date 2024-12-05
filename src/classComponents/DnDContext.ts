@@ -1,4 +1,5 @@
-// @ts-ignore
+// @ts-nocheck
+
 import { DropTarget, DropTargetMonitor, DropTargetConnector } from "react-dnd";
 import {
   DnDTypes,

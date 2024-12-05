@@ -1,19 +1,14 @@
-import React, { Component, ReactNode } from "react";
-import { DragSourceMonitor, DropTargetMonitor } from "react-dnd";
+import type { ReactNode } from "react";
+import { Component } from "react";
 import AddMore from "../components/AddMore";
 import Summary from "../components/Summary";
 import SelectedArea from "../components/SelectedArea";
-import {
-  CellUnit,
-  DATETIME_FORMAT,
-  SummaryPos,
-  DnDTypes,
-} from "../config/default";
+import { CellUnit, SummaryPos, DnDTypes } from "../config/default";
 import { getPos } from "../helper/utility";
-import { SchedulerData } from "../components/SchedulerData";
-import { RenderDataItem } from "../types/baseType";
-import { Dayjs } from "dayjs";
-import { DnDSource } from "./DnDSource";
+import type { SchedulerData } from "../components/SchedulerData";
+import type { RenderDataItem } from "../types/baseType";
+import type { Dayjs } from "dayjs";
+import type { DnDSource } from "./DnDSource";
 
 interface ResourceEventsProps {
   resourceEvents: RenderDataItem;
